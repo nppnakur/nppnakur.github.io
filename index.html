@@ -19,24 +19,26 @@
             background-position: center center;
             background-attachment: fixed;
             background-repeat: no-repeat;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #fff;
             position: relative;
             overflow-x: hidden;
+            padding: 20px;
         }
 
         h2 {
             position: absolute;
-            top: 8px;
+            top: 15px;
             width: 100%;
             text-align: center;
-            font-size: 40px;
+            font-size: clamp(24px, 5vw, 40px);
             color: #fff;
             z-index: 1;
             animation: glowing 1.5s infinite alternate;
+            padding: 0 15px;
         }
 
         @keyframes glowing {
@@ -47,9 +49,9 @@
 
         .powered-by {
             position: fixed;
-            bottom: 20px;
-            right: 30px;
-            font-size: 16px;
+            bottom: 15px;
+            right: 15px;
+            font-size: clamp(12px, 3vw, 16px);
             color: #f2f2f1;
             white-space: nowrap;
             overflow: hidden;
@@ -76,30 +78,30 @@
         }
 
         .container {
-            width: 80%;
+            width: 90%;
             max-width: 1000px;
-            border-radius: 20px;
-            box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             display: flex;
-            overflow: hidden;
-            background-color: rgba(0, 0, 0, 0.4); /* थोड़ा डार्क किया ताकि टेक्स्ट दिखे */
-            padding: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
             flex-direction: row;
+            gap: 20px;
+            border: 2px solid rgba(255, 204, 0, 0.3);
+            backdrop-filter: blur(10px);
         }
 
         .logo-section {
             flex: 1;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 25px;
-            position: relative;
+            padding: 20px;
         }
 
         .logo-wrapper {
-            width: 300px;
-            height: 300px;
+            width: 100%;
+            max-width: 320px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -107,14 +109,13 @@
 
         .rotating-logo {
             width: 100%;
-            height: 100%;
-            border-radius: 50%;
+            max-width: 300px;
+            height: auto;
             animation: flipUpright 5s ease infinite;
             transform-style: preserve-3d;
             object-fit: contain;
-            border: 3px solid #ffcc00;
-            background: rgba(255, 204, 0, 0.1);
-            padding: 10px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(255, 204, 0, 0.3);
         }
 
         @keyframes flipUpright {
@@ -125,82 +126,204 @@
 
         .form-section {
             flex: 1;
-            padding: 40px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .form-section h3 {
-            font-size: 28px;
-            margin-bottom: 20px;
+            font-size: clamp(24px, 4vw, 32px);
+            margin-bottom: 25px;
             text-align: center;
             color: #ffcc00;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            width: 100%;
         }
 
         .form-group label {
             display: block;
-            font-size: 16px;
-            margin-bottom: 5px;
+            font-size: clamp(14px, 3vw, 16px);
+            margin-bottom: 10px;
             color: #fff;
+            font-weight: bold;
+            padding-left: 10px;
         }
 
         .form-group input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ffcc0061;
-            border-radius: 4px;
-            background: rgba(0, 0, 0, 0.5);
-            font-size: 14px;
+            padding: 15px 20px;
+            border: 2px solid rgba(255, 204, 0, 0.5);
+            border-radius: 30px; /* गोलाई बढ़ाई */
+            background: rgba(0, 0, 0, 0.7);
+            font-size: clamp(14px, 3vw, 16px);
             color: white;
             outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #ffcc00;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
         }
 
         .form-group button {
             width: 100%;
-            padding: 12px;
-            font-size: 16px;
+            padding: 16px;
+            font-size: clamp(16px, 3vw, 18px);
             font-weight: bold;
             color: #1a1818;
-            background-color: #fbf2f2cf;
+            background: linear-gradient(135deg, #ffcc00, #ff9900);
             border: none;
-            border-radius: 23px;
+            border-radius: 30px; /* गोलाई बढ़ाई */
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s ease;
             animation: waveButton 2s infinite alternate ease-in-out;
+            margin-top: 10px;
         }
 
         .form-group button:hover {
-            background-color: #ffcc00;
-            transform: scale(1.02);
+            background: linear-gradient(135deg, #ff9900, #ffcc00);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 204, 0, 0.4);
         }
 
         @keyframes waveButton {
             0% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
-            100% { transform: translateY(3px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
         }
 
         .footer {
             text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
+            margin-top: 25px;
+            font-size: clamp(12px, 2.5vw, 14px);
+            color: rgba(255, 255, 255, 0.7);
         }
 
         #error-msg {
             color: #ff4d4d;
             text-align: center;
-            margin-bottom: 10px;
-            font-size: 14px;
+            margin-bottom: 15px;
+            font-size: clamp(13px, 2.5vw, 15px);
             font-weight: bold;
+            min-height: 20px;
+            padding: 8px;
+            border-radius: 10px;
+            background: rgba(255, 77, 77, 0.1);
+            display: none;
         }
 
-        /* Responsive Settings */
+        /* Mobile Responsiveness */
         @media screen and (max-width: 768px) {
-            .container { flex-direction: column; padding: 20px; }
-            .logo-wrapper { width: 200px; height: 200px; }
-            h2 { font-size: 28px; }
+            body {
+                padding: 15px;
+            }
+            
+            .container {
+                flex-direction: column;
+                width: 95%;
+                padding: 20px;
+                gap: 15px;
+            }
+            
+            .logo-wrapper {
+                max-width: 250px;
+                margin: 0 auto;
+            }
+            
+            .rotating-logo {
+                max-width: 220px;
+                border-radius: 15px;
+            }
+            
+            .form-section {
+                padding: 20px 15px;
+            }
+            
+            h2 {
+                position: relative;
+                top: 0;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            
+            .form-group input {
+                padding: 14px 18px;
+            }
+            
+            .form-group button {
+                padding: 15px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 15px;
+                border-radius: 20px;
+            }
+            
+            .logo-wrapper {
+                max-width: 200px;
+            }
+            
+            .rotating-logo {
+                max-width: 180px;
+            }
+            
+            .form-section {
+                padding: 15px 10px;
+            }
+            
+            .form-group input {
+                padding: 12px 15px;
+                font-size: 15px;
+            }
+            
+            .form-group button {
+                padding: 14px;
+                font-size: 16px;
+            }
+            
+            .powered-by {
+                bottom: 10px;
+                right: 10px;
+                font-size: 12px;
+            }
+        }
+
+        @media screen and (max-width: 360px) {
+            .container {
+                width: 100%;
+                border-radius: 15px;
+                padding: 12px;
+            }
+            
+            .logo-wrapper {
+                max-width: 170px;
+            }
+            
+            .rotating-logo {
+                max-width: 150px;
+            }
+            
+            h2 {
+                font-size: 22px;
+            }
+            
+            .form-section h3 {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
@@ -210,7 +333,7 @@
     <div class="container">
         <div class="logo-section">
             <div class="logo-wrapper">
-                <img src="img1.png" alt="Logo" class="rotating-logo">
+                <img src="img1.png" alt="Nagar Palika Nakur Logo" class="rotating-logo" id="mainLogo">
             </div>
         </div>
         
@@ -244,24 +367,73 @@
 
     <script>
         function validateLogin() {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
             const errorMsg = document.getElementById('error-msg');
 
-            // GitHub पर PHP नहीं चलती, इसलिए यहाँ JavaScript से चेक कर रहे हैं
+            // Clear previous error
+            errorMsg.style.display = 'none';
+            errorMsg.innerHTML = '';
+
+            // Simple validation
+            if (!user || !pass) {
+                errorMsg.innerHTML = "❌ Please enter both username and password!";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Login check
             if (user === "Sunnydhaka" && pass === "Sunny1990") {
-                alert("Login Successful!");
-                // यहाँ आप अगले पेज का नाम लिख सकते हैं
-                // window.location.href = "dashboard.html";
+                // Success - redirect to dashboard
+                errorMsg.innerHTML = "✅ Login Successful! Redirecting...";
+                errorMsg.style.color = "#00ff00";
+                errorMsg.style.display = 'block';
+                
+                // Simulate loading delay
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 1000);
             } else {
+                // Error
                 errorMsg.innerHTML = "❌ Invalid Username or Password!";
+                errorMsg.style.display = 'block';
+                
+                // Shake animation
+                const inputs = document.querySelectorAll('input');
+                inputs.forEach(input => {
+                    input.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        input.style.animation = '';
+                    }, 500);
+                });
             }
         }
 
-        // इमेज लोड हैंडलर
+        // Add Enter key support
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                validateLogin();
+            }
+        });
+
+        // Shake animation for error
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-10px); }
+                75% { transform: translateX(10px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Ensure logo loads properly
         window.onload = function() {
-            const logo = document.querySelector('.rotating-logo');
+            const logo = document.getElementById('mainLogo');
             logo.src = 'img1.png?' + new Date().getTime();
+            
+            // Auto focus on username field
+            document.getElementById('username').focus();
         };
     </script>
 </body>
