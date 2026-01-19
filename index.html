@@ -19,26 +19,25 @@
             background-position: center center;
             background-attachment: fixed;
             background-repeat: no-repeat;
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #fff;
             position: relative;
             overflow-x: hidden;
-            padding: 20px;
         }
 
+        /* Heading को थोड़ा नीचे किया गया है */
         h2 {
             position: absolute;
-            top: 15px;
+            top: 40px; 
             width: 100%;
             text-align: center;
-            font-size: clamp(24px, 5vw, 40px);
+            font-size: 38px;
             color: #fff;
             z-index: 1;
             animation: glowing 1.5s infinite alternate;
-            padding: 0 15px;
         }
 
         @keyframes glowing {
@@ -49,9 +48,9 @@
 
         .powered-by {
             position: fixed;
-            bottom: 15px;
-            right: 15px;
-            font-size: clamp(12px, 3vw, 16px);
+            bottom: 20px;
+            right: 30px;
+            font-size: 16px;
             color: #f2f2f1;
             white-space: nowrap;
             overflow: hidden;
@@ -63,32 +62,20 @@
                 floatUpDown 2s ease-in-out infinite;
         }
 
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 260px; }
-        }
-
-        @keyframes blink {
-            50% { border-color: transparent; }
-        }
-
-        @keyframes floatUpDown {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
+        @keyframes typing { from { width: 0 } to { width: 260px; } }
+        @keyframes blink { 50% { border-color: transparent; } }
+        @keyframes floatUpDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
         .container {
-            width: 90%;
-            max-width: 1000px;
-            border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 85%;
+            max-width: 950px;
+            border-radius: 30px;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
             display: flex;
-            background-color: rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0.5);
             padding: 20px;
             flex-direction: row;
-            gap: 20px;
-            border: 2px solid rgba(255, 204, 0, 0.3);
-            backdrop-filter: blur(10px);
         }
 
         .logo-section {
@@ -96,244 +83,110 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 10px;
         }
 
         .logo-wrapper {
-            width: 100%;
-            max-width: 320px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 280px;
+            height: 280px;
         }
 
+        /* लोगो से गोला और बॉर्डर हटा दिया गया है */
         .rotating-logo {
             width: 100%;
-            max-width: 300px;
-            height: auto;
+            height: 100%;
             animation: flipUpright 5s ease infinite;
             transform-style: preserve-3d;
             object-fit: contain;
-            border-radius: 20px;
-            box-shadow: 0 5px 20px rgba(255, 204, 0, 0.3);
         }
 
         @keyframes flipUpright {
-            0% { transform: rotateY(0deg) scaleX(1); }
-            50% { transform: rotateY(180deg) scaleX(-1); }
-            100% { transform: rotateY(360deg) scaleX(1); }
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
         }
 
         .form-section {
             flex: 1;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            padding: 30px;
         }
 
         .form-section h3 {
-            font-size: clamp(24px, 4vw, 32px);
+            font-size: 26px;
             margin-bottom: 25px;
             text-align: center;
             color: #ffcc00;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .form-group {
-            margin-bottom: 25px;
-            width: 100%;
+            margin-bottom: 18px;
         }
 
         .form-group label {
             display: block;
-            font-size: clamp(14px, 3vw, 16px);
-            margin-bottom: 10px;
-            color: #fff;
-            font-weight: bold;
-            padding-left: 10px;
+            font-size: 15px;
+            margin-bottom: 8px;
+            margin-left: 10px;
         }
 
+        /* इनपुट बॉक्स को गोल किया गया है */
         .form-group input {
             width: 100%;
-            padding: 15px 20px;
-            border: 2px solid rgba(255, 204, 0, 0.5);
-            border-radius: 30px; /* गोलाई बढ़ाई */
-            background: rgba(0, 0, 0, 0.7);
-            font-size: clamp(14px, 3vw, 16px);
+            padding: 12px 20px;
+            border: 1px solid rgba(255, 204, 0, 0.3);
+            border-radius: 25px; 
+            background: rgba(255, 255, 255, 0.1);
+            font-size: 14px;
             color: white;
             outline: none;
-            transition: all 0.3s ease;
+            transition: 0.3s;
         }
 
         .form-group input:focus {
             border-color: #ffcc00;
-            box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
-            background: rgba(0, 0, 0, 0.9);
-        }
-
-        .form-group input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .form-group button {
             width: 100%;
-            padding: 16px;
-            font-size: clamp(16px, 3vw, 18px);
+            padding: 12px;
+            font-size: 16px;
             font-weight: bold;
             color: #1a1818;
-            background: linear-gradient(135deg, #ffcc00, #ff9900);
+            background-color: #ffcc00;
             border: none;
-            border-radius: 30px; /* गोलाई बढ़ाई */
+            border-radius: 25px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            animation: waveButton 2s infinite alternate ease-in-out;
             margin-top: 10px;
-        }
-
-        .form-group button:hover {
-            background: linear-gradient(135deg, #ff9900, #ffcc00);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(255, 204, 0, 0.4);
+            animation: waveButton 2s infinite alternate ease-in-out;
         }
 
         @keyframes waveButton {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0); }
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 25px;
-            font-size: clamp(12px, 2.5vw, 14px);
-            color: rgba(255, 255, 255, 0.7);
+            0% { transform: scale(1); }
+            100% { transform: scale(1.03); }
         }
 
         #error-msg {
             color: #ff4d4d;
             text-align: center;
             margin-bottom: 15px;
-            font-size: clamp(13px, 2.5vw, 15px);
             font-weight: bold;
-            min-height: 20px;
-            padding: 8px;
-            border-radius: 10px;
-            background: rgba(255, 77, 77, 0.1);
-            display: none;
         }
 
-        /* Mobile Responsiveness */
         @media screen and (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
-            
-            .container {
-                flex-direction: column;
-                width: 95%;
-                padding: 20px;
-                gap: 15px;
-            }
-            
-            .logo-wrapper {
-                max-width: 250px;
-                margin: 0 auto;
-            }
-            
-            .rotating-logo {
-                max-width: 220px;
-                border-radius: 15px;
-            }
-            
-            .form-section {
-                padding: 20px 15px;
-            }
-            
-            h2 {
-                position: relative;
-                top: 0;
-                margin-bottom: 20px;
-                text-align: center;
-            }
-            
-            .form-group input {
-                padding: 14px 18px;
-            }
-            
-            .form-group button {
-                padding: 15px;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            .container {
-                padding: 15px;
-                border-radius: 20px;
-            }
-            
-            .logo-wrapper {
-                max-width: 200px;
-            }
-            
-            .rotating-logo {
-                max-width: 180px;
-            }
-            
-            .form-section {
-                padding: 15px 10px;
-            }
-            
-            .form-group input {
-                padding: 12px 15px;
-                font-size: 15px;
-            }
-            
-            .form-group button {
-                padding: 14px;
-                font-size: 16px;
-            }
-            
-            .powered-by {
-                bottom: 10px;
-                right: 10px;
-                font-size: 12px;
-            }
-        }
-
-        @media screen and (max-width: 360px) {
-            .container {
-                width: 100%;
-                border-radius: 15px;
-                padding: 12px;
-            }
-            
-            .logo-wrapper {
-                max-width: 170px;
-            }
-            
-            .rotating-logo {
-                max-width: 150px;
-            }
-            
-            h2 {
-                font-size: 22px;
-            }
-            
-            .form-section h3 {
-                font-size: 20px;
-            }
+            .container { flex-direction: column; text-align: center; }
+            h2 { font-size: 26px; top: 20px; }
+            .logo-wrapper { width: 180px; height: 180px; margin: 0 auto; }
         }
     </style>
 </head>
 <body>
+
     <h2>WELCOME TO NAGAR PALIKA NAKUR</h2>
     
     <div class="container">
         <div class="logo-section">
             <div class="logo-wrapper">
-                <img src="img1.png" alt="Nagar Palika Nakur Logo" class="rotating-logo" id="mainLogo">
+                <img src="img1.png" alt="Logo" class="rotating-logo">
             </div>
         </div>
         
@@ -343,12 +196,12 @@
 
             <form id="loginForm">
                 <div class="form-group">
-                    <label for="username"><b>USER NAME</b></label>
+                    <label for="username">USER NAME</label>
                     <input type="text" id="username" placeholder="ENTER YOUR USER ID" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="password"><b>PASSWORD</b></label>
+                    <label for="password">PASSWORD</label>
                     <input type="password" id="password" placeholder="ENTER YOUR PASSWORD" required>
                 </div>
                 
@@ -356,10 +209,6 @@
                     <button type="button" onclick="validateLogin()">LOG IN &#8594;</button>
                 </div>
             </form>
-            
-            <div class="footer">
-                <span style="color: #ffcc00;">Secure Login Portal</span>
-            </div>
         </div>
     </div>
     
@@ -367,74 +216,16 @@
 
     <script>
         function validateLogin() {
-            const user = document.getElementById('username').value.trim();
-            const pass = document.getElementById('password').value.trim();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
             const errorMsg = document.getElementById('error-msg');
 
-            // Clear previous error
-            errorMsg.style.display = 'none';
-            errorMsg.innerHTML = '';
-
-            // Simple validation
-            if (!user || !pass) {
-                errorMsg.innerHTML = "❌ Please enter both username and password!";
-                errorMsg.style.display = 'block';
-                return;
-            }
-
-            // Login check
             if (user === "Sunnydhaka" && pass === "Sunny1990") {
-                // Success - redirect to dashboard
-                errorMsg.innerHTML = "✅ Login Successful! Redirecting...";
-                errorMsg.style.color = "#00ff00";
-                errorMsg.style.display = 'block';
-                
-                // Simulate loading delay
-                setTimeout(() => {
-                    window.location.href = "dashboard.html";
-                }, 1000);
+                alert("Login Successful!");
             } else {
-                // Error
-                errorMsg.innerHTML = "❌ Invalid Username or Password!";
-                errorMsg.style.display = 'block';
-                
-                // Shake animation
-                const inputs = document.querySelectorAll('input');
-                inputs.forEach(input => {
-                    input.style.animation = 'shake 0.5s';
-                    setTimeout(() => {
-                        input.style.animation = '';
-                    }, 500);
-                });
+                errorMsg.innerHTML = "❌ Invalid ID or Password!";
             }
         }
-
-        // Add Enter key support
-        document.getElementById('password').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                validateLogin();
-            }
-        });
-
-        // Shake animation for error
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes shake {
-                0%, 100% { transform: translateX(0); }
-                25% { transform: translateX(-10px); }
-                75% { transform: translateX(10px); }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Ensure logo loads properly
-        window.onload = function() {
-            const logo = document.getElementById('mainLogo');
-            logo.src = 'img1.png?' + new Date().getTime();
-            
-            // Auto focus on username field
-            document.getElementById('username').focus();
-        };
     </script>
 </body>
 </html>
