@@ -1,66 +1,9 @@
-<?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-?>
-
-<?php
-session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// If already logged in, redirect to dashboard
-if (isset($_SESSION["username"]) && $_SESSION["otp_verified"] && $_SESSION["username"] === "Sunnydhaka") {
-    header("Location: dashboard.php");
-    exit;
-}
-
-// Login processing
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["admin_login"])) {
-    $username = $_POST["username"] ?? '';
-    $password = $_POST["password"] ?? '';
-
-    if ($username === "Sunnydhaka" && $password === "Sunny1990") {
-        // Generate OTP (6 digits)
-        $otp = rand(100000, 999999);
-        $_SESSION['otp'] = $otp;
-        $_SESSION['otp_expiry'] = time() + 300; // Valid for 5 minutes
-        $_SESSION['temp_username'] = $username;
-        
-        // For testing - remove in production
-        $_SESSION['debug_otp'] = $otp;
-        
-        // Try to send email (works on InfinityFree with their mail server)
-        $to = "sunnydhaka91@gmail.com";
-        $subject = "NAGAR PALIKA NAKUR - OTP Verification";
-        $message = "Your OTP is: $otp\n\nThis OTP is valid for 5 minutes.";
-        $headers = "From: noreply@yourdomain.com\r\n";
-        
-        if(@mail($to, $subject, $message, $headers)) {
-            header("Location: otp_verify.php");
-            exit;
-        } else {
-            // Even if mail fails, proceed to OTP page (for testing)
-            header("Location: otp_verify.php");
-            exit;
-        }
-    } else {
-        $_SESSION["error"] = "❌ Invalid username or password!";
-        header("Location: index.php");
-        exit;
-    }
-}
-
-$error = $_SESSION["error"] ?? '';
-unset($_SESSION["error"]);
-?>
 <!DOCTYPE html>
 <html lang="hi">
 <head>
   <meta charset="UTF-8">
   <title>NAGAR PALIKA NAKUR</title>
-  <link rel="icon" href="https://sunnydhaka.fwh.is/img1.png" type="image/png">
+  <link rel="icon" href="img1.png" type="image/png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="HandheldFriendly" content="true">
   <style>
@@ -224,10 +167,8 @@ unset($_SESSION["error"]);
 
   <div class="form-section">
     <h3>ADMIN LOGIN</h3>
-    <?php if (!empty($error)): ?>
-      <div class="error-message"><?= htmlspecialchars($error) ?></div>
-    <?php endif; ?>
-    <form method="POST" action="">
+    <form method="POST" action="login.php">
+      <input type="hidden" name="user_role" value="1">
       <div class="form-group">
         <label for="username"><b>USER NAME</b></label>
         <input type="text" name="username" id="username" placeholder="ENTER YOUR USER ID" required>
