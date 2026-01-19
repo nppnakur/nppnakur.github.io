@@ -40,15 +40,9 @@
         }
 
         @keyframes glowing {
-            0% {
-                text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00;
-            }
-            50% {
-                text-shadow: 0 0 15px #ffcc00, 0 0 25px #ffcc00, 0 0 35px #ffcc00;
-            }
-            100% {
-                text-shadow: 0 0 20px #ffcc00, 0 0 30px #ffcc00, 0 0 40px #ffcc00;
-            }
+            0% { text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00; }
+            50% { text-shadow: 0 0 15px #ffcc00, 0 0 25px #ffcc00, 0 0 35px #ffcc00; }
+            100% { text-shadow: 0 0 20px #ffcc00, 0 0 30px #ffcc00, 0 0 40px #ffcc00; }
         }
 
         .powered-by {
@@ -61,7 +55,7 @@
             overflow: hidden;
             border-right: 2px solid #ffc107;
             width: 0;
-            animation:
+            animation: 
                 typing 3s steps(28, end) forwards,
                 blink 0.7s step-end infinite,
                 floatUpDown 2s ease-in-out infinite;
@@ -88,7 +82,7 @@
             box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2);
             display: flex;
             overflow: hidden;
-            background-color: rgba(0, 0, 0, 0.19);
+            background-color: rgba(0, 0, 0, 0.4); /* थोड़ा डार्क किया ताकि टेक्स्ट दिखे */
             padding: 0;
             flex-direction: row;
         }
@@ -124,21 +118,9 @@
         }
 
         @keyframes flipUpright {
-            0% {
-                transform: rotateY(0deg) scaleX(1);
-            }
-            25% {
-                transform: rotateY(90deg) scaleX(0.8);
-            }
-            50% {
-                transform: rotateY(180deg) scaleX(-1);
-            }
-            75% {
-                transform: rotateY(270deg) scaleX(0.8);
-            }
-            100% {
-                transform: rotateY(360deg) scaleX(1);
-            }
+            0% { transform: rotateY(0deg) scaleX(1); }
+            50% { transform: rotateY(180deg) scaleX(-1); }
+            100% { transform: rotateY(360deg) scaleX(1); }
         }
 
         .form-section {
@@ -167,15 +149,12 @@
         .form-group input {
             width: 100%;
             padding: 10px;
-            border: none;
+            border: 1px solid #ffcc0061;
             border-radius: 4px;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.5);
             font-size: 14px;
             color: white;
-        }
-
-        .form-group input::placeholder {
-            color: #aaa;
+            outline: none;
         }
 
         .form-group button {
@@ -188,30 +167,19 @@
             border: none;
             border-radius: 23px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: 0.3s;
             animation: waveButton 2s infinite alternate ease-in-out;
         }
 
         .form-group button:hover {
-            background-color: #e6b800;
+            background-color: #ffcc00;
+            transform: scale(1.02);
         }
 
         @keyframes waveButton {
-            0% {
-                transform: translateY(0);
-            }
-            30% {
-                transform: translateY(-3px);
-            }
-            50% {
-                transform: translateY(0);
-            }
-            75% {
-                transform: translateY(3px);
-            }
-            100% {
-                transform: translateY(0);
-            }
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+            100% { transform: translateY(3px); }
         }
 
         .footer {
@@ -220,96 +188,19 @@
             font-size: 14px;
         }
 
-        .footer span {
-            color: red;
+        #error-msg {
+            color: #ff4d4d;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: bold;
         }
 
-        /* Mobile Responsiveness */
+        /* Responsive Settings */
         @media screen and (max-width: 768px) {
-            h2 {
-                font-size: 35px;
-                top: 10px;
-            }
-            
-            .container {
-                flex-direction: column;
-                max-width: 90%;
-                padding: 20px;
-            }
-            
-            .logo-section {
-                padding: 15px;
-            }
-            
-            .logo-wrapper {
-                width: 250px;
-                height: 250px;
-            }
-            
-            .form-section {
-                padding: 25px;
-            }
-            
-            .form-section h3 {
-                font-size: 24px;
-            }
-            
-            .powered-by {
-                right: 15px;
-                bottom: 10px;
-                font-size: 14px;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            h2 {
-                font-size: 30px;
-                top: 5px;
-            }
-            
-            .logo-wrapper {
-                width: 200px;
-                height: 200px;
-            }
-            
-            .form-section {
-                padding: 20px;
-            }
-            
-            .form-section h3 {
-                font-size: 22px;
-            }
-            
-            .form-group input {
-                font-size: 14px;
-                padding: 8px;
-            }
-            
-            .form-group button {
-                padding: 10px;
-                font-size: 14px;
-            }
-            
-            .footer {
-                font-size: 10px;
-            }
-            
-            .powered-by {
-                right: 10px;
-                bottom: 5px;
-                font-size: 12px;
-            }
-        }
-
-        @media screen and (max-width: 360px) {
-            .logo-wrapper {
-                width: 180px;
-                height: 180px;
-            }
-            
-            h2 {
-                font-size: 25px;
-            }
+            .container { flex-direction: column; padding: 20px; }
+            .logo-wrapper { width: 200px; height: 200px; }
+            h2 { font-size: 28px; }
         }
     </style>
 </head>
@@ -319,32 +210,32 @@
     <div class="container">
         <div class="logo-section">
             <div class="logo-wrapper">
-                <img src="img1.png" alt="Nagar Palika Nakur Logo" class="rotating-logo">
+                <img src="img1.png" alt="Logo" class="rotating-logo">
             </div>
         </div>
         
         <div class="form-section">
             <h3>LOG IN</h3>
-            <form method="POST" action="login.php">
-                <input type="hidden" name="user_role" value="1">
-                
+            <div id="error-msg"></div>
+
+            <form id="loginForm">
                 <div class="form-group">
                     <label for="username"><b>USER NAME</b></label>
-                    <input type="text" name="username" id="username" placeholder="ENTER YOUR USER ID" required>
+                    <input type="text" id="username" placeholder="ENTER YOUR USER ID" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="password"><b>PASSWORD</b></label>
-                    <input type="password" name="password" id="password" placeholder="ENTER YOUR PASSWORD" required>
+                    <input type="password" id="password" placeholder="ENTER YOUR PASSWORD" required>
                 </div>
                 
                 <div class="form-group">
-                    <button type="submit" name="admin_login">LOG IN &#8594;</button>
+                    <button type="button" onclick="validateLogin()">LOG IN &#8594;</button>
                 </div>
             </form>
             
             <div class="footer">
-                <span>Secure Login Portal</span>
+                <span style="color: #ffcc00;">Secure Login Portal</span>
             </div>
         </div>
     </div>
@@ -352,31 +243,26 @@
     <div class="powered-by">POWERED-BY➤SUNNY DHAKA</div>
 
     <script>
-        // ब्राउज़र टैब में लोगो सुनिश्चित करने के लिए
-        document.addEventListener('DOMContentLoaded', function() {
-            // फेविकॉन को फोर्स लोड करने के लिए
-            const favicon = document.querySelector('link[rel="icon"]');
-            if (favicon) {
-                // कैशिंग से बचने के लिए timestamp जोड़ें
-                favicon.href = 'img1.png?' + new Date().getTime();
-                
-                // फेविकॉन लोड होने की पुष्टि के लिए
-                const img = new Image();
-                img.src = 'img1.png';
-                img.onload = function() {
-                    console.log('Favicon loaded successfully');
-                };
-                img.onerror = function() {
-                    console.log('Favicon loading failed');
-                };
+        function validateLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+
+            // GitHub पर PHP नहीं चलती, इसलिए यहाँ JavaScript से चेक कर रहे हैं
+            if (user === "Sunnydhaka" && pass === "Sunny1990") {
+                alert("Login Successful!");
+                // यहाँ आप अगले पेज का नाम लिख सकते हैं
+                // window.location.href = "dashboard.html";
+            } else {
+                errorMsg.innerHTML = "❌ Invalid Username or Password!";
             }
-            
-            // लोगो को रीफ्रेश करने के लिए (यदि कैश में है)
+        }
+
+        // इमेज लोड हैंडलर
+        window.onload = function() {
             const logo = document.querySelector('.rotating-logo');
-            if (logo) {
-                logo.src = 'img1.png?' + new Date().getTime();
-            }
-        });
+            logo.src = 'img1.png?' + new Date().getTime();
+        };
     </script>
 </body>
 </html>
