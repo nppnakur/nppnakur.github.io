@@ -1,0 +1,396 @@
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit();
+}
+
+// उपयोगकर्ता का नाम प्रदर्शित करने के लिए
+$username = htmlspecialchars($_SESSION['username']);
+?>
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>डैशबोर्ड - जल प्रबंधन प्रणाली</title>
+<link rel="icon" href="img1.png" type="image/x-icon"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* ---------- Global Styles ---------- */
+:root {
+   --primary-color: #007bff;
+   --primary-dark: #0047b3;
+   --text-color: #333;
+   --light-bg: #eef2f9;
+   --card-bg: #ffffff;
+   --shadow: 0 4px 12px rgba(0,0,0,0.15);
+   --card-shadow: 8px 8px 15px rgba(0,0,0,.15),
+                  -6px -6px 12px rgba(255,255,255,.8);
+   --card-shadow-hover: 12px 12px 25px rgba(0,0,0,.22),
+                        -8px -8px 20px rgba(255,255,255,.9);
+}
+
+* {
+   box-sizing: border-box;
+   margin: 0;
+   padding: 0;
+}
+
+html, body {
+   height: 100%;
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   background: var(--light-bg);
+   color: var(--text-color);
+   line-height: 1.6;
+}
+
+/* ---------- Top bar with Logo & Buttons ---------- */
+.nav-top {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 8px 2%; /* Smaller padding for a more compact bar */
+   position: sticky;
+   top: 0;
+   background: linear-gradient(135deg, #0056b3, #007bff);
+   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+   z-index: 100;
+}
+
+.nav-top::before {
+   content: '';
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background: url('path/to/texture.png') repeat; /* Optional: Add a subtle texture */
+   opacity: 0.1;
+   pointer-events: none;
+}
+
+.nav-logo {
+   display: flex;
+   align-items: center;
+   gap: 15px;
+}
+
+.logo-img {
+   height: 50px;
+   width: 50px;
+   border-radius: 50%;
+   box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.logo-text {
+   color: #fff;
+   font-size: 24px;
+   font-weight: 600;
+   text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+.nav-buttons {
+   display: flex;
+   gap: 15px;
+}
+
+.nav-btn {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: #fff;
+   font-size: 16px;
+   text-decoration: none;
+   padding: 10px 16px; /* Smaller padding for icon-only buttons */
+   border-radius: 25px;
+   background: rgba(255, 255, 255, 0.2);
+   backdrop-filter: blur(5px);
+   border: 1px solid rgba(255, 255, 255, 0.3);
+   transition: all 0.3s ease;
+   font-weight: 500;
+}
+
+.nav-btn:hover, 
+.nav-btn:focus {
+   background: rgba(255, 255, 255, 0.3);
+   transform: translateY(-2px);
+   box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+   outline: none;
+}
+
+.nav-btn i {
+   margin-right: 0; /* No margin as text is removed */
+   font-size: 18px;
+}
+
+/* Hiding text for icon-only buttons on small screens */
+@media (max-width: 480px) {
+    .nav-btn {
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        border-radius: 50%;
+    }
+    .nav-btn i {
+        margin: 0;
+    }
+    .nav-btn span {
+        display: none;
+    }
+}
+
+/* ---------- Page Heading ---------- */
+.page-heading {
+   margin: 40px 0 30px;
+   text-align: center;
+   font-size: 32px;
+   color: var(--primary-color);
+   text-shadow: 1px 1px 2px rgba(0,0,0,.1);
+   padding: 0 20px;
+}
+
+@media (max-width: 768px) {
+   .page-heading {
+      font-size: 28px;
+      margin: 30px 0 25px;
+   }
+   
+   .logo-img {
+      height: 40px;
+      width: 40px;
+   }
+   
+   .logo-text {
+      font-size: 20px;
+   }
+   
+   .nav-btn {
+      padding: 8px 12px;
+      font-size: 14px;
+   }
+   
+   .nav-btn i {
+      font-size: 16px;
+      margin-right: 5px;
+   }
+   
+   .nav-top {
+      padding: 10px 4%;
+   }
+}
+
+/* ---------- Button Cards Container ---------- */
+.nav-wrap {
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+   gap: 25px;
+   max-width: 1200px;
+   margin: 0 auto;
+   padding: 0 20px 60px;
+}
+
+@media (max-width: 480px) {
+   .nav-wrap {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      padding: 0 15px 40px;
+   }
+}
+
+/* ---------- Card Styles ---------- */
+.btn-nav {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   min-height: 140px;
+   padding: 25px 20px;
+   border-radius: 16px;
+   font-size: 20px;
+   text-decoration: none;
+   font-weight: 600;
+   color: var(--primary-color);
+   background: linear-gradient(145deg, #e8f0ff, var(--card-bg));
+   box-shadow: var(--card-shadow);
+   border: 1px solid rgba(0,0,0,.04);
+   transition: all 0.3s ease;
+   text-align: center;
+   position: relative;
+   overflow: hidden;
+}
+
+.btn-nav:hover, 
+.btn-nav:focus {
+   transform: translateY(-5px);
+   box-shadow: var(--card-shadow-hover);
+   outline: none;
+}
+
+.btn-nav::after {
+   content: '';
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   width: 100%;
+   height: 4px;
+   background: var(--primary-color);
+   transform: scaleX(0);
+   transform-origin: right;
+   transition: transform 0.3s ease;
+}
+
+.btn-nav:hover::after {
+   transform: scaleX(1);
+   transform-origin: left;
+}
+
+.btn-icon {
+   font-size: 32px;
+   margin-bottom: 12px;
+   height: 40px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+/* ---------- Footer ---------- */
+footer {
+   text-align: center;
+   padding: 20px;
+   color: #555;
+   font-size: 14px;
+   background: var(--card-bg);
+   border-top: 1px solid rgba(0,0,0,0.05);
+   margin-top: auto;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+   .btn-nav {
+      border: 2px solid var(--primary-color);
+   }
+   
+   .nav-btn:hover,
+   .nav-btn:focus {
+      background: #fff;
+      color: var(--primary-dark);
+   }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+   .btn-nav,
+   .btn-nav:hover,
+   .btn-nav:focus,
+   .nav-btn,
+   .nav-btn:hover {
+      transition: none;
+      transform: none;
+   }
+}
+
+/* Focus styles for accessibility */
+.btn-nav:focus,
+.nav-btn:focus {
+   outline: 2px solid var(--primary-dark);
+   outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+   .nav-top,
+   footer {
+      display: none;
+   }
+   
+   .btn-nav {
+      box-shadow: none;
+      border: 1px solid #000;
+      break-inside: avoid;
+   }
+   
+   body {
+      background: #fff;
+   }
+}
+</style>
+</head>
+<body>
+<div class="nav-top">
+   <div class="nav-logo">
+      <img src="img1.png" alt="Nagar Palika Parishad Nakur, Saharanpur Logo" class="logo-img">
+      <div class="logo-text">जल प्रबंधन प्रणाली</div>
+   </div>
+   <div class="nav-buttons">
+      <a class="nav-btn" href="dashboard.php" title="होम">
+         <i class="fas fa-home"></i>
+      </a>
+      <a class="nav-btn" href="logout.php" title="लॉगआउट">
+         <i class="fas fa-sign-out-alt"></i>
+      </a>
+   </div>
+</div>
+
+<h1 class="page-heading">💧 जल प्रबंधन डैशबोर्ड</h1>
+
+<div class="nav-wrap">
+   <a class="btn-nav" href="connection_detail.php">
+      <span class="btn-icon">🔗</span>
+      कनेक्शन विवरण
+   </a>
+   
+   <a class="btn-nav" href="add_connection.php">
+      <span class="btn-icon">➕</span>
+      नया कनेक्शन
+   </a>
+   
+   <a class="btn-nav" href="payment.php">
+      <span class="btn-icon">💵</span>
+      भुगतान करें
+   </a>
+   
+   <a class="btn-nav" href="base_defaulter.php">
+      <span class="btn-icon">📊</span>
+      बड़े बकायादार
+   </a>
+   
+   <a class="btn-nav" href="demand_notice.php">
+      <span class="btn-icon">📄</span>
+      मांग नोटिस 
+   </a>
+   
+   <a class="btn-nav" href="print_all_bills.php">
+      <span class="btn-icon">🖨️</span>
+      सभी बिल प्रिंट करें
+   </a>
+</div>
+
+<footer>
+   <p>© जल प्रबंधन बोर्ड <?php echo date('Y'); ?></p>
+</footer>
+
+<script>
+// कीबोर्ड नेविगेशन के लिए
+document.addEventListener('DOMContentLoaded', function() {
+   const navItems = document.querySelectorAll('.btn-nav, .nav-btn');
+   
+   // पहला नेविगेशन आइटम फोकस करने के लिए
+   if (navItems.length > 0) {
+      navItems[0].setAttribute('tabindex', '0');
+   }
+   
+   // कीप्रेस इवेंट हैंडलिंग
+   document.addEventListener('keydown', function(e) {
+      if (e.key === 'Tab') {
+         document.body.classList.add('user-tabbing');
+      }
+   });
+   
+   // माउस इवेंट के बाद टैबिंग क्लास हटाने के लिए
+   document.addEventListener('mousedown', function() {
+      document.body.classList.remove('user-tabbing');
+   });
+});
+</script>
+</body>
+</html>
