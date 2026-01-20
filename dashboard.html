@@ -29,6 +29,7 @@
       background-image: url('https://ptaxsnn.com/Login/images/banner.jpg');
       background-size: cover;
       background-position: center;
+      background-repeat: no-repeat;
       opacity: 0.25;
       z-index: -1;
       filter: brightness(0.8);
@@ -70,7 +71,6 @@
       align-items: center;
       border: 1px solid rgba(0,0,0,0.1);
       position: relative;
-      overflow: hidden;
     }
     
     .card-content {
@@ -110,7 +110,8 @@
       transform: translateY(-6px);
       box-shadow: 0 8px 16px rgba(0,0,0,0.15);
     }
-    
+
+    /* Animations for Icons */
     .bill-card:hover .card-icon { animation: waterDrop 1.2s ease infinite; color: #0066cc; }
     .payment-card:hover .card-icon { animation: pulse 0.9s ease infinite; color: #00aa00; }
     .arrears-card:hover .card-icon { animation: shake 0.6s ease infinite; color: #cc3300; }
@@ -126,7 +127,7 @@
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    @keyframes aiGlow { 0%, 100% { transform: scale(1); text-shadow: 0 0 5px rgba(255, 51, 102, 0.5); } 50% { transform: scale(1.15); text-shadow: 0 0 15px rgba(255, 51, 102, 0.8), 0 0 25px rgba(255, 51, 102, 0.4); } }
+    @keyframes aiGlow { 0%, 100% { transform: scale(1); text-shadow: 0 0 5px rgba(255, 51, 102, 0.5); } 50% { transform: scale(1.15); text-shadow: 0 0 15px rgba(255, 51, 102, 0.8); } }
     @keyframes swing { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(8deg); } 75% { transform: rotate(-8deg); } }
     
     .logout-container {
@@ -147,11 +148,8 @@
       font-size: 15px;
       box-shadow: 0 4px 10px rgba(255, 94, 98, 0.3);
       transition: all 0.3s;
-    }
-    
-    .logout-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 14px rgba(255, 94, 98, 0.4);
+      border: none;
+      cursor: pointer;
     }
     
     .session-timer {
@@ -182,8 +180,6 @@
     
     @media (max-width: 600px) {
       .card-container { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-      .card { height: 170px; padding: 18px 12px; }
-      .card-icon { font-size: 42px; }
     }
   </style>
 </head>
@@ -267,7 +263,7 @@
     <div class="card dhaka-ai-card" onclick="window.location.href='https://sunnydhaka.fwh.is/dhaka_ai.php';">
       <div class="card-content">
         <h2>DHAKA-AI</h2>
-        <p>ARTIFICIAL INTELLIGENCE</p>
+        <p>AI SERVICE</p>
       </div>
       <div class="card-icon-container">
         <div class="card-icon">🤖</div>
@@ -286,97 +282,70 @@
   </div>
   
   <div class="logout-container">
-    <a href="#" class="logout-btn" id="logoutBtn">
-      <span style="margin-right: 8px;">🚪</span> लॉगआउट
-    </a>
+    <button class="logout-btn" id="logoutBtn">
+      <span style="margin-right: 8px;">🚪</span> LOGOUT
+    </button>
   </div>
 
 <script>
-// Authentication check
 document.addEventListener('DOMContentLoaded', function() {
+    // 1. Authentication Security ✅
     const isLoggedIn = localStorage.getItem('loggedIn');
-    const username = localStorage.getItem('username');
+    const username = localStorage.getItem('username') || "ADMIN";
     
-    if (!isLoggedIn || !username) {
-        alert('Please login first!');
+    if (isLoggedIn !== 'true') {
         window.location.href = 'index.html';
         return;
     }
     
-    // Update welcome message
+    // 2. Welcome Message
     document.getElementById('welcomeTab').innerHTML = `WELCOME ${username.toUpperCase()} TO NPP NAKUR SERVICE`;
     
-    // Session timeout configuration
-    let sessionTime = 1800; // 30 minutes in seconds
-    const warningTime = 60; // Show warning 60 seconds before logout
+    // 3. Session Management ✅
+    let sessionTime = 1800; // 30 Minutes
+    const warningTime = 60; 
     
-    // Start session timer
     const timerInterval = setInterval(() => {
         sessionTime--;
-        updateSessionTimer();
+        updateTimerDisplay();
         
-        // Show warning when time is running out
         if (sessionTime === warningTime) {
-            showLogoutWarning();
+            document.getElementById('logoutNotification').style.display = 'block';
         }
         
-        // Logout when time is up
         if (sessionTime <= 0) {
             clearInterval(timerInterval);
             logout();
         }
     }, 1000);
-    
-    // Reset timer on user activity
-    ['click', 'keypress', 'mousemove', 'scroll'].forEach(event => {
-        document.addEventListener(event, () => {
-            sessionTime = 1800;
-            updateSessionTimer();
+
+    // Reset timer on user movement
+    ['click', 'mousemove', 'keypress'].forEach(evt => {
+        document.addEventListener(evt, () => {
+            if(sessionTime > warningTime) sessionTime = 1800;
         });
     });
-    
-    // Logout button functionality
-    document.getElementById('logoutBtn').addEventListener('click', function(e) {
-        e.preventDefault();
-        logout();
-    });
-    
-    function updateSessionTimer() {
-        const minutes = Math.floor(sessionTime / 60);
-        const seconds = sessionTime % 60;
-        document.getElementById('sessionTime').textContent = 
-            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
-    
-    function showLogoutWarning() {
-        const notification = document.getElementById('logoutNotification');
-        const countdownSpan = document.getElementById('countdown');
-        
-        notification.style.display = 'block';
-        
-        let warningCountdown = warningTime;
-        const warningInterval = setInterval(() => {
-            warningCountdown--;
-            countdownSpan.textContent = warningCountdown;
-            
-            if (warningCountdown <= 0) {
-                clearInterval(warningInterval);
-                notification.style.display = 'none';
-            }
-        }, 1000);
-    }
-});
 
-function logout() {
-    // Clear localStorage
-    localStorage.removeItem('loggedIn');
-    localStorage.removeItem('username');
-    localStorage.removeItem('loginTime');
-    
-    // Show message and redirect
-    alert('Successfully logged out!');
-    window.location.href = 'index.html';
-}
+    function updateTimerDisplay() {
+        const mins = Math.floor(sessionTime / 60);
+        const secs = sessionTime % 60;
+        document.getElementById('sessionTime').textContent = 
+            `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        
+        if(sessionTime <= warningTime) {
+            document.getElementById('countdown').textContent = sessionTime;
+        }
+    }
+
+    // 4. Logout Logic
+    function logout() {
+        localStorage.clear(); // Clear all session data
+        alert('Session expired or logged out!');
+        window.location.href = 'index.html';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+});
 </script>
 </body>
 </html>
