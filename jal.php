@@ -1,11 +1,13 @@
 <?php
 session_start();
+
+// यदि उपयोगकर्ता लॉगिन नहीं किया है तो लॉगिन पेज पर रीडायरेक्ट करें
 if (!isset($_SESSION['username'])) {
     header("Location: index.php");
     exit();
 }
 
-// उपयोगकर्ता का नाम प्रदर्शित करने के लिए
+// उपयोगकर्ता का नाम सुरक्षित रूप से प्रदर्शित करने के लिए
 $username = htmlspecialchars($_SESSION['username']);
 ?>
 <!DOCTYPE html>
@@ -14,7 +16,8 @@ $username = htmlspecialchars($_SESSION['username']);
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>डैशबोर्ड - जल प्रबंधन प्रणाली</title>
-<link rel="icon" href="img1.png" type="image/x-icon"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="icon" href="img1.png" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 /* ---------- Global Styles ---------- */
 :root {
@@ -49,7 +52,7 @@ html, body {
    display: flex;
    justify-content: space-between;
    align-items: center;
-   padding: 8px 2%; /* Smaller padding for a more compact bar */
+   padding: 8px 2%;
    position: sticky;
    top: 0;
    background: linear-gradient(135deg, #0056b3, #007bff);
@@ -64,7 +67,7 @@ html, body {
    left: 0;
    width: 100%;
    height: 100%;
-   background: url('path/to/texture.png') repeat; /* Optional: Add a subtle texture */
+   background: url('path/to/texture.png') repeat;
    opacity: 0.1;
    pointer-events: none;
 }
@@ -89,9 +92,20 @@ html, body {
    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
 }
 
+.user-welcome {
+   color: #fff;
+   font-size: 16px;
+   background: rgba(255, 255, 255, 0.2);
+   padding: 5px 15px;
+   border-radius: 20px;
+   backdrop-filter: blur(5px);
+   border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 .nav-buttons {
    display: flex;
    gap: 15px;
+   align-items: center;
 }
 
 .nav-btn {
@@ -101,7 +115,7 @@ html, body {
    color: #fff;
    font-size: 16px;
    text-decoration: none;
-   padding: 10px 16px; /* Smaller padding for icon-only buttons */
+   padding: 10px 16px;
    border-radius: 25px;
    background: rgba(255, 255, 255, 0.2);
    backdrop-filter: blur(5px);
@@ -119,7 +133,7 @@ html, body {
 }
 
 .nav-btn i {
-   margin-right: 0; /* No margin as text is removed */
+   margin-right: 0;
    font-size: 18px;
 }
 
@@ -136,6 +150,10 @@ html, body {
     }
     .nav-btn span {
         display: none;
+    }
+    .user-welcome {
+        font-size: 12px;
+        padding: 3px 10px;
     }
 }
 
@@ -321,6 +339,11 @@ footer {
       <img src="img1.png" alt="Nagar Palika Parishad Nakur, Saharanpur Logo" class="logo-img">
       <div class="logo-text">जल प्रबंधन प्रणाली</div>
    </div>
+   
+   <div class="user-welcome">
+      स्वागत है, <?php echo $username; ?>!
+   </div>
+   
    <div class="nav-buttons">
       <a class="nav-btn" href="dashboard.php" title="होम">
          <i class="fas fa-home"></i>
