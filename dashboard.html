@@ -166,6 +166,20 @@
       z-index: 1000;
     }
     
+    .logout-notification {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 87, 34, 0.9);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
     @media (max-width: 600px) {
       .card-container { grid-template-columns: repeat(2, 1fr); gap: 15px; }
       .card { height: 170px; padding: 18px 12px; }
@@ -174,8 +188,12 @@
   </style>
 </head>
 <body>
-
   <div class="background-banner"></div>
+  
+  <div class="logout-notification" id="logoutNotification">
+    <strong>⚠️ Session Expiring Soon!</strong><br>
+    You will be logged out in <span id="countdown">60</span> seconds
+  </div>
   
   <div class="session-timer" id="sessionTimer">
     Session: <span id="sessionTime">30:00</span>
@@ -274,12 +292,13 @@
   </div>
 
 <script>
-// Check authentication
+// Authentication check
 document.addEventListener('DOMContentLoaded', function() {
     const isLoggedIn = localStorage.getItem('loggedIn');
     const username = localStorage.getItem('username');
     
     if (!isLoggedIn || !username) {
+        alert('Please login first!');
         window.location.href = 'index.html';
         return;
     }
@@ -287,43 +306,77 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update welcome message
     document.getElementById('welcomeTab').innerHTML = `WELCOME ${username.toUpperCase()} TO NPP NAKUR SERVICE`;
     
-    // Start session timer (30 minutes)
+    // Session timeout configuration
     let sessionTime = 1800; // 30 minutes in seconds
-    const sessionTimer = document.getElementById('sessionTime');
+    const warningTime = 60; // Show warning 60 seconds before logout
+    
+    // Start session timer
     const timerInterval = setInterval(() => {
         sessionTime--;
-        const minutes = Math.floor(sessionTime / 60);
-        const seconds = sessionTime % 60;
-        sessionTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        updateSessionTimer();
         
+        // Show warning when time is running out
+        if (sessionTime === warningTime) {
+            showLogoutWarning();
+        }
+        
+        // Logout when time is up
         if (sessionTime <= 0) {
             clearInterval(timerInterval);
             logout();
         }
     }, 1000);
     
-    // Reset timer on activity
-    ['click', 'keypress', 'mousemove'].forEach(event => {
+    // Reset timer on user activity
+    ['click', 'keypress', 'mousemove', 'scroll'].forEach(event => {
         document.addEventListener(event, () => {
             sessionTime = 1800;
+            updateSessionTimer();
         });
     });
     
-    // Logout button
+    // Logout button functionality
     document.getElementById('logoutBtn').addEventListener('click', function(e) {
         e.preventDefault();
         logout();
     });
+    
+    function updateSessionTimer() {
+        const minutes = Math.floor(sessionTime / 60);
+        const seconds = sessionTime % 60;
+        document.getElementById('sessionTime').textContent = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    function showLogoutWarning() {
+        const notification = document.getElementById('logoutNotification');
+        const countdownSpan = document.getElementById('countdown');
+        
+        notification.style.display = 'block';
+        
+        let warningCountdown = warningTime;
+        const warningInterval = setInterval(() => {
+            warningCountdown--;
+            countdownSpan.textContent = warningCountdown;
+            
+            if (warningCountdown <= 0) {
+                clearInterval(warningInterval);
+                notification.style.display = 'none';
+            }
+        }, 1000);
+    }
 });
 
 function logout() {
+    // Clear localStorage
     localStorage.removeItem('loggedIn');
     localStorage.removeItem('username');
     localStorage.removeItem('loginTime');
+    
+    // Show message and redirect
     alert('Successfully logged out!');
     window.location.href = 'index.html';
 }
 </script>
-
 </body>
 </html>
