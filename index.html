@@ -189,7 +189,6 @@
     <h3>ADMIN LOGIN</h3>
     <div class="error-message" id="errorMsg"></div>
     
-    <!-- Login Section -->
     <div id="login-section">
       <form id="loginForm">
         <div class="form-group">
@@ -206,7 +205,6 @@
       </form>
     </div>
     
-    <!-- OTP Verification Section -->
     <div id="otp-section">
       <div class="success-msg" id="successMsg"></div>
       <div class="otp-timer" id="otpTimer">OTP valid for: <span id="timer">05:00</span></div>
@@ -229,43 +227,30 @@
 </div>
 
 <script>
-// EmailJS Configuration - COMPLETE CREDENTIALS ✅
-const SERVICE_ID = "service_25eenak";      // ✅ आपका Service ID
-const TEMPLATE_ID = "template_hdj6nfo";   // ✅ आपका Template ID
-const PUBLIC_KEY = "M-JV2m_vTtrU3W_EB";   // ✅ आपका Public Key (अब ADDED)
-const ADMIN_EMAIL = "sunnydhaka91@gmail.com"; // ✅ आपका Email
+// EmailJS Configuration ✅
+const SERVICE_ID = "service_25eenak";      
+const TEMPLATE_ID = "template_hdj6nfo";   
+const PUBLIC_KEY = "M-JV2m_vTtrU3W_EB";   
+const ADMIN_EMAIL = "sunnydhaka91@gmail.com"; 
 
 // Global variables
 let generatedOTP = null;
 let otpTimer = null;
 let timeLeft = 300;
 
-// Initialize EmailJS WITH PUBLIC KEY ✅
+// Initialize EmailJS
 emailjs.init(PUBLIC_KEY);
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if already logged in
     if (localStorage.getItem('loggedIn') === 'true') {
         window.location.href = 'dashboard.html';
         return;
     }
     
-    // Refresh logo
-    const logo = document.getElementById('mainLogo');
-    if (logo) {
-        logo.src = 'img1.png?' + new Date().getTime();
-    }
-    
-    // Focus on username
     document.getElementById('username').focus();
-    
-    // Login button event
     document.getElementById('loginBtn').addEventListener('click', sendOTP);
-    
-    // Verify OTP button event
     document.getElementById('verifyBtn').addEventListener('click', verifyOTP);
     
-    // Enter key support
     document.getElementById('password').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') sendOTP();
     });
@@ -273,19 +258,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('user-otp').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') verifyOTP();
     });
-    
-    // Refresh favicon
-    const link = document.querySelector('link[rel="icon"]');
-    if (link) {
-        link.href = 'img1.png?' + new Date().getTime();
-    }
-    
-    // Debug: Show credentials in console
-    console.log('=== EmailJS Configuration Loaded ===');
-    console.log('Service ID:', SERVICE_ID);
-    console.log('Template ID:', TEMPLATE_ID);
-    console.log('Public Key:', PUBLIC_KEY);
-    console.log('Admin Email:', ADMIN_EMAIL);
 });
 
 function sendOTP() {
@@ -293,81 +265,45 @@ function sendOTP() {
     const password = document.getElementById('password').value.trim();
     const errorMsg = document.getElementById('errorMsg');
     
-    // Reset error
     errorMsg.style.display = 'none';
-    errorMsg.textContent = '';
     
-    // Validation
     if (!username || !password) {
         errorMsg.textContent = '❌ Please enter both username and password!';
         errorMsg.style.display = 'block';
         return;
     }
     
-    // Check credentials
     if (username === "Sunnydhaka" && password === "Sunny1990") {
-        // Generate OTP
         generatedOTP = Math.floor(100000 + Math.random() * 900000);
         
-        // Show sending message
-        document.getElementById('successMsg').textContent = '📧 Generating OTP...';
+        document.getElementById('successMsg').textContent = '📧 Sending OTP to your Email...';
         document.getElementById('successMsg').style.display = 'block';
         
-        // Prepare email parameters
+        // Final Correct Parameters Match Template ✅
         const templateParams = {
             to_email: ADMIN_EMAIL,
             otp: generatedOTP,
-            user_name: username,
             from_name: "NAGAR PALIKA NAKUR",
-            website_name: "Nagar Palika Nakur Admin Portal"
+            time: new Date().toLocaleString('hi-IN') // समय भी भेजा जा रहा है
         };
         
-        // Show OTP for testing (always visible)
-        console.log('Generated OTP:', generatedOTP);
-        
-        // Send email via EmailJS
         emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
             .then(function(response) {
-                console.log('✅ Email sent successfully:', response);
-                
-                // Show success and OTP
-                document.getElementById('successMsg').innerHTML = 
-                    `✅ OTP sent successfully! Check your email.<br>
-                     <div style="background: #ffcc00; color: #000; padding: 10px; margin: 10px 0; border-radius: 8px;">
-                        <strong>For testing, OTP is:</strong> <span style="font-size: 20px; font-weight: bold;">${generatedOTP}</span>
-                     </div>`;
-                
+                document.getElementById('successMsg').innerHTML = `✅ OTP sent successfully! Check your Gmail.`;
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('otp-section').style.display = 'block';
-                
-                // Start OTP timer
                 startOTPTimer();
-                
-                // Focus on OTP input
-                setTimeout(() => {
-                    document.getElementById('user-otp').focus();
-                }, 500);
-                
+                setTimeout(() => { document.getElementById('user-otp').focus(); }, 500);
             }, function(error) {
-                console.log('❌ Email sending failed:', error);
-                
-                // Fallback: Show OTP on screen
+                console.log('Error:', error);
+                // Fallback if email fails
                 document.getElementById('successMsg').innerHTML = 
-                    `✅ OTP Generated!<br>
-                     <div style="background: #ff0000; color: #fff; padding: 10px; margin: 10px 0; border-radius: 8px;">
-                        <strong>Email service issue. Your OTP:</strong> <span style="font-size: 24px; font-weight: bold;">${generatedOTP}</span>
-                     </div>`;
-                
+                    `<div style="background: #ff0000; color: #fff; padding: 10px; border-radius: 8px;">
+                        <strong>Email service issue. Your OTP:</strong> ${generatedOTP}
+                    </div>`;
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('otp-section').style.display = 'block';
-                
-                // Start OTP timer
                 startOTPTimer();
-                
-                // Focus on OTP input
-                setTimeout(() => {
-                    document.getElementById('user-otp').focus();
-                }, 500);
             });
             
     } else {
@@ -381,108 +317,31 @@ function verifyOTP() {
     const enteredOTP = document.getElementById('user-otp').value.trim();
     const errorMsg = document.getElementById('errorMsg');
     
-    // Reset error
-    errorMsg.style.display = 'none';
-    errorMsg.textContent = '';
-    
-    if (!enteredOTP) {
-        errorMsg.textContent = '❌ Please enter OTP!';
-        errorMsg.style.display = 'block';
-        return;
-    }
-    
-    if (enteredOTP.length !== 6) {
-        errorMsg.textContent = '❌ OTP must be 6 digits!';
-        errorMsg.style.display = 'block';
-        return;
-    }
-    
     if (generatedOTP && parseInt(enteredOTP) === generatedOTP) {
-        // Stop timer
-        if (otpTimer) {
-            clearInterval(otpTimer);
-        }
-        
-        // Save login data to localStorage
+        if (otpTimer) clearInterval(otpTimer);
         localStorage.setItem('loggedIn', 'true');
-        localStorage.setItem('username', 'Sunnydhaka');
-        localStorage.setItem('loginTime', new Date().toISOString());
-        
-        // Show success
-        document.getElementById('successMsg').innerHTML = 
-            '<div style="color: #00ff00; font-weight: bold; padding: 10px; background: rgba(0,255,0,0.1); border-radius: 8px;">✅ OTP Verified! Redirecting to dashboard...</div>';
-        
-        // Redirect to dashboard
-        setTimeout(() => {
-            window.location.href = 'dashboard.html';
-        }, 1500);
-        
+        document.getElementById('successMsg').innerHTML = '✅ OTP Verified! Redirecting...';
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
     } else {
-        errorMsg.textContent = '❌ Invalid OTP! Please try again.';
+        errorMsg.textContent = '❌ Invalid OTP!';
         errorMsg.style.display = 'block';
-        shakeInputs();
     }
 }
 
 function resendOTP() {
-    // Generate new OTP
-    generatedOTP = Math.floor(100000 + Math.random() * 900000);
-    
-    // Reset timer
-    timeLeft = 300;
-    updateTimerDisplay();
-    
-    // Send new OTP
-    const templateParams = {
-        to_email: ADMIN_EMAIL,
-        otp: generatedOTP,
-        user_name: "Sunnydhaka",
-        from_name: "NAGAR PALIKA NAKUR",
-        website_name: "Nagar Palika Nakur Admin Portal"
-    };
-    
-    document.getElementById('successMsg').innerHTML = '📧 Resending OTP...';
-    
-    emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
-        .then(function() {
-            document.getElementById('successMsg').innerHTML = 
-                `✅ New OTP sent!<br>
-                 <div style="background: #ffcc00; color: #000; padding: 10px; margin: 10px 0; border-radius: 8px;">
-                    <strong>New OTP:</strong> <span style="font-size: 20px; font-weight: bold;">${generatedOTP}</span>
-                 </div>`;
-        }, function() {
-            document.getElementById('successMsg').innerHTML = 
-                `✅ New OTP Generated!<br>
-                 <div style="background: #ff0000; color: #fff; padding: 10px; margin: 10px 0; border-radius: 8px;">
-                    <strong>Email failed. Your OTP:</strong> <span style="font-size: 24px; font-weight: bold;">${generatedOTP}</span>
-                 </div>`;
-        });
+    sendOTP();
 }
 
 function startOTPTimer() {
     timeLeft = 300;
-    updateTimerDisplay();
-    
-    if (otpTimer) {
-        clearInterval(otpTimer);
-    }
-    
+    if (otpTimer) clearInterval(otpTimer);
     otpTimer = setInterval(() => {
         timeLeft--;
-        updateTimerDisplay();
-        
-        if (timeLeft <= 0) {
-            clearInterval(otpTimer);
-            document.getElementById('otpTimer').innerHTML = '⏰ OTP Expired! <button onclick="resendOTP()" style="background: transparent; color: #ff6b6b; border: none; cursor: pointer;">Click to Resend</button>';
-            generatedOTP = null;
-        }
+        const min = Math.floor(timeLeft / 60);
+        const sec = timeLeft % 60;
+        document.getElementById('timer').textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+        if (timeLeft <= 0) clearInterval(otpTimer);
     }, 1000);
-}
-
-function updateTimerDisplay() {
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    document.getElementById('timer').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
 function shakeInputs() {
@@ -492,18 +351,6 @@ function shakeInputs() {
         setTimeout(() => input.style.animation = '', 500);
     });
 }
-
-// Add shake animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-10px); }
-        75% { transform: translateX(10px); }
-    }
-`;
-document.head.appendChild(style);
 </script>
-
 </body>
 </html>
