@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <title>OTP Verification - NAGAR PALIKA NAKUR</title>
+  <link rel="icon" href="img1.png" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    body {
+      margin: 0; padding: 0; font-family: Arial, sans-serif;
+      background-image: url('https://ptaxsnn.com/Login/images/banner.jpg');
+      background-size: cover; background-position: center; background-repeat: no-repeat;
+      background-attachment: fixed; min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff;
+    }
+    h2 {
+      position: absolute; top: 8px; width: 100%; text-align: center;
+      font-size: 40px; color: #fff; animation: glowing 1.5s infinite alternate; z-index: 1;
+    }
+    @keyframes glowing {
+      0% { text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00; }
+      100% { text-shadow: 0 0 20px #ffcc00, 0 0 40px #ffcc00; }
+    }
+    .container {
+      background-color: rgba(0, 0, 0, 0.5); /* थोडा गहरा किया ताकि टेक्स्ट दिखे */
+      border-radius: 35px; padding: 10px; display: flex; flex-direction: row;
+      width: 90%; max-width: 1000px; box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2);
+      position: relative; backdrop-filter: blur(5px);
+    }
+    .logo-section { flex: 1; display: flex; align-items: center; justify-content: center; padding: 30px; }
+    .rotating-logo { width: 300px; animation: flipUpright 5s ease infinite; transform-style: preserve-3d; }
+    @keyframes flipUpright {
+      0% { transform: rotateY(0deg); }
+      100% { transform: rotateY(180deg); }
+    }
+    .form-section { flex: 1; padding: 20px; }
+    .form-section h3 { font-size: 28px; text-align: center; color: #ffcc00; margin-bottom: 20px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { font-size: 16px; margin-bottom: 10px; display: block; }
+    .form-group input {
+      width: 90%; padding: 12px; font-size: 20px; background-color: rgba(0,0,0,0.5);
+      color: white; border: 1px solid #ffcc00; border-radius: 23px; text-align: center; letter-spacing: 5px;
+    }
+    .form-group button {
+      width: 100%; padding: 12px; font-size: 15px; font-weight: bold;
+      background-color: #fbf2f2cf; color: #1a1818; border: none; border-radius: 23px;
+      cursor: pointer; animation: waveButton 2s infinite alternate ease-in-out;
+    }
+    @keyframes waveButton {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(3px); }
+    }
+    .powered-by {
+      position: absolute; bottom: 10px; right: 20px; font-size: 16px; color: #f2f2f1;
+      width: 0; white-space: nowrap; overflow: hidden;
+      animation: typing 3s steps(20, end) forwards;
+    }
+    @keyframes typing { from { width: 0 } to { width: 200px } }
+
+    @media screen and (max-width: 768px) {
+      .container { flex-direction: column; }
+      .rotating-logo { width: 180px; }
+      h2 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<h2>OTP VERIFICATION - NAGAR PALIKA NAKUR</h2>
+
+<div class="container">
+  <div class="logo-section">
+    <img src="img1.png" alt="Logo" class="rotating-logo">
+  </div>
+
+  <div class="form-section">
+    <h3>ENTER OTP</h3>
+    <div id="msg" style="text-align: center; color: #ffcc00; margin-bottom: 10px;"></div>
+    
+    <div class="form-group">
+      <label for="otp"><b>6 DIGIT OTP</b></label>
+      <input type="text" id="otp_input" placeholder="......" maxlength="6" inputmode="numeric">
+    </div>
+    
+    <div class="form-group">
+      <button onclick="verifyMyOTP()">VERIFY OTP →</button>
+    </div>
+    
+    <div style="text-align: center; margin-top: 15px;">
+      <a href="#" onclick="location.reload()" style="color: #ffcc00; text-decoration: none;">Resend OTP</a> | 
+      <a href="index.html" style="color: #ffcc00; text-decoration: none;">← Back to Login</a>
+    </div>
+  </div>
+
+  <div class="powered-by">POWERED BY SUNNY DHAKA</div>
+</div>
+
+<script>
+    function verifyMyOTP() {
+        const userEntered = document.getElementById('otp_input').value;
+        const correctOTP = localStorage.getItem("generatedOTP"); // index.html से आया कोड
+
+        if (userEntered === correctOTP) {
+            alert("✅ लॉगिन सफल!");
+            window.location.href = "dashboard.html"; // यहाँ खतौनी वाला पेज खुलेगा
+        } else {
+            document.getElementById('msg').innerHTML = "❌ गलत OTP! कृपया पुनः प्रयास करें";
+            document.getElementById('otp_input').value = "";
+        }
+    }
+</script>
+
+</body>
+</html>
