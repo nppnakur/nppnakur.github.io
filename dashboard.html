@@ -1,92 +1,529 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WELCOME TO NAGAR PALIKA NAKUR</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <style>
-        body {
-            margin: 0; padding: 0; font-family: Arial, sans-serif;
-            background-image: url('https://ptaxsnn.com/Login/images/banner.jpg');
-            background-size: cover; background-attachment: fixed;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;
-        }
-        h2 { color: #fff; text-shadow: 0 0 10px #ffcc00; font-size: 28px; text-align: center; margin-bottom: 20px; }
-        .login-card {
-            background: rgba(0, 0, 0, 0.4); padding: 40px 20px; border-radius: 40px;
-            backdrop-filter: blur(10px); width: 320px; text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .logo { width: 120px; margin-bottom: 20px; }
-        h3 { color: #ffcc00; margin-bottom: 10px; }
-        input {
-            width: 90%; padding: 12px; margin: 8px 0; border-radius: 20px; border: none;
-            background: rgba(255,255,255,0.2); color: white; text-align: center;
-        }
-        button {
-            width: 100%; padding: 12px; background: #f1c40f; color: #000; border: none;
-            border-radius: 25px; cursor: pointer; font-weight: bold; margin-top: 15px;
-        }
-        #otp-section { display: none; }
-    </style>
+  <meta charset="UTF-8">
+  <title>WATER MANAGEMENT SYSTEM</title>
+  <link rel="icon" href="img1.png" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    
+    body {
+      background-color: #f0f8ff;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+    
+    /* Background banner style */
+    .background-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('nakur.png');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.25;
+      z-index: -1;
+      filter: brightness(0.8);
+    }
+    
+    /* Tab style */
+    .water-tab {
+      background: linear-gradient(90deg, #0066cc, #00a8ff);
+      color: white;
+      padding: 18px 10px;
+      font-size: clamp(18px, 3.5vw, 26px);
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Card container */
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 25px auto;
+      padding: 0 20px;
+    }
+    
+    /* Card style */
+    .card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 12px;
+      padding: 20px 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      height: 190px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Card content */
+    .card-content {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-grow: 1;
+    }
+    
+    /* Icon container at bottom - larger size */
+    .card-icon-container {
+      margin-top: auto;
+      padding-top: 12px;
+      width: 100%;
+      border-top: 1px dashed rgba(0,0,0,0.15);
+    }
+    
+    .card-icon {
+      font-size: 48px; /* Increased icon size */
+      transition: all 0.3s;
+      display: inline-block;
+    }
+    
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 6px;
+      color: #333;
+    }
+    
+    .card p {
+      font-size: 13px;
+      color: #666;
+    }
+    
+    /* Hover animations */
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+    
+    /* Different animations for each card */
+    .bill-card:hover .card-icon {
+      animation: waterDrop 1.2s ease infinite;
+      color: #0066cc;
+    }
+    
+    .payment-card:hover .card-icon {
+      animation: pulse 0.9s ease infinite;
+      color: #00aa00;
+    }
+    
+    .arrears-card:hover .card-icon {
+      animation: shake 0.6s ease infinite;
+      color: #cc3300;
+    }
+    
+    .total-card:hover .card-icon {
+      animation: bounce 0.7s ease infinite;
+      color: #ff9900;
+    }
+    
+    .electric-card:hover .card-icon {
+      animation: flash 0.8s ease infinite;
+      color: #ffcc00;
+    }
+    
+    .shop-card:hover .card-icon {
+      animation: spin 1.2s linear infinite;
+      color: #6600cc;
+    }
+    
+    .dhaka-ai-card:hover .card-icon {
+      animation: aiGlow 1.5s ease infinite;
+      color: #ff3366;
+    }
+    
+    .id-card:hover .card-icon {
+      animation: swing 1.1s ease infinite;
+      color: #555;
+    }
+    
+    /* Animation keyframes */
+    @keyframes waterDrop {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-6px) scale(1.1); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-8deg); }
+      75% { transform: rotate(8deg); }
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes flash {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes aiGlow {
+      0%, 100% { 
+        transform: scale(1); 
+        text-shadow: 0 0 5px rgba(255, 51, 102, 0.5);
+      }
+      50% { 
+        transform: scale(1.15); 
+        text-shadow: 0 0 15px rgba(255, 51, 102, 0.8), 0 0 25px rgba(255, 51, 102, 0.4);
+      }
+    }
+    
+    @keyframes swing {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(8deg); }
+      75% { transform: rotate(-8deg); }
+    }
+    
+    /* Logout button */
+    .logout-container {
+      display: flex;
+      justify-content: center;
+      margin: 25px 0;
+      padding: 0 20px;
+    }
+    
+    .logout-btn {
+      display: inline-block;
+      padding: 12px 28px;
+      background: linear-gradient(to right, #ff5e62, #ff2400);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 15px;
+      box-shadow: 0 4px 10px rgba(255, 94, 98, 0.3);
+      transition: all 0.3s;
+    }
+    
+    .logout-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 14px rgba(255, 94, 98, 0.4);
+    }
+    
+    /* Mobile responsiveness */
+    @media (max-width: 600px) {
+      .card-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+      }
+      
+      .card {
+        height: 170px;
+        padding: 18px 12px;
+      }
+      
+      .card-icon {
+        font-size: 42px; /* Slightly smaller on mobile */
+      }
+    }
+    
+    /* Auto logout notification */
+    .logout-notification {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 87, 34, 0.9);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .session-timer {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(0, 102, 204, 0.8);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      z-index: 1000;
+    }
+  </style>
 </head>
 <body>
 
-    <h2>WELCOME TO NAGAR PALIKA NAKUR</h2>
+  <div class="background-banner"></div>
+  
+  <!-- Auto logout notification -->
+  <div class="logout-notification" id="logoutNotification">
+    <strong>⚠️ Session Expiring Soon!</strong><br>
+    You will be logged out in <span id="countdown">60</span> seconds
+  </div>
+  
+  <!-- Session timer -->
+  <div class="session-timer" id="sessionTimer">
+    Session expires in: <span id="sessionTime">30:00</span>
+  </div>
 
-    <div class="login-card">
-        <img src="img1.png" alt="Logo" class="logo">
-        <h3>ADMIN LOGIN</h3>
-        
-        <div id="login-section">
-            <input type="text" id="username" placeholder="USER NAME">
-            <input type="password" id="password" placeholder="PASSWORD">
-            <button onclick="sendOTP()">LOG IN →</button>
-        </div>
-
-        <div id="otp-section">
-            <p style="color:white;">ENTER OTP</p>
-            <input type="text" id="user-otp" placeholder="......" maxlength="6">
-            <button onclick="verifyOTP()">VERIFY & LOGIN</button>
-        </div>
-
-        <p style="color:white; font-size:10px; margin-top:20px;">POWERED-BY ➤ SUNNY DHAKA</p>
+  <div class="water-tab">
+    WELCOME TO NPP NAKUR SERVICE
+  </div>
+  
+  <div class="card-container">
+    <div class="card bill-card" onclick="window.location.href='https://sunnydhaka.fwh.is/jal.php';">
+      <div class="card-content">
+        <h2>WATER</h2>
+        <p>MANAGEMENT</p>
+      </div>
+      <div class="card-icon-container">
+        <div class="card-icon">🚰</div>
+      </div>
     </div>
+    
+    <div class="card payment-card" onclick="window.location.href='https://sunnydhaka.fwh.is/house_tax_dashboard.php';">
+      <div class="card-content">
+        <h2>HOUSE TAX</h2>
+        <p>MANAGEMENT</p>
+      </div>
+      <div class="card-icon-container">
+        <div class="card-icon">🏠</div>
+      </div>
+    </div>
+    
+    <div class="card arrears-card" onclick="window.location.href='https://sunnydhaka.fwh.is/establishment.php';">
+      <div class="card-content">
+        <h2>ESTABLISHMENT</h2>
+        <p>DEPARTMENT</p>
+      </div>
+      <div class="card-icon-container">
+        <div class="card-icon">⚠️</div>
+      </div>
+    </div>
+    
+    <div class="card total-card" onclick="window.location.href='https://sunnydhaka.fwh.is/other_tax.php';">
+      <div class="card-content">
+        <h2>OTHER</h2>
+        <p>TAXES</p>
+      </div>
+      <div class="card-icon-container">
+        <div class="card-icon">💰</div>
+      </div>
+    </div>
+    
+    <div class="card electric-card" onclick="window.location.href='https://sunnydhaka.fwh.is/electricity.php';">
+      <div class="card-content">
+        <h2>ELECTRICITY</h2>
+        <p>DEPARTMENT</p>
+      </div>
+      <div class="card-icon-container">
+        <div class="card-icon">💡</div>
+      </div>
+    </div>
+    
+    <div class="card shop-card" onclick="window.location.href='https://sunnydhaka.fwh.is/shop_tax.php';">
+      <div class="card-content">
+        <h2>SHOP</h2>
+        <p>TAX</p>
+      </div>
+      <div class="card-icon-container">
+        <div class="card-icon">🏬</div>
+      </div>
+    </div>
+    
+    <div class="card dhaka-ai-card" onclick="window.location.href='https://sunnydhaka.fwh.is/dhaka_ai.php';">
+      <div class="card-content">
+        <h2>DHAKA-AI</h2>
+        <p>ARTIFICIAL INTELLIGENCE</p>
+      </div>
+      <div class="card-icon-container">
+        <div class="card-icon">🤖</div>
+      </div>
+    </div>
+    
+    <div class="card id-card" onclick="window.location.href='https://sunnydhaka.fwh.is/idcard_desbord.php';">
+     <div class="card-content">
+        <h2>ID CARD</h2>
+        <p>MANAGEMENT</p>
+      </div>
+      <div class="card-icon-container">
+        <div class="card-icon">🪪</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="logout-container">
+    <a href="#" class="logout-btn" id="logoutBtn">
+      <span style="margin-right: 8px;">🚪</span> लॉगआउट
+    </a>
+  </div>
 
 <script>
-    const SERVICE_ID = "service_smpaj1v"; 
-    const TEMPLATE_ID = "YOUR_TEMPLATE_ID"; // EmailJS से यहाँ भरें
-    const PUBLIC_KEY = "YOUR_PUBLIC_KEY";   // EmailJS से यहाँ भरें
+// Session timeout duration in seconds (30 minutes = 1800 seconds)
+let sessionDuration = 1800; 
+let warningTime = 60; // Show warning 60 seconds before logout
+let timeLeft = sessionDuration;
+let timerInterval = null;
+let logoutTimeout = null;
 
-    let generatedOTP;
-    emailjs.init(PUBLIC_KEY);
+// Check if user is logged in (from localStorage)
+document.addEventListener('DOMContentLoaded', function() {
+  const isLoggedIn = localStorage.getItem('loggedIn');
+  const username = localStorage.getItem('username');
+  
+  if (!isLoggedIn || !username) {
+    // If not logged in, redirect to login page
+    window.location.href = 'index.html';
+    return;
+  }
+  
+  // Update welcome message with username
+  const welcomeTab = document.querySelector('.water-tab');
+  if (welcomeTab && username) {
+    welcomeTab.innerHTML = `WELCOME ${username.toUpperCase()} TO NPP NAKUR SERVICE`;
+  }
+  
+  // Start session timer
+  startSessionTimer();
+  
+  // Reset timer on user activity
+  document.addEventListener('click', resetTimer);
+  document.addEventListener('keypress', resetTimer);
+  document.addEventListener('mousemove', resetTimer);
+  document.addEventListener('scroll', resetTimer);
+  
+  // Logout button functionality
+  document.getElementById('logoutBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    logout();
+  });
+});
 
-    function sendOTP() {
-        const user = document.getElementById('username').value;
-        if(user === "Sunnydhaka") {
-            generatedOTP = Math.floor(100000 + Math.random() * 900000);
-            emailjs.send(SERVICE_ID, TEMPLATE_ID, {
-                to_email: "sunnydhaka91@gmail.com",
-                otp: generatedOTP,
-                user_name: user
-            }).then(() => {
-                document.getElementById('login-section').style.display = 'none';
-                document.getElementById('otp-section').style.display = 'block';
-            });
-        }
+function startSessionTimer() {
+  // Clear any existing timers
+  if (timerInterval) clearInterval(timerInterval);
+  if (logoutTimeout) clearTimeout(logoutTimeout);
+  
+  // Start main countdown
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    
+    // Show warning when time is running out
+    if (timeLeft === warningTime) {
+      showLogoutWarning();
     }
-
-    function verifyOTP() {
-        const entered = document.getElementById('user-otp').value;
-        if (entered == generatedOTP) {
-            alert("✅ Login Successful! Welcome to Nagar Palika Nakur Admin Panel.");
-            // यहाँ पक्का करें कि फाइल का नाम dashboard.html ही है
-            window.location.href = "dashboard.html"; 
-        } else {
-            alert("गलत OTP!");
-        }
+    
+    // Logout when time is up
+    if (timeLeft <= 0) {
+      logout();
     }
+  }, 1000);
+  
+  // Set logout timeout
+  logoutTimeout = setTimeout(logout, sessionDuration * 1000);
+}
+
+function resetTimer() {
+  timeLeft = sessionDuration;
+  updateTimerDisplay();
+  
+  // Hide warning if it was shown
+  const notification = document.getElementById('logoutNotification');
+  notification.style.display = 'none';
+  
+  // Restart timers
+  startSessionTimer();
+}
+
+function updateTimerDisplay() {
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  const timerDisplay = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  
+  document.getElementById('sessionTime').textContent = timerDisplay;
+}
+
+function showLogoutWarning() {
+  const notification = document.getElementById('logoutNotification');
+  const countdownSpan = document.getElementById('countdown');
+  
+  // Show notification
+  notification.style.display = 'block';
+  
+  // Update countdown every second
+  let warningCountdown = warningTime;
+  const warningInterval = setInterval(() => {
+    warningCountdown--;
+    countdownSpan.textContent = warningCountdown;
+    
+    if (warningCountdown <= 0) {
+      clearInterval(warningInterval);
+    }
+  }, 1000);
+}
+
+function logout() {
+  // Clear localStorage
+  localStorage.removeItem('loggedIn');
+  localStorage.removeItem('username');
+  localStorage.removeItem('otpVerified');
+  
+  // Clear timers
+  if (timerInterval) clearInterval(timerInterval);
+  if (logoutTimeout) clearTimeout(logoutTimeout);
+  
+  // Redirect to login page
+  alert('Session expired. Please login again.');
+  window.location.href = 'index.html';
+}
+
+// Handle page visibility change
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') {
+    // Page is visible again, check if user should still be logged in
+    const isLoggedIn = localStorage.getItem('loggedIn');
+    if (!isLoggedIn) {
+      logout();
+    }
+  }
+});
+
+// Handle browser/tab close
+window.addEventListener('beforeunload', function(e) {
+  // Optional: Clear session data when closing tab
+  // localStorage.removeItem('loggedIn');
+  // localStorage.removeItem('username');
+});
 </script>
+
 </body>
 </html>
