@@ -46,11 +46,9 @@
             0% {
                 text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00;
             }
-
             50% {
                 text-shadow: 0 0 15px #ffcc00, 0 0 25px #ffcc00, 0 0 35px #ffcc00;
             }
-
             100% {
                 text-shadow: 0 0 20px #ffcc00, 0 0 30px #ffcc00, 0 0 40px #ffcc00;
             }
@@ -66,37 +64,24 @@
             overflow: hidden;
             border-right: 2px solid #ffc107;
             width: 0;
-            animation: typing 3s steps(28, end) forwards,
+            animation: 
+                typing 3s steps(28, end) forwards,
                 blink 0.7s step-end infinite,
                 floatUpDown 2s ease-in-out infinite;
         }
 
         @keyframes typing {
-            from {
-                width: 0
-            }
-
-            to {
-                width: 260px;
-            }
+            from { width: 0 }
+            to { width: 260px; }
         }
 
         @keyframes blink {
-            50% {
-                border-color: transparent;
-            }
+            50% { border-color: transparent; }
         }
 
         @keyframes floatUpDown {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-5px);
-            }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
 
         .container {
@@ -141,17 +126,9 @@
         }
 
         @keyframes flipUpright {
-            0% {
-                transform: rotateY(0deg) scaleX(1);
-            }
-
-            50% {
-                transform: rotateY(180deg) scaleX(-1);
-            }
-
-            100% {
-                transform: rotateY(360deg) scaleX(1);
-            }
+            0% { transform: rotateY(0deg) scaleX(1); }
+            50% { transform: rotateY(180deg) scaleX(-1); }
+            100% { transform: rotateY(360deg) scaleX(1); }
         }
 
         .form-section {
@@ -229,17 +206,9 @@
         }
 
         @keyframes waveButton {
-            0% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-5px);
-            }
-
-            100% {
-                transform: translateY(0);
-            }
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
         }
 
         #error-msg {
@@ -305,76 +274,34 @@
             body {
                 padding: 15px;
             }
-
             .container {
                 flex-direction: column;
                 width: 95%;
                 padding: 20px;
                 gap: 15px;
             }
-
             .logo-wrapper {
                 max-width: 250px;
                 margin: 0 auto;
             }
-
             .rotating-logo {
                 max-width: 220px;
                 border-radius: 15px;
             }
-
             .form-section {
                 padding: 20px 15px;
             }
-
             h2 {
                 position: relative;
                 top: 0;
                 margin-bottom: 20px;
                 text-align: center;
             }
-
             .form-group input {
                 padding: 14px 18px;
             }
-
             .form-group button {
                 padding: 15px;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            .container {
-                padding: 15px;
-                border-radius: 20px;
-            }
-
-            .logo-wrapper {
-                max-width: 200px;
-            }
-
-            .rotating-logo {
-                max-width: 180px;
-            }
-
-            .form-section {
-                padding: 15px 10px;
-            }
-
-            .form-group input {
-                padding: 12px 15px;
-                font-size: 15px;
-            }
-
-            .form-group button {
-                padding: 14px;
-                font-size: 16px;
-            }
-
-            .powered-by {
-                bottom: 10px;
-                right: 10px;
-                font-size: 12px;
             }
         }
     </style>
@@ -439,11 +366,11 @@
     <div class="powered-by">POWERED-BY➤SUNNY DHAKA</div>
 
     <script>
-        // EmailJS Configuration
-        const SERVICE_ID = "service_smpaj1v";
-        const TEMPLATE_ID = "template_k2wsy99";
-        const PUBLIC_KEY = "M-JV2m_vTtrU3W_EB";
-        const ADMIN_EMAIL = "sunnydhaka91@gmail.com";
+        // EmailJS Configuration - FINAL CREDENTIALS
+        const SERVICE_ID = "service_9w4o2si";      // ✅ आपका Service ID
+        const TEMPLATE_ID = "template_hdj6nfo";   // ✅ आपका Template ID
+        const PUBLIC_KEY = "M-JV2m_vTtrU3W_EB";   // ✅ आपका Public Key
+        const ADMIN_EMAIL = "sunnydhaka91@gmail.com"; // ✅ आपका Email
 
         // Global variables
         let generatedOTP = null;
@@ -525,13 +452,17 @@
                     website_name: "Nagar Palika Nakur Admin Portal"
                 };
 
-                // Show OTP in console for debugging
-                console.log('Generated OTP for testing:', generatedOTP);
+                // Debug information
+                console.log('=== EmailJS Configuration ===');
+                console.log('Service ID:', SERVICE_ID);
+                console.log('Template ID:', TEMPLATE_ID);
+                console.log('Generated OTP:', generatedOTP);
+                console.log('Sending to:', ADMIN_EMAIL);
 
                 // Send email via EmailJS
                 emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
                     .then(function (response) {
-                        console.log('Email sent successfully:', response.status, response.text);
+                        console.log('✅ Email sent successfully:', response.status, response.text);
                         
                         // Show success and switch to OTP section
                         document.getElementById('successMsg').textContent = '✅ OTP sent successfully! Check your email.';
@@ -547,10 +478,12 @@
                         }, 500);
 
                     }, function (error) {
-                        console.log('Email sending failed:', error);
+                        console.log('❌ Email sending failed:', error);
                         
-                        // Fallback for testing
-                        document.getElementById('successMsg').innerHTML = `✅ Email service issue. Your OTP: <strong>${generatedOTP}</strong>`;
+                        // Fallback for testing - Show OTP on screen
+                        document.getElementById('successMsg').innerHTML = 
+                            `✅ OTP Generated: <strong style="font-size: 20px; color: #ffcc00;">${generatedOTP}</strong><br>
+                             <small>(Email service issue. OTP shown here for testing)</small>`;
                         document.getElementById('login-section').style.display = 'none';
                         document.getElementById('otp-section').style.display = 'block';
                         
@@ -608,7 +541,7 @@
                 // Redirect to dashboard
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
-                }, 1000);
+                }, 1500);
 
             } else {
                 errorMsg.textContent = '❌ Invalid OTP! Please try again.';
@@ -635,13 +568,13 @@
             };
 
             document.getElementById('successMsg').textContent = '📧 Resending OTP...';
-            console.log('Resent OTP:', generatedOTP);
 
             emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
                 .then(function () {
                     document.getElementById('successMsg').textContent = '✅ New OTP sent successfully!';
                 }, function () {
-                    document.getElementById('successMsg').innerHTML = `✅ New OTP: <strong>${generatedOTP}</strong>`;
+                    document.getElementById('successMsg').innerHTML = 
+                        `✅ New OTP: <strong style="font-size: 20px; color: #ffcc00;">${generatedOTP}</strong>`;
                 });
         }
 
@@ -668,7 +601,8 @@
         function updateTimerDisplay() {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
-            document.getElementById('timer').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
         function shakeInputs() {
