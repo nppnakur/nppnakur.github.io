@@ -229,10 +229,10 @@
 </div>
 
 <script>
-// EmailJS Configuration - FINAL CREDENTIALS
+// EmailJS Configuration - COMPLETE CREDENTIALS ✅
 const SERVICE_ID = "service_9w4o2si";      // ✅ आपका Service ID
 const TEMPLATE_ID = "template_hdj6nfo";   // ✅ आपका Template ID
-const PUBLIC_KEY = "M-JV2m_vTtrU3W_EB";   // ✅ आपका Public Key
+const PUBLIC_KEY = "M-JV2m_vTtrU3W_EB";   // ✅ आपका Public Key (अब ADDED)
 const ADMIN_EMAIL = "sunnydhaka91@gmail.com"; // ✅ आपका Email
 
 // Global variables
@@ -240,7 +240,7 @@ let generatedOTP = null;
 let otpTimer = null;
 let timeLeft = 300;
 
-// Initialize EmailJS
+// Initialize EmailJS WITH PUBLIC KEY ✅
 emailjs.init(PUBLIC_KEY);
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -279,6 +279,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (link) {
         link.href = 'img1.png?' + new Date().getTime();
     }
+    
+    // Debug: Show credentials in console
+    console.log('=== EmailJS Configuration Loaded ===');
+    console.log('Service ID:', SERVICE_ID);
+    console.log('Template ID:', TEMPLATE_ID);
+    console.log('Public Key:', PUBLIC_KEY);
+    console.log('Admin Email:', ADMIN_EMAIL);
 });
 
 function sendOTP() {
@@ -303,7 +310,7 @@ function sendOTP() {
         generatedOTP = Math.floor(100000 + Math.random() * 900000);
         
         // Show sending message
-        document.getElementById('successMsg').textContent = '📧 Sending OTP to your email...';
+        document.getElementById('successMsg').textContent = '📧 Generating OTP...';
         document.getElementById('successMsg').style.display = 'block';
         
         // Prepare email parameters
@@ -315,20 +322,21 @@ function sendOTP() {
             website_name: "Nagar Palika Nakur Admin Portal"
         };
         
-        // Debug information
-        console.log('=== EmailJS Configuration ===');
-        console.log('Service ID:', SERVICE_ID);
-        console.log('Template ID:', TEMPLATE_ID);
+        // Show OTP for testing (always visible)
         console.log('Generated OTP:', generatedOTP);
-        console.log('Sending to:', ADMIN_EMAIL);
-
+        
         // Send email via EmailJS
         emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
             .then(function(response) {
-                console.log('✅ Email sent successfully:', response.status, response.text);
+                console.log('✅ Email sent successfully:', response);
                 
-                // Show success and switch to OTP section
-                document.getElementById('successMsg').textContent = '✅ OTP sent successfully! Check your email.';
+                // Show success and OTP
+                document.getElementById('successMsg').innerHTML = 
+                    `✅ OTP sent successfully! Check your email.<br>
+                     <div style="background: #ffcc00; color: #000; padding: 10px; margin: 10px 0; border-radius: 8px;">
+                        <strong>For testing, OTP is:</strong> <span style="font-size: 20px; font-weight: bold;">${generatedOTP}</span>
+                     </div>`;
+                
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('otp-section').style.display = 'block';
                 
@@ -343,10 +351,13 @@ function sendOTP() {
             }, function(error) {
                 console.log('❌ Email sending failed:', error);
                 
-                // Fallback for testing - Show OTP on screen
+                // Fallback: Show OTP on screen
                 document.getElementById('successMsg').innerHTML = 
-                    `✅ OTP Generated: <strong style="font-size: 18px; color: #ffcc00;">${generatedOTP}</strong><br>
-                     <small>(Email service issue. OTP shown here for testing)</small>`;
+                    `✅ OTP Generated!<br>
+                     <div style="background: #ff0000; color: #fff; padding: 10px; margin: 10px 0; border-radius: 8px;">
+                        <strong>Email service issue. Your OTP:</strong> <span style="font-size: 24px; font-weight: bold;">${generatedOTP}</span>
+                     </div>`;
+                
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('otp-section').style.display = 'block';
                 
@@ -362,8 +373,6 @@ function sendOTP() {
     } else {
         errorMsg.textContent = '❌ Invalid username or password!';
         errorMsg.style.display = 'block';
-        
-        // Shake animation
         shakeInputs();
     }
 }
@@ -400,10 +409,10 @@ function verifyOTP() {
         localStorage.setItem('loginTime', new Date().toISOString());
         
         // Show success
-        document.getElementById('successMsg').textContent = '✅ OTP Verified! Redirecting to dashboard...';
-        document.getElementById('successMsg').style.color = '#00ff00';
+        document.getElementById('successMsg').innerHTML = 
+            '<div style="color: #00ff00; font-weight: bold; padding: 10px; background: rgba(0,255,0,0.1); border-radius: 8px;">✅ OTP Verified! Redirecting to dashboard...</div>';
         
-        // Redirect to dashboard after 1.5 seconds
+        // Redirect to dashboard
         setTimeout(() => {
             window.location.href = 'dashboard.html';
         }, 1500);
@@ -432,15 +441,21 @@ function resendOTP() {
         website_name: "Nagar Palika Nakur Admin Portal"
     };
     
-    document.getElementById('successMsg').textContent = '📧 Resending OTP...';
-    console.log('Resent OTP:', generatedOTP);
-
+    document.getElementById('successMsg').innerHTML = '📧 Resending OTP...';
+    
     emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
         .then(function() {
-            document.getElementById('successMsg').textContent = '✅ New OTP sent successfully!';
+            document.getElementById('successMsg').innerHTML = 
+                `✅ New OTP sent!<br>
+                 <div style="background: #ffcc00; color: #000; padding: 10px; margin: 10px 0; border-radius: 8px;">
+                    <strong>New OTP:</strong> <span style="font-size: 20px; font-weight: bold;">${generatedOTP}</span>
+                 </div>`;
         }, function() {
             document.getElementById('successMsg').innerHTML = 
-                `✅ New OTP: <strong style="font-size: 18px; color: #ffcc00;">${generatedOTP}</strong>`;
+                `✅ New OTP Generated!<br>
+                 <div style="background: #ff0000; color: #fff; padding: 10px; margin: 10px 0; border-radius: 8px;">
+                    <strong>Email failed. Your OTP:</strong> <span style="font-size: 24px; font-weight: bold;">${generatedOTP}</span>
+                 </div>`;
         });
 }
 
@@ -458,7 +473,7 @@ function startOTPTimer() {
         
         if (timeLeft <= 0) {
             clearInterval(otpTimer);
-            document.getElementById('otpTimer').innerHTML = '⏰ OTP Expired! Please request new OTP.';
+            document.getElementById('otpTimer').innerHTML = '⏰ OTP Expired! <button onclick="resendOTP()" style="background: transparent; color: #ff6b6b; border: none; cursor: pointer;">Click to Resend</button>';
             generatedOTP = null;
         }
     }, 1000);
