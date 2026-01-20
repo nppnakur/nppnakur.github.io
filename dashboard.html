@@ -2,350 +2,89 @@
 <html lang="hi">
 <head>
   <meta charset="UTF-8">
-  <title>NPP NAKUR - Dashboard</title>
+  <title>NAGAR PALIKA NAKUR - LOGIN</title>
   <link rel="icon" href="img1.png" type="image/png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    
-    body {
-      background-color: #f0f8ff;
-      overflow-x: hidden;
-      position: relative;
-      min-height: 100vh;
-    }
-    
-    .background-banner {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url('https://ptaxsnn.com/Login/images/banner.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      opacity: 0.25;
-      z-index: -1;
-      filter: brightness(0.8);
-    }
-    
-    .water-tab {
-      background: linear-gradient(90deg, #0066cc, #00a8ff);
-      color: white;
-      padding: 18px 10px;
-      font-size: clamp(18px, 3.5vw, 26px);
-      font-weight: bold;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .card-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 20px;
-      max-width: 900px;
-      margin: 25px auto;
-      padding: 0 20px;
-    }
-    
-    .card {
-      background: rgba(255,255,255,0.95);
-      border-radius: 12px;
-      padding: 20px 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      text-align: center;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      height: 190px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid rgba(0,0,0,0.1);
-      position: relative;
-    }
-    
-    .card-content {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      flex-grow: 1;
-    }
-    
-    .card-icon-container {
-      margin-top: auto;
-      padding-top: 12px;
-      width: 100%;
-      border-top: 1px dashed rgba(0,0,0,0.15);
-    }
-    
-    .card-icon {
-      font-size: 48px;
-      transition: all 0.3s;
-      display: inline-block;
-    }
-    
-    .card h2 {
-      font-size: 18px;
-      margin-bottom: 6px;
-      color: #333;
-    }
-    
-    .card p {
-      font-size: 13px;
-      color: #666;
-    }
-    
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-    }
-
-    /* Animations for Icons */
-    .bill-card:hover .card-icon { animation: waterDrop 1.2s ease infinite; color: #0066cc; }
-    .payment-card:hover .card-icon { animation: pulse 0.9s ease infinite; color: #00aa00; }
-    .arrears-card:hover .card-icon { animation: shake 0.6s ease infinite; color: #cc3300; }
-    .total-card:hover .card-icon { animation: bounce 0.7s ease infinite; color: #ff9900; }
-    .electric-card:hover .card-icon { animation: flash 0.8s ease infinite; color: #ffcc00; }
-    .shop-card:hover .card-icon { animation: spin 1.2s linear infinite; color: #6600cc; }
-    .dhaka-ai-card:hover .card-icon { animation: aiGlow 1.5s ease infinite; color: #ff3366; }
-    .id-card:hover .card-icon { animation: swing 1.1s ease infinite; color: #555; }
-    
-    @keyframes waterDrop { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-6px) scale(1.1); } }
-    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
-    @keyframes shake { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
-    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-    @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    @keyframes aiGlow { 0%, 100% { transform: scale(1); text-shadow: 0 0 5px rgba(255, 51, 102, 0.5); } 50% { transform: scale(1.15); text-shadow: 0 0 15px rgba(255, 51, 102, 0.8); } }
-    @keyframes swing { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(8deg); } 75% { transform: rotate(-8deg); } }
-    
-    .logout-container {
-      display: flex;
-      justify-content: center;
-      margin: 25px 0;
-      padding: 0 20px;
-    }
-    
-    .logout-btn {
-      display: inline-block;
-      padding: 12px 28px;
-      background: linear-gradient(to right, #ff5e62, #ff2400);
-      color: white;
-      text-decoration: none;
-      border-radius: 50px;
-      font-weight: bold;
-      font-size: 15px;
-      box-shadow: 0 4px 10px rgba(255, 94, 98, 0.3);
-      transition: all 0.3s;
-      border: none;
-      cursor: pointer;
-    }
-    
-    .session-timer {
-      position: fixed;
-      bottom: 10px;
-      left: 10px;
-      background: rgba(0, 102, 204, 0.8);
-      color: white;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      z-index: 1000;
-    }
-    
-    .logout-notification {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      background: rgba(255, 87, 34, 0.9);
-      color: white;
-      padding: 10px 15px;
-      border-radius: 8px;
-      font-size: 14px;
-      display: none;
-      z-index: 1000;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    
-    @media (max-width: 600px) {
-      .card-container { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-    }
+    body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background: url('https://ptaxsnn.com/Login/images/banner.jpg') no-repeat center center fixed; background-size: cover; height: 100vh; display: flex; justify-content: center; align-items: center; color: white; }
+    .login-box { background: rgba(0, 0, 0, 0.7); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; border: 1px solid #ffcc00; }
+    h2 { color: #ffcc00; margin-bottom: 20px; }
+    input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 25px; border: none; outline: none; font-size: 16px; text-align: center; }
+    button { width: 100%; padding: 12px; border-radius: 25px; border: none; background: #ffcc00; color: #000; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
+    button:hover { background: #e6b800; }
+    #otp-section { display: none; }
+    .error { color: #ff6b6b; font-size: 14px; margin-bottom: 10px; display: none; }
   </style>
 </head>
 <body>
-  <div class="background-banner"></div>
-  
-  <div class="logout-notification" id="logoutNotification">
-    <strong>⚠️ Session Expiring Soon!</strong><br>
-    You will be logged out in <span id="countdown">60</span> seconds
-  </div>
-  
-  <div class="session-timer" id="sessionTimer">
-    Session: <span id="sessionTime">30:00</span>
+
+<div class="login-box">
+  <h2>ADMIN LOGIN</h2>
+  <div id="errorMsg" class="error"></div>
+
+  <div id="login-section">
+    <input type="text" id="username" placeholder="USER ID">
+    <input type="password" id="password" placeholder="PASSWORD">
+    <button onclick="sendOTP()">SEND OTP →</button>
   </div>
 
-  <div class="water-tab" id="welcomeTab">
-    WELCOME TO NPP NAKUR SERVICE
+  <div id="otp-section">
+    <p style="color: #00ff00;">📧 OTP Sent to your Email</p>
+    <input type="text" id="user-otp" placeholder="ENTER 6-DIGIT OTP" maxlength="6">
+    <button onclick="verifyOTP()">VERIFY & LOGIN</button>
   </div>
-  
-  <div class="card-container">
-    <div class="card bill-card" onclick="window.location.href='https://sunnydhaka.fwh.is/jal.php';">
-      <div class="card-content">
-        <h2>WATER</h2>
-        <p>MANAGEMENT</p>
-      </div>
-      <div class="card-icon-container">
-        <div class="card-icon">🚰</div>
-      </div>
-    </div>
-    
-    <div class="card payment-card" onclick="window.location.href='https://sunnydhaka.fwh.is/house_tax_dashboard.php';">
-      <div class="card-content">
-        <h2>HOUSE TAX</h2>
-        <p>MANAGEMENT</p>
-      </div>
-      <div class="card-icon-container">
-        <div class="card-icon">🏠</div>
-      </div>
-    </div>
-    
-    <div class="card arrears-card" onclick="window.location.href='https://sunnydhaka.fwh.is/establishment.php';">
-      <div class="card-content">
-        <h2>ESTABLISHMENT</h2>
-        <p>DEPARTMENT</p>
-      </div>
-      <div class="card-icon-container">
-        <div class="card-icon">⚠️</div>
-      </div>
-    </div>
-    
-    <div class="card total-card" onclick="window.location.href='https://sunnydhaka.fwh.is/other_tax.php';">
-      <div class="card-content">
-        <h2>OTHER</h2>
-        <p>TAXES</p>
-      </div>
-      <div class="card-icon-container">
-        <div class="card-icon">💰</div>
-      </div>
-    </div>
-    
-    <div class="card electric-card" onclick="window.location.href='https://sunnydhaka.fwh.is/electricity.php';">
-      <div class="card-content">
-        <h2>ELECTRICITY</h2>
-        <p>DEPARTMENT</p>
-      </div>
-      <div class="card-icon-container">
-        <div class="card-icon">💡</div>
-      </div>
-    </div>
-    
-    <div class="card shop-card" onclick="window.location.href='https://sunnydhaka.fwh.is/shop_tax.php';">
-      <div class="card-content">
-        <h2>SHOP</h2>
-        <p>TAX</p>
-      </div>
-      <div class="card-icon-container">
-        <div class="card-icon">🏬</div>
-      </div>
-    </div>
-    
-    <div class="card dhaka-ai-card" onclick="window.location.href='https://sunnydhaka.fwh.is/dhaka_ai.php';">
-      <div class="card-content">
-        <h2>DHAKA-AI</h2>
-        <p>AI SERVICE</p>
-      </div>
-      <div class="card-icon-container">
-        <div class="card-icon">🤖</div>
-      </div>
-    </div>
-    
-    <div class="card id-card" onclick="window.location.href='https://sunnydhaka.fwh.is/idcard_desbord.php';">
-     <div class="card-content">
-        <h2>ID CARD</h2>
-        <p>MANAGEMENT</p>
-      </div>
-      <div class="card-icon-container">
-        <div class="card-icon">🪪</div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="logout-container">
-    <button class="logout-btn" id="logoutBtn">
-      <span style="margin-right: 8px;">🚪</span> LOGOUT
-    </button>
-  </div>
+</div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // 1. Authentication Security ✅
-    const isLoggedIn = localStorage.getItem('loggedIn');
-    const username = localStorage.getItem('username') || "ADMIN";
-    
-    if (isLoggedIn !== 'true') {
-        window.location.href = 'index.html';
-        return;
+  // EmailJS Setup
+  const SERVICE_ID = "service_25eenak";
+  const TEMPLATE_ID = "template_hdj6nfo";
+  const PUBLIC_KEY = "M-JV2m_vTtrU3W_EB";
+  const ADMIN_EMAIL = "sunnydhaka91@gmail.com";
+
+  let generatedOTP = null;
+  emailjs.init(PUBLIC_KEY);
+
+  function sendOTP() {
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value.trim();
+    const err = document.getElementById('errorMsg');
+
+    if (user === "Sunnydhaka" && pass === "Sunny1990") {
+      generatedOTP = Math.floor(100000 + Math.random() * 900000);
+      err.style.display = 'none';
+
+      emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+        to_email: ADMIN_EMAIL,
+        otp: generatedOTP,
+        from_name: "NAGAR PALIKA NAKUR",
+        time: new Date().toLocaleString()
+      }).then(() => {
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('otp-section').style.display = 'block';
+      });
+    } else {
+      err.innerText = "❌ Invalid Username or Password!";
+      err.style.display = 'block';
     }
-    
-    // 2. Welcome Message
-    document.getElementById('welcomeTab').innerHTML = `WELCOME ${username.toUpperCase()} TO NPP NAKUR SERVICE`;
-    
-    // 3. Session Management ✅
-    let sessionTime = 1800; // 30 Minutes
-    const warningTime = 60; 
-    
-    const timerInterval = setInterval(() => {
-        sessionTime--;
-        updateTimerDisplay();
-        
-        if (sessionTime === warningTime) {
-            document.getElementById('logoutNotification').style.display = 'block';
-        }
-        
-        if (sessionTime <= 0) {
-            clearInterval(timerInterval);
-            logout();
-        }
-    }, 1000);
+  }
 
-    // Reset timer on user movement
-    ['click', 'mousemove', 'keypress'].forEach(evt => {
-        document.addEventListener(evt, () => {
-            if(sessionTime > warningTime) sessionTime = 1800;
-        });
-    });
+  function verifyOTP() {
+    const entered = document.getElementById('user-otp').value.trim();
+    if (parseInt(entered) === generatedOTP) {
+      // ✅ डेटा सेव करना
+      localStorage.setItem('loggedIn', 'true');
+      localStorage.setItem('username', 'Sunnydhaka');
+      localStorage.setItem('loginTimestamp', Date.now());
 
-    function updateTimerDisplay() {
-        const mins = Math.floor(sessionTime / 60);
-        const secs = sessionTime % 60;
-        document.getElementById('sessionTime').textContent = 
-            `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        
-        if(sessionTime <= warningTime) {
-            document.getElementById('countdown').textContent = sessionTime;
-        }
+      alert("✅ Verified! Welcome to Dashboard.");
+      // पेज को रिप्लेस करें ताकि पीछे न जा सके
+      window.location.replace('dashboard.html');
+    } else {
+      alert("❌ Wrong OTP! Please try again.");
     }
-
-    // 4. Logout Logic
-    function logout() {
-        localStorage.clear(); // Clear all session data
-        alert('Session expired or logged out!');
-        window.location.href = 'index.html';
-    }
-
-    document.getElementById('logoutBtn').addEventListener('click', logout);
-});
+  }
 </script>
 </body>
 </html>
