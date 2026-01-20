@@ -229,11 +229,11 @@
 </div>
 
 <script>
-// EmailJS Configuration - आपके द्वारा कॉन्फ़िगर किया गया
-const SERVICE_ID = "service_smpaj1v";
-const TEMPLATE_ID = "template_k2wsy99"; // आपको यह EmailJS में Template बनाना होगा
-const PUBLIC_KEY = "M-JV2m_vTtrU3W_EB";
-const ADMIN_EMAIL = "sunnydhaka91@gmail.com";
+// EmailJS Configuration - FINAL CREDENTIALS
+const SERVICE_ID = "service_9w4o2si";      // ✅ आपका Service ID
+const TEMPLATE_ID = "template_hdj6nfo";   // ✅ आपका Template ID
+const PUBLIC_KEY = "M-JV2m_vTtrU3W_EB";   // ✅ आपका Public Key
+const ADMIN_EMAIL = "sunnydhaka91@gmail.com"; // ✅ आपका Email
 
 // Global variables
 let generatedOTP = null;
@@ -306,7 +306,7 @@ function sendOTP() {
         document.getElementById('successMsg').textContent = '📧 Sending OTP to your email...';
         document.getElementById('successMsg').style.display = 'block';
         
-        // Prepare email parameters - TEMPLATE बनाते समय इन variables का उपयोग करें
+        // Prepare email parameters
         const templateParams = {
             to_email: ADMIN_EMAIL,
             otp: generatedOTP,
@@ -315,13 +315,17 @@ function sendOTP() {
             website_name: "Nagar Palika Nakur Admin Portal"
         };
         
-        // Show OTP for testing (development में)
+        // Debug information
+        console.log('=== EmailJS Configuration ===');
+        console.log('Service ID:', SERVICE_ID);
+        console.log('Template ID:', TEMPLATE_ID);
         console.log('Generated OTP:', generatedOTP);
-        
-        // Try to send email via EmailJS
+        console.log('Sending to:', ADMIN_EMAIL);
+
+        // Send email via EmailJS
         emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
             .then(function(response) {
-                console.log('Email sent successfully:', response.status, response.text);
+                console.log('✅ Email sent successfully:', response.status, response.text);
                 
                 // Show success and switch to OTP section
                 document.getElementById('successMsg').textContent = '✅ OTP sent successfully! Check your email.';
@@ -337,10 +341,12 @@ function sendOTP() {
                 }, 500);
                 
             }, function(error) {
-                console.log('Email sending failed:', error);
+                console.log('❌ Email sending failed:', error);
                 
-                // Fallback: Show OTP directly for testing
-                document.getElementById('successMsg').innerHTML = `✅ Email service temporary unavailable. <br><strong>Your OTP: ${generatedOTP}</strong>`;
+                // Fallback for testing - Show OTP on screen
+                document.getElementById('successMsg').innerHTML = 
+                    `✅ OTP Generated: <strong style="font-size: 18px; color: #ffcc00;">${generatedOTP}</strong><br>
+                     <small>(Email service issue. OTP shown here for testing)</small>`;
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('otp-section').style.display = 'block';
                 
@@ -397,10 +403,10 @@ function verifyOTP() {
         document.getElementById('successMsg').textContent = '✅ OTP Verified! Redirecting to dashboard...';
         document.getElementById('successMsg').style.color = '#00ff00';
         
-        // Redirect to dashboard after 1 second
+        // Redirect to dashboard after 1.5 seconds
         setTimeout(() => {
             window.location.href = 'dashboard.html';
-        }, 1000);
+        }, 1500);
         
     } else {
         errorMsg.textContent = '❌ Invalid OTP! Please try again.';
@@ -428,12 +434,13 @@ function resendOTP() {
     
     document.getElementById('successMsg').textContent = '📧 Resending OTP...';
     console.log('Resent OTP:', generatedOTP);
-    
+
     emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
         .then(function() {
             document.getElementById('successMsg').textContent = '✅ New OTP sent successfully!';
         }, function() {
-            document.getElementById('successMsg').textContent = `✅ New OTP: ${generatedOTP}`;
+            document.getElementById('successMsg').innerHTML = 
+                `✅ New OTP: <strong style="font-size: 18px; color: #ffcc00;">${generatedOTP}</strong>`;
         });
 }
 
