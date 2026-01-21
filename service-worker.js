@@ -1,34 +1,34 @@
-const CACHE_NAME = 'nagar-palika-cache-v1';
+// Service Worker for NAGAR PALIKA NAKUR PWA
+const CACHE_NAME = 'nagar-palika-v1.0';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/apple-touch-icon.png'
+  'img1.png',
+  'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js'
 ];
 
-// इंस्टॉल करने पर
+// Install Event
 self.addEventListener('install', event => {
-  console.log('Service Worker इंस्टॉल हो रहा है');
+  console.log('Service Worker: Installed');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('फाइलें कैश हो रही हैं');
+        console.log('Service Worker: Caching Files');
         return cache.addAll(urlsToCache);
       })
       .then(() => self.skipWaiting())
   );
 });
 
-// एक्टिवेट होने पर
+// Activate Event
 self.addEventListener('activate', event => {
-  console.log('Service Worker एक्टिवेट हुआ');
+  console.log('Service Worker: Activated');
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cache => {
           if (cache !== CACHE_NAME) {
-            console.log('पुराना कैश डिलीट हो रहा है:', cache);
+            console.log('Service Worker: Clearing Old Cache');
             return caches.delete(cache);
           }
         })
@@ -38,21 +38,18 @@ self.addEventListener('activate', event => {
   );
 });
 
-// रिक्वेस्ट इंटरसेप्ट
+// Fetch Event
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then(response => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request)
-          .catch(() => {
-            // ऑफलाइन होने पर फॉलबैक
-            if (event.request.url.indexOf('.html') > -1) {
-              return caches.match('/');
-            }
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME)
+          .then(cache => {
+            cache.put(event.request, responseClone);
           });
+        return response;
       })
+      .catch(() => caches.match(event.request))
   );
 });
