@@ -2,23 +2,54 @@
   "name": "NAGAR PALIKA NAKUR",
   "short_name": "NagarPalika",
   "description": "नगर पालिका नाकुर प्रशासन पोर्टल",
-  "start_url": "/",
+  "start_url": "/index.html",
   "scope": "/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#ffcc00",
-  "orientation": "any",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "img1.png",
+      "src": "https://npnakur.github.io/img1.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "https://npnakur.github.io/img1.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "https://npnakur.github.io/img1.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "https://npnakur.github.io/img1.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "https://npnakur.github.io/img1.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "https://npnakur.github.io/img1.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "img1.png",
+      "src": "https://npnakur.github.io/img1.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "https://npnakur.github.io/img1.png",
       "sizes": "512x512",
       "type": "image/png"
     }
   ],
-  "categories": ["government", "productivity"]
+  "prefer_related_applications": false,
+  "categories": ["business", "productivity", "utilities"]
 }
