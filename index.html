@@ -3,14 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <title>NAGAR PALIKA NAKUR</title>
-  
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#007bff">
-  <link rel="apple-touch-icon" href="Img1.png">
-  
   <link rel="icon" href="img1.png" type="image/png">
+  
+  <!-- PWA के लिए जरूरी मेटा टैग -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="HandheldFriendly" content="true">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="NagarPalika">
+  <meta name="theme-color" content="#ffcc00">
+  <meta name="msapplication-TileColor" content="#ffcc00">
+  <meta name="msapplication-TileImage" content="img1.png">
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="img1.png">
+  
+  <!-- EmailJS -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   
   <style>
@@ -29,7 +38,67 @@
       justify-content: center;
       align-items: center;
       color: #fff;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
     }
+    
+    /* Install Prompt Styling */
+    #installPrompt {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: #ffcc00;
+      padding: 15px 20px;
+      border-radius: 10px;
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      border: 2px solid #ffcc00;
+      max-width: 90%;
+      text-align: center;
+    }
+    
+    #installPrompt button {
+      background: #ffcc00;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    #installPrompt button:hover {
+      background: #e6b800;
+    }
+    
+    #installPrompt button.secondary {
+      background: transparent;
+      color: #ffcc00;
+      border: 1px solid #ffcc00;
+    }
+    
+    .pwa-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #ffcc00;
+      color: #000;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: bold;
+      display: none;
+    }
+    
     h2 {
       position: absolute;
       top: 8px;
@@ -39,12 +108,15 @@
       color: #fff;
       animation: glowing 1.5s infinite alternate;
       z-index: 1;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
+    
     @keyframes glowing {
       0% { text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00; }
       50% { text-shadow: 0 0 15px #ffcc00, 0 0 25px #ffcc00, 0 0 35px #ffcc00; }
       100% { text-shadow: 0 0 20px #ffcc00, 0 0 30px #ffcc00, 0 0 40px #ffcc00; }
     }
+    
     .container {
       background-color: rgba(0, 0, 0, 0.19);
       border-radius: 35px;
@@ -55,7 +127,9 @@
       max-width: 1000px;
       box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2);
       position: relative;
+      backdrop-filter: blur(5px);
     }
+    
     .logo-section {
       flex: 1;
       display: flex;
@@ -64,33 +138,40 @@
       justify-content: center;
       padding: 30px;
     }
+    
     .rotating-logo {
       width: 300px;
       animation: flipUpright 5s ease infinite;
       transform-style: preserve-3d;
     }
+    
     @keyframes flipUpright {
       0% { transform: rotateY(0deg) scaleX(1); }
       100% { transform: rotateY(180deg) scaleX(-1); }
     }
+    
     .form-section {
       flex: 1;
       padding: 20px;
     }
+    
     .form-section h3 {
       font-size: 28px;
       text-align: center;
       color: #ffcc00;
       margin-bottom: 20px;
     }
+    
     .form-group {
       margin-bottom: 20px;
     }
+    
     .form-group label {
       font-size: 16px;
       margin-bottom: 10px;
       display: block;
     }
+    
     .form-group input {
       width: 94%;
       padding: 12px;
@@ -99,7 +180,9 @@
       color: white;
       border: none;
       border-radius: 23px;
+      backdrop-filter: blur(10px);
     }
+    
     .form-group button {
       width: 100%;
       padding: 12px;
@@ -111,10 +194,14 @@
       border-radius: 23px;
       cursor: pointer;
       animation: waveButton 2s infinite alternate ease-in-out;
+      transition: all 0.3s;
     }
+    
     .form-group button:hover {
       background-color: #e6b800;
+      transform: scale(1.02);
     }
+    
     @keyframes waveButton {
       0% { transform: translateY(0); }
       30% { transform: translateY(-3px); }
@@ -122,6 +209,7 @@
       75% { transform: translateY(3px); }
       100% { transform: translateY(0); }
     }
+    
     .powered-by {
       position: absolute;
       bottom: 0px;
@@ -133,14 +221,17 @@
       width: 0;
       animation: typing 3s steps(28, end) forwards, floatUpDown 2s ease-in-out infinite;
     }
+    
     @keyframes typing {
       from { width: 0 }
       to { width: 260px }
     }
+    
     @keyframes floatUpDown {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-5px); }
     }
+    
     .error-message {
       color: #ff6b6b;
       text-align: center;
@@ -152,6 +243,7 @@
     #otp-section {
       display: none;
     }
+    
     .success-msg {
       color: #00ff00;
       text-align: center;
@@ -159,11 +251,41 @@
       font-weight: bold;
       font-size: 14px;
     }
+    
     .otp-timer {
       color: #ffcc00;
       text-align: center;
       font-size: 14px;
       margin-bottom: 10px;
+    }
+    
+    /* ऑफलाइन इंडिकेटर */
+    .offline-indicator {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ff3333;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      display: none;
+      z-index: 1001;
+    }
+    
+    .online-indicator {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #00cc00;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      display: none;
+      z-index: 1001;
     }
     
     @media screen and (max-width: 768px) {
@@ -174,56 +296,88 @@
       .form-group input { font-size: 16px; }
       .form-group button { font-size: 16px; }
       .powered-by { font-size: 14px; }
+      #installPrompt { width: 95%; bottom: 10px; }
     }
-
-    @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-10px); }
-        75% { transform: translateX(10px); }
+    
+    @media screen and (max-width: 480px) {
+      h2 { font-size: 24px; top: 6px; }
+      .form-section h3 { font-size: 20px; }
+      .form-group button { font-size: 14px; }
+      .pwa-badge { top: 5px; right: 5px; font-size: 10px; }
+    }
+    
+    @media (display-mode: standalone) {
+      h2 { top: 20px; }
+      .pwa-badge { display: block; }
     }
   </style>
 </head>
 <body>
 
+<!-- ऑफलाइन/ऑनलाइन इंडिकेटर -->
+<div class="offline-indicator" id="offlineIndicator">⚠️ ऑफलाइन मोड</div>
+<div class="online-indicator" id="onlineIndicator">✅ ऑनलाइन</div>
+
+<!-- PWA बैज -->
+<div class="pwa-badge" id="pwaBadge">📱 PWA</div>
+
 <h2>WELCOME TO NAGAR PALIKA NAKUR</h2>
+
+<!-- इंस्टॉल प्रॉम्प्ट -->
+<div id="installPrompt">
+  <p>📱 नगर पालिका ऐप को इंस्टॉल करें!</p>
+  <p><small>होम स्क्रीन पर ऐड करें और ऑफलाइन काम करें</small></p>
+  <div>
+    <button id="installBtn">इंस्टॉल करें</button>
+    <button id="cancelInstall" class="secondary">बाद में</button>
+  </div>
+</div>
 
 <div class="container">
   <div class="logo-section">
-    <img src="Img1.png" alt="Logo" class="rotating-logo" id="mainLogo" onerror="this.src='https://via.placeholder.com/300?text=LOGO+NOT+FOUND'">
+    <img src="img1.png" alt="Logo" class="rotating-logo" id="mainLogo">
   </div>
 
   <div class="form-section">
     <h3>ADMIN LOGIN</h3>
     <div class="error-message" id="errorMsg"></div>
     
+    <!-- Login Section -->
     <div id="login-section">
       <form id="loginForm">
         <div class="form-group">
           <label for="username"><b>USER NAME</b></label>
-          <input type="text" name="username" id="username" placeholder="ENTER YOUR USER ID" required>
+          <input type="text" name="username" id="username" placeholder="ENTER YOUR USER ID" required autocomplete="username">
         </div>
         <div class="form-group">
           <label for="password"><b>PASSWORD</b></label>
-          <input type="password" name="password" id="password" placeholder="ENTER YOUR PASSWORD" required>
+          <input type="password" name="password" id="password" placeholder="ENTER YOUR PASSWORD" required autocomplete="current-password">
         </div>
         <div class="form-group">
           <button type="button" id="loginBtn">LOG IN →</button>
         </div>
+        <div style="text-align: center; margin-top: 15px; font-size: 14px; color: #ffcc00;">
+          <span id="connectionStatus">🔵 ऑनलाइन</span>
+        </div>
       </form>
     </div>
     
+    <!-- OTP Verification Section -->
     <div id="otp-section">
       <div class="success-msg" id="successMsg"></div>
       <div class="otp-timer" id="otpTimer">OTP valid for: <span id="timer">05:00</span></div>
       <form id="otpForm">
         <div class="form-group">
           <label for="user-otp"><b>ENTER OTP</b></label>
-          <input type="text" name="user-otp" id="user-otp" placeholder="ENTER 6-DIGIT OTP" maxlength="6" required>
+          <input type="text" name="user-otp" id="user-otp" placeholder="ENTER 6-DIGIT OTP" maxlength="6" required autocomplete="one-time-code">
         </div>
         <div class="form-group">
           <button type="button" id="verifyBtn">VERIFY & LOGIN</button>
         </div>
       </form>
+      <div style="text-align: center; margin-top: 10px;">
+        <button onclick="resendOTP()" style="background: transparent; color: #ffcc00; border: none; cursor: pointer; font-size: 14px;">Resend OTP</button>
+      </div>
     </div>
   </div>
 
@@ -231,87 +385,370 @@
 </div>
 
 <script>
-// PWA Service Worker Registration
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js');
-  });
-}
+// EmailJS Configuration
+const SERVICE_ID = "service_25eenak";
+const TEMPLATE_ID = "template_hdj6nfo";
+const PUBLIC_KEY = "M-JV2m_vTtrU3W_EB";
+const ADMIN_EMAIL = "sunnydhaka91@gmail.com";
 
-// EmailJS Config
-const SERVICE_ID = "service_25eenak";      
-const TEMPLATE_ID = "template_hdj6nfo";   
-const PUBLIC_KEY = "M-JV2m_vTtrU3W_EB";   
-const ADMIN_EMAIL = "sunnydhaka91@gmail.com"; 
-
+// Global variables
 let generatedOTP = null;
 let otpTimer = null;
 let timeLeft = 300;
+let deferredPrompt = null;
 
+// Initialize EmailJS
 emailjs.init(PUBLIC_KEY);
 
+// DOM लोड होने पर
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 NAGAR PALIKA PWA लोड हो रहा है...');
+    
+    // पहले से लॉगिन चेक करें
     if (localStorage.getItem('loggedIn') === 'true') {
         window.location.href = 'dashboard.html';
         return;
     }
+    
+    // लोगो रिफ्रेश
+    const logo = document.getElementById('mainLogo');
+    if (logo) {
+        logo.src = 'img1.png?' + new Date().getTime();
+    }
+    
+    // फोकस यूजरनेम पर
+    document.getElementById('username').focus();
+    
+    // इवेंट लिसनर्स
     document.getElementById('loginBtn').addEventListener('click', sendOTP);
     document.getElementById('verifyBtn').addEventListener('click', verifyOTP);
+    
+    // एंटर की सपोर्ट
+    document.getElementById('password').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') sendOTP();
+    });
+    
+    document.getElementById('user-otp').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') verifyOTP();
+    });
+    
+    // PWA इंस्टॉल इवेंट
+    window.addEventListener('beforeinstallprompt', (e) => {
+        console.log('📱 PWA इंस्टॉल प्रॉम्प्ट उपलब्ध');
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // 5 सेकंड बाद प्रॉम्प्ट दिखाएं
+        setTimeout(() => {
+            showInstallPrompt();
+        }, 5000);
+    });
+    
+    // इंस्टॉल बटन क्लिक
+    document.getElementById('installBtn').addEventListener('click', installPWA);
+    document.getElementById('cancelInstall').addEventListener('click', hideInstallPrompt);
+    
+    // ऑफलाइन/ऑनलाइन डिटेक्शन
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+    
+    // सर्विस वर्कर रजिस्टर करें
+    registerServiceWorker();
+    
+    // PWA बैज दिखाएं यदि इंस्टॉल है
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        document.getElementById('pwaBadge').style.display = 'block';
+    }
+    
+    // डीबग इन्फो
+    console.log('✅ PWA सेटअप पूर्ण');
 });
 
+// सर्विस वर्कर रजिस्टर
+function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+                console.log('✅ Service Worker registered:', registration);
+                
+                // बैकग्राउंड सिंक रजिस्टर
+                if ('sync' in registration) {
+                    registration.sync.register('sync-forms')
+                        .then(() => console.log('🔄 बैकग्राउंड सिंक रजिस्टर'))
+                        .catch(err => console.log('❌ सिंक रजिस्टर नहीं हुआ:', err));
+                }
+                
+                // पुश नोटिफिकेशन परमिशन
+                if ('Notification' in window && Notification.permission === 'default') {
+                    Notification.requestPermission();
+                }
+            })
+            .catch(err => console.log('❌ Service Worker registration failed:', err));
+    }
+}
+
+// PWA इंस्टॉल प्रॉम्प्ट दिखाएं
+function showInstallPrompt() {
+    if (deferredPrompt && !isPWAInstalled()) {
+        document.getElementById('installPrompt').style.display = 'flex';
+    }
+}
+
+// PWA इंस्टॉल प्रॉम्प्ट छुपाएं
+function hideInstallPrompt() {
+    document.getElementById('installPrompt').style.display = 'none';
+}
+
+// PWA इंस्टॉल करें
+function installPWA() {
+    if (!deferredPrompt) return;
+    
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choiceResult => {
+        if (choiceResult.outcome === 'accepted') {
+            console.log('✅ उपयोगकर्ता ने PWA इंस्टॉल स्वीकार किया');
+            showNotification('नगर पालिका ऐप इंस्टॉल हो गया!');
+        } else {
+            console.log('❌ उपयोगकर्ता ने PWA इंस्टॉल अस्वीकार किया');
+        }
+        deferredPrompt = null;
+        hideInstallPrompt();
+    });
+}
+
+// PWA इंस्टॉल है या नहीं
+function isPWAInstalled() {
+    return window.matchMedia('(display-mode: standalone)').matches || 
+           window.navigator.standalone === true;
+}
+
+// नोटिफिकेशन दिखाएं
+function showNotification(message) {
+    if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('NAGAR PALIKA NAKUR', {
+            body: message,
+            icon: 'img1.png'
+        });
+    }
+}
+
+// नेटवर्क स्टेटस अपडेट
+function updateOnlineStatus() {
+    const status = document.getElementById('connectionStatus');
+    const offlineIndicator = document.getElementById('offlineIndicator');
+    const onlineIndicator = document.getElementById('onlineIndicator');
+    
+    if (navigator.onLine) {
+        status.innerHTML = '🔵 ऑनलाइन';
+        status.style.color = '#00ff00';
+        offlineIndicator.style.display = 'none';
+        onlineIndicator.style.display = 'block';
+        setTimeout(() => onlineIndicator.style.display = 'none', 3000);
+    } else {
+        status.innerHTML = '🔴 ऑफलाइन';
+        status.style.color = '#ff6b6b';
+        offlineIndicator.style.display = 'block';
+        onlineIndicator.style.display = 'none';
+    }
+}
+
+// OTP भेजें
 function sendOTP() {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
+    const errorMsg = document.getElementById('errorMsg');
     
+    // एरर रीसेट
+    errorMsg.style.display = 'none';
+    errorMsg.textContent = '';
+    
+    // वैलिडेशन
+    if (!username || !password) {
+        errorMsg.textContent = '❌ कृपया यूजरनेम और पासवर्ड दोनों डालें!';
+        errorMsg.style.display = 'block';
+        shakeInputs();
+        return;
+    }
+    
+    // क्रेडेंशियल्स चेक
     if (username === "Sunnydhaka" && password === "Sunny1990") {
+        // OTP जनरेट
         generatedOTP = Math.floor(100000 + Math.random() * 900000);
-        document.getElementById('successMsg').textContent = '📧 Generating OTP...';
         
-        emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+        // संदेश दिखाएं
+        document.getElementById('successMsg').textContent = '📧 OTP जनरेट हो रहा है...';
+        document.getElementById('successMsg').style.display = 'block';
+        
+        // ईमेल पैरामीटर्स
+        const templateParams = {
             to_email: ADMIN_EMAIL,
             otp: generatedOTP,
-            user_name: username
-        }).then(() => {
-            document.getElementById('successMsg').innerHTML = `✅ OTP sent! Testing: ${generatedOTP}`;
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('otp-section').style.display = 'block';
-            startOTPTimer();
-        });
+            user_name: username,
+            from_name: "NAGAR PALIKA NAKUR",
+            website_name: "Nagar Palika Nakur Admin Portal"
+        };
+        
+        // टेस्टिंग के लिए OTP दिखाएं
+        console.log('Generated OTP:', generatedOTP);
+        
+        // ईमेल भेजें
+        emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
+            .then(function(response) {
+                console.log('✅ Email sent successfully:', response);
+                
+                document.getElementById('successMsg').innerHTML = 
+                    `✅ OTP सफलतापूर्वक भेज दिया गया! अपना ईमेल चेक करें।<br>
+                     <div style="background: #ffcc00; color: #000; padding: 10px; margin: 10px 0; border-radius: 8px;">
+                        <strong>टेस्टिंग के लिए, OTP है:</strong> <span style="font-size: 20px; font-weight: bold;">${generatedOTP}</span>
+                     </div>`;
+                
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('otp-section').style.display = 'block';
+                
+                // OTP टाइमर शुरू
+                startOTPTimer();
+                
+                // OTP इनपुट पर फोकस
+                setTimeout(() => {
+                    document.getElementById('user-otp').focus();
+                }, 500);
+                
+            }, function(error) {
+                console.log('❌ Email sending failed:', error);
+                
+                // फॉलबैक: OTP स्क्रीन पर दिखाएं
+                document.getElementById('successMsg').innerHTML = 
+                    `✅ OTP जनरेट हो गया!<br>
+                     <div style="background: #ff0000; color: #fff; padding: 10px; margin: 10px 0; border-radius: 8px;">
+                        <strong>ईमेल सर्विस में समस्या। आपका OTP:</strong> <span style="font-size: 24px; font-weight: bold;">${generatedOTP}</span>
+                     </div>`;
+                
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('otp-section').style.display = 'block';
+                
+                // OTP टाइमर शुरू
+                startOTPTimer();
+                
+                // OTP इनपुट पर फोकस
+                setTimeout(() => {
+                    document.getElementById('user-otp').focus();
+                }, 500);
+            });
+            
     } else {
-        document.getElementById('errorMsg').textContent = '❌ Invalid Credentials!';
-        document.getElementById('errorMsg').style.display = 'block';
+        errorMsg.textContent = '❌ अमान्य यूजरनेम या पासवर्ड!';
+        errorMsg.style.display = 'block';
         shakeInputs();
     }
 }
 
+// OTP वेरीफाई करें
 function verifyOTP() {
     const enteredOTP = document.getElementById('user-otp').value.trim();
+    const errorMsg = document.getElementById('errorMsg');
+    
+    // एरर रीसेट
+    errorMsg.style.display = 'none';
+    errorMsg.textContent = '';
+    
+    if (!enteredOTP) {
+        errorMsg.textContent = '❌ कृपया OTP डालें!';
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
+    if (enteredOTP.length !== 6) {
+        errorMsg.textContent = '❌ OTP 6 अंकों का होना चाहिए!';
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
     if (generatedOTP && parseInt(enteredOTP) === generatedOTP) {
+        // टाइमर बंद करें
+        if (otpTimer) {
+            clearInterval(otpTimer);
+        }
+        
+        // लोकल स्टोरेज में सेव करें
         localStorage.setItem('loggedIn', 'true');
-        window.location.href = 'dashboard.html';
+        localStorage.setItem('username', 'Sunnydhaka');
+        localStorage.setItem('loginTime', new Date().toISOString());
+        
+        // सफलता संदेश
+        document.getElementById('successMsg').innerHTML = 
+            '<div style="color: #00ff00; font-weight: bold; padding: 10px; background: rgba(0,255,0,0.1); border-radius: 8px;">✅ OTP वेरीफाई हो गया! डैशबोर्ड पर रीडायरेक्ट हो रहा है...</div>';
+        
+        // नोटिफिकेशन (यदि अनुमति हो)
+        showNotification('लॉगिन सफल! डैशबोर्ड पर स्वागत है।');
+        
+        // डैशबोर्ड पर रीडायरेक्ट
+        setTimeout(() => {
+            window.location.href = 'dashboard.html';
+        }, 1500);
+        
     } else {
-        alert("Wrong OTP!");
+        errorMsg.textContent = '❌ अमान्य OTP! कृपया फिर से प्रयास करें।';
+        errorMsg.style.display = 'block';
+        shakeInputs();
     }
 }
 
+// OTP फिर से भेजें
+function resendOTP() {
+    // नया OTP जनरेट
+    generatedOTP = Math.floor(100000 + Math.random() * 900000);
+    
+    // टाइमर रीसेट
+    timeLeft = 300;
+    updateTimerDisplay();
+    
+    // नया OTP भेजें
+    const templateParams = {
+        to_email: ADMIN_EMAIL,
+        otp: generatedOTP,
+        user_name: "Sunnydhaka",
+        from_name: "NAGAR PALIKA NAKUR",
+        website_name: "Nagar Palika Nakur Admin Portal"
+    };
+    
+    document.getElementById('successMsg').innerHTML = '📧 OTP फिर से भेजा जा रहा है...';
+    
+    emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
+        .then(function() {
+            document.getElementById('successMsg').innerHTML = 
+                `✅ नया OTP भेज दिया गया!<br>
+                 <div style="background: #ffcc00; color: #000; padding: 10px; margin: 10px 0; border-radius: 8px;">
+                    <strong>नया OTP:</strong> <span style="font-size: 20px; font-weight: bold;">${generatedOTP}</span>
+                 </div>`;
+        }, function() {
+            document.getElementById('successMsg').innerHTML = 
+                `✅ नया OTP जनरेट हो गया!<br>
+                 <div style="background: #ff0000; color: #fff; padding: 10px; margin: 10px 0; border-radius: 8px;">
+                    <strong>ईमेल विफल। आपका OTP:</strong> <span style="font-size: 24px; font-weight: bold;">${generatedOTP}</span>
+                 </div>`;
+        });
+}
+
+// OTP टाइमर शुरू
 function startOTPTimer() {
+    timeLeft = 300;
+    updateTimerDisplay();
+    
+    if (otpTimer) {
+        clearInterval(otpTimer);
+    }
+    
     otpTimer = setInterval(() => {
         timeLeft--;
-        let min = Math.floor(timeLeft / 60);
-        let sec = timeLeft % 60;
-        document.getElementById('timer').textContent = `${min}:${sec < 10 ? '0' : ''}${sec}`;
-        if (timeLeft <= 0) clearInterval(otpTimer);
+        updateTimerDisplay();
+        
+        if (timeLeft <= 0) {
+            clearInterval(otpTimer);
+            document.getElementById('otpTimer').innerHTML = '⏰ OTP समय सीमा समाप्त! <button onclick="resendOTP()" style="background: transparent; color: #ff6b6b; border: none; cursor: pointer;">फिर से भेजें</button>';
+            generatedOTP = null;
+        }
     }, 1000);
 }
 
-function shakeInputs() {
-    const inputs = document.querySelectorAll('input');
-    inputs.forEach(input => {
-        input.style.animation = 'shake 0.5s';
-        setTimeout(() => input.style.animation = '', 500);
-    });
-}
-</script>
-</body>
-</html>
-
+// टाइमर डिस्प्ले अपडे
