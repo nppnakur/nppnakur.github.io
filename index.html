@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#007bff">
   <link rel="apple-touch-icon" href="Img1.png">
   
-  <link rel="icon" href="Img1.png" type="image/png">
+  <link rel="icon" href="img1.png" type="image/png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="HandheldFriendly" content="true">
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -175,11 +175,6 @@
       .form-group button { font-size: 16px; }
       .powered-by { font-size: 14px; }
     }
-    @media screen and (max-width: 480px) {
-      h2 { font-size: 24px; top: 6px; }
-      .form-section h3 { font-size: 20px; }
-      .form-group button { font-size: 14px; }
-    }
 
     @keyframes shake {
         0%, 100% { transform: translateX(0); }
@@ -194,7 +189,7 @@
 
 <div class="container">
   <div class="logo-section">
-    <img src="Img1.png" alt="Logo" class="rotating-logo" id="mainLogo">
+    <img src="Img1.png" alt="Logo" class="rotating-logo" id="mainLogo" onerror="this.src='https://via.placeholder.com/300?text=LOGO+NOT+FOUND'">
   </div>
 
   <div class="form-section">
@@ -229,9 +224,6 @@
           <button type="button" id="verifyBtn">VERIFY & LOGIN</button>
         </div>
       </form>
-      <div style="text-align: center; margin-top: 10px;">
-        <button onclick="resendOTP()" style="background: transparent; color: #ffcc00; border: none; cursor: pointer; font-size: 14px;">Resend OTP</button>
-      </div>
     </div>
   </div>
 
@@ -242,12 +234,11 @@
 // PWA Service Worker Registration
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('Service Worker Registered'))
-      .catch(err => console.log('Service Worker Error: ', err));
+    navigator.serviceWorker.register('sw.js');
   });
 }
 
+// EmailJS Config
 const SERVICE_ID = "service_25eenak";      
 const TEMPLATE_ID = "template_hdj6nfo";   
 const PUBLIC_KEY = "M-JV2m_vTtrU3W_EB";   
@@ -264,9 +255,6 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = 'dashboard.html';
         return;
     }
-    const logo = document.getElementById('mainLogo');
-    if (logo) logo.src = 'Img1.png?' + new Date().getTime();
-    document.getElementById('username').focus();
     document.getElementById('loginBtn').addEventListener('click', sendOTP);
     document.getElementById('verifyBtn').addEventListener('click', verifyOTP);
 });
@@ -274,25 +262,24 @@ document.addEventListener('DOMContentLoaded', function() {
 function sendOTP() {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
-    const errorMsg = document.getElementById('errorMsg');
-    errorMsg.style.display = 'none';
     
     if (username === "Sunnydhaka" && password === "Sunny1990") {
         generatedOTP = Math.floor(100000 + Math.random() * 900000);
         document.getElementById('successMsg').textContent = '📧 Generating OTP...';
-        document.getElementById('successMsg').style.display = 'block';
         
-        const templateParams = { to_email: ADMIN_EMAIL, otp: generatedOTP, user_name: username };
-        
-        emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams).then(() => {
-            document.getElementById('successMsg').innerHTML = `✅ OTP sent! For testing: ${generatedOTP}`;
+        emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+            to_email: ADMIN_EMAIL,
+            otp: generatedOTP,
+            user_name: username
+        }).then(() => {
+            document.getElementById('successMsg').innerHTML = `✅ OTP sent! Testing: ${generatedOTP}`;
             document.getElementById('login-section').style.display = 'none';
             document.getElementById('otp-section').style.display = 'block';
             startOTPTimer();
         });
     } else {
-        errorMsg.textContent = '❌ Invalid credentials!';
-        errorMsg.style.display = 'block';
+        document.getElementById('errorMsg').textContent = '❌ Invalid Credentials!';
+        document.getElementById('errorMsg').style.display = 'block';
         shakeInputs();
     }
 }
@@ -303,28 +290,28 @@ function verifyOTP() {
         localStorage.setItem('loggedIn', 'true');
         window.location.href = 'dashboard.html';
     } else {
-        document.getElementById('errorMsg').textContent = '❌ Invalid OTP!';
-        document.getElementById('errorMsg').style.display = 'block';
-        shakeInputs();
+        alert("Wrong OTP!");
     }
 }
 
 function startOTPTimer() {
     otpTimer = setInterval(() => {
         timeLeft--;
-        const min = Math.floor(timeLeft / 60);
-        const sec = timeLeft % 60;
+        let min = Math.floor(timeLeft / 60);
+        let sec = timeLeft % 60;
         document.getElementById('timer').textContent = `${min}:${sec < 10 ? '0' : ''}${sec}`;
         if (timeLeft <= 0) clearInterval(otpTimer);
     }, 1000);
 }
 
 function shakeInputs() {
-    document.querySelectorAll('input').forEach(i => {
-        i.style.animation = 'shake 0.5s';
-        setTimeout(() => i.style.animation = '', 500);
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.style.animation = 'shake 0.5s';
+        setTimeout(() => input.style.animation = '', 500);
     });
 }
 </script>
 </body>
 </html>
+
