@@ -10,24 +10,15 @@
   "orientation": "any",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "img1.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
-      "src": "icon-512.png",
+      "src": "img1.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     }
   ],
-  "categories": ["government", "productivity"],
-  "lang": "hi-IN"
+  "categories": ["government", "productivity"]
 }
