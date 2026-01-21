@@ -2,11 +2,11 @@
   "name": "NAGAR PALIKA NAKUR",
   "short_name": "NagarPalika",
   "description": "नगर पालिका नाकुर प्रशासन पोर्टल",
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#ffcc00",
-  "orientation": "portrait-primary",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "img1.png",
@@ -22,5 +22,5 @@
     }
   ],
   "categories": ["government", "productivity"],
-  "lang": "hi-IN"
+  "lang": "hi"
 }
