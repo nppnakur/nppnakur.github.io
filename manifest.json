@@ -1,15 +1,26 @@
 {
   "name": "NAGAR PALIKA NAKUR",
-  "short_name": "NP Nakur",
-  "start_url": "index.html",
+  "short_name": "NagarPalika",
+  "description": "नगर पालिका नाकुर प्रशासन पोर्टल",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#007bff",
+  "background_color": "#000000",
+  "theme_color": "#ffcc00",
+  "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "Img1.png",
+      "src": "img1.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "img1.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-  ]
+  ],
+  "categories": ["government", "productivity"],
+  "lang": "hi-IN"
 }
