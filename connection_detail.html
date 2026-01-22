@@ -6,782 +6,1228 @@
 <title>जल प्रबंधन - कनेक्शन विवरण</title>
 <link rel="icon" type="image/png" href="img1.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
 /* ---------- Global Styles ---------- */
+:root {
+  --primary: #10b981;
+  --secondary: #059669;
+  --light-green: #d1fae5;
+  --dark-green: #065f46;
+  --gradient-primary: linear-gradient(135deg, #10b981, #059669);
+  --gradient-secondary: linear-gradient(135deg, #34d399, #10b981);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
-    line-height: 1.6;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  min-height: 100vh;
+  color: #1f2937;
+  overflow-x: hidden;
 }
 
-/* ---------- Header Styles ---------- */
-.header {
-    background: linear-gradient(135deg, #0066cc, #003d99);
-    color: white;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+/* Water Background Animation */
+.water-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
 }
 
-.logo-container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+.water-bg::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path fill="%2310b981" opacity="0.05" d="M0,100 Q25,75 50,100 T100,100 Q125,75 150,100 T200,100 L200,200 L0,200 Z"/></svg>') repeat;
+  animation: waterWave 20s linear infinite;
+}
+
+.water-bg::after {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path fill="%23059669" opacity="0.03" d="M0,120 Q25,95 50,120 T100,120 Q125,95 150,120 T200,120 L200,200 L0,200 Z"/></svg>') repeat;
+  animation: waterWave 15s linear infinite reverse;
+}
+
+@keyframes waterWave {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ---------- Top Bar Styles ---------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--gradient-primary);
+  box-shadow: var(--shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  height: 70px;
+  backdrop-filter: blur(10px);
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .logo {
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
-    object-fit: cover;
+  height: 45px;
+  width: auto;
+  border-radius: 6px;
+  animation: logoPulse 3s ease-in-out infinite;
 }
 
-.header h1 {
-    font-size: 24px;
-    font-weight: 600;
+@keyframes logoPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 
-.header-buttons {
-    display: flex;
-    gap: 10px;
+.org-name {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
-.header-btn {
-    background: rgba(255,255,255,0.2);
-    border: none;
-    color: white;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 14px;
-    transition: background 0.3s;
+.topbar-right {
+  display: flex;
+  gap: 15px;
 }
 
-.header-btn:hover {
-    background: rgba(255,255,255,0.3);
+.topbar a {
+  color: white;
+  font-size: 16px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.topbar a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.topbar a:hover::before {
+  left: 100%;
+}
+
+.topbar a:hover {
+  background: rgba(255,255,255,0.25);
+  transform: translateY(-1px);
 }
 
 /* ---------- Main Container ---------- */
-.container {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 0 15px;
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 15px;
 }
 
-/* ---------- Search Section ---------- */
-.search-section {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
+/* ---------- Heading Styles ---------- */
+.main-heading {
+  text-align: center;
+  color: var(--dark-green);
+  font-size: 32px;
+  margin: 10px 0 20px;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  width: 100%;
+  position: relative;
+  animation: headingGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes headingGlow {
+  from { text-shadow: 1px 1px 2px rgba(0,0,0,0.1), 0 0 5px rgba(16, 185, 129, 0.3); }
+  to { text-shadow: 1px 1px 2px rgba(0,0,0,0.1), 0 0 10px rgba(16, 185, 129, 0.6); }
+}
+
+.main-heading::after {
+  content: '💧';
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  font-size: 40px;
+  animation: waterDrop 2s ease-in-out infinite;
+}
+
+@keyframes waterDrop {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-10px) scale(1.1); }
+}
+
+/* ---------- Search Box Styles ---------- */
+.search-container {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 650px;
 }
 
 .search-box {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
+  position: relative;
+  width: 300px;
+  max-width: 100%;
 }
 
-.search-input {
-    flex: 1;
-    min-width: 250px;
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
+.search-box input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #d1fae5;
+  border-radius: 10px;
+  font-size: 14px;
+  background: white;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2), 0 0 20px rgba(16, 185, 129, 0.3);
+  animation: searchGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes searchGlow {
+  from { box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2), 0 0 20px rgba(16, 185, 129, 0.3); }
+  to { box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.4), 0 0 30px rgba(16, 185, 129, 0.5); }
 }
 
 .search-btn, .export-btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
 }
 
 .search-btn {
-    background: #28a745;
-    color: white;
+  background: var(--gradient-primary);
+  color: white;
 }
 
 .export-btn {
-    background: #17a2b8;
-    color: white;
-    text-decoration: none;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
 }
 
-.search-btn:hover {
-    background: #218838;
+.search-btn:hover, .export-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: var(--shadow-hover);
 }
 
-.export-btn:hover {
-    background: #138496;
+.search-btn:hover::after, .export-btn:hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: buttonShine 1s ease-in-out;
+}
+
+@keyframes buttonShine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 /* ---------- Stats Cards ---------- */
 .stats-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 15px;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px auto;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1200px;
 }
 
 .stat-card {
-    background: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    text-align: center;
+  flex: 1;
+  min-width: 180px;
+  max-width: 250px;
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  background: white;
+  border: 1px solid #e5e7eb;
+  position: relative;
+  overflow: hidden;
+  animation: cardFloat 3s ease-in-out infinite alternate;
+}
+
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-primary);
+}
+
+.stat-card:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: var(--shadow-hover);
+  animation: none;
+}
+
+.stat-card.connections {
+  background: var(--gradient-primary);
+  color: white;
+}
+
+.stat-card.current {
+  background: var(--gradient-secondary);
+  color: white;
+}
+
+.stat-card.arrear {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+}
+
+.stat-card.remaining {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
 }
 
 .stat-card h3 {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 10px;
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.9;
 }
 
 .stat-card .number {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 5px;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 8px 0;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  animation: numberPulse 2s ease-in-out infinite;
+}
+
+@keyframes numberPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 
 .stat-card .icon {
-    font-size: 20px;
-    margin-bottom: 10px;
+  font-size: 24px;
+  margin-bottom: 8px;
+  opacity: 0.9;
+  animation: iconFloat 2s ease-in-out infinite alternate;
 }
 
-/* ---------- Table Section ---------- */
-.table-section {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    overflow: hidden;
+@keyframes iconFloat {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-5px); }
 }
 
-.table-container {
-    overflow-x: auto;
+/* ---------- Main Table Container ---------- */
+.main-table-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: var(--shadow-hover);
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 380px);
+  min-height: 400px;
+  backdrop-filter: blur(10px);
+  animation: containerAppear 0.8s ease-out;
+}
+
+@keyframes containerAppear {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Fixed Table Header Container ---------- */
+.table-header-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 2px solid #e5e7eb;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
 }
 
 .data-table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+  table-layout: fixed;
+}
+
+/* Fixed header styling */
+.data-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 101;
+  background: rgba(16, 185, 129, 0.95);
 }
 
 .data-table th {
-    background: #f1f5f9;
-    padding: 12px 10px;
-    text-align: left;
-    font-weight: 600;
-    color: #444;
-    border-bottom: 2px solid #ddd;
-    font-size: 14px;
-    white-space: nowrap;
+  background: var(--gradient-primary);
+  color: white;
+  padding: 15px 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-right: 1px solid rgba(255,255,255,0.2);
+  position: sticky;
+  top: 0;
+  z-index: 102;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
 }
 
-.data-table td {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    font-size: 14px;
-    vertical-align: middle;
+.data-table th:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-1px);
+}
+
+.data-table th:last-child {
+  border-right: none;
+}
+
+/* ---------- Scrollable Table Body Container ---------- */
+.table-body-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.data-table tbody tr {
+  transition: all 0.2s ease;
+  animation: rowAppear 0.5s ease-out backwards;
+}
+
+@keyframes rowAppear {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.data-table tbody tr:nth-child(even) {
+  background: rgba(248, 250, 252, 0.8);
 }
 
 .data-table tbody tr:hover {
-    background-color: #f8f9fa;
+  background: var(--light-green);
+  transform: scale(1.005);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* Action Buttons */
+.data-table td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+  text-align: center;
+  vertical-align: middle;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Column specific styles */
+.con-no-col { width: 12%; font-weight: 600; font-size: 13px; }
+.ward-no-col { width: 8%; font-size: 13px; }
+.owner { 
+  width: 22%; 
+  text-align: left; 
+  padding-left: 10px !important; 
+  font-size: 13px; 
+  font-weight: bold !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mobile-col { width: 10%; font-family: monospace; font-size: 13px; }
+.current-amount-col { 
+  width: 12%; 
+  font-weight: 600; 
+  color: #059669; 
+  font-size: 13px; 
+  text-align: right; 
+  padding-right: 15px !important;
+  animation: amountGlow 2s ease-in-out infinite alternate;
+}
+.arrear-col { 
+  width: 12%; 
+  font-weight: 600; 
+  color: #d97706; 
+  font-size: 13px; 
+  text-align: right; 
+  padding-right: 15px !important;
+  animation: arrearGlow 2s ease-in-out infinite alternate;
+}
+.remaining-col { 
+  width: 12%; 
+  font-weight: 600; 
+  color: #dc2626; 
+  font-size: 13px; 
+  text-align: right; 
+  padding-right: 15px !important;
+  animation: remainingGlow 2s ease-in-out infinite alternate;
+}
+.act { width: 12%; }
+
+@keyframes amountGlow {
+  from { color: #059669; text-shadow: 0 0 5px rgba(5, 150, 105, 0.3); }
+  to { color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+}
+
+@keyframes arrearGlow {
+  from { color: #d97706; text-shadow: 0 0 5px rgba(217, 119, 6, 0.3); }
+  to { color: #f59e0b; text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+}
+
+@keyframes remainingGlow {
+  from { color: #dc2626; text-shadow: 0 0 5px rgba(220, 38, 38, 0.3); }
+  to { color: #ef4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+}
+
+/* Status badges */
+.status-paid {
+  background: #d1fae5;
+  color: #065f46;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+  min-width: 80px;
+  animation: paidPulse 2s ease-in-out infinite;
+}
+
+@keyframes paidPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Action buttons */
 .action-buttons {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
 }
 
 .action-btn {
-    width: 30px;
-    height: 30px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-decoration: none;
-    font-size: 12px;
-    cursor: pointer;
-    border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 13px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
 }
-
-.edit-btn { background: #007bff; }
-.delete-btn { background: #dc3545; }
-.print-btn { background: #17a2b8; }
-.pay-btn { background: #28a745; }
 
 .action-btn:hover {
-    opacity: 0.9;
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: var(--shadow-hover);
 }
 
-/* Status Badge */
-.status-paid {
-    background: #d4edda;
-    color: #155724;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 500;
+.edit-btn {
+  background: var(--gradient-primary);
+  color: white;
 }
 
-/* ---------- Message Styles ---------- */
-.message-box {
-    padding: 12px 15px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.delete-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
 }
 
-.success {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+.print-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
 }
 
-.error {
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+.pay-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  animation: payButtonGlow 2s ease-in-out infinite;
 }
 
-/* ---------- Empty State ---------- */
-.empty-state {
-    text-align: center;
-    padding: 40px 20px;
-    color: #666;
+@keyframes payButtonGlow {
+  0%, 100% { box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); }
+  50% { box-shadow: 0 4px 15px rgba(16, 185, 129, 0.6); }
 }
 
-.empty-state i {
-    font-size: 48px;
-    color: #ddd;
-    margin-bottom: 15px;
+/* ---------- Empty Table Message ---------- */
+.empty-table-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40px;
+  color: #6b7280;
+  text-align: center;
 }
 
-.empty-state h3 {
-    margin-bottom: 10px;
-    color: #444;
+.empty-table-message i {
+  font-size: 60px;
+  color: #d1d5db;
+  margin-bottom: 20px;
+  opacity: 0.5;
+  animation: emptyIconFloat 3s ease-in-out infinite;
+}
+
+@keyframes emptyIconFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.empty-table-message h3 {
+  font-size: 20px;
+  color: #374151;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.empty-table-message p {
+  font-size: 14px;
+  max-width: 500px;
+  line-height: 1.6;
+  color: #6b7280;
 }
 
 /* ---------- Modal Styles ---------- */
-.modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
+.modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: var(--shadow-hover);
+  overflow: hidden;
+  animation: modalAppear 0.3s ease-out;
 }
 
-.modal-content {
-    background: white;
-    width: 90%;
-    max-width: 500px;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+@keyframes modalAppear {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .modal-header {
-    background: #dc3545;
-    color: white;
-    padding: 15px 20px;
-    border-radius: 8px 8px 0 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  background: var(--gradient-primary);
+  color: white;
+  border-bottom: none;
+  padding: 16px 20px;
+  animation: modalHeaderGlow 2s ease-in-out infinite alternate;
 }
 
-.modal-body {
-    padding: 20px;
+@keyframes modalHeaderGlow {
+  from { background: var(--gradient-primary); }
+  to { background: linear-gradient(135deg, #059669, #047857); }
 }
 
-.modal-footer {
-    padding: 15px 20px;
-    background: #f8f9fa;
-    border-radius: 0 0 8px 8px;
-    text-align: right;
+/* ---------- Responsive Styles ---------- */
+@media (max-width: 992px) {
+  .main-heading {
+    font-size: 28px;
+  }
+  
+  .main-heading::after {
+    font-size: 30px;
+  }
+  
+  .stat-card {
+    animation: none;
+  }
+  
+  .stat-card:hover {
+    animation: cardFloat 2s ease-in-out infinite alternate;
+  }
 }
 
-.btn {
-    padding: 8px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.btn-secondary {
-    background: #6c757d;
-    color: white;
-}
-
-.btn-danger {
-    background: #dc3545;
-    color: white;
-}
-
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-/* ---------- Responsive Design ---------- */
 @media (max-width: 768px) {
-    .header {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
-    }
-    
-    .search-box {
-        flex-direction: column;
-    }
-    
-    .search-input {
-        width: 100%;
-    }
-    
-    .stats-container {
-        grid-template-columns: 1fr;
-    }
-    
-    .data-table th,
-    .data-table td {
-        padding: 8px 5px;
-        font-size: 12px;
-    }
-    
-    .action-buttons {
-        flex-direction: column;
-        gap: 3px;
-    }
-    
-    .action-btn {
-        width: 25px;
-        height: 25px;
-        font-size: 10px;
-    }
+  .main-heading {
+    font-size: 24px;
+  }
+  
+  .main-heading::after {
+    display: none;
+  }
+  
+  .search-container {
+    flex-direction: column;
+  }
+  
+  .search-box {
+    width: 100%;
+  }
 }
 
-@media (max-width: 480px) {
-    .container {
-        padding: 0 10px;
-    }
-    
-    .header h1 {
-        font-size: 20px;
-    }
-    
-    .stat-card .number {
-        font-size: 20px;
-    }
+/* Custom scrollbar */
+.table-body-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-body-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.table-body-container::-webkit-scrollbar-thumb {
+  background: var(--gradient-primary);
+  border-radius: 4px;
+}
+
+.table-body-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+}
+
+/* Floating water droplets */
+.floating-droplets {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.droplet {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-radius: 50%;
+  opacity: 0.1;
+  animation: dropletFloat 15s linear infinite;
+}
+
+.droplet:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+.droplet:nth-child(2) { top: 20%; left: 15%; animation-delay: 2s; }
+.droplet:nth-child(3) { top: 30%; left: 85%; animation-delay: 4s; }
+.droplet:nth-child(4) { top: 40%; left: 75%; animation-delay: 6s; }
+.droplet:nth-child(5) { top: 50%; left: 10%; animation-delay: 8s; }
+.droplet:nth-child(6) { top: 60%; left: 90%; animation-delay: 10s; }
+.droplet:nth-child(7) { top: 70%; left: 20%; animation-delay: 12s; }
+.droplet:nth-child(8) { top: 80%; left: 80%; animation-delay: 14s; }
+
+@keyframes dropletFloat {
+  0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.1; }
+  90% { opacity: 0.1; }
+  100% { transform: translateY(-100px) translateX(50px) rotate(360deg); opacity: 0; }
+}
+
+/* Loader animation */
+.loader {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.loader-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #e5e7eb;
+  border-top: 5px solid #10b981;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
+<!-- Water Background -->
+<div class="water-bg"></div>
 
-<!-- Header -->
-<header class="header">
-    <div class="logo-container">
-        <img src="img1.png" alt="Logo" class="logo">
-        <h1>जल प्रबंधन - कनेक्शन विवरण</h1>
-    </div>
-    <div class="header-buttons">
-        <a href="dashboard.php" class="header-btn">
-            <i class="fas fa-home"></i> होम
-        </a>
-        <a href="logout.php" class="header-btn">
-            <i class="fas fa-sign-out-alt"></i> लॉगआउट
-        </a>
-    </div>
-</header>
+<!-- Floating Droplets -->
+<div class="floating-droplets">
+  <div class="droplet"></div>
+  <div class="droplet"></div>
+  <div class="droplet"></div>
+  <div class="droplet"></div>
+  <div class="droplet"></div>
+  <div class="droplet"></div>
+  <div class="droplet"></div>
+  <div class="droplet"></div>
+</div>
 
-<!-- Main Container -->
-<div class="container">
-    
-    <!-- Search Section -->
-    <div class="search-section">
+<!-- Loader -->
+<div class="loader" id="loader">
+  <div class="loader-spinner"></div>
+  <p class="mt-3">लोड हो रहा है...</p>
+</div>
+
+<div class="topbar">
+    <div class="topbar-left">
+        <img src="img1.png" alt="जल प्रबंधन लोगो" class="logo">
+        <span class="org-name">जल प्रबंधन</span>
+    </div>
+    <div class="topbar-right">
+        <a href="dashboard.html"><i class="fas fa-home"></i> होम</a>
+        <a href="index.html"><i class="fas fa-sign-out-alt"></i> लॉगआउट</a>
+    </div>
+</div>
+
+<div class="main-container">
+    <h1 class="main-heading">🚰 जल कनेक्शन विवरण डैशबोर्ड</h1>
+
+    <div class="search-container">
         <div class="search-box">
-            <input type="text" class="search-input" placeholder="कनेक्शन नंबर, नाम, या मोबाइल खोजें...">
-            <button class="search-btn">
-                <i class="fas fa-search"></i> खोजें
-            </button>
-            <a href="#" class="export-btn">
-                <i class="fas fa-file-excel"></i> एक्सेल एक्सपोर्ट
-            </a>
+            <input type="text" placeholder="🔍 कनेक्शन नंबर, नाम, मोबाइल, या वार्ड खोजें..." id="searchInput">
         </div>
+        <button class="search-btn" onclick="performSearch()">
+            <i class="fas fa-search"></i> खोजें
+        </button>
+        <button class="export-btn" onclick="exportToExcel()">
+            <i class="fas fa-file-excel"></i> एक्सेल एक्सपोर्ट
+        </button>
     </div>
-    
-    <!-- Stats Cards -->
+
+    <!-- Stats Cards ALWAYS SHOW -->
     <div class="stats-container">
-        <div class="stat-card">
+        <div class="stat-card connections">
             <div class="icon">👥</div>
             <h3>कुल कनेक्शन</h3>
-            <div class="number">150</div>
+            <div class="number" id="totalConnections">150</div>
             <p>सभी कनेक्शनों की कुल संख्या</p>
         </div>
-        
-        <div class="stat-card">
+        <div class="stat-card current">
             <div class="icon">💰</div>
             <h3>वर्तमान राशि</h3>
             <div class="number">₹2,50,000</div>
             <p>2025-26 वर्ष की राशि</p>
         </div>
-        
-        <div class="stat-card">
+        <div class="stat-card arrear">
             <div class="icon">📅</div>
             <h3>बकाया शेष</h3>
             <div class="number">₹1,20,000</div>
             <p>2024-25 वर्ष का बकाया</p>
         </div>
-        
-        <div class="stat-card">
+        <div class="stat-card remaining">
             <div class="icon">🧾</div>
             <h3>शेष राशि</h3>
             <div class="number">₹3,70,000</div>
             <p>सभी कनेक्शनों का शेष</p>
         </div>
     </div>
-    
-    <!-- Table Section -->
-    <div class="table-section">
-        <div class="table-container">
+
+    <!-- Main Table Container ALWAYS SHOW -->
+    <div class="main-table-container">
+        <!-- Fixed Header Container -->
+        <div class="table-header-container">
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>कनेक्शन</th>
-                        <th>वार्ड</th>
-                        <th>नाम</th>
-                        <th>मोबाइल</th>
-                        <th>25‑26</th>
-                        <th>24‑25</th>
-                        <th>शेष</th>
-                        <th>स्थिति</th>
-                        <th>क्रिया</th>
+                        <th class="con-no-col">🔗 कनेक्शन</th>
+                        <th class="ward-no-col">🏘️ वार्ड</th>
+                        <th class="owner">👤 नाम</th>
+                        <th class="mobile-col">📱 मोबाइल</th>
+                        <th class="current-amount-col">💰 25‑26</th>
+                        <th class="arrear-col">📅 24‑25</th>
+                        <th class="remaining-col">🧾 शेष</th>
+                        <th class="act">⚙️ क्रिया</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Sample Data Row 1 -->
-                    <tr>
-                        <td>JAL001</td>
-                        <td>5</td>
-                        <td>रमेश कुमार</td>
-                        <td>9876543210</td>
-                        <td>₹2,500</td>
-                        <td>₹1,200</td>
-                        <td>₹3,700</td>
-                        <td><span class="status-paid">भुगतान</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn edit-btn" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn delete-btn" title="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                                <button class="action-btn print-btn" title="Print">
-                                    <i class="fas fa-print"></i>
-                                </button>
-                                <button class="action-btn pay-btn" title="Pay">
-                                    <i class="fas fa-rupee-sign"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    
-                    <!-- Sample Data Row 2 -->
-                    <tr>
-                        <td>JAL002</td>
-                        <td>7</td>
-                        <td>सीता देवी</td>
-                        <td>8765432109</td>
-                        <td>₹2,000</td>
-                        <td>₹1,500</td>
-                        <td>₹3,500</td>
-                        <td><span style="color:#dc3545;">बकाया</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn edit-btn" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn delete-btn" title="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                                <button class="action-btn print-btn" title="Print">
-                                    <i class="fas fa-print"></i>
-                                </button>
-                                <button class="action-btn pay-btn" title="Pay">
-                                    <i class="fas fa-rupee-sign"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    
-                    <!-- Sample Data Row 3 -->
-                    <tr>
-                        <td>JAL003</td>
-                        <td>3</td>
-                        <td>अमित शर्मा</td>
-                        <td>7654321098</td>
-                        <td>₹3,000</td>
-                        <td>₹0</td>
-                        <td>₹3,000</td>
-                        <td><span class="status-paid">भुगतान</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn edit-btn" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn delete-btn" title="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                                <button class="action-btn print-btn" title="Print">
-                                    <i class="fas fa-print"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    
-                    <!-- Sample Data Row 4 -->
-                    <tr>
-                        <td>JAL004</td>
-                        <td>2</td>
-                        <td>प्रिया सिंह</td>
-                        <td>6543210987</td>
-                        <td>₹2,800</td>
-                        <td>₹800</td>
-                        <td>₹3,600</td>
-                        <td><span style="color:#dc3545;">बकाया</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn edit-btn" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn delete-btn" title="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                                <button class="action-btn print-btn" title="Print">
-                                    <i class="fas fa-print"></i>
-                                </button>
-                                <button class="action-btn pay-btn" title="Pay">
-                                    <i class="fas fa-rupee-sign"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    
-                    <!-- Sample Data Row 5 -->
-                    <tr>
-                        <td>JAL005</td>
-                        <td>9</td>
-                        <td>राजेश यादव</td>
-                        <td>5432109876</td>
-                        <td>₹2,200</td>
-                        <td>₹1,000</td>
-                        <td>₹3,200</td>
-                        <td><span class="status-paid">भुगतान</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn edit-btn" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn delete-btn" title="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                                <button class="action-btn print-btn" title="Print">
-                                    <i class="fas fa-print"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+            </table>
+        </div>
+
+        <!-- Scrollable Body Container -->
+        <div class="table-body-container">
+            <!-- Show table data -->
+            <table class="data-table">
+                <tbody id="tableBody">
+                    <!-- Data will be loaded here -->
                 </tbody>
             </table>
         </div>
     </div>
-    
-    <!-- Empty State (Hidden by default) -->
-    <div class="empty-state" style="display: none;">
-        <i class="fas fa-search"></i>
-        <h3>खोज शुरू करें</h3>
-        <p>कनेक्शन विवरण देखने के लिए सर्च बॉक्स में कनेक्शन नंबर, ग्राहक का नाम, या मोबाइल नंबर डालकर सर्च करें।</p>
-    </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal-overlay" id="deleteModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3><i class="fas fa-exclamation-triangle"></i> कनेक्शन डिलीट करें</h3>
-            <button onclick="closeModal()" style="background:none;border:none;color:white;font-size:20px;cursor:pointer;">×</button>
-        </div>
-        <div class="modal-body">
-            <div style="background:#f8d7da;color:#721c24;padding:10px;border-radius:5px;margin-bottom:15px;">
-                <i class="fas fa-exclamation-circle"></i>
-                <strong>चेतावनी!</strong> यह कार्रवाई पूर्ववत नहीं की जा सकती है
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>कनेक्शन डिलीट करें</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            
-            <div style="padding:15px;background:#f8f9fa;border-radius:5px;margin-bottom:15px;">
-                <p style="margin-bottom:10px;">निम्नलिखित कनेक्शन को डिलीट करना चाहते हैं?</p>
-                <div id="connectionDetails">
-                    <p><strong>कनेक्शन नंबर:</strong> JAL001</p>
-                    <p><strong>ग्राहक का नाम:</strong> रमेश कुमार</p>
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <strong>चेतावनी!</strong> यह कार्रवाई पूर्ववत नहीं की जा सकती है
+                </div>
+                <div id="connectionDetails"></div>
+                <div class="mt-3">
+                    <label for="password" class="form-label">पासवर्ड</label>
+                    <input type="password" class="form-control" id="password" placeholder="अपना पासवर्ड दर्ज करें">
                 </div>
             </div>
-            
-            <div>
-                <label for="password" style="display:block;margin-bottom:5px;">पासवर्ड</label>
-                <div style="position:relative;">
-                    <input type="password" id="password" style="width:100%;padding:8px 40px 8px 10px;border:1px solid #ddd;border-radius:5px;" placeholder="अपना पासवर्ड दर्ज करें">
-                    <span onclick="togglePassword()" style="position:absolute;right:10px;top:8px;cursor:pointer;">
-                        <i class="fas fa-eye"></i>
-                    </span>
-                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">रद्द करें</button>
+                <button type="button" class="btn btn-danger" id="deleteBtn" disabled>डिलीट करें</button>
             </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeModal()">रद्द करें</button>
-            <button class="btn btn-danger" id="deleteBtn" disabled onclick="confirmDelete()">डिलीट करें</button>
         </div>
     </div>
 </div>
 
 <script>
-// Search functionality
-document.querySelector('.search-btn').addEventListener('click', function() {
-    const searchTerm = document.querySelector('.search-input').value.toLowerCase();
-    const rows = document.querySelectorAll('.data-table tbody tr');
-    let found = false;
+// Sample Data
+const connectionData = [
+    { id: 'JAL001', ward: '5', name: 'रमेश कुमार', mobile: '9876543210', current: 2500, arrear: 1200, remaining: 3700, status: 'paid' },
+    { id: 'JAL002', ward: '7', name: 'सीता देवी', mobile: '8765432109', current: 2000, arrear: 1500, remaining: 3500, status: 'pending' },
+    { id: 'JAL003', ward: '3', name: 'अमित शर्मा', mobile: '7654321098', current: 3000, arrear: 0, remaining: 3000, status: 'paid' },
+    { id: 'JAL004', ward: '2', name: 'प्रिया सिंह', mobile: '6543210987', current: 2800, arrear: 800, remaining: 3600, status: 'pending' },
+    { id: 'JAL005', ward: '9', name: 'राजेश यादव', mobile: '5432109876', current: 2200, arrear: 1000, remaining: 3200, status: 'paid' },
+    { id: 'JAL006', ward: '4', name: 'मोहन लाल', mobile: '4321098765', current: 3200, arrear: 500, remaining: 3700, status: 'pending' },
+    { id: 'JAL007', ward: '6', name: 'गीता देवी', mobile: '3210987654', current: 1800, arrear: 1200, remaining: 3000, status: 'paid' },
+    { id: 'JAL008', ward: '8', name: 'विकास सिंह', mobile: '2109876543', current: 2700, arrear: 900, remaining: 3600, status: 'pending' },
+    { id: 'JAL009', ward: '1', name: 'नीता कुमारी', mobile: '1098765432', current: 1900, arrear: 1100, remaining: 3000, status: 'paid' },
+    { id: 'JAL010', ward: '10', name: 'संजय वर्मा', mobile: '0987654321', current: 2600, arrear: 1400, remaining: 4000, status: 'pending' }
+];
+
+// Format Indian Currency
+function formatIndianCurrency(amount) {
+    if (amount === 0) return '0';
     
-    rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        if (text.includes(searchTerm)) {
-            row.style.display = '';
-            found = true;
-        } else {
-            row.style.display = 'none';
+    // Convert to string and split into whole and decimal parts
+    let [whole, decimal] = Math.abs(amount).toFixed(2).split('.');
+    
+    // Format whole number part with Indian numbering system
+    let lastThree = whole.substring(whole.length - 3);
+    let otherNumbers = whole.substring(0, whole.length - 3);
+    
+    if (otherNumbers !== '') {
+        lastThree = ',' + lastThree;
+    }
+    
+    let formatted = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+    
+    // Add negative sign if needed
+    if (amount < 0) {
+        formatted = '-' + formatted;
+    }
+    
+    return '₹' + formatted + (decimal ? '.' + decimal : '.00');
+}
+
+// Load Data
+function loadData(filter = '') {
+    const tableBody = document.getElementById('tableBody');
+    tableBody.innerHTML = '';
+    
+    let filteredData = connectionData;
+    
+    if (filter) {
+        const searchTerm = filter.toLowerCase();
+        filteredData = connectionData.filter(item => 
+            item.id.toLowerCase().includes(searchTerm) ||
+            item.name.toLowerCase().includes(searchTerm) ||
+            item.mobile.includes(searchTerm) ||
+            item.ward.includes(searchTerm)
+        );
+    }
+    
+    // Update stats
+    document.getElementById('totalConnections').textContent = filteredData.length;
+    
+    filteredData.forEach((item, index) => {
+        const row = document.createElement('tr');
+        row.style.animationDelay = `${index * 0.1}s`;
+        
+        row.innerHTML = `
+            <td class="con-no-col">${item.id}</td>
+            <td class="ward-no-col">${item.ward}</td>
+            <td class="owner" title="${item.name}">${item.name}</td>
+            <td class="mobile-col">${item.mobile}</td>
+            <td class="current-amount-col">${formatIndianCurrency(item.current)}</td>
+            <td class="arrear-col">${formatIndianCurrency(item.arrear)}</td>
+            <td class="remaining-col">${formatIndianCurrency(item.remaining)}</td>
+            <td class="act">
+                <div class="action-buttons">
+                    <button class="action-btn edit-btn" onclick="editConnection('${item.id}')" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn delete-btn" onclick="showDeleteModal('${item.id}', '${item.name}')" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button class="action-btn print-btn" onclick="printBill('${item.id}')" title="Print">
+                        <i class="fas fa-print"></i>
+                    </button>
+                    ${item.remaining > 0 ? `
+                    <button class="action-btn pay-btn" onclick="makePayment('${item.id}')" title="Pay Now">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </button>
+                    ` : ''}
+                </div>
+                <div class="mt-1">
+                    ${item.status === 'paid' ? '<span class="status-paid">✅ भुगतान</span>' : '<span style="color:#dc3545;font-size:12px;">❌ बकाया</span>'}
+                </div>
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
+    });
+}
+
+// Search Function
+function performSearch() {
+    const searchTerm = document.getElementById('searchInput').value;
+    loadData(searchTerm);
+}
+
+// Export to Excel
+function exportToExcel() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
+    
+    setTimeout(() => {
+        // Create Excel data
+        let excelData = "कनेक्शन नंबर,वार्ड,नाम,मोबाइल,2025-26,2024-25,शेष,स्थिति\n";
+        
+        connectionData.forEach(item => {
+            excelData += `${item.id},${item.ward},${item.name},${item.mobile},${item.current},${item.arrear},${item.remaining},${item.status === 'paid' ? 'भुगतान' : 'बकाया'}\n`;
+        });
+        
+        // Create download link
+        const blob = new Blob([excelData], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `connection_details_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        loader.style.display = 'none';
+        
+        // Show success message
+        alert('एक्सेल फ़ाइल डाउनलोड हो गई है!');
+    }, 1500);
+}
+
+// Edit Connection
+function editConnection(conId) {
+    alert(`एडिट कर रहे हैं: ${conId}`);
+    // window.location.href = `edit_connection.html?id=${conId}`;
+}
+
+// Show Delete Modal
+function showDeleteModal(conId, ownerName) {
+    document.getElementById('connectionDetails').innerHTML = `
+        <div class="alert alert-info">
+            <p><strong>कनेक्शन नंबर:</strong> ${conId}</p>
+            <p><strong>ग्राहक का नाम:</strong> ${ownerName}</p>
+        </div>
+    `;
+    
+    const deleteBtn = document.getElementById('deleteBtn');
+    deleteBtn.disabled = true;
+    deleteBtn.onclick = () => deleteConnection(conId);
+    
+    const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    modal.show();
+    
+    // Enable delete button when password is entered
+    document.getElementById('password').addEventListener('input', function() {
+        deleteBtn.disabled = this.value.trim() === '';
+    });
+}
+
+// Delete Connection
+function deleteConnection(conId) {
+    const password = document.getElementById('password').value;
+    
+    if (password === 'admin123') {
+        // Show loading animation
+        const index = connectionData.findIndex(item => item.id === conId);
+        if (index > -1) {
+            connectionData.splice(index, 1);
+            loadData();
+        }
+        
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+        modal.hide();
+        
+        // Show success message
+        alert('कनेक्शन सफलतापूर्वक डिलीट हो गया!');
+    } else {
+        alert('❌ गलत पासवर्ड!');
+    }
+}
+
+// Print Bill
+function printBill(conId) {
+    alert(`बिल प्रिंट कर रहे हैं: ${conId}`);
+    // window.open(`print_bill.html?id=${conId}`, '_blank');
+}
+
+// Make Payment
+function makePayment(conId) {
+    alert(`पेमेंट पेज पर जा रहे हैं: ${conId}`);
+    // window.open(`payment.html?con=${conId}`, '_blank');
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Load data on page load
+    loadData();
+    
+    // Add Enter key support for search
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            performSearch();
         }
     });
     
-    // Show empty state if no results
-    document.querySelector('.empty-state').style.display = found ? 'none' : 'block';
+    // Add animation to stats on page load
+    const statCards = document.querySelectorAll('.stat-card');
+    statCards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.2}s`;
+    });
 });
 
-// Modal functions
-function showDeleteModal(conNo, ownerName) {
-    document.getElementById('connectionDetails').innerHTML = `
-        <p><strong>कनेक्शन नंबर:</strong> ${conNo}</p>
-        <p><strong>ग्राहक का नाम:</strong> ${ownerName}</p>
-    `;
-    document.getElementById('deleteModal').style.display = 'flex';
-}
-
-function closeModal() {
-    document.getElementById('deleteModal').style.display = 'none';
-    document.getElementById('password').value = '';
-    document.getElementById('deleteBtn').disabled = true;
-}
-
-function togglePassword() {
-    const passwordInput = document.getElementById('password');
-    const icon = document.querySelector('#deleteModal .fa-eye');
+// Add water ripple effect on click
+document.addEventListener('click', function(e) {
+    if (!e.target.matches('.action-btn') && !e.target.closest('.action-btn')) {
+        return;
+    }
     
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-    } else {
-        passwordInput.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
+    const button = e.target.closest('.action-btn');
+    if (button) {
+        const ripple = document.createElement('span');
+        const rect = button.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        
+        ripple.style.cssText = `
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            width: ${size}px;
+            height: ${size}px;
+            top: ${y}px;
+            left: ${x}px;
+            pointer-events: none;
+        `;
+        
+        button.appendChild(ripple);
+        
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
     }
-}
-
-// Enable delete button when password is entered
-document.getElementById('password').addEventListener('input', function() {
-    document.getElementById('deleteBtn').disabled = this.value.trim() === '';
 });
 
-function confirmDelete() {
-    const password = document.getElementById('password').value;
-    if (password === 'admin123') {
-        alert('कनेक्शन डिलीट कर दिया गया है');
-        closeModal();
-    } else {
-        alert('गलत पासवर्ड');
+// Add CSS for ripple animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
     }
-}
+`;
+document.head.appendChild(style);
 
-// Add event listeners to delete buttons
-document.querySelectorAll('.delete-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const row = this.closest('tr');
-        const conNo = row.cells[0].textContent;
-        const ownerName = row.cells[2].textContent;
-        showDeleteModal(conNo, ownerName);
+// Add smooth scroll effect
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
     });
-});
-
-// Print bill function
-document.querySelectorAll('.print-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const conNo = this.closest('tr').cells[0].textContent;
-        alert(`बिल प्रिंट कर रहे हैं: ${conNo}`);
-        // window.open('print_bill.php?id=' + conNo, '_blank');
-    });
-});
-
-// Pay now function
-document.querySelectorAll('.pay-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const conNo = this.closest('tr').cells[0].textContent;
-        alert(`पेमेंट पेज पर जा रहे हैं: ${conNo}`);
-        // window.open('payment.php?con=' + conNo, '_blank');
-    });
-});
-
-// Edit function
-document.querySelectorAll('.edit-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const conNo = this.closest('tr').cells[0].textContent;
-        alert(`एडिट कर रहे हैं: ${conNo}`);
-        // window.location.href = 'edit_connection.php?id=' + conNo;
-    });
-});
-
-// Close modal when clicking outside
-document.getElementById('deleteModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeModal();
-    }
 });
 </script>
 </body>
