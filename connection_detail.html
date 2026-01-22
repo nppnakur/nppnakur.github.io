@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>जल प्रबंधन - कनेक्शन विवरण</title>
+<link rel="icon" type="image/png" href="img1.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ---------- Global Styles ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* ---------- Header Styles ---------- */
+.header {
+    background: linear-gradient(135deg, #0066cc, #003d99);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.header h1 {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.header-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.header-btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* ---------- Main Container ---------- */
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+/* ---------- Search Section ---------- */
+.search-section {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 250px;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.search-btn, .export-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-btn {
+    background: #28a745;
+    color: white;
+}
+
+.export-btn {
+    background: #17a2b8;
+    color: white;
+    text-decoration: none;
+}
+
+.search-btn:hover {
+    background: #218838;
+}
+
+.export-btn:hover {
+    background: #138496;
+}
+
+/* ---------- Stats Cards ---------- */
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.stat-card h3 {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.stat-card .number {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.stat-card .icon {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+/* ---------- Table Section ---------- */
+.table-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    background: #f1f5f9;
+    padding: 12px 10px;
+    text-align: left;
+    font-weight: 600;
+    color: #444;
+    border-bottom: 2px solid #ddd;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.data-table td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    font-size: 12px;
+    cursor: pointer;
+    border: none;
+}
+
+.edit-btn { background: #007bff; }
+.delete-btn { background: #dc3545; }
+.print-btn { background: #17a2b8; }
+.pay-btn { background: #28a745; }
+
+.action-btn:hover {
+    opacity: 0.9;
+}
+
+/* Status Badge */
+.status-paid {
+    background: #d4edda;
+    color: #155724;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* ---------- Message Styles ---------- */
+.message-box {
+    padding: 12px 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* ---------- Empty State ---------- */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.empty-state i {
+    font-size: 48px;
+    color: #ddd;
+    margin-bottom: 15px;
+}
+
+.empty-state h3 {
+    margin-bottom: 10px;
+    color: #444;
+}
+
+/* ---------- Modal Styles ---------- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    background: #dc3545;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-radius: 0 0 8px 8px;
+    text-align: right;
+}
+
+.btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ---------- Responsive Design ---------- */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .search-box {
+        flex-direction: column;
+    }
+    
+    .search-input {
+        width: 100%;
+    }
+    
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 8px 5px;
+        font-size: 12px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 3px;
+    }
+    
+    .action-btn {
+        width: 25px;
+        height: 25px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 10px;
+    }
+    
+    .header h1 {
+        font-size: 20px;
+    }
+    
+    .stat-card .number {
+        font-size: 20px;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+    <div class="logo-container">
+        <img src="img1.png" alt="Logo" class="logo">
+        <h1>जल प्रबंधन - कनेक्शन विवरण</h1>
+    </div>
+    <div class="header-buttons">
+        <a href="dashboard.php" class="header-btn">
+            <i class="fas fa-home"></i> होम
+        </a>
+        <a href="logout.php" class="header-btn">
+            <i class="fas fa-sign-out-alt"></i> लॉगआउट
+        </a>
+    </div>
+</header>
+
+<!-- Main Container -->
+<div class="container">
+    
+    <!-- Search Section -->
+    <div class="search-section">
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="कनेक्शन नंबर, नाम, या मोबाइल खोजें...">
+            <button class="search-btn">
+                <i class="fas fa-search"></i> खोजें
+            </button>
+            <a href="#" class="export-btn">
+                <i class="fas fa-file-excel"></i> एक्सेल एक्सपोर्ट
+            </a>
+        </div>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="icon">👥</div>
+            <h3>कुल कनेक्शन</h3>
+            <div class="number">150</div>
+            <p>सभी कनेक्शनों की कुल संख्या</p>
+        </div>
+        
+        <div class="stat-card">
+            <div class="icon">💰</div>
+            <h3>वर्तमान राशि</h3>
+            <div class="number">₹2,50,000</div>
+            <p>2025-26 वर्ष की राशि</p>
+        </div>
+        
+        <div class="stat-card">
+            <div class="icon">📅</div>
+            <h3>बकाया शेष</h3>
+            <div class="number">₹1,20,000</div>
+            <p>2024-25 वर्ष का बकाया</p>
+        </div>
+        
+        <div class="stat-card">
+            <div class="icon">🧾</div>
+            <h3>शेष राशि</h3>
+            <div class="number">₹3,70,000</div>
+            <p>सभी कनेक्शनों का शेष</p>
+        </div>
+    </div>
+    
+    <!-- Table Section -->
+    <div class="table-section">
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>कनेक्शन</th>
+                        <th>वार्ड</th>
+                        <th>नाम</th>
+                        <th>मोबाइल</th>
+                        <th>25‑26</th>
+                        <th>24‑25</th>
+                        <th>शेष</th>
+                        <th>स्थिति</th>
+                        <th>क्रिया</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample Data Row 1 -->
+                    <tr>
+                        <td>JAL001</td>
+                        <td>5</td>
+                        <td>रमेश कुमार</td>
+                        <td>9876543210</td>
+                        <td>₹2,500</td>
+                        <td>₹1,200</td>
+                        <td>₹3,700</td>
+                        <td><span class="status-paid">भुगतान</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn edit-btn" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete-btn" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <button class="action-btn print-btn" title="Print">
+                                    <i class="fas fa-print"></i>
+                                </button>
+                                <button class="action-btn pay-btn" title="Pay">
+                                    <i class="fas fa-rupee-sign"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Sample Data Row 2 -->
+                    <tr>
+                        <td>JAL002</td>
+                        <td>7</td>
+                        <td>सीता देवी</td>
+                        <td>8765432109</td>
+                        <td>₹2,000</td>
+                        <td>₹1,500</td>
+                        <td>₹3,500</td>
+                        <td><span style="color:#dc3545;">बकाया</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn edit-btn" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete-btn" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <button class="action-btn print-btn" title="Print">
+                                    <i class="fas fa-print"></i>
+                                </button>
+                                <button class="action-btn pay-btn" title="Pay">
+                                    <i class="fas fa-rupee-sign"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Sample Data Row 3 -->
+                    <tr>
+                        <td>JAL003</td>
+                        <td>3</td>
+                        <td>अमित शर्मा</td>
+                        <td>7654321098</td>
+                        <td>₹3,000</td>
+                        <td>₹0</td>
+                        <td>₹3,000</td>
+                        <td><span class="status-paid">भुगतान</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn edit-btn" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete-btn" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <button class="action-btn print-btn" title="Print">
+                                    <i class="fas fa-print"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Sample Data Row 4 -->
+                    <tr>
+                        <td>JAL004</td>
+                        <td>2</td>
+                        <td>प्रिया सिंह</td>
+                        <td>6543210987</td>
+                        <td>₹2,800</td>
+                        <td>₹800</td>
+                        <td>₹3,600</td>
+                        <td><span style="color:#dc3545;">बकाया</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn edit-btn" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete-btn" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <button class="action-btn print-btn" title="Print">
+                                    <i class="fas fa-print"></i>
+                                </button>
+                                <button class="action-btn pay-btn" title="Pay">
+                                    <i class="fas fa-rupee-sign"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Sample Data Row 5 -->
+                    <tr>
+                        <td>JAL005</td>
+                        <td>9</td>
+                        <td>राजेश यादव</td>
+                        <td>5432109876</td>
+                        <td>₹2,200</td>
+                        <td>₹1,000</td>
+                        <td>₹3,200</td>
+                        <td><span class="status-paid">भुगतान</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn edit-btn" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete-btn" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <button class="action-btn print-btn" title="Print">
+                                    <i class="fas fa-print"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Empty State (Hidden by default) -->
+    <div class="empty-state" style="display: none;">
+        <i class="fas fa-search"></i>
+        <h3>खोज शुरू करें</h3>
+        <p>कनेक्शन विवरण देखने के लिए सर्च बॉक्स में कनेक्शन नंबर, ग्राहक का नाम, या मोबाइल नंबर डालकर सर्च करें।</p>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-exclamation-triangle"></i> कनेक्शन डिलीट करें</h3>
+            <button onclick="closeModal()" style="background:none;border:none;color:white;font-size:20px;cursor:pointer;">×</button>
+        </div>
+        <div class="modal-body">
+            <div style="background:#f8d7da;color:#721c24;padding:10px;border-radius:5px;margin-bottom:15px;">
+                <i class="fas fa-exclamation-circle"></i>
+                <strong>चेतावनी!</strong> यह कार्रवाई पूर्ववत नहीं की जा सकती है
+            </div>
+            
+            <div style="padding:15px;background:#f8f9fa;border-radius:5px;margin-bottom:15px;">
+                <p style="margin-bottom:10px;">निम्नलिखित कनेक्शन को डिलीट करना चाहते हैं?</p>
+                <div id="connectionDetails">
+                    <p><strong>कनेक्शन नंबर:</strong> JAL001</p>
+                    <p><strong>ग्राहक का नाम:</strong> रमेश कुमार</p>
+                </div>
+            </div>
+            
+            <div>
+                <label for="password" style="display:block;margin-bottom:5px;">पासवर्ड</label>
+                <div style="position:relative;">
+                    <input type="password" id="password" style="width:100%;padding:8px 40px 8px 10px;border:1px solid #ddd;border-radius:5px;" placeholder="अपना पासवर्ड दर्ज करें">
+                    <span onclick="togglePassword()" style="position:absolute;right:10px;top:8px;cursor:pointer;">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal()">रद्द करें</button>
+            <button class="btn btn-danger" id="deleteBtn" disabled onclick="confirmDelete()">डिलीट करें</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Search functionality
+document.querySelector('.search-btn').addEventListener('click', function() {
+    const searchTerm = document.querySelector('.search-input').value.toLowerCase();
+    const rows = document.querySelectorAll('.data-table tbody tr');
+    let found = false;
+    
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        if (text.includes(searchTerm)) {
+            row.style.display = '';
+            found = true;
+        } else {
+            row.style.display = 'none';
+        }
+    });
+    
+    // Show empty state if no results
+    document.querySelector('.empty-state').style.display = found ? 'none' : 'block';
+});
+
+// Modal functions
+function showDeleteModal(conNo, ownerName) {
+    document.getElementById('connectionDetails').innerHTML = `
+        <p><strong>कनेक्शन नंबर:</strong> ${conNo}</p>
+        <p><strong>ग्राहक का नाम:</strong> ${ownerName}</p>
+    `;
+    document.getElementById('deleteModal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+    document.getElementById('password').value = '';
+    document.getElementById('deleteBtn').disabled = true;
+}
+
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const icon = document.querySelector('#deleteModal .fa-eye');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+
+// Enable delete button when password is entered
+document.getElementById('password').addEventListener('input', function() {
+    document.getElementById('deleteBtn').disabled = this.value.trim() === '';
+});
+
+function confirmDelete() {
+    const password = document.getElementById('password').value;
+    if (password === 'admin123') {
+        alert('कनेक्शन डिलीट कर दिया गया है');
+        closeModal();
+    } else {
+        alert('गलत पासवर्ड');
+    }
+}
+
+// Add event listeners to delete buttons
+document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const row = this.closest('tr');
+        const conNo = row.cells[0].textContent;
+        const ownerName = row.cells[2].textContent;
+        showDeleteModal(conNo, ownerName);
+    });
+});
+
+// Print bill function
+document.querySelectorAll('.print-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const conNo = this.closest('tr').cells[0].textContent;
+        alert(`बिल प्रिंट कर रहे हैं: ${conNo}`);
+        // window.open('print_bill.php?id=' + conNo, '_blank');
+    });
+});
+
+// Pay now function
+document.querySelectorAll('.pay-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const conNo = this.closest('tr').cells[0].textContent;
+        alert(`पेमेंट पेज पर जा रहे हैं: ${conNo}`);
+        // window.open('payment.php?con=' + conNo, '_blank');
+    });
+});
+
+// Edit function
+document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const conNo = this.closest('tr').cells[0].textContent;
+        alert(`एडिट कर रहे हैं: ${conNo}`);
+        // window.location.href = 'edit_connection.php?id=' + conNo;
+    });
+});
+
+// Close modal when clicking outside
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+</script>
+</body>
+</html>
