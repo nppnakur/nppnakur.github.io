@@ -34,40 +34,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Water Background Animation */
-.water-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  overflow: hidden;
-}
-
-.water-bg::before {
-  content: '';
-  position: absolute;
-  width: 200%;
-  height: 200%;
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path fill="%2310b981" opacity="0.05" d="M0,100 Q25,75 50,100 T100,100 Q125,75 150,100 T200,100 L200,200 L0,200 Z"/></svg>') repeat;
-  animation: waterWave 20s linear infinite;
-}
-
-.water-bg::after {
-  content: '';
-  position: absolute;
-  width: 200%;
-  height: 200%;
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path fill="%23059669" opacity="0.03" d="M0,120 Q25,95 50,120 T100,120 Q125,95 150,120 T200,120 L200,200 L0,200 Z"/></svg>') repeat;
-  animation: waterWave 15s linear infinite reverse;
-}
-
-@keyframes waterWave {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
 /* ---------- Top Bar Styles ---------- */
 .topbar {
   position: sticky;
@@ -80,7 +46,6 @@ body {
   align-items: center;
   padding: 12px 24px;
   height: 70px;
-  backdrop-filter: blur(10px);
 }
 
 .topbar-left {
@@ -93,12 +58,6 @@ body {
   height: 45px;
   width: auto;
   border-radius: 6px;
-  animation: logoPulse 3s ease-in-out infinite;
-}
-
-@keyframes logoPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
 }
 
 .org-name {
@@ -124,23 +83,6 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  position: relative;
-  overflow: hidden;
-}
-
-.topbar a::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0.5s;
-}
-
-.topbar a:hover::before {
-  left: 100%;
 }
 
 .topbar a:hover {
@@ -166,29 +108,8 @@ body {
   font-size: 32px;
   margin: 10px 0 20px;
   font-weight: 700;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  text-shadow: 1px 1px 2px rgba(0,0,0,.1);
   width: 100%;
-  position: relative;
-  animation: headingGlow 2s ease-in-out infinite alternate;
-}
-
-@keyframes headingGlow {
-  from { text-shadow: 1px 1px 2px rgba(0,0,0,0.1), 0 0 5px rgba(16, 185, 129, 0.3); }
-  to { text-shadow: 1px 1px 2px rgba(0,0,0,0.1), 0 0 10px rgba(16, 185, 129, 0.6); }
-}
-
-.main-heading::after {
-  content: '💧';
-  position: absolute;
-  top: -10px;
-  right: 20px;
-  font-size: 40px;
-  animation: waterDrop 2s ease-in-out infinite;
-}
-
-@keyframes waterDrop {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-10px) scale(1.1); }
 }
 
 /* ---------- Search Box Styles ---------- */
@@ -217,20 +138,12 @@ body {
   background: white;
   box-shadow: var(--shadow);
   transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
 }
 
 .search-box input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2), 0 0 20px rgba(16, 185, 129, 0.3);
-  animation: searchGlow 1.5s ease-in-out infinite alternate;
-}
-
-@keyframes searchGlow {
-  from { box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2), 0 0 20px rgba(16, 185, 129, 0.3); }
-  to { box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.4), 0 0 30px rgba(16, 185, 129, 0.5); }
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
 .search-btn, .export-btn {
@@ -245,8 +158,6 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  position: relative;
-  overflow: hidden;
 }
 
 .search-btn {
@@ -260,24 +171,8 @@ body {
 }
 
 .search-btn:hover, .export-btn:hover {
-  transform: translateY(-2px) scale(1.05);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-hover);
-}
-
-.search-btn:hover::after, .export-btn:hover::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  animation: buttonShine 1s ease-in-out;
-}
-
-@keyframes buttonShine {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
 }
 
 /* ---------- Stats Cards ---------- */
@@ -304,12 +199,6 @@ body {
   border: 1px solid #e5e7eb;
   position: relative;
   overflow: hidden;
-  animation: cardFloat 3s ease-in-out infinite alternate;
-}
-
-@keyframes cardFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
 }
 
 .stat-card::before {
@@ -323,9 +212,8 @@ body {
 }
 
 .stat-card:hover {
-  transform: translateY(-5px) scale(1.03);
+  transform: translateY(-3px);
   box-shadow: var(--shadow-hover);
-  animation: none;
 }
 
 .stat-card.connections {
@@ -360,24 +248,12 @@ body {
   font-weight: 700;
   margin: 8px 0;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-  animation: numberPulse 2s ease-in-out infinite;
-}
-
-@keyframes numberPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
 }
 
 .stat-card .icon {
   font-size: 24px;
   margin-bottom: 8px;
   opacity: 0.9;
-  animation: iconFloat 2s ease-in-out infinite alternate;
-}
-
-@keyframes iconFloat {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-5px); }
 }
 
 /* ---------- Main Table Container ---------- */
@@ -385,7 +261,7 @@ body {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  background: rgba(255, 255, 255, 0.95);
+  background: white;
   border-radius: 12px;
   box-shadow: var(--shadow-hover);
   overflow: hidden;
@@ -394,25 +270,17 @@ body {
   flex-direction: column;
   height: calc(100vh - 380px);
   min-height: 400px;
-  backdrop-filter: blur(10px);
-  animation: containerAppear 0.8s ease-out;
-}
-
-@keyframes containerAppear {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ---------- Fixed Table Header Container ---------- */
 .table-header-container {
-  background: rgba(255, 255, 255, 0.95);
+  background: white;
   border-bottom: 2px solid #e5e7eb;
   overflow: hidden;
   flex-shrink: 0;
   position: sticky;
   top: 0;
   z-index: 100;
-  backdrop-filter: blur(10px);
 }
 
 .data-table {
@@ -427,7 +295,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 101;
-  background: rgba(16, 185, 129, 0.95);
+  background: white;
 }
 
 .data-table th {
@@ -444,13 +312,6 @@ body {
   position: sticky;
   top: 0;
   z-index: 102;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-}
-
-.data-table th:hover {
-  background: linear-gradient(135deg, #059669, #047857);
-  transform: translateY(-1px);
 }
 
 .data-table th:last-child {
@@ -464,24 +325,26 @@ body {
   overflow-x: auto;
 }
 
-.data-table tbody tr {
-  transition: all 0.2s ease;
-  animation: rowAppear 0.5s ease-out backwards;
+/* Ensure header stays fixed while body scrolls */
+.table-body-container table {
+  border-collapse: collapse;
+  width: 100%;
 }
 
-@keyframes rowAppear {
-  from { opacity: 0; transform: translateX(-10px); }
-  to { opacity: 1; transform: translateX(0); }
+.table-body-container thead {
+  display: none; /* Hide thead in body container as we already have fixed header */
+}
+
+.data-table tbody tr {
+  transition: all 0.2s ease;
 }
 
 .data-table tbody tr:nth-child(even) {
-  background: rgba(248, 250, 252, 0.8);
+  background: #f8fafc;
 }
 
 .data-table tbody tr:hover {
   background: var(--light-green);
-  transform: scale(1.005);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .data-table td {
@@ -496,7 +359,7 @@ body {
   white-space: nowrap;
 }
 
-/* Column specific styles */
+/* Column specific styles - updated for better fit */
 .con-no-col { width: 12%; font-weight: 600; font-size: 13px; }
 .ward-no-col { width: 8%; font-size: 13px; }
 .owner { 
@@ -510,51 +373,12 @@ body {
   text-overflow: ellipsis;
 }
 .mobile-col { width: 10%; font-family: monospace; font-size: 13px; }
-.current-amount-col { 
-  width: 12%; 
-  font-weight: 600; 
-  color: #059669; 
-  font-size: 13px; 
-  text-align: right; 
-  padding-right: 15px !important;
-  animation: amountGlow 2s ease-in-out infinite alternate;
-}
-.arrear-col { 
-  width: 12%; 
-  font-weight: 600; 
-  color: #d97706; 
-  font-size: 13px; 
-  text-align: right; 
-  padding-right: 15px !important;
-  animation: arrearGlow 2s ease-in-out infinite alternate;
-}
-.remaining-col { 
-  width: 12%; 
-  font-weight: 600; 
-  color: #dc2626; 
-  font-size: 13px; 
-  text-align: right; 
-  padding-right: 15px !important;
-  animation: remainingGlow 2s ease-in-out infinite alternate;
-}
+.current-amount-col { width: 12%; font-weight: 600; color: #059669; font-size: 13px; text-align: right; padding-right: 15px !important; }
+.arrear-col { width: 12%; font-weight: 600; color: #d97706; font-size: 13px; text-align: right; padding-right: 15px !important; }
+.remaining-col { width: 12%; font-weight: 600; color: #dc2626; font-size: 13px; text-align: right; padding-right: 15px !important; }
 .act { width: 12%; }
 
-@keyframes amountGlow {
-  from { color: #059669; text-shadow: 0 0 5px rgba(5, 150, 105, 0.3); }
-  to { color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
-}
-
-@keyframes arrearGlow {
-  from { color: #d97706; text-shadow: 0 0 5px rgba(217, 119, 6, 0.3); }
-  to { color: #f59e0b; text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
-}
-
-@keyframes remainingGlow {
-  from { color: #dc2626; text-shadow: 0 0 5px rgba(220, 38, 38, 0.3); }
-  to { color: #ef4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
-}
-
-/* Status badges */
+/* Status badges - केवल आइकन */
 .status-paid {
   background: #d1fae5;
   color: #065f46;
@@ -564,12 +388,6 @@ body {
   font-weight: 600;
   display: inline-block;
   min-width: 80px;
-  animation: paidPulse 2s ease-in-out infinite;
-}
-
-@keyframes paidPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
 }
 
 /* Action buttons */
@@ -590,13 +408,6 @@ body {
   transition: all 0.3s ease;
   font-size: 13px;
   box-shadow: var(--shadow);
-  position: relative;
-  overflow: hidden;
-}
-
-.action-btn:hover {
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: var(--shadow-hover);
 }
 
 .edit-btn {
@@ -617,12 +428,36 @@ body {
 .pay-btn {
   background: linear-gradient(135deg, #10b981, #059669);
   color: white;
-  animation: payButtonGlow 2s ease-in-out infinite;
 }
 
-@keyframes payButtonGlow {
-  0%, 100% { box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); }
-  50% { box-shadow: 0 4px 15px rgba(16, 185, 129, 0.6); }
+.action-btn:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-hover);
+}
+
+/* ---------- Message Styles ---------- */
+.message-box {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+  padding: 12px 16px;
+  margin: 15px auto;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: var(--shadow);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.message-box.error {
+  background: #fecaca;
+  color: #991b1b;
+  border-color: #fca5a5;
 }
 
 /* ---------- Empty Table Message ---------- */
@@ -642,12 +477,6 @@ body {
   color: #d1d5db;
   margin-bottom: 20px;
   opacity: 0.5;
-  animation: emptyIconFloat 3s ease-in-out infinite;
-}
-
-@keyframes emptyIconFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
 }
 
 .empty-table-message h3 {
@@ -670,12 +499,6 @@ body {
   border: none;
   box-shadow: var(--shadow-hover);
   overflow: hidden;
-  animation: modalAppear 0.3s ease-out;
-}
-
-@keyframes modalAppear {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
 }
 
 .modal-header {
@@ -683,48 +506,273 @@ body {
   color: white;
   border-bottom: none;
   padding: 16px 20px;
-  animation: modalHeaderGlow 2s ease-in-out infinite alternate;
 }
 
-@keyframes modalHeaderGlow {
-  from { background: var(--gradient-primary); }
-  to { background: linear-gradient(135deg, #059669, #047857); }
+.modal-title {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.btn-close {
+  filter: invert(1);
+  opacity: 0.8;
+}
+
+.password-container {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6b7280;
+  z-index: 5;
 }
 
 /* ---------- Responsive Styles ---------- */
+@media (max-width: 1200px) {
+  .stats-container {
+    gap: 12px;
+  }
+  
+  .stat-card {
+    min-width: 160px;
+    max-width: 220px;
+  }
+  
+  .main-table-container {
+    height: calc(100vh - 370px);
+  }
+}
+
 @media (max-width: 992px) {
   .main-heading {
     font-size: 28px;
   }
   
-  .main-heading::after {
-    font-size: 30px;
+  .data-table th {
+    padding: 12px 6px;
+    font-size: 12px;
   }
   
-  .stat-card {
-    animation: none;
+  .data-table td {
+    padding: 10px 6px;
+    font-size: 12px;
   }
   
-  .stat-card:hover {
-    animation: cardFloat 2s ease-in-out infinite alternate;
+  .action-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
   }
+  
+  .org-name {
+    font-size: 18px;
+  }
+  
+  .main-table-container {
+    height: calc(100vh - 350px);
+  }
+  
+  .empty-table-message i {
+    font-size: 50px;
+  }
+  
+  .empty-table-message h3 {
+    font-size: 18px;
+  }
+  
+  .status-paid {
+    font-size: 11px;
+    padding: 5px 8px;
+    min-width: 70px;
+  }
+  
+  /* Adjust column widths for tablet */
+  .owner { 
+    width: 20%; 
+    font-size: 12px; 
+  }
+  .con-no-col { width: 14%; font-size: 12px; }
+  .ward-no-col { width: 9%; font-size: 12px; }
+  .mobile-col { width: 12%; font-size: 12px; }
+  .current-amount-col, .arrear-col, .remaining-col { 
+    width: 11%; 
+    font-size: 12px; 
+  }
+  .act { width: 13%; }
 }
 
 @media (max-width: 768px) {
-  .main-heading {
-    font-size: 24px;
+  .topbar {
+    padding: 10px 15px;
+    height: auto;
+    flex-direction: column;
+    gap: 10px;
   }
   
-  .main-heading::after {
-    display: none;
+  .topbar-left, .topbar-right {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .logo {
+    height: 35px;
+  }
+  
+  .topbar a {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+  
+  .main-heading {
+    font-size: 24px;
+    margin: 8px 0 15px;
   }
   
   .search-container {
     flex-direction: column;
+    align-items: center;
+    gap: 10px;
   }
   
   .search-box {
     width: 100%;
+  }
+  
+  .stats-container {
+    gap: 10px;
+  }
+  
+  .stat-card {
+    min-width: 45%;
+    padding: 12px;
+  }
+  
+  .stat-card .number {
+    font-size: 18px;
+  }
+  
+  .stat-card h3 {
+    font-size: 12px;
+  }
+  
+  .search-box input, .search-btn, .export-btn {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+  
+  .main-table-container {
+    border-radius: 10px;
+    height: calc(100vh - 330px);
+  }
+  
+  .data-table {
+    min-width: 800px; /* For horizontal scrolling on mobile */
+  }
+  
+  .data-table th, .data-table td {
+    padding: 8px 4px;
+    font-size: 10px;
+  }
+  
+  .org-name {
+    font-size: 16px;
+  }
+  
+  .action-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+  
+  .empty-table-message {
+    padding: 20px;
+  }
+  
+  .empty-table-message i {
+    font-size: 40px;
+  }
+  
+  .empty-table-message h3 {
+    font-size: 16px;
+  }
+  
+  .status-paid {
+    font-size: 9px;
+    padding: 4px 6px;
+    min-width: 60px;
+  }
+  
+  /* Adjust column widths for mobile */
+  .owner { 
+    width: 18%; 
+    font-size: 10px; 
+    padding-left: 6px !important;
+  }
+  .con-no-col { width: 16%; font-size: 10px; }
+  .ward-no-col { width: 10%; font-size: 10px; }
+  .mobile-col { width: 13%; font-size: 10px; }
+  .current-amount-col, .arrear-col, .remaining-col { 
+    width: 9%; 
+    font-size: 10px; 
+  }
+  .act { width: 15%; }
+}
+
+@media (max-width: 576px) {
+  .main-heading {
+    font-size: 22px;
+  }
+  
+  .stat-card {
+    min-width: 100%;
+    padding: 10px;
+  }
+  
+  .topbar {
+    padding: 8px 12px;
+  }
+  
+  .data-table th,
+  .data-table td {
+    padding: 6px 3px;
+    font-size: 9px;
+  }
+  
+  .action-buttons {
+    gap: 3px;
+  }
+  
+  .action-btn {
+    width: 22px;
+    height: 22px;
+    font-size: 9px;
+  }
+  
+  .org-name {
+    font-size: 14px;
+  }
+  
+  .empty-table-message i {
+    font-size: 35px;
+  }
+  
+  .empty-table-message h3 {
+    font-size: 15px;
+  }
+  
+  .status-paid {
+    font-size: 8px;
+    padding: 3px 5px;
+    min-width: 50px;
+  }
+  
+  .main-table-container {
+    height: calc(100vh - 310px);
   }
 }
 
@@ -736,11 +784,10 @@ body {
 
 .table-body-container::-webkit-scrollbar-track {
   background: #f1f5f9;
-  border-radius: 4px;
 }
 
 .table-body-container::-webkit-scrollbar-thumb {
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, #10b981, #059669);
   border-radius: 4px;
 }
 
@@ -748,97 +795,61 @@ body {
   background: linear-gradient(135deg, #059669, #047857);
 }
 
-/* Floating water droplets */
-.floating-droplets {
-  position: fixed;
+/* Loading animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stat-card, .message-box, .main-table-container {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* No data message */
+.no-data {
+  text-align: center;
+  padding: 30px;
+  color: #6c757d;
+  font-style: italic;
+  font-size: 14px;
+}
+
+.no-data i {
+  font-size: 28px;
+  margin-bottom: 10px;
+  display: block;
+  opacity: 0.5;
+}
+
+/* Table cell alignment for better readability */
+.table-body-container td {
+  vertical-align: middle;
+}
+
+/* Make sure table header stays on top during scroll */
+.table-header-container th {
+  position: sticky;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: -1;
+  z-index: 10;
 }
 
-.droplet {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background: linear-gradient(135deg, #10b981, #059669);
-  border-radius: 50%;
-  opacity: 0.1;
-  animation: dropletFloat 15s linear infinite;
+/* Ensure proper z-index for fixed elements */
+.topbar {
+  z-index: 1000;
 }
 
-.droplet:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
-.droplet:nth-child(2) { top: 20%; left: 15%; animation-delay: 2s; }
-.droplet:nth-child(3) { top: 30%; left: 85%; animation-delay: 4s; }
-.droplet:nth-child(4) { top: 40%; left: 75%; animation-delay: 6s; }
-.droplet:nth-child(5) { top: 50%; left: 10%; animation-delay: 8s; }
-.droplet:nth-child(6) { top: 60%; left: 90%; animation-delay: 10s; }
-.droplet:nth-child(7) { top: 70%; left: 20%; animation-delay: 12s; }
-.droplet:nth-child(8) { top: 80%; left: 80%; animation-delay: 14s; }
-
-@keyframes dropletFloat {
-  0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
-  10% { opacity: 0.1; }
-  90% { opacity: 0.1; }
-  100% { transform: translateY(-100px) translateX(50px) rotate(360deg); opacity: 0; }
+.table-header-container {
+  z-index: 999;
 }
 
-/* Loader animation */
-.loader {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.9);
-  z-index: 9999;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.loader-spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid #e5e7eb;
-  border-top: 5px solid #10b981;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.data-table th {
+  z-index: 1000;
 }
 </style>
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<!-- Water Background -->
-<div class="water-bg"></div>
-
-<!-- Floating Droplets -->
-<div class="floating-droplets">
-  <div class="droplet"></div>
-  <div class="droplet"></div>
-  <div class="droplet"></div>
-  <div class="droplet"></div>
-  <div class="droplet"></div>
-  <div class="droplet"></div>
-  <div class="droplet"></div>
-  <div class="droplet"></div>
-</div>
-
-<!-- Loader -->
-<div class="loader" id="loader">
-  <div class="loader-spinner"></div>
-  <p class="mt-3">लोड हो रहा है...</p>
-</div>
-
 <div class="topbar">
     <div class="topbar-left">
         <img src="img1.png" alt="जल प्रबंधन लोगो" class="logo">
@@ -870,25 +881,25 @@ body {
         <div class="stat-card connections">
             <div class="icon">👥</div>
             <h3>कुल कनेक्शन</h3>
-            <div class="number" id="totalConnections">150</div>
+            <div class="number" id="totalConnections">0</div>
             <p>सभी कनेक्शनों की कुल संख्या</p>
         </div>
         <div class="stat-card current">
             <div class="icon">💰</div>
             <h3>वर्तमान राशि</h3>
-            <div class="number">₹2,50,000</div>
+            <div class="number" id="totalCurrent">₹0</div>
             <p>2025-26 वर्ष की राशि</p>
         </div>
         <div class="stat-card arrear">
             <div class="icon">📅</div>
             <h3>बकाया शेष</h3>
-            <div class="number">₹1,20,000</div>
+            <div class="number" id="totalArrear">₹0</div>
             <p>2024-25 वर्ष का बकाया</p>
         </div>
         <div class="stat-card remaining">
             <div class="icon">🧾</div>
             <h3>शेष राशि</h3>
-            <div class="number">₹3,70,000</div>
+            <div class="number" id="totalRemaining">₹0</div>
             <p>सभी कनेक्शनों का शेष</p>
         </div>
     </div>
@@ -953,30 +964,23 @@ body {
 </div>
 
 <script>
-// Sample Data
-const connectionData = [
-    { id: 'JAL001', ward: '5', name: 'रमेश कुमार', mobile: '9876543210', current: 2500, arrear: 1200, remaining: 3700, status: 'paid' },
-    { id: 'JAL002', ward: '7', name: 'सीता देवी', mobile: '8765432109', current: 2000, arrear: 1500, remaining: 3500, status: 'pending' },
-    { id: 'JAL003', ward: '3', name: 'अमित शर्मा', mobile: '7654321098', current: 3000, arrear: 0, remaining: 3000, status: 'paid' },
-    { id: 'JAL004', ward: '2', name: 'प्रिया सिंह', mobile: '6543210987', current: 2800, arrear: 800, remaining: 3600, status: 'pending' },
-    { id: 'JAL005', ward: '9', name: 'राजेश यादव', mobile: '5432109876', current: 2200, arrear: 1000, remaining: 3200, status: 'paid' },
-    { id: 'JAL006', ward: '4', name: 'मोहन लाल', mobile: '4321098765', current: 3200, arrear: 500, remaining: 3700, status: 'pending' },
-    { id: 'JAL007', ward: '6', name: 'गीता देवी', mobile: '3210987654', current: 1800, arrear: 1200, remaining: 3000, status: 'paid' },
-    { id: 'JAL008', ward: '8', name: 'विकास सिंह', mobile: '2109876543', current: 2700, arrear: 900, remaining: 3600, status: 'pending' },
-    { id: 'JAL009', ward: '1', name: 'नीता कुमारी', mobile: '1098765432', current: 1900, arrear: 1100, remaining: 3000, status: 'paid' },
-    { id: 'JAL010', ward: '10', name: 'संजय वर्मा', mobile: '0987654321', current: 2600, arrear: 1400, remaining: 4000, status: 'pending' }
-];
+// Global variable to store CSV data
+let connectionData = [];
+let currentData = []; // For filtered data
 
 // Format Indian Currency
 function formatIndianCurrency(amount) {
-    if (amount === 0) return '0';
+    if (isNaN(amount) || amount === null || amount === '') return '₹0';
     
-    // Convert to string and split into whole and decimal parts
-    let [whole, decimal] = Math.abs(amount).toFixed(2).split('.');
+    amount = parseFloat(amount);
     
-    // Format whole number part with Indian numbering system
-    let lastThree = whole.substring(whole.length - 3);
-    let otherNumbers = whole.substring(0, whole.length - 3);
+    // Format number with commas in Indian style
+    let parts = amount.toFixed(2).split('.');
+    let wholePart = parts[0];
+    let decimalPart = parts[1] || '00';
+    
+    let lastThree = wholePart.substring(wholePart.length - 3);
+    let otherNumbers = wholePart.substring(0, wholePart.length - 3);
     
     if (otherNumbers !== '') {
         lastThree = ',' + lastThree;
@@ -984,65 +988,129 @@ function formatIndianCurrency(amount) {
     
     let formatted = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
     
-    // Add negative sign if needed
-    if (amount < 0) {
-        formatted = '-' + formatted;
-    }
-    
-    return '₹' + formatted + (decimal ? '.' + decimal : '.00');
+    return '₹' + formatted + '.' + decimalPart;
 }
 
-// Load Data
-function loadData(filter = '') {
+// Parse CSV data
+function parseCSV(csvText) {
+    const rows = csvText.split('\n');
+    const data = [];
+    
+    for (let i = 1; i < rows.length; i++) { // Start from 1 to skip header
+        const row = rows[i].trim();
+        if (!row) continue;
+        
+        const columns = row.split(',').map(col => col.trim());
+        
+        if (columns.length >= 7) {
+            const connection = {
+                con_no: columns[0] || '',
+                ward_no: columns[1] || '',
+                owner_name: columns[2] || '',
+                mobile: columns[3] || '',
+                current_amount: parseFloat(columns[4]) || 0,
+                arrear_balance: parseFloat(columns[5]) || 0,
+                remaining_balance: parseFloat(columns[6]) || 0,
+                status: parseFloat(columns[6]) === 0 ? 'paid' : 'pending'
+            };
+            data.push(connection);
+        }
+    }
+    
+    return data;
+}
+
+// Load CSV data from file
+async function loadCSVData() {
+    try {
+        // You can replace this with your actual CSV file path
+        const response = await fetch('connection_data.csv');
+        const csvText = await response.text();
+        connectionData = parseCSV(csvText);
+        currentData = [...connectionData];
+        updateStats();
+        renderTable();
+    } catch (error) {
+        console.error('Error loading CSV:', error);
+        // Fallback to sample data if CSV not found
+        loadSampleData();
+    }
+}
+
+// Sample data fallback
+function loadSampleData() {
+    connectionData = [
+        { con_no: 'JAL001', ward_no: '5', owner_name: 'रमेश कुमार', mobile: '9876543210', current_amount: 2500, arrear_balance: 1200, remaining_balance: 3700, status: 'paid' },
+        { con_no: 'JAL002', ward_no: '7', owner_name: 'सीता देवी', mobile: '8765432109', current_amount: 2000, arrear_balance: 1500, remaining_balance: 3500, status: 'pending' },
+        { con_no: 'JAL003', ward_no: '3', owner_name: 'अमित शर्मा', mobile: '7654321098', current_amount: 3000, arrear_balance: 0, remaining_balance: 3000, status: 'paid' },
+        { con_no: 'JAL004', ward_no: '2', owner_name: 'प्रिया सिंह', mobile: '6543210987', current_amount: 2800, arrear_balance: 800, remaining_balance: 3600, status: 'pending' },
+        { con_no: 'JAL005', ward_no: '9', owner_name: 'राजेश यादव', mobile: '5432109876', current_amount: 2200, arrear_balance: 1000, remaining_balance: 3200, status: 'paid' }
+    ];
+    currentData = [...connectionData];
+    updateStats();
+    renderTable();
+}
+
+// Update statistics
+function updateStats() {
+    const totalConnections = currentData.length;
+    const totalCurrent = currentData.reduce((sum, item) => sum + (item.current_amount || 0), 0);
+    const totalArrear = currentData.reduce((sum, item) => sum + (item.arrear_balance || 0), 0);
+    const totalRemaining = currentData.reduce((sum, item) => sum + (item.remaining_balance || 0), 0);
+    
+    document.getElementById('totalConnections').textContent = totalConnections;
+    document.getElementById('totalCurrent').textContent = formatIndianCurrency(totalCurrent);
+    document.getElementById('totalArrear').textContent = formatIndianCurrency(totalArrear);
+    document.getElementById('totalRemaining').textContent = formatIndianCurrency(totalRemaining);
+}
+
+// Render table data
+function renderTable() {
     const tableBody = document.getElementById('tableBody');
     tableBody.innerHTML = '';
     
-    let filteredData = connectionData;
-    
-    if (filter) {
-        const searchTerm = filter.toLowerCase();
-        filteredData = connectionData.filter(item => 
-            item.id.toLowerCase().includes(searchTerm) ||
-            item.name.toLowerCase().includes(searchTerm) ||
-            item.mobile.includes(searchTerm) ||
-            item.ward.includes(searchTerm)
-        );
+    if (currentData.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="8" class="no-data">
+                    <i class="fas fa-inbox"></i>
+                    कोई डेटा उपलब्ध नहीं है
+                </td>
+            </tr>
+        `;
+        return;
     }
     
-    // Update stats
-    document.getElementById('totalConnections').textContent = filteredData.length;
-    
-    filteredData.forEach((item, index) => {
+    currentData.forEach((item, index) => {
         const row = document.createElement('tr');
-        row.style.animationDelay = `${index * 0.1}s`;
         
         row.innerHTML = `
-            <td class="con-no-col">${item.id}</td>
-            <td class="ward-no-col">${item.ward}</td>
-            <td class="owner" title="${item.name}">${item.name}</td>
-            <td class="mobile-col">${item.mobile}</td>
-            <td class="current-amount-col">${formatIndianCurrency(item.current)}</td>
-            <td class="arrear-col">${formatIndianCurrency(item.arrear)}</td>
-            <td class="remaining-col">${formatIndianCurrency(item.remaining)}</td>
+            <td class="con-no-col">${item.con_no || ''}</td>
+            <td class="ward-no-col">${item.ward_no || ''}</td>
+            <td class="owner" title="${item.owner_name || ''}">${item.owner_name || ''}</td>
+            <td class="mobile-col">${item.mobile || ''}</td>
+            <td class="current-amount-col">${formatIndianCurrency(item.current_amount || 0)}</td>
+            <td class="arrear-col">${formatIndianCurrency(item.arrear_balance || 0)}</td>
+            <td class="remaining-col">${formatIndianCurrency(item.remaining_balance || 0)}</td>
             <td class="act">
                 <div class="action-buttons">
-                    <button class="action-btn edit-btn" onclick="editConnection('${item.id}')" title="Edit">
+                    <button class="action-btn edit-btn" onclick="editConnection('${item.con_no}')" title="Edit">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="action-btn delete-btn" onclick="showDeleteModal('${item.id}', '${item.name}')" title="Delete">
+                    <button class="action-btn delete-btn" onclick="showDeleteModal('${item.con_no}', '${item.owner_name}')" title="Delete">
                         <i class="fas fa-trash"></i>
                     </button>
-                    <button class="action-btn print-btn" onclick="printBill('${item.id}')" title="Print">
+                    <button class="action-btn print-btn" onclick="printBill('${item.con_no}')" title="Print">
                         <i class="fas fa-print"></i>
                     </button>
-                    ${item.remaining > 0 ? `
-                    <button class="action-btn pay-btn" onclick="makePayment('${item.id}')" title="Pay Now">
+                    ${item.remaining_balance > 0 ? `
+                    <button class="action-btn pay-btn" onclick="makePayment('${item.con_no}')" title="Pay Now">
                         <i class="fas fa-money-bill-wave"></i>
                     </button>
                     ` : ''}
                 </div>
                 <div class="mt-1">
-                    ${item.status === 'paid' ? '<span class="status-paid">✅ भुगतान</span>' : '<span style="color:#dc3545;font-size:12px;">❌ बकाया</span>'}
+                    ${item.remaining_balance === 0 ? '<span class="status-paid">✅ भुगतान</span>' : '<span style="display: inline-block; width: 80px;">&nbsp;</span>'}
                 </div>
             </td>
         `;
@@ -1053,58 +1121,61 @@ function loadData(filter = '') {
 
 // Search Function
 function performSearch() {
-    const searchTerm = document.getElementById('searchInput').value;
-    loadData(searchTerm);
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    
+    if (!searchTerm) {
+        currentData = [...connectionData];
+    } else {
+        currentData = connectionData.filter(item => 
+            (item.con_no && item.con_no.toLowerCase().includes(searchTerm)) ||
+            (item.owner_name && item.owner_name.toLowerCase().includes(searchTerm)) ||
+            (item.mobile && item.mobile.includes(searchTerm)) ||
+            (item.ward_no && item.ward_no.includes(searchTerm))
+        );
+    }
+    
+    updateStats();
+    renderTable();
 }
 
 // Export to Excel
 function exportToExcel() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'flex';
+    // Create CSV content
+    let csvContent = "कनेक्शन नंबर,वार्ड,नाम,मोबाइल,2025-26,2024-25,शेष,स्थिति\n";
     
-    setTimeout(() => {
-        // Create Excel data
-        let excelData = "कनेक्शन नंबर,वार्ड,नाम,मोबाइल,2025-26,2024-25,शेष,स्थिति\n";
-        
-        connectionData.forEach(item => {
-            excelData += `${item.id},${item.ward},${item.name},${item.mobile},${item.current},${item.arrear},${item.remaining},${item.status === 'paid' ? 'भुगतान' : 'बकाया'}\n`;
-        });
-        
-        // Create download link
-        const blob = new Blob([excelData], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', `connection_details_${new Date().toISOString().split('T')[0]}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        loader.style.display = 'none';
-        
-        // Show success message
-        alert('एक्सेल फ़ाइल डाउनलोड हो गई है!');
-    }, 1500);
+    currentData.forEach(item => {
+        csvContent += `"${item.con_no}","${item.ward_no}","${item.owner_name}","${item.mobile}",${item.current_amount},${item.arrear_balance},${item.remaining_balance},"${item.remaining_balance === 0 ? 'भुगतान' : 'बकाया'}"\n`;
+    });
+    
+    // Create download link
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `connection_details_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 // Edit Connection
-function editConnection(conId) {
-    alert(`एडिट कर रहे हैं: ${conId}`);
-    // window.location.href = `edit_connection.html?id=${conId}`;
+function editConnection(conNo) {
+    alert(`एडिट कर रहे हैं: ${conNo}`);
+    // window.location.href = `edit_connection.html?id=${conNo}`;
 }
 
 // Show Delete Modal
-function showDeleteModal(conId, ownerName) {
+function showDeleteModal(conNo, ownerName) {
     document.getElementById('connectionDetails').innerHTML = `
         <div class="alert alert-info">
-            <p><strong>कनेक्शन नंबर:</strong> ${conId}</p>
+            <p><strong>कनेक्शन नंबर:</strong> ${conNo}</p>
             <p><strong>ग्राहक का नाम:</strong> ${ownerName}</p>
         </div>
     `;
     
     const deleteBtn = document.getElementById('deleteBtn');
     deleteBtn.disabled = true;
-    deleteBtn.onclick = () => deleteConnection(conId);
+    deleteBtn.onclick = () => deleteConnection(conNo);
     
     const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
     modal.show();
@@ -1116,16 +1187,25 @@ function showDeleteModal(conId, ownerName) {
 }
 
 // Delete Connection
-function deleteConnection(conId) {
+function deleteConnection(conNo) {
     const password = document.getElementById('password').value;
     
     if (password === 'admin123') {
-        // Show loading animation
-        const index = connectionData.findIndex(item => item.id === conId);
+        // Remove from connectionData
+        const index = connectionData.findIndex(item => item.con_no === conNo);
         if (index > -1) {
             connectionData.splice(index, 1);
-            loadData();
         }
+        
+        // Remove from currentData
+        const currentIndex = currentData.findIndex(item => item.con_no === conNo);
+        if (currentIndex > -1) {
+            currentData.splice(currentIndex, 1);
+        }
+        
+        // Update UI
+        updateStats();
+        renderTable();
         
         // Close modal
         const modal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
@@ -1139,21 +1219,21 @@ function deleteConnection(conId) {
 }
 
 // Print Bill
-function printBill(conId) {
-    alert(`बिल प्रिंट कर रहे हैं: ${conId}`);
-    // window.open(`print_bill.html?id=${conId}`, '_blank');
+function printBill(conNo) {
+    alert(`बिल प्रिंट कर रहे हैं: ${conNo}`);
+    // window.open(`print_bill.html?id=${conNo}`, '_blank');
 }
 
 // Make Payment
-function makePayment(conId) {
-    alert(`पेमेंट पेज पर जा रहे हैं: ${conId}`);
-    // window.open(`payment.html?con=${conId}`, '_blank');
+function makePayment(conNo) {
+    alert(`पेमेंट पेज पर जा रहे हैं: ${conNo}`);
+    // window.open(`payment.html?con=${conNo}`, '_blank');
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
-    // Load data on page load
-    loadData();
+    // Load CSV data
+    loadCSVData();
     
     // Add Enter key support for search
     document.getElementById('searchInput').addEventListener('keypress', function(e) {
@@ -1162,73 +1242,40 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Add animation to stats on page load
-    const statCards = document.querySelectorAll('.stat-card');
-    statCards.forEach((card, index) => {
-        card.style.animationDelay = `${index * 0.2}s`;
-    });
-});
-
-// Add water ripple effect on click
-document.addEventListener('click', function(e) {
-    if (!e.target.matches('.action-btn') && !e.target.closest('.action-btn')) {
-        return;
+    // Auto-hide messages after a few seconds
+    const messageBox = document.querySelector('.message-box');
+    if (messageBox) {
+        setTimeout(() => {
+            messageBox.style.opacity = '0';
+            messageBox.style.transition = 'opacity 0.5s ease-out';
+            setTimeout(() => {
+                messageBox.remove();
+            }, 500);
+        }, 5000);
     }
     
-    const button = e.target.closest('.action-btn');
-    if (button) {
-        const ripple = document.createElement('span');
-        const rect = button.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = e.clientX - rect.left - size / 2;
-        const y = e.clientY - rect.top - size / 2;
-        
-        ripple.style.cssText = `
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.7);
-            transform: scale(0);
-            animation: ripple 0.6s linear;
-            width: ${size}px;
-            height: ${size}px;
-            top: ${y}px;
-            left: ${x}px;
-            pointer-events: none;
-        `;
-        
-        button.appendChild(ripple);
-        
-        setTimeout(() => {
-            ripple.remove();
-        }, 600);
-    }
+    // Adjust table height
+    adjustTableHeight();
+    window.addEventListener('resize', adjustTableHeight);
 });
 
-// Add CSS for ripple animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes ripple {
-        to {
-            transform: scale(4);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(style);
-
-// Add smooth scroll effect
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
+// Adjust table height function
+function adjustTableHeight() {
+    const tableContainer = document.querySelector('.main-table-container');
+    if (!tableContainer) return;
+    
+    const windowHeight = window.innerHeight;
+    const topbarHeight = document.querySelector('.topbar').offsetHeight || 70;
+    const headingHeight = document.querySelector('.main-heading').offsetHeight || 60;
+    const searchHeight = document.querySelector('.search-container').offsetHeight || 50;
+    const statsHeight = document.querySelector('.stats-container').offsetHeight || 100;
+    const margins = 60;
+    
+    const calculatedHeight = windowHeight - topbarHeight - headingHeight - searchHeight - statsHeight - margins;
+    const minHeight = 350;
+    
+    tableContainer.style.height = Math.max(calculatedHeight, minHeight) + 'px';
+}
 </script>
 </body>
 </html>
