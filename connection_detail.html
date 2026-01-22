@@ -340,6 +340,7 @@ body {
   display: none; /* Hide thead in body container as we already have fixed header */
 }
 
+/* Color coding for rows */
 .data-table tbody tr {
   transition: all 0.2s ease;
 }
@@ -350,6 +351,20 @@ body {
 
 .data-table tbody tr:hover {
   background: var(--light-green);
+  transform: scale(1.005);
+}
+
+/* Color coding based on amount */
+.high-balance {
+  background: #fee2e2 !important; /* Light red for high balance */
+}
+
+.medium-balance {
+  background: #fef3c7 !important; /* Light yellow for medium balance */
+}
+
+.paid-connection {
+  background: #d1fae5 !important; /* Light green for paid */
 }
 
 .data-table td {
@@ -365,7 +380,7 @@ body {
 }
 
 /* Column specific styles - updated for better fit */
-.con-no-col { width: 12%; font-weight: 600; font-size: 13px; }
+.con-no-col { width: 10%; font-weight: 600; font-size: 13px; }
 .ward-no-col { width: 10%; font-size: 13px; }
 .owner { 
   width: 25%; 
@@ -378,15 +393,47 @@ body {
   text-overflow: ellipsis;
 }
 .mobile-col { width: 10%; font-family: monospace; font-size: 13px; }
-.current-amount-col { width: 15%; font-weight: 600; color: #059669; font-size: 13px; text-align: right; padding-right: 15px !important; }
-.arrear-col { width: 15%; font-weight: 600; color: #d97706; font-size: 13px; text-align: right; padding-right: 15px !important; }
-.total-col { width: 15%; font-weight: 700; color: #1e3a8a; font-size: 13px; text-align: right; padding-right: 15px !important; }
+.current-amount-col { 
+  width: 15%; 
+  font-weight: 600; 
+  color: #059669; 
+  font-size: 13px; 
+  text-align: right; 
+  padding-right: 15px !important;
+}
+.arrear-col { 
+  width: 15%; 
+  font-weight: 600; 
+  color: #d97706; 
+  font-size: 13px; 
+  text-align: right; 
+  padding-right: 15px !important;
+}
+.total-col { 
+  width: 15%; 
+  font-weight: 700; 
+  color: #1e3a8a; 
+  font-size: 13px; 
+  text-align: right; 
+  padding-right: 15px !important;
+}
 .act { width: 10%; }
 
-/* Status badges - केवल आइकन */
+/* Status badges */
 .status-paid {
   background: #d1fae5;
   color: #065f46;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+  min-width: 80px;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
   padding: 6px 10px;
   border-radius: 20px;
   font-size: 12px;
@@ -590,7 +637,7 @@ body {
     font-size: 18px;
   }
   
-  .status-paid {
+  .status-paid, .status-pending {
     font-size: 11px;
     padding: 5px 8px;
     min-width: 70px;
@@ -601,8 +648,8 @@ body {
     width: 22%; 
     font-size: 12px; 
   }
-  .con-no-col { width: 13%; font-size: 12px; }
-  .ward-no-col { width: 10%; font-size: 12px; }
+  .con-no-col { width: 12%; font-size: 12px; }
+  .ward-no-col { width: 11%; font-size: 12px; }
   .mobile-col { width: 12%; font-size: 12px; }
   .current-amount-col, .arrear-col, .total-col { 
     width: 13%; 
@@ -706,7 +753,7 @@ body {
     font-size: 16px;
   }
   
-  .status-paid {
+  .status-paid, .status-pending {
     font-size: 9px;
     padding: 4px 6px;
     min-width: 60px;
@@ -770,7 +817,7 @@ body {
     font-size: 15px;
   }
   
-  .status-paid {
+  .status-paid, .status-pending {
     font-size: 8px;
     padding: 3px 5px;
     min-width: 50px;
@@ -850,6 +897,36 @@ body {
 .data-table th {
   z-index: 1000;
 }
+
+/* Excel Export Styling */
+.excel-exporting {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.export-spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid #e5e7eb;
+  border-top: 5px solid #10b981;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 </style>
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -877,7 +954,7 @@ body {
             <i class="fas fa-search"></i> खोजें
         </button>
         <button class="export-btn" onclick="exportToExcel()">
-            <i class="fas fa-file-excel"></i> एक्सेल
+            <i class="fas fa-file-excel"></i> एक्सेल एक्सपोर्ट
         </button>
         <button class="upload-btn" onclick="uploadCSV()">
             <i class="fas fa-upload"></i> CSV अपलोड
@@ -1017,109 +1094,55 @@ function extractAmount(str) {
     return isNaN(amount) ? 0 : amount;
 }
 
-// Parse CSV data with proper column mapping
+// Parse CSV data - सही तरीके से CSV पार्स करें
 function parseCSV(csvText) {
     const rows = csvText.split('\n');
     const data = [];
     
-    // Skip empty rows
+    console.log('CSV parsing started...');
+    
     for (let i = 0; i < rows.length; i++) {
         const row = rows[i].trim();
         if (!row) continue;
         
-        // Split by comma, but handle quoted fields properly
-        const columns = [];
-        let currentColumn = '';
-        let inQuotes = false;
+        // Simple comma split for now
+        const columns = row.split(',').map(col => col.trim());
         
-        for (let j = 0; j < row.length; j++) {
-            const char = row[j];
-            
-            if (char === '"') {
-                inQuotes = !inQuotes;
-            } else if (char === ',' && !inQuotes) {
-                columns.push(currentColumn.trim());
-                currentColumn = '';
-            } else {
-                currentColumn += char;
-            }
-        }
-        columns.push(currentColumn.trim()); // Add last column
+        // Your CSV format: 1034,23-चौधरीयान,श्री रकम सिंह s/o श्री हीरा,58,₹259.00,₹9,92,71,91,983.00,₹9,92,71,91,983.00
+        // Columns: 0=कनेक्शन, 1=वार्ड, 2=नाम, 3=मोबाइल, 4=2024-25 बकाया, 5=पुराना बकाया, 6=2025-26
         
-        // Process only rows with enough columns (at least 7 columns for your format)
         if (columns.length >= 7) {
-            // Extract amounts from different column formats
-            let current_2025_26 = 0;
-            let arrear_2024_25 = 0;
-            let remaining_balance = 0;
-            
-            // Try to identify which column has which data
-            // Your CSV has: Connection, Ward, Name, Mobile, Arrear 2024-25, Old Arrear, Current 2025-26
-            // But totals need to be calculated
-            
-            // Check if this looks like your sample data format
-            if (columns[4] && columns[4].includes('₹')) {
-                // Column 4 is बकाया शेष (2024-25)
-                arrear_2024_25 = extractAmount(columns[4]);
+            try {
+                const currentYearAmount = extractAmount(columns[6]); // 2025-26
+                const lastYearArrear = extractAmount(columns[4]); // 2024-25 बकाया
+                const oldArrear = extractAmount(columns[5]); // पुराना बकाया
                 
-                // Column 5 is बकाया बैलेंस (पुराना बकाया) 
-                // Column 6 is शेष (2025-26) - actually this should be current year
-                current_2025_26 = extractAmount(columns[6]) || 600; // Fallback to ₹600
+                // कुल शेष = 2025-26 + 2024-25 बकाया + पुराना बकाया
+                const totalBalance = currentYearAmount + lastYearArrear + oldArrear;
                 
-                // Calculate total balance
-                remaining_balance = current_2025_26 + arrear_2024_25 + extractAmount(columns[5] || 0);
-            } else {
-                // Try other formats
-                for (let k = 4; k < Math.min(columns.length, 7); k++) {
-                    const col = columns[k];
-                    if (col && col.includes('₹')) {
-                        const amount = extractAmount(col);
-                        if (k === 4) arrear_2024_25 = amount;
-                        else if (k === 5) remaining_balance = amount; // Old logic
-                        else if (k === 6) current_2025_26 = amount;
-                    }
-                }
+                const connection = {
+                    con_no: columns[0] || '',
+                    ward_no: columns[1] || '',
+                    owner_name: columns[2] || '',
+                    mobile: columns[3] || '',
+                    current_2025_26: currentYearAmount,
+                    arrear_2024_25: lastYearArrear,
+                    old_arrear: oldArrear,
+                    total_balance: totalBalance,
+                    status: totalBalance === 0 ? 'paid' : 'pending'
+                };
+                
+                data.push(connection);
+                
+            } catch (error) {
+                console.error(`Error parsing row ${i}:`, error, columns);
             }
-            
-            // If current year amount not found, set to 600
-            if (current_2025_26 === 0) {
-                current_2025_26 = 600;
-            }
-            
-            // Calculate total if not already calculated
-            if (remaining_balance === 0) {
-                remaining_balance = current_2025_26 + arrear_2024_25;
-            }
-            
-            const connection = {
-                con_no: columns[0] || '',
-                ward_no: columns[1] || '',
-                owner_name: columns[2] || '',
-                mobile: columns[3] || '',
-                current_2025_26: current_2025_26,
-                arrear_2024_25: arrear_2024_25,
-                total_balance: remaining_balance,
-                status: remaining_balance === 0 ? 'paid' : 'pending'
-            };
-            
-            data.push(connection);
-        } else if (columns.length >= 4) {
-            // Minimum required columns: Connection, Ward, Name, Mobile
-            const connection = {
-                con_no: columns[0] || '',
-                ward_no: columns[1] || '',
-                owner_name: columns[2] || '',
-                mobile: columns[3] || '',
-                current_2025_26: 600, // Default
-                arrear_2024_25: 0,
-                total_balance: 600,
-                status: 'pending'
-            };
-            data.push(connection);
         }
     }
     
     console.log(`Parsed ${data.length} rows from CSV`);
+    console.log('Sample data:', data.slice(0, 3));
+    
     return data;
 }
 
@@ -1133,7 +1156,9 @@ async function loadCSVData() {
             'data.csv',
             'bills.csv',
             'connection_details.csv',
-            'water_connections.csv'
+            'water_connections.csv',
+            'नकुर_जल_कनेक्शन.csv',
+            'jal_connection.csv'
         ];
         
         let csvLoaded = false;
@@ -1146,20 +1171,16 @@ async function loadCSVData() {
                     connectionData = parseCSV(csvText);
                     currentData = [...connectionData];
                     
-                    // Calculate totals based on your specific data
-                    calculateCorrectTotals();
-                    
                     updateStats();
                     renderTable();
                     csvLoaded = true;
-                    console.log(`✅ Loaded data from ${csvFile}: ${connectionData.length} records`);
                     
-                    // Show success message
-                    showMessage(`CSV फ़ाइल सफलतापूर्वक लोड हुई: ${connectionData.length} कनेक्शन`, 'success');
+                    showMessage(`✅ CSV फ़ाइल सफलतापूर्वक लोड हुई: ${connectionData.length} कनेक्शन`, 'success');
+                    console.log(`✅ Loaded ${connectionData.length} records from ${csvFile}`);
                     break;
                 }
             } catch (error) {
-                console.log(`Failed to load ${csvFile}:`, error);
+                console.log(`❌ Failed to load ${csvFile}:`, error);
             }
         }
         
@@ -1168,100 +1189,134 @@ async function loadCSVData() {
         }
     } catch (error) {
         console.error('Error loading CSV:', error);
-        // Fallback to sample data if CSV not found
+        // Load sample data that matches your CSV format
         loadSampleData();
     }
 }
 
-// Calculate correct totals based on your provided statistics
-function calculateCorrectTotals() {
-    if (connectionData.length === 0) return;
-    
-    // Your provided totals:
-    const totalCurrent202526 = 213328660707.00; // ₹2,13,32,86,60,707.00
-    const totalArrear202425 = 130125446771.00; // ₹1,30,12,54,46,771.00
-    const totalRemaining = totalCurrent202526 + totalArrear202425; // ₹3,43,45,41,07,478.00
-    
-    console.log('Setting totals to:', {
-        current: totalCurrent202526,
-        arrear: totalArrear202425,
-        remaining: totalRemaining
-    });
-    
-    // Update the stats display
-    document.getElementById('totalCurrent').textContent = formatIndianCurrency(totalCurrent202526);
-    document.getElementById('totalArrear').textContent = formatIndianCurrency(totalArrear202425);
-    document.getElementById('totalRemaining').textContent = formatIndianCurrency(totalRemaining);
-    
-    // If we have actual connection data, update individual records proportionally
-    if (connectionData.length > 0) {
-        const avgCurrentPerConnection = totalCurrent202526 / connectionData.length;
-        const avgArrearPerConnection = totalArrear202425 / connectionData.length;
-        
-        connectionData.forEach(connection => {
-            // Assign proportional amounts
-            connection.current_2025_26 = avgCurrentPerConnection;
-            connection.arrear_2024_25 = avgArrearPerConnection;
-            connection.total_balance = avgCurrentPerConnection + avgArrearPerConnection;
-            connection.status = connection.total_balance > 0 ? 'pending' : 'paid';
-        });
-        
-        currentData = [...connectionData];
-    }
-}
-
-// Load sample data with correct totals
+// Load sample data that matches your CSV format
 function loadSampleData() {
-    // Create sample data with your totals distributed
-    const totalConnections = 1000; // Example total connections
-    const totalCurrent202526 = 213328660707.00;
-    const totalArrear202425 = 130125446771.00;
-    const avgCurrent = totalCurrent202526 / totalConnections;
-    const avgArrear = totalArrear202425 / totalConnections;
+    connectionData = [
+        {
+            con_no: '1034',
+            ward_no: '23-चौधरीयान',
+            owner_name: 'श्री रकम सिंह s/o श्री हीरा',
+            mobile: '58',
+            current_2025_26: 600, // 2025-26 की राशि
+            arrear_2024_25: 259.00, // 2024-25 बकाया
+            old_arrear: 9927191983.00, // पुराना बकाया
+            total_balance: 600 + 259.00 + 9927191983.00,
+            status: 'pending'
+        },
+        {
+            con_no: '1035',
+            ward_no: '24-रामनगर',
+            owner_name: 'श्रीमती गीता देवी',
+            mobile: '9876543210',
+            current_2025_26: 600,
+            arrear_2024_25: 1500.00,
+            old_arrear: 250000.00,
+            total_balance: 600 + 1500.00 + 250000.00,
+            status: 'pending'
+        },
+        {
+            con_no: '1036',
+            ward_no: '25-शिवपुरी',
+            owner_name: 'श्री अमित कुमार',
+            mobile: '8765432109',
+            current_2025_26: 600,
+            arrear_2024_25: 0,
+            old_arrear: 0,
+            total_balance: 600,
+            status: 'paid'
+        },
+        {
+            con_no: '1037',
+            ward_no: '26-गांधी नगर',
+            owner_name: 'श्री राजेश यादव',
+            mobile: '7654321098',
+            current_2025_26: 600,
+            arrear_2024_25: 3200.00,
+            old_arrear: 125000.00,
+            total_balance: 600 + 3200.00 + 125000.00,
+            status: 'pending'
+        },
+        {
+            con_no: '1038',
+            ward_no: '27-इंदिरा नगर',
+            owner_name: 'श्रीमती सीता देवी',
+            mobile: '6543210987',
+            current_2025_26: 600,
+            arrear_2024_25: 0,
+            old_arrear: 0,
+            total_balance: 600,
+            status: 'paid'
+        }
+    ];
     
-    connectionData = [];
-    
-    for (let i = 1; i <= totalConnections; i++) {
-        // Add some variation to make it realistic
-        const variation = 1 + (Math.random() - 0.5) * 0.2; // ±10% variation
+    // Add more sample data
+    for (let i = 1039; i <= 1100; i++) {
+        const ward = Math.floor(Math.random() * 30) + 1;
+        const current = 600;
+        const arrear = Math.random() > 0.3 ? Math.floor(Math.random() * 5000) : 0;
+        const oldArrear = Math.random() > 0.5 ? Math.floor(Math.random() * 10000000) : 0;
+        const total = current + arrear + oldArrear;
         
         connectionData.push({
-            con_no: `JAL${String(i).padStart(4, '0')}`,
-            ward_no: Math.floor(Math.random() * 20) + 1,
+            con_no: i.toString(),
+            ward_no: `${ward}-${['चौधरीयान', 'रामनगर', 'शिवपुरी', 'गांधी नगर', 'इंदिरा नगर'][Math.floor(Math.random() * 5)]}`,
             owner_name: `ग्राहक ${i}`,
             mobile: `9${String(Math.floor(100000000 + Math.random() * 900000000)).substring(0, 9)}`,
-            current_2025_26: avgCurrent * variation,
-            arrear_2024_25: avgArrear * variation,
-            total_balance: (avgCurrent + avgArrear) * variation,
-            status: Math.random() > 0.3 ? 'pending' : 'paid'
+            current_2025_26: current,
+            arrear_2024_25: arrear,
+            old_arrear: oldArrear,
+            total_balance: total,
+            status: total === 600 ? 'paid' : 'pending'
         });
     }
     
     currentData = [...connectionData];
-    calculateCorrectTotals();
+    updateStats();
     renderTable();
     
     showMessage('CSV फ़ाइल नहीं मिली, सैंपल डेटा लोड किया गया', 'warning');
 }
 
-// Update statistics
+// Update statistics with correct calculations
 function updateStats() {
+    if (currentData.length === 0) {
+        document.getElementById('totalConnections').textContent = '0';
+        document.getElementById('totalCurrent').textContent = '₹0';
+        document.getElementById('totalArrear').textContent = '₹0';
+        document.getElementById('totalRemaining').textContent = '₹0';
+        return;
+    }
+    
     const totalConnections = currentData.length;
     const totalCurrent = currentData.reduce((sum, item) => sum + (item.current_2025_26 || 0), 0);
     const totalArrear = currentData.reduce((sum, item) => sum + (item.arrear_2024_25 || 0), 0);
-    const totalRemaining = currentData.reduce((sum, item) => sum + (item.total_balance || 0), 0);
+    const totalOldArrear = currentData.reduce((sum, item) => sum + (item.old_arrear || 0), 0);
+    const totalRemaining = totalCurrent + totalArrear + totalOldArrear;
     
     document.getElementById('totalConnections').textContent = totalConnections.toLocaleString('hi-IN');
-    
-    // Only update if we have real data, otherwise keep the calculated totals
-    if (connectionData.length > 0 && connectionData[0].con_no !== 'JAL0001') {
-        document.getElementById('totalCurrent').textContent = formatIndianCurrency(totalCurrent);
-        document.getElementById('totalArrear').textContent = formatIndianCurrency(totalArrear);
-        document.getElementById('totalRemaining').textContent = formatIndianCurrency(totalRemaining);
-    }
+    document.getElementById('totalCurrent').textContent = formatIndianCurrency(totalCurrent);
+    document.getElementById('totalArrear').textContent = formatIndianCurrency(totalArrear);
+    document.getElementById('totalRemaining').textContent = formatIndianCurrency(totalRemaining);
 }
 
-// Render table data
+// Get row color class based on amount
+function getRowColorClass(totalBalance) {
+    if (totalBalance === 600) {
+        return 'paid-connection'; // केवल वर्तमान वर्ष का भुगतान
+    } else if (totalBalance > 1000000) {
+        return 'high-balance'; // 10 लाख से अधिक
+    } else if (totalBalance > 100000) {
+        return 'medium-balance'; // 1 लाख से 10 लाख के बीच
+    }
+    return ''; // कोई विशेष कलर नहीं
+}
+
+// Render table data with color coding
 function renderTable() {
     const tableBody = document.getElementById('tableBody');
     tableBody.innerHTML = '';
@@ -1278,11 +1333,21 @@ function renderTable() {
         return;
     }
     
-    // Show first 100 rows for performance
-    const displayData = currentData.slice(0, 100);
+    // Show first 200 rows for performance
+    const displayData = currentData.slice(0, 200);
     
     displayData.forEach((item, index) => {
         const row = document.createElement('tr');
+        const rowColorClass = getRowColorClass(item.total_balance || 0);
+        
+        if (rowColorClass) {
+            row.className = rowColorClass;
+        }
+        
+        // Determine status text
+        const statusText = item.status === 'paid' ? 
+            '<span class="status-paid">✅ भुगतान</span>' : 
+            '<span class="status-pending">❌ बकाया</span>';
         
         row.innerHTML = `
             <td class="con-no-col">${item.con_no || ''}</td>
@@ -1294,23 +1359,23 @@ function renderTable() {
             <td class="total-col">${formatIndianCurrency(item.total_balance || 0)}</td>
             <td class="act">
                 <div class="action-buttons">
-                    <button class="action-btn edit-btn" onclick="editConnection('${item.con_no}')" title="Edit">
+                    <button class="action-btn edit-btn" onclick="editConnection('${item.con_no}')" title="एडिट करें">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="action-btn delete-btn" onclick="showDeleteModal('${item.con_no}', '${item.owner_name}')" title="Delete">
+                    <button class="action-btn delete-btn" onclick="showDeleteModal('${item.con_no}', '${item.owner_name}')" title="डिलीट करें">
                         <i class="fas fa-trash"></i>
                     </button>
-                    <button class="action-btn print-btn" onclick="printBill('${item.con_no}')" title="Print">
+                    <button class="action-btn print-btn" onclick="printBill('${item.con_no}')" title="बिल प्रिंट करें">
                         <i class="fas fa-print"></i>
                     </button>
-                    ${item.total_balance > 0 ? `
-                    <button class="action-btn pay-btn" onclick="makePayment('${item.con_no}')" title="Pay Now">
+                    ${item.status === 'pending' ? `
+                    <button class="action-btn pay-btn" onclick="makePayment('${item.con_no}')" title="भुगतान करें">
                         <i class="fas fa-money-bill-wave"></i>
                     </button>
                     ` : ''}
                 </div>
                 <div class="mt-1">
-                    ${item.status === 'paid' ? '<span class="status-paid">✅ भुगतान</span>' : '<span style="color:#dc3545;font-size:12px;">❌ बकाया</span>'}
+                    ${statusText}
                 </div>
             </td>
         `;
@@ -1319,12 +1384,12 @@ function renderTable() {
     });
     
     // Show message if more data exists
-    if (currentData.length > 100) {
+    if (currentData.length > 200) {
         const infoRow = document.createElement('tr');
         infoRow.innerHTML = `
             <td colspan="8" style="text-align: center; padding: 15px; background: #f8f9fa; font-style: italic; color: #666;">
                 <i class="fas fa-info-circle"></i>
-                ${currentData.length - 100} और रिकॉर्ड्स हैं। सटीक खोज के लिए सर्च बॉक्स का उपयोग करें।
+                और ${currentData.length - 200} रिकॉर्ड्स हैं। सटीक खोज के लिए सर्च बॉक्स का उपयोग करें।
             </td>
         `;
         tableBody.appendChild(infoRow);
@@ -1379,31 +1444,159 @@ function performSearch() {
     }
 }
 
-// Export to Excel
+// Export to Excel with Hindi support and beautiful styling
 function exportToExcel() {
     if (currentData.length === 0) {
         showMessage('निर्यात करने के लिए कोई डेटा नहीं है', 'error');
         return;
     }
     
-    // Create CSV content with correct headers
-    let csvContent = "कनेक्शन नंबर,वार्ड,नाम,मोबाइल,2025-26,2024-25,कुल शेष,स्थिति\n";
+    // Show loading spinner
+    const exportOverlay = document.createElement('div');
+    exportOverlay.className = 'excel-exporting';
+    exportOverlay.innerHTML = `
+        <div class="export-spinner"></div>
+        <h3 style="color: #059669;">एक्सेल फ़ाइल बनाई जा रही है...</h3>
+        <p style="color: #666;">कृपया प्रतीक्षा करें</p>
+    `;
+    document.body.appendChild(exportOverlay);
     
-    currentData.forEach(item => {
-        csvContent += `"${item.con_no}","${item.ward_no}","${item.owner_name}","${item.mobile}",${item.current_2025_26 || 0},${item.arrear_2024_25 || 0},${item.total_balance || 0},"${item.status === 'paid' ? 'भुगतान' : 'बकाया'}"\n`;
-    });
-    
-    // Create download link
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', `connection_details_${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    showMessage('एक्सेल फ़ाइल सफलतापूर्वन निर्यात हुई', 'success');
+    setTimeout(() => {
+        // Create HTML table for Excel with Hindi and styling
+        let excelHTML = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>जल कनेक्शन विवरण - नकुर</title>
+            <style>
+                body { font-family: 'Segoe UI', Arial, sans-serif; margin: 20px; }
+                table { border-collapse: collapse; width: 100%; margin: 20px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+                th { background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: bold; padding: 15px; border: 1px solid #059669; text-align: center; font-size: 14px; }
+                td { border: 1px solid #e0e0e0; padding: 12px 8px; font-size: 13px; vertical-align: middle; }
+                .excel-header { background: linear-gradient(135deg, #1e40af, #1e3a8a); color: white; font-size: 24px; font-weight: bold; padding: 25px; text-align: center; border: 2px solid #1e3a8a; margin-bottom: 0; }
+                .excel-subheader { background: #dbeafe; color: #1e40af; padding: 15px; text-align: center; border: 1px solid #bfdbfe; font-weight: bold; font-size: 14px; }
+                .excel-footer { background: #f8fafc; color: #64748b; padding: 12px; text-align: center; border-top: 2px solid #e2e8f0; font-size: 12px; }
+                .total-row { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; font-weight: bold; }
+                .stats-row { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; font-weight: bold; text-align: center; }
+                .paid-row { background: #d1fae5; }
+                .pending-row { background: #fef3c7; }
+                .high-balance { background: #fee2e2; }
+                .rupee { font-family: 'Arial Unicode MS', Arial, sans-serif; color: #065f46; font-weight: bold; }
+                .border-top { border-top: 3px solid #10b981; }
+                .border-bottom { border-bottom: 3px solid #10b981; }
+            </style>
+        </head>
+        <body>
+            <table width="100%" cellspacing="0" cellpadding="0" class="border-top">
+                <tr><td colspan="8" class="excel-header">🚰 जल कनेक्शन विवरण - नगर पालिका नकुर</td></tr>
+                <tr><td colspan="8" class="excel-subheader">
+                    <strong>📅 रिपोर्ट तिथि:</strong> ${new Date().toLocaleDateString('hi-IN')} | 
+                    <strong>⏰ समय:</strong> ${new Date().toLocaleTimeString('hi-IN')} | 
+                    <strong>🔢 कुल कनेक्शन:</strong> ${currentData.length}
+                </td></tr>
+                <tr>
+                    <th>🔗 कनेक्शन नंबर</th>
+                    <th>🏘️ वार्ड नंबर</th>
+                    <th>👤 मालिक का नाम</th>
+                    <th>📱 मोबाइल नंबर</th>
+                    <th>💰 वर्तमान राशि<br>2025-26</th>
+                    <th>📅 बकाया शेष<br>2024-25</th>
+                    <th>🧾 कुल शेष राशि</th>
+                    <th>📊 स्थिति</th>
+                </tr>
+        `;
+        
+        // Calculate totals
+        const totals = {
+            current: 0,
+            arrear: 0,
+            total: 0,
+            paid: 0,
+            pending: 0
+        };
+        
+        // Add data rows
+        currentData.forEach((item, index) => {
+            const rowClass = item.status === 'paid' ? 'paid-row' : 'pending-row';
+            const balanceClass = (item.total_balance || 0) > 1000000 ? 'high-balance' : '';
+            
+            totals.current += item.current_2025_26 || 0;
+            totals.arrear += item.arrear_2024_25 || 0;
+            totals.total += item.total_balance || 0;
+            
+            if (item.status === 'paid') totals.paid++;
+            else totals.pending++;
+            
+            excelHTML += `
+                <tr class="${rowClass} ${balanceClass}">
+                    <td style="font-weight:bold;">${item.con_no || ''}</td>
+                    <td style="text-align:center;">${item.ward_no || ''}</td>
+                    <td style="font-weight:bold;">${item.owner_name || ''}</td>
+                    <td style="text-align:center;">${item.mobile || ''}</td>
+                    <td class="rupee" style="text-align:right;">${formatIndianCurrency(item.current_2025_26 || 0)}</td>
+                    <td class="rupee" style="text-align:right;">${formatIndianCurrency(item.arrear_2024_25 || 0)}</td>
+                    <td class="rupee" style="text-align:right;">${formatIndianCurrency(item.total_balance || 0)}</td>
+                    <td style="text-align:center; font-weight:bold;">${item.status === 'paid' ? '✅ भुगतान' : '❌ बकाया'}</td>
+                </tr>
+            `;
+        });
+        
+        // Add totals row
+        excelHTML += `
+                <tr class="total-row border-bottom">
+                    <td colspan="4" style="text-align:right; font-size:14px;"><strong>कुल योग:</strong></td>
+                    <td style="text-align:right; font-size:14px;"><strong>${formatIndianCurrency(totals.current)}</strong></td>
+                    <td style="text-align:right; font-size:14px;"><strong>${formatIndianCurrency(totals.arrear)}</strong></td>
+                    <td style="text-align:right; font-size:14px;"><strong>${formatIndianCurrency(totals.total)}</strong></td>
+                    <td style="text-align:center; font-size:14px;"><strong>📊 सांख्यिकी</strong></td>
+                </tr>
+        `;
+        
+        // Add statistics row
+        excelHTML += `
+                <tr class="stats-row">
+                    <td colspan="8" style="text-align:center; padding:20px; font-size:14px;">
+                        📊 <strong>विस्तृत सांख्यिकी</strong> | 
+                        🔢 कुल कनेक्शन: <strong>${currentData.length}</strong> | 
+                        ✅ भुगतान: <strong>${totals.paid}</strong> | 
+                        ❌ बकाया: <strong>${totals.pending}</strong> | 
+                        💰 कुल राशि: <strong>${formatIndianCurrency(totals.total)}</strong> | 
+                        📈 औसत बकाया: <strong>${formatIndianCurrency(totals.total / currentData.length)}</strong>
+                    </td>
+                </tr>
+        `;
+        
+        // Add footer
+        excelHTML += `
+                <tr>
+                    <td colspan="8" class="excel-footer">
+                        🖨️ जनरेटेड ऑन: ${new Date().toLocaleString('hi-IN')} | 
+                        👨‍💼 द्वारा: जल प्रबंधन प्रणाली | 
+                        🔐 प्रणाली: नगर पालिका नकुर
+                    </td>
+                </tr>
+            </table>
+        </body>
+        </html>
+        `;
+        
+        // Create Blob and download
+        const blob = new Blob([excelHTML], { type: 'application/vnd.ms-excel;charset=utf-8' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `नकुर_जल_कनेक्शन_${new Date().toISOString().split('T')[0]}.xls`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Remove loading overlay
+        document.body.removeChild(exportOverlay);
+        
+        showMessage(`एक्सेल फ़ाइल सफलतापूर्वक डाउनलोड हुई: ${currentData.length} कनेक्शन`, 'success');
+        
+    }, 1000);
 }
 
 // Upload CSV file
@@ -1420,7 +1613,7 @@ document.getElementById('csvFileInput').addEventListener('change', function(e) {
             const csvText = event.target.result;
             connectionData = parseCSV(csvText);
             currentData = [...connectionData];
-            calculateCorrectTotals();
+            updateStats();
             renderTable();
             showMessage(`CSV फ़ाइल सफलतापूर्वक लोड हुई: ${connectionData.length} कनेक्शन`, 'success');
             
@@ -1439,7 +1632,7 @@ document.getElementById('csvFileInput').addEventListener('change', function(e) {
 function editConnection(conNo) {
     const connection = currentData.find(item => item.con_no === conNo);
     if (connection) {
-        alert(`एडिट कर रहे हैं:\n\nकनेक्शन: ${connection.con_no}\nनाम: ${connection.owner_name}\n\n2025-26: ${formatIndianCurrency(connection.current_2025_26)}\n2024-25: ${formatIndianCurrency(connection.arrear_2024_25)}\nकुल: ${formatIndianCurrency(connection.total_balance)}`);
+        alert(`एडिट कर रहे हैं:\n\nकनेक्शन: ${connection.con_no}\nनाम: ${connection.owner_name}\n\n2025-26: ${formatIndianCurrency(connection.current_2025_26)}\n2024-25: ${formatIndianCurrency(connection.arrear_2024_25)}\nपुराना बकाया: ${formatIndianCurrency(connection.old_arrear)}\nकुल: ${formatIndianCurrency(connection.total_balance)}`);
         // window.location.href = `edit_connection.html?id=${conNo}`;
     }
 }
@@ -1517,6 +1710,7 @@ function printBill(conNo) {
             ------------------------------------
             2025-26 की राशि: ${formatIndianCurrency(connection.current_2025_26)}
             2024-25 का बकाया: ${formatIndianCurrency(connection.arrear_2024_25)}
+            पुराना बकाया: ${formatIndianCurrency(connection.old_arrear)}
             
             ------------------------------------
             कुल देय राशि: ${formatIndianCurrency(connection.total_balance)}
