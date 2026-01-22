@@ -146,7 +146,7 @@ body {
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
-.search-btn, .export-btn {
+.search-btn, .export-btn, .upload-btn {
   padding: 12px 16px;
   border: none;
   border-radius: 10px;
@@ -170,7 +170,12 @@ body {
   color: white;
 }
 
-.search-btn:hover, .export-btn:hover {
+.upload-btn {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+}
+
+.search-btn:hover, .export-btn:hover, .upload-btn:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-hover);
 }
@@ -360,10 +365,10 @@ body {
 }
 
 /* Column specific styles - updated for better fit */
-.con-no-col { width: 12%; font-weight: 600; font-size: 13px; }
+.con-no-col { width: 10%; font-weight: 600; font-size: 13px; }
 .ward-no-col { width: 8%; font-size: 13px; }
 .owner { 
-  width: 22%; 
+  width: 25%; 
   text-align: left; 
   padding-left: 10px !important; 
   font-size: 13px; 
@@ -375,8 +380,9 @@ body {
 .mobile-col { width: 10%; font-family: monospace; font-size: 13px; }
 .current-amount-col { width: 12%; font-weight: 600; color: #059669; font-size: 13px; text-align: right; padding-right: 15px !important; }
 .arrear-col { width: 12%; font-weight: 600; color: #d97706; font-size: 13px; text-align: right; padding-right: 15px !important; }
-.remaining-col { width: 12%; font-weight: 600; color: #dc2626; font-size: 13px; text-align: right; padding-right: 15px !important; }
-.act { width: 12%; }
+.old-arrear-col { width: 15%; font-weight: 600; color: #dc2626; font-size: 13px; text-align: right; padding-right: 15px !important; }
+.total-col { width: 15%; font-weight: 700; color: #1e3a8a; font-size: 13px; text-align: right; padding-right: 15px !important; }
+.act { width: 10%; }
 
 /* Status badges - केवल आइकन */
 .status-paid {
@@ -596,14 +602,14 @@ body {
     width: 20%; 
     font-size: 12px; 
   }
-  .con-no-col { width: 14%; font-size: 12px; }
+  .con-no-col { width: 12%; font-size: 12px; }
   .ward-no-col { width: 9%; font-size: 12px; }
   .mobile-col { width: 12%; font-size: 12px; }
-  .current-amount-col, .arrear-col, .remaining-col { 
+  .current-amount-col, .arrear-col, .old-arrear-col, .total-col { 
     width: 11%; 
     font-size: 12px; 
   }
-  .act { width: 13%; }
+  .act { width: 12%; }
 }
 
 @media (max-width: 768px) {
@@ -660,7 +666,7 @@ body {
     font-size: 12px;
   }
   
-  .search-box input, .search-btn, .export-btn {
+  .search-box input, .search-btn, .export-btn, .upload-btn {
     padding: 10px 14px;
     font-size: 13px;
   }
@@ -671,7 +677,7 @@ body {
   }
   
   .data-table {
-    min-width: 800px; /* For horizontal scrolling on mobile */
+    min-width: 900px; /* For horizontal scrolling on mobile */
   }
   
   .data-table th, .data-table td {
@@ -713,10 +719,10 @@ body {
     font-size: 10px; 
     padding-left: 6px !important;
   }
-  .con-no-col { width: 16%; font-size: 10px; }
+  .con-no-col { width: 14%; font-size: 10px; }
   .ward-no-col { width: 10%; font-size: 10px; }
   .mobile-col { width: 13%; font-size: 10px; }
-  .current-amount-col, .arrear-col, .remaining-col { 
+  .current-amount-col, .arrear-col, .old-arrear-col, .total-col { 
     width: 9%; 
     font-size: 10px; 
   }
@@ -872,8 +878,12 @@ body {
             <i class="fas fa-search"></i> खोजें
         </button>
         <button class="export-btn" onclick="exportToExcel()">
-            <i class="fas fa-file-excel"></i> एक्सेल एक्सपोर्ट
+            <i class="fas fa-file-excel"></i> एक्सेल
         </button>
+        <button class="upload-btn" onclick="uploadCSV()">
+            <i class="fas fa-upload"></i> CSV अपलोड
+        </button>
+        <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
     </div>
 
     <!-- Stats Cards ALWAYS SHOW -->
@@ -898,9 +908,9 @@ body {
         </div>
         <div class="stat-card remaining">
             <div class="icon">🧾</div>
-            <h3>शेष राशि</h3>
+            <h3>कुल शेष</h3>
             <div class="number" id="totalRemaining">₹0</div>
-            <p>सभी कनेक्शनों का शेष</p>
+            <p>सभी कनेक्शनों का कुल शेष</p>
         </div>
     </div>
 
@@ -915,9 +925,10 @@ body {
                         <th class="ward-no-col">🏘️ वार्ड</th>
                         <th class="owner">👤 नाम</th>
                         <th class="mobile-col">📱 मोबाइल</th>
-                        <th class="current-amount-col">💰 25‑26 (₹600)</th>
-                        <th class="arrear-col">📅 24‑25</th>
-                        <th class="remaining-col">🧾 शेष</th>
+                        <th class="current-amount-col">💰 2025‑26 (₹600)</th>
+                        <th class="arrear-col">📅 2024‑25</th>
+                        <th class="old-arrear-col">📊 पुराना बकाया</th>
+                        <th class="total-col">🧾 कुल शेष</th>
                         <th class="act">⚙️ क्रिया</th>
                     </tr>
                 </thead>
@@ -968,15 +979,11 @@ body {
 let connectionData = [];
 let currentData = []; // For filtered data
 
-// Format Indian Currency (CSV से मिले डेटा के अनुसार)
+// Format Indian Currency with proper ₹ symbol and commas
 function formatIndianCurrency(amount) {
-    if (isNaN(amount) || amount === null || amount === '') return '₹0';
+    if (isNaN(amount) || amount === null || amount === '' || amount === 0) return '₹0.00';
     
     amount = parseFloat(amount);
-    
-    // Check if amount is 600 for current year (2025-26)
-    // If you want to always show 600 for current year, uncomment below line
-    // if (amount === 0) return '₹600'; // या आपकी CSV में जो भी amount है
     
     // Format number with commas in Indian style
     let parts = Math.abs(amount).toFixed(2).split('.');
@@ -1000,62 +1007,76 @@ function formatIndianCurrency(amount) {
     return '₹' + formatted + '.' + decimalPart;
 }
 
-// Parse CSV data with proper column mapping
+// Extract number from string like "₹2,345.00"
+function extractAmount(str) {
+    if (!str) return 0;
+    
+    // Remove ₹ symbol and commas
+    str = str.toString().replace(/₹/g, '').replace(/,/g, '').trim();
+    
+    // Parse as float
+    const amount = parseFloat(str);
+    return isNaN(amount) ? 0 : amount;
+}
+
+// Parse CSV data with proper column mapping for YOUR CSV format
 function parseCSV(csvText) {
     const rows = csvText.split('\n');
     const data = [];
     
-    // Check first row for headers to understand structure
-    const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
-    
-    console.log('CSV Headers:', headers);
-    
-    // Find column indices based on common CSV column names
-    let conNoIndex = headers.findIndex(h => h.includes('connection') || h.includes('con'));
-    let wardIndex = headers.findIndex(h => h.includes('ward'));
-    let nameIndex = headers.findIndex(h => h.includes('name') || h.includes('owner'));
-    let mobileIndex = headers.findIndex(h => h.includes('mobile') || h.includes('phone'));
-    let currentIndex = headers.findIndex(h => h.includes('current') || h.includes('2025') || h.includes('25-26'));
-    let arrearIndex = headers.findIndex(h => h.includes('arrear') || h.includes('2024') || h.includes('24-25'));
-    let remainingIndex = headers.findIndex(h => h.includes('remaining') || h.includes('balance') || h.includes('शेष'));
-    
-    // If indices not found, use default indices
-    if (conNoIndex === -1) conNoIndex = 0;
-    if (wardIndex === -1) wardIndex = 1;
-    if (nameIndex === -1) nameIndex = 2;
-    if (mobileIndex === -1) mobileIndex = 3;
-    if (currentIndex === -1) currentIndex = 4;
-    if (arrearIndex === -1) arrearIndex = 5;
-    if (remainingIndex === -1) remainingIndex = 6;
-    
-    for (let i = 1; i < rows.length; i++) { // Start from 1 to skip header
+    // Skip empty rows
+    for (let i = 0; i < rows.length; i++) {
         const row = rows[i].trim();
         if (!row) continue;
         
-        const columns = row.split(',').map(col => col.trim());
+        // Split by comma, but handle quoted fields properly
+        const columns = [];
+        let currentColumn = '';
+        let inQuotes = false;
         
-        if (columns.length >= 4) {
+        for (let j = 0; j < row.length; j++) {
+            const char = row[j];
+            
+            if (char === '"') {
+                inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+                columns.push(currentColumn.trim());
+                currentColumn = '';
+            } else {
+                currentColumn += char;
+            }
+        }
+        columns.push(currentColumn.trim()); // Add last column
+        
+        // Process only rows with enough columns (at least 7 columns)
+        if (columns.length >= 7) {
             const connection = {
-                con_no: columns[conNoIndex] || '',
-                ward_no: columns[wardIndex] || '',
-                owner_name: columns[nameIndex] || '',
-                mobile: columns[mobileIndex] || '',
-                current_amount: parseFloat(columns[currentIndex]) || 0,
-                arrear_balance: parseFloat(columns[arrearIndex]) || 0,
-                remaining_balance: parseFloat(columns[remainingIndex]) || 0,
-                status: parseFloat(columns[remainingIndex]) === 0 ? 'paid' : 'pending'
+                con_no: columns[0] || '', // Connection No (3236)
+                ward_no: columns[1] || '', // Ward (18-बन्जारान)
+                owner_name: columns[2] || '', // Name (श्री मुनव्वर...)
+                mobile: columns[3] || '', // Mobile (47)
+                
+                // Extract amounts from columns
+                arrear_2024_25: extractAmount(columns[4]), // बकाया शेष: ₹2,345.00
+                old_arrear: extractAmount(columns[5]), // बकाया बैलेंस: ₹6,39,83,42,376.00
+                remaining_2025_26: extractAmount(columns[6]), // शेष: ₹600.00
+                
+                // Fixed amount for 2025-26
+                current_2025_26: 600, // Fixed ₹600 for current year
+                
+                // Calculate TOTAL बकाया
+                total_balance: extractAmount(columns[4]) + extractAmount(columns[5]) + 600
             };
             
-            // If current amount is 0, set it to 600 (2025-26 का fix amount)
-            if (connection.current_amount === 0) {
-                connection.current_amount = 600;
-            }
+            // Determine status
+            connection.status = connection.total_balance === 600 ? 'paid' : 'pending';
             
             data.push(connection);
+            console.log('Parsed row:', connection);
         }
     }
     
-    console.log('Parsed Data:', data);
+    console.log('Total parsed rows:', data.length);
     return data;
 }
 
@@ -1067,7 +1088,8 @@ async function loadCSVData() {
             'connection_data.csv',
             'connections.csv',
             'data.csv',
-            'bills.csv'
+            'bills.csv',
+            'connection_details.csv'
         ];
         
         let csvLoaded = false;
@@ -1082,7 +1104,10 @@ async function loadCSVData() {
                     updateStats();
                     renderTable();
                     csvLoaded = true;
-                    console.log(`Loaded data from ${csvFile}`);
+                    console.log(`✅ Loaded data from ${csvFile}: ${connectionData.length} records`);
+                    
+                    // Show success message
+                    showMessage(`CSV फ़ाइल सफलतापूर्वक लोड हुई: ${connectionData.length} कनेक्शन`, 'success');
                     break;
                 }
             } catch (error) {
@@ -1100,31 +1125,60 @@ async function loadCSVData() {
     }
 }
 
-// Sample data fallback (with ₹600 for current year)
+// Load sample data based on your CSV row
 function loadSampleData() {
     connectionData = [
-        { con_no: 'JAL001', ward_no: '5', owner_name: 'रमेश कुमार', mobile: '9876543210', current_amount: 600, arrear_balance: 1200, remaining_balance: 1800, status: 'pending' },
-        { con_no: 'JAL002', ward_no: '7', owner_name: 'सीता देवी', mobile: '8765432109', current_amount: 600, arrear_balance: 1500, remaining_balance: 2100, status: 'pending' },
-        { con_no: 'JAL003', ward_no: '3', owner_name: 'अमित शर्मा', mobile: '7654321098', current_amount: 600, arrear_balance: 0, remaining_balance: 600, status: 'pending' },
-        { con_no: 'JAL004', ward_no: '2', owner_name: 'प्रिया सिंह', mobile: '6543210987', current_amount: 600, arrear_balance: 800, remaining_balance: 1400, status: 'pending' },
-        { con_no: 'JAL005', ward_no: '9', owner_name: 'राजेश यादव', mobile: '5432109876', current_amount: 600, arrear_balance: 1000, remaining_balance: 1600, status: 'pending' },
-        { con_no: 'JAL006', ward_no: '4', owner_name: 'मोहन लाल', mobile: '4321098765', current_amount: 600, arrear_balance: 500, remaining_balance: 1100, status: 'pending' },
-        { con_no: 'JAL007', ward_no: '6', owner_name: 'गीता देवी', mobile: '3210987654', current_amount: 600, arrear_balance: 0, remaining_balance: 600, status: 'paid' },
-        { con_no: 'JAL008', ward_no: '8', owner_name: 'विकास सिंह', mobile: '2109876543', current_amount: 600, arrear_balance: 900, remaining_balance: 1500, status: 'pending' },
-        { con_no: 'JAL009', ward_no: '1', owner_name: 'नीता कुमारी', mobile: '1098765432', current_amount: 600, arrear_balance: 0, remaining_balance: 600, status: 'paid' },
-        { con_no: 'JAL010', ward_no: '10', owner_name: 'संजय वर्मा', mobile: '0987654321', current_amount: 600, arrear_balance: 1400, remaining_balance: 2000, status: 'pending' }
+        {
+            con_no: '3236',
+            ward_no: '18-बन्जारान',
+            owner_name: 'श्री मुनव्वर उर्फ भोला s/o श्री अनवर',
+            mobile: '47',
+            current_2025_26: 600,
+            arrear_2024_25: 2345.00,
+            old_arrear: 6398342376.00,
+            remaining_2025_26: 600,
+            total_balance: 600 + 2345.00 + 6398342376.00, // ₹6,39,83,45,321.00
+            status: 'pending'
+        },
+        {
+            con_no: '3237',
+            ward_no: '19-शिवपुरी',
+            owner_name: 'रमेश कुमार सिंह',
+            mobile: '9876543210',
+            current_2025_26: 600,
+            arrear_2024_25: 1500.00,
+            old_arrear: 250000.00,
+            remaining_2025_26: 600,
+            total_balance: 600 + 1500.00 + 250000.00, // ₹2,52,100.00
+            status: 'pending'
+        },
+        {
+            con_no: '3238',
+            ward_no: '20-रामनगर',
+            owner_name: 'सीता देवी',
+            mobile: '8765432109',
+            current_2025_26: 600,
+            arrear_2024_25: 0,
+            old_arrear: 0,
+            remaining_2025_26: 600,
+            total_balance: 600, // केवल वर्तमान वर्ष का
+            status: 'paid'
+        }
     ];
     currentData = [...connectionData];
     updateStats();
     renderTable();
+    
+    showMessage('CSV फ़ाइल नहीं मिली, सैंपल डेटा लोड किया गया', 'warning');
 }
 
 // Update statistics
 function updateStats() {
     const totalConnections = currentData.length;
-    const totalCurrent = currentData.reduce((sum, item) => sum + (item.current_amount || 600), 0);
-    const totalArrear = currentData.reduce((sum, item) => sum + (item.arrear_balance || 0), 0);
-    const totalRemaining = currentData.reduce((sum, item) => sum + (item.remaining_balance || 0), 0);
+    const totalCurrent = currentData.reduce((sum, item) => sum + (item.current_2025_26 || 0), 0);
+    const totalArrear = currentData.reduce((sum, item) => sum + (item.arrear_2024_25 || 0), 0);
+    const totalOldArrear = currentData.reduce((sum, item) => sum + (item.old_arrear || 0), 0);
+    const totalRemaining = currentData.reduce((sum, item) => sum + (item.total_balance || 0), 0);
     
     document.getElementById('totalConnections').textContent = totalConnections;
     document.getElementById('totalCurrent').textContent = formatIndianCurrency(totalCurrent);
@@ -1140,7 +1194,7 @@ function renderTable() {
     if (currentData.length === 0) {
         tableBody.innerHTML = `
             <tr>
-                <td colspan="8" class="no-data">
+                <td colspan="9" class="no-data">
                     <i class="fas fa-inbox"></i>
                     कोई डेटा उपलब्ध नहीं है
                 </td>
@@ -1152,17 +1206,15 @@ function renderTable() {
     currentData.forEach((item, index) => {
         const row = document.createElement('tr');
         
-        // Calculate शेष correctly
-        const totalBalance = (item.current_amount || 600) + (item.arrear_balance || 0);
-        
         row.innerHTML = `
             <td class="con-no-col">${item.con_no || ''}</td>
             <td class="ward-no-col">${item.ward_no || ''}</td>
             <td class="owner" title="${item.owner_name || ''}">${item.owner_name || ''}</td>
             <td class="mobile-col">${item.mobile || ''}</td>
-            <td class="current-amount-col">${formatIndianCurrency(item.current_amount || 600)}</td>
-            <td class="arrear-col">${formatIndianCurrency(item.arrear_balance || 0)}</td>
-            <td class="remaining-col">${formatIndianCurrency(item.remaining_balance || 0)}</td>
+            <td class="current-amount-col">${formatIndianCurrency(item.current_2025_26 || 600)}</td>
+            <td class="arrear-col">${formatIndianCurrency(item.arrear_2024_25 || 0)}</td>
+            <td class="old-arrear-col">${formatIndianCurrency(item.old_arrear || 0)}</td>
+            <td class="total-col">${formatIndianCurrency(item.total_balance || 0)}</td>
             <td class="act">
                 <div class="action-buttons">
                     <button class="action-btn edit-btn" onclick="editConnection('${item.con_no}')" title="Edit">
@@ -1174,20 +1226,45 @@ function renderTable() {
                     <button class="action-btn print-btn" onclick="printBill('${item.con_no}')" title="Print">
                         <i class="fas fa-print"></i>
                     </button>
-                    ${item.remaining_balance > 0 ? `
+                    ${item.total_balance > 600 ? `
                     <button class="action-btn pay-btn" onclick="makePayment('${item.con_no}')" title="Pay Now">
                         <i class="fas fa-money-bill-wave"></i>
                     </button>
                     ` : ''}
                 </div>
                 <div class="mt-1">
-                    ${item.remaining_balance === 0 ? '<span class="status-paid">✅ भुगतान</span>' : '<span style="display: inline-block; width: 80px;">&nbsp;</span>'}
+                    ${item.total_balance === 600 ? '<span class="status-paid">✅ भुगतान</span>' : '<span style="color:#dc3545;font-size:12px;">❌ बकाया</span>'}
                 </div>
             </td>
         `;
         
         tableBody.appendChild(row);
     });
+}
+
+// Show message
+function showMessage(message, type = 'info') {
+    const messageBox = document.createElement('div');
+    messageBox.className = `message-box ${type === 'error' ? 'error' : 'success'}`;
+    messageBox.innerHTML = `
+        <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'}"></i>
+        ${message}
+    `;
+    
+    const container = document.querySelector('.main-container');
+    const heading = document.querySelector('.main-heading');
+    container.insertBefore(messageBox, heading.nextElementSibling);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        messageBox.style.opacity = '0';
+        messageBox.style.transition = 'opacity 0.5s ease-out';
+        setTimeout(() => {
+            if (messageBox.parentNode) {
+                messageBox.parentNode.removeChild(messageBox);
+            }
+        }, 500);
+    }, 5000);
 }
 
 // Search Function
@@ -1198,24 +1275,33 @@ function performSearch() {
         currentData = [...connectionData];
     } else {
         currentData = connectionData.filter(item => 
-            (item.con_no && item.con_no.toLowerCase().includes(searchTerm)) ||
+            (item.con_no && item.con_no.toString().toLowerCase().includes(searchTerm)) ||
             (item.owner_name && item.owner_name.toLowerCase().includes(searchTerm)) ||
-            (item.mobile && item.mobile.includes(searchTerm)) ||
-            (item.ward_no && item.ward_no.toString().includes(searchTerm))
+            (item.mobile && item.mobile.toString().includes(searchTerm)) ||
+            (item.ward_no && item.ward_no.toString().toLowerCase().includes(searchTerm))
         );
     }
     
     updateStats();
     renderTable();
+    
+    if (currentData.length === 0 && searchTerm) {
+        showMessage(`"${searchTerm}" के लिए कोई परिणाम नहीं मिला`, 'error');
+    }
 }
 
 // Export to Excel
 function exportToExcel() {
+    if (currentData.length === 0) {
+        showMessage('निर्यात करने के लिए कोई डेटा नहीं है', 'error');
+        return;
+    }
+    
     // Create CSV content with correct headers
-    let csvContent = "कनेक्शन नंबर,वार्ड,नाम,मोबाइल,2025-26,2024-25,शेष,स्थिति\n";
+    let csvContent = "कनेक्शन नंबर,वार्ड,नाम,मोबाइल,2025-26,2024-25,पुराना बकाया,कुल शेष,स्थिति\n";
     
     currentData.forEach(item => {
-        csvContent += `"${item.con_no}","${item.ward_no}","${item.owner_name}","${item.mobile}",${item.current_amount || 600},${item.arrear_balance || 0},${item.remaining_balance || 0},"${item.remaining_balance === 0 ? 'भुगतान' : 'बकाया'}"\n`;
+        csvContent += `"${item.con_no}","${item.ward_no}","${item.owner_name}","${item.mobile}",${item.current_2025_26 || 600},${item.arrear_2024_25 || 0},${item.old_arrear || 0},${item.total_balance || 0},"${item.total_balance === 600 ? 'भुगतान' : 'बकाया'}"\n`;
     });
     
     // Create download link
@@ -1227,12 +1313,46 @@ function exportToExcel() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    
+    showMessage('एक्सेल फ़ाइल सफलतापूर्वन निर्यात हुई', 'success');
 }
+
+// Upload CSV file
+function uploadCSV() {
+    document.getElementById('csvFileInput').click();
+}
+
+// Handle CSV file upload
+document.getElementById('csvFileInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const csvText = event.target.result;
+            connectionData = parseCSV(csvText);
+            currentData = [...connectionData];
+            updateStats();
+            renderTable();
+            showMessage(`CSV फ़ाइल सफलतापूर्वक लोड हुई: ${connectionData.length} कनेक्शन`, 'success');
+            
+            // Reset file input
+            document.getElementById('csvFileInput').value = '';
+        };
+        reader.onerror = function() {
+            showMessage('CSV फ़ाइल लोड करने में त्रुटि', 'error');
+            document.getElementById('csvFileInput').value = '';
+        };
+        reader.readAsText(file);
+    }
+});
 
 // Edit Connection
 function editConnection(conNo) {
-    alert(`एडिट कर रहे हैं: ${conNo}`);
-    // window.location.href = `edit_connection.html?id=${conNo}`;
+    const connection = currentData.find(item => item.con_no === conNo);
+    if (connection) {
+        alert(`एडिट कर रहे हैं:\n\nकनेक्शन: ${connection.con_no}\nनाम: ${connection.owner_name}\n\nकुल बकाया: ${formatIndianCurrency(connection.total_balance)}`);
+        // window.location.href = `edit_connection.html?id=${conNo}`;
+    }
 }
 
 // Show Delete Modal
@@ -1283,22 +1403,71 @@ function deleteConnection(conNo) {
         modal.hide();
         
         // Show success message
-        alert('कनेक्शन सफलतापूर्वक डिलीट हो गया!');
+        showMessage('कनेक्शन सफलतापूर्वक डिलीट हो गया!', 'success');
     } else {
-        alert('❌ गलत पासवर्ड!');
+        showMessage('❌ गलत पासवर्ड!', 'error');
     }
 }
 
 // Print Bill
 function printBill(conNo) {
-    alert(`बिल प्रिंट कर रहे हैं: ${conNo}`);
-    // window.open(`print_bill.html?id=${conNo}`, '_blank');
+    const connection = currentData.find(item => item.con_no === conNo);
+    if (connection) {
+        const billContent = `
+            ====================================
+                    जल बिल - NPP नकुर
+            ====================================
+            
+            कनेक्शन नंबर: ${connection.con_no}
+            वार्ड: ${connection.ward_no}
+            नाम: ${connection.owner_name}
+            मोबाइल: ${connection.mobile}
+            
+            ------------------------------------
+                   बिल विवरण
+            ------------------------------------
+            2025-26 की राशि: ${formatIndianCurrency(connection.current_2025_26)}
+            2024-25 का बकाया: ${formatIndianCurrency(connection.arrear_2024_25)}
+            पुराना बकाया: ${formatIndianCurrency(connection.old_arrear)}
+            
+            ------------------------------------
+            कुल देय राशि: ${formatIndianCurrency(connection.total_balance)}
+            ------------------------------------
+            
+            जारी दिनांक: ${new Date().toLocaleDateString('hi-IN')}
+            भुगतान की अंतिम तिथि: 31-03-2026
+        `;
+        
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html>
+            <head>
+                <title>जल बिल - ${connection.con_no}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; }
+                    .bill-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
+                    .bill-details { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                    .bill-details td { padding: 8px; border-bottom: 1px solid #ddd; }
+                    .total { font-weight: bold; font-size: 18px; color: #d00; }
+                </style>
+            </head>
+            <body>
+                <pre style="font-family: monospace; font-size: 14px;">${billContent}</pre>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    }
 }
 
 // Make Payment
 function makePayment(conNo) {
-    alert(`पेमेंट पेज पर जा रहे हैं: ${conNo}`);
-    // window.open(`payment.html?con=${conNo}`, '_blank');
+    const connection = currentData.find(item => item.con_no === conNo);
+    if (connection) {
+        alert(`भुगतान कर रहे हैं:\n\nकनेक्शन: ${connection.con_no}\nनाम: ${connection.owner_name}\n\nकुल बकाया: ${formatIndianCurrency(connection.total_balance)}\n\nभुगतान पेज पर रीडायरेक्ट हो रहे हैं...`);
+        // window.open(`payment.html?con=${conNo}&amount=${connection.total_balance}`, '_blank');
+    }
 }
 
 // Initialize
@@ -1335,42 +1504,6 @@ function adjustTableHeight() {
     
     tableContainer.style.height = Math.max(calculatedHeight, minHeight) + 'px';
 }
-
-// File upload functionality for CSV
-document.addEventListener('DOMContentLoaded', function() {
-    // Create file input element for CSV upload
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = '.csv';
-    fileInput.style.display = 'none';
-    fileInput.id = 'csvUpload';
-    document.body.appendChild(fileInput);
-    
-    // Add event listener for file upload
-    fileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const csvText = event.target.result;
-                connectionData = parseCSV(csvText);
-                currentData = [...connectionData];
-                updateStats();
-                renderTable();
-                alert('CSV फ़ाइल सफलतापूर्वक लोड हो गई!');
-            };
-            reader.readAsText(file);
-        }
-    });
-    
-    // Add upload button to UI
-    const uploadBtn = document.createElement('button');
-    uploadBtn.className = 'export-btn';
-    uploadBtn.innerHTML = '<i class="fas fa-upload"></i> CSV अपलोड';
-    uploadBtn.onclick = () => fileInput.click();
-    
-    document.querySelector('.search-container').appendChild(uploadBtn);
-});
 </script>
 </body>
 </html>
