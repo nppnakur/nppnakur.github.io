@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>जल प्रबंधन - CSV डेटा विवरण</title>
-<link rel="icon" type="image/png" href="img1.png">
+<link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/3082/3082383.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
@@ -425,7 +425,7 @@ body {
 }
 
 .table-body-container thead {
-  display: none; /* Hide thead in body container as we already have fixed header */
+  display: none;
 }
 
 .data-table tbody tr {
@@ -452,7 +452,7 @@ body {
   white-space: nowrap;
 }
 
-/* Column specific styles - updated for better fit */
+/* Column specific styles */
 .con-no-col { width: 12%; font-weight: 600; font-size: 13px; }
 .ward-no-col { width: 8%; font-size: 13px; }
 .owner { 
@@ -726,7 +726,6 @@ body {
     min-width: 70px;
   }
   
-  /* Adjust column widths for tablet */
   .owner { 
     width: 20%; 
     font-size: 12px; 
@@ -814,7 +813,7 @@ body {
   }
   
   .data-table {
-    min-width: 800px; /* For horizontal scrolling on mobile */
+    min-width: 800px;
   }
   
   .data-table th, .data-table td {
@@ -850,7 +849,6 @@ body {
     min-width: 60px;
   }
   
-  /* Adjust column widths for mobile */
   .owner { 
     width: 18%; 
     font-size: 10px; 
@@ -964,11 +962,6 @@ body {
   opacity: 0.5;
 }
 
-/* Table cell alignment for better readability */
-.table-body-container td {
-  vertical-align: middle;
-}
-
 /* Make sure table header stays on top during scroll */
 .table-header-container th {
   position: sticky;
@@ -1000,7 +993,7 @@ body {
 <body>
 <div class="topbar">
     <div class="topbar-left">
-        <img src="img1.png" alt="जल प्रबंधन लोगो" class="logo">
+        <img src="https://cdn-icons-png.flaticon.com/512/3082/3082383.png" alt="जल प्रबंधन लोगो" class="logo">
         <span class="org-name">जल प्रबंधन - CSV डेटा</span>
     </div>
     <div class="topbar-right">
@@ -1021,7 +1014,7 @@ body {
             <div class="upload-text">
                 <h3>CSV फाइल अपलोड करें</h3>
                 <p>कनेक्शन डेटा वाली CSV फाइल चुनें</p>
-                <p class="text-muted" style="font-size: 12px;">कॉलम: कनेक्शन नंबर, वार्ड नंबर, मालिक का नाम, मोबाइल, वर्तमान राशि, बकाया शेष, शेष राशि</p>
+                <p class="text-muted" style="font-size: 12px;">कॉलम: Connection No, Ward No, Owner Name, Mobile, Current amount 2025-26, Arrear Balance, Remaining Balance</p>
             </div>
             <input type="file" id="csvFile" accept=".csv" style="display: none;" onchange="handleFileSelect(event)">
         </div>
@@ -1113,7 +1106,7 @@ body {
             <p>जल कनेक्शन डेटा देखने के लिए ऊपर दिए गए अपलोड बॉक्स में CSV फाइल अपलोड करें।</p>
             <p style="font-size: 12px; color: #9ca3af; margin-top: 15px;">
                 <i class="fas fa-info-circle"></i> CSV फाइल में निम्न कॉलम होने चाहिए:<br>
-                connection No, ward_no, Owner Name, Mobile, Current amount 2025-26, Arrear Balance, remaining_balance
+                Connection No, Ward No, Owner Name, Mobile, Current amount 2025-26, Arrear Balance, Remaining Balance
             </p>
         </div>
     </div>
@@ -1172,7 +1165,7 @@ function formatIndianCurrency(number) {
         number = 0;
     }
     number = parseFloat(number);
-    number = Math.round(number * 100) / 100; // Round to 2 decimal places
+    number = Math.round(number * 100) / 100;
 
     // Separate whole number and decimal part
     let parts = number.toString().split('.');
@@ -1192,11 +1185,11 @@ function formatIndianCurrency(number) {
     if (len <= 3) {
         formatted_whole = whole;
     } else {
-        // Logic: Extract last three digits (thousands)
-        let last_three = whole.substring(len - 3); // e.g., '566'
-        let remaining = whole.substring(0, len - 3); // e.g., '11648'
+        // Extract last three digits (thousands)
+        let last_three = whole.substring(len - 3);
+        let remaining = whole.substring(0, len - 3);
 
-        // Logic: Format remaining part by pairs (Lakhs, Crores, etc.)
+        // Format remaining part by pairs (Lakhs, Crores, etc.)
         let formatted_remaining = '';
         
         // Reverse the remaining part to apply 2-digit grouping from the right
@@ -1258,6 +1251,87 @@ function formatFileSize(bytes) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
+// Parse CSV text with proper handling
+function parseCSV(text) {
+    const rows = [];
+    const lines = text.split('\n');
+    
+    if (lines.length === 0) return rows;
+    
+    // Try to detect header
+    const firstLine = lines[0];
+    let delimiter = ',';
+    
+    // Check for different delimiters
+    if (firstLine.includes(';')) {
+        delimiter = ';';
+    } else if (firstLine.includes('\t')) {
+        delimiter = '\t';
+    }
+    
+    // Process each line
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        
+        // Handle quoted fields
+        const cells = [];
+        let currentCell = '';
+        let insideQuotes = false;
+        
+        for (let j = 0; j < line.length; j++) {
+            const char = line[j];
+            const nextChar = line[j + 1];
+            
+            if (char === '"' && !insideQuotes) {
+                insideQuotes = true;
+            } else if (char === '"' && insideQuotes && nextChar === '"') {
+                currentCell += '"';
+                j++; // Skip next quote
+            } else if (char === '"' && insideQuotes) {
+                insideQuotes = false;
+            } else if (char === delimiter && !insideQuotes) {
+                cells.push(currentCell);
+                currentCell = '';
+            } else {
+                currentCell += char;
+            }
+        }
+        cells.push(currentCell);
+        
+        // If we have at least 7 columns (minimum required)
+        if (cells.length >= 7) {
+            const row = {
+                'Connection No': cells[0] || '',
+                'Ward No': cells[1] || '',
+                'Owner Name': cells[2] || '',
+                'Mobile': cells[5] || '',
+                'Current amount 2025-26': parseFloat(cells[6]) || 0,
+                'Arrear Balance': parseFloat(cells[7]) || 0,
+                'Remaining Balance': parseFloat(cells[8]) || 0
+            };
+            rows.push(row);
+        }
+    }
+    
+    return rows;
+}
+
+// Convert CSV data to our format
+function convertCsvData(originalData) {
+    return originalData.map(row => {
+        return {
+            connectionNo: row['Connection No'] || '',
+            wardNo: row['Ward No'] || '',
+            ownerName: row['Owner Name'] || '',
+            mobile: row['Mobile'] || '',
+            currentAmount: parseFloat(row['Current amount 2025-26'] || 0),
+            arrearBalance: parseFloat(row['Arrear Balance'] || 0),
+            remainingBalance: parseFloat(row['Remaining Balance'] || 0)
+        };
+    });
+}
+
 // Process CSV file
 function processCSV() {
     const fileInput = document.getElementById('csvFile');
@@ -1287,11 +1361,11 @@ function processCSV() {
             }
 
             // Store data
-            csvData = rows;
-            filteredData = [...rows];
+            csvData = convertCsvData(rows);
+            filteredData = [...csvData];
             
             // Show success message
-            showMessage(`सफलतापूर्वक ${rows.length} कनेक्शन लोड किए गए।`, 'success');
+            showMessage(`सफलतापूर्वक ${csvData.length} कनेक्शन लोड किए गए।`, 'success');
             
             // Show UI components
             document.getElementById('searchContainer').style.display = 'flex';
@@ -1317,43 +1391,6 @@ function processCSV() {
     };
     
     reader.readAsText(file, 'UTF-8');
-}
-
-// Parse CSV text
-function parseCSV(text) {
-    const rows = [];
-    const lines = text.split('\n');
-    
-    // Check if we have header
-    if (lines.length === 0) return rows;
-    
-    // Detect delimiter (comma or semicolon)
-    const firstLine = lines[0];
-    const delimiter = firstLine.includes(';') ? ';' : ',';
-    
-    // Parse rows
-    for (let i = 0; i < lines.length; i++) {
-        const line = lines[i].trim();
-        if (!line) continue;
-        
-        // Simple CSV parsing (for demonstration)
-        const cells = line.split(delimiter);
-        
-        // Create row object
-        const row = {
-            connectionNo: cells[0] || '',
-            wardNo: cells[1] || '',
-            ownerName: cells[2] || '',
-            mobile: cells[3] || '',
-            currentAmount: parseFloat(cells[4]) || 0,
-            arrearBalance: parseFloat(cells[5]) || 0,
-            remainingBalance: parseFloat(cells[6]) || 0
-        };
-        
-        rows.push(row);
-    }
-    
-    return rows;
 }
 
 // Update statistics
@@ -1408,18 +1445,22 @@ function renderTable() {
         const statusClass = row.remainingBalance === 0 ? 'status-paid' : 'status-pending';
         const statusText = row.remainingBalance === 0 ? '✅ भुगतान' : '❌ बकाया';
         
+        // Format mobile number
+        let mobileDisplay = row.mobile || 'N/A';
+        if (mobileDisplay === '0') mobileDisplay = 'N/A';
+        
         html += `
             <tr class="${isEven ? '' : 'highlight'}">
                 <td class="con-no-col">${escapeHtml(row.connectionNo)}</td>
                 <td class="ward-no-col">${escapeHtml(row.wardNo)}</td>
                 <td class="owner" title="${escapeHtml(row.ownerName)}">${escapeHtml(row.ownerName)}</td>
-                <td class="mobile-col">${escapeHtml(row.mobile)}</td>
+                <td class="mobile-col">${escapeHtml(mobileDisplay)}</td>
                 <td class="current-amount-col rupee">₹${formatIndianCurrency(row.currentAmount)}</td>
                 <td class="arrear-col rupee">₹${formatIndianCurrency(row.arrearBalance)}</td>
                 <td class="remaining-col rupee">₹${formatIndianCurrency(row.remainingBalance)}</td>
                 <td class="act">
                     <div class="action-buttons">
-                        <a href="javascript:void(0)" class="action-btn edit-btn" title="Edit">
+                        <a href="javascript:void(0)" class="action-btn edit-btn" title="Edit" onclick="editConnection('${escapeHtml(row.connectionNo)}')">
                             <i class="fas fa-edit"></i>
                         </a>
                         <a href="javascript:void(0)" onclick="showDeleteModal('${escapeHtml(row.connectionNo)}', '${escapeHtml(row.ownerName)}')" class="action-btn delete-btn" title="Delete">
@@ -1498,7 +1539,7 @@ function exportToExcel() {
                     <th>वार्ड नंबर</th>
                     <th>मालिक का नाम</th>
                     <th>मोबाइल नंबर</th>
-                    <th>वर्तमान राशि</th>
+                    <th>वर्तमान राशि (2025-26)</th>
                     <th>बकाया शेष</th>
                     <th>शेष राशि</th>
                     <th>स्थिति</th>
@@ -1542,10 +1583,11 @@ function exportToExcel() {
             <td><strong>₹${formatIndianCurrency(totals.totalCurrentAmount)}</strong></td>
             <td><strong>₹${formatIndianCurrency(totals.totalArrearBalance)}</strong></td>
             <td><strong>₹${formatIndianCurrency(totals.totalRemainingBalance)}</strong></td>
-            <td><strong>सांख्यिकी</strong></td>
+            <td><strong>${filteredData.length} कनेक्शन</strong></td>
         </tr>
         </table>
         <p>रिपोर्ट तिथि: ${new Date().toLocaleString('hi-IN')}</p>
+        <p>कुल कनेक्शन: ${filteredData.length} | कुल राशि: ₹${formatIndianCurrency(totals.totalRemainingBalance)}</p>
         </body></html>
     `;
 
@@ -1554,7 +1596,7 @@ function exportToExcel() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `connection_details_${new Date().toISOString().split('T')[0]}.xls`;
+    a.download = `जल_कनेक्शन_विवरण_${new Date().toISOString().split('T')[0]}.xls`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -1613,9 +1655,8 @@ function adjustTableHeight() {
     const headingHeight = document.querySelector('.main-heading').offsetHeight || 60;
     const searchHeight = document.querySelector('.search-container').offsetHeight || 50;
     const statsHeight = document.querySelector('.stats-container').offsetHeight || 100;
-    const uploadHeight = document.querySelector('.upload-container').offsetHeight || 0;
     
-    const calculatedHeight = windowHeight - topbarHeight - headingHeight - searchHeight - statsHeight - uploadHeight - 60;
+    const calculatedHeight = windowHeight - topbarHeight - headingHeight - searchHeight - statsHeight - 60;
     const minHeight = 350;
     
     if (tableContainer.style.display !== 'none') {
@@ -1623,7 +1664,7 @@ function adjustTableHeight() {
     }
 }
 
-// Modal functions (from original code)
+// Modal functions
 function showDeleteModal(conNo, ownerName) {
     document.getElementById('connectionDetails').innerHTML = 
         `<strong>कनेक्शन नंबर:</strong> ${conNo}<br>
@@ -1680,12 +1721,44 @@ function confirmDelete() {
     }, 1500);
 }
 
+function editConnection(conNo) {
+    showMessage(`संपादित करें: ${conNo} (यह एक डेमो फंक्शन है)`, 'warning');
+}
+
 function printBill(conNo) {
-    alert(`प्रिंट बिल: ${conNo}\n(यह एक डेमो फंक्शन है)`);
+    showMessage(`प्रिंट बिल: ${conNo} (यह एक डेमो फंक्शन है)`, 'success');
 }
 
 function redirectToPayment(conNo) {
-    alert(`पेमेंट रीडायरेक्ट: ${conNo}\n(यह एक डेमो फंक्शन है)`);
+    showMessage(`पेमेंट पेज: ${conNo} (यह एक डेमो फंक्शन है)`, 'success');
+}
+
+// Sample data for demo
+function loadSampleData() {
+    // This is just for demonstration
+    const sampleData = `Connection No,Ward No,Owner Name,House No,Old House No,Mobile,Current amount 2025-26,Arrear Balance,Remaining Balance
+1612,18-बन्जारान,श्री मौo इकराम s/o श्री मौo हनीफ,0,2378/1,6398342376,600,600,1200
+2496,23-चौधरीयान,श्री सुदर्शन पुत्र श्री यशपाल पुत्र श्री कलीराम,51,325,9412849527,600,7600,8200
+2578,4-चौधरीयन,श्री सुभाष चंद व अशोक कुमार s /o स्व बलवंत सिंह,0,175,9759217358,600,750,1350`;
+    
+    // Process sample data
+    const rows = parseCSV(sampleData);
+    csvData = convertCsvData(rows);
+    filteredData = [...csvData];
+    
+    // Show UI components
+    document.getElementById('searchContainer').style.display = 'flex';
+    document.getElementById('statsContainer').style.display = 'flex';
+    document.getElementById('tableContainer').style.display = 'flex';
+    document.getElementById('initialMessage').style.display = 'none';
+    document.getElementById('uploadContainer').style.display = 'none';
+    
+    // Update statistics and render table
+    updateStatistics();
+    renderTable();
+    adjustTableHeight();
+    
+    showMessage('डेमो डेटा लोड किया गया। अपना CSV फाइल अपलोड करने के लिए पेज रीफ्रेश करें।', 'success');
 }
 
 // Initialize
@@ -1702,6 +1775,17 @@ window.onload = function() {
             }
         });
     }
+    
+    // Add demo button for testing
+    const uploadContainer = document.getElementById('uploadContainer');
+    const demoButton = document.createElement('button');
+    demoButton.className = 'upload-btn mt-3';
+    demoButton.innerHTML = '<i class="fas fa-vial"></i> डेमो डेटा लोड करें';
+    demoButton.onclick = loadSampleData;
+    uploadContainer.appendChild(demoButton);
+    
+    // Initial height adjustment
+    setTimeout(adjustTableHeight, 100);
 };
 </script>
 </body>
