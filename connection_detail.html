@@ -915,7 +915,7 @@ body {
                         <th class="ward-no-col">🏘️ वार्ड</th>
                         <th class="owner">👤 नाम</th>
                         <th class="mobile-col">📱 मोबाइल</th>
-                        <th class="current-amount-col">💰 25‑26</th>
+                        <th class="current-amount-col">💰 25‑26 (₹600)</th>
                         <th class="arrear-col">📅 24‑25</th>
                         <th class="remaining-col">🧾 शेष</th>
                         <th class="act">⚙️ क्रिया</th>
@@ -968,14 +968,18 @@ body {
 let connectionData = [];
 let currentData = []; // For filtered data
 
-// Format Indian Currency
+// Format Indian Currency (CSV से मिले डेटा के अनुसार)
 function formatIndianCurrency(amount) {
     if (isNaN(amount) || amount === null || amount === '') return '₹0';
     
     amount = parseFloat(amount);
     
+    // Check if amount is 600 for current year (2025-26)
+    // If you want to always show 600 for current year, uncomment below line
+    // if (amount === 0) return '₹600'; // या आपकी CSV में जो भी amount है
+    
     // Format number with commas in Indian style
-    let parts = amount.toFixed(2).split('.');
+    let parts = Math.abs(amount).toFixed(2).split('.');
     let wholePart = parts[0];
     let decimalPart = parts[1] || '00';
     
@@ -988,13 +992,41 @@ function formatIndianCurrency(amount) {
     
     let formatted = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
     
+    // Add negative sign if needed
+    if (amount < 0) {
+        formatted = '-' + formatted;
+    }
+    
     return '₹' + formatted + '.' + decimalPart;
 }
 
-// Parse CSV data
+// Parse CSV data with proper column mapping
 function parseCSV(csvText) {
     const rows = csvText.split('\n');
     const data = [];
+    
+    // Check first row for headers to understand structure
+    const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
+    
+    console.log('CSV Headers:', headers);
+    
+    // Find column indices based on common CSV column names
+    let conNoIndex = headers.findIndex(h => h.includes('connection') || h.includes('con'));
+    let wardIndex = headers.findIndex(h => h.includes('ward'));
+    let nameIndex = headers.findIndex(h => h.includes('name') || h.includes('owner'));
+    let mobileIndex = headers.findIndex(h => h.includes('mobile') || h.includes('phone'));
+    let currentIndex = headers.findIndex(h => h.includes('current') || h.includes('2025') || h.includes('25-26'));
+    let arrearIndex = headers.findIndex(h => h.includes('arrear') || h.includes('2024') || h.includes('24-25'));
+    let remainingIndex = headers.findIndex(h => h.includes('remaining') || h.includes('balance') || h.includes('शेष'));
+    
+    // If indices not found, use default indices
+    if (conNoIndex === -1) conNoIndex = 0;
+    if (wardIndex === -1) wardIndex = 1;
+    if (nameIndex === -1) nameIndex = 2;
+    if (mobileIndex === -1) mobileIndex = 3;
+    if (currentIndex === -1) currentIndex = 4;
+    if (arrearIndex === -1) arrearIndex = 5;
+    if (remainingIndex === -1) remainingIndex = 6;
     
     for (let i = 1; i < rows.length; i++) { // Start from 1 to skip header
         const row = rows[i].trim();
@@ -1002,34 +1034,65 @@ function parseCSV(csvText) {
         
         const columns = row.split(',').map(col => col.trim());
         
-        if (columns.length >= 7) {
+        if (columns.length >= 4) {
             const connection = {
-                con_no: columns[0] || '',
-                ward_no: columns[1] || '',
-                owner_name: columns[2] || '',
-                mobile: columns[3] || '',
-                current_amount: parseFloat(columns[4]) || 0,
-                arrear_balance: parseFloat(columns[5]) || 0,
-                remaining_balance: parseFloat(columns[6]) || 0,
-                status: parseFloat(columns[6]) === 0 ? 'paid' : 'pending'
+                con_no: columns[conNoIndex] || '',
+                ward_no: columns[wardIndex] || '',
+                owner_name: columns[nameIndex] || '',
+                mobile: columns[mobileIndex] || '',
+                current_amount: parseFloat(columns[currentIndex]) || 0,
+                arrear_balance: parseFloat(columns[arrearIndex]) || 0,
+                remaining_balance: parseFloat(columns[remainingIndex]) || 0,
+                status: parseFloat(columns[remainingIndex]) === 0 ? 'paid' : 'pending'
             };
+            
+            // If current amount is 0, set it to 600 (2025-26 का fix amount)
+            if (connection.current_amount === 0) {
+                connection.current_amount = 600;
+            }
+            
             data.push(connection);
         }
     }
     
+    console.log('Parsed Data:', data);
     return data;
 }
 
 // Load CSV data from file
 async function loadCSVData() {
     try {
-        // You can replace this with your actual CSV file path
-        const response = await fetch('connection_data.csv');
-        const csvText = await response.text();
-        connectionData = parseCSV(csvText);
-        currentData = [...connectionData];
-        updateStats();
-        renderTable();
+        // Try different CSV file names
+        const csvFiles = [
+            'connection_data.csv',
+            'connections.csv',
+            'data.csv',
+            'bills.csv'
+        ];
+        
+        let csvLoaded = false;
+        
+        for (const csvFile of csvFiles) {
+            try {
+                const response = await fetch(csvFile);
+                if (response.ok) {
+                    const csvText = await response.text();
+                    connectionData = parseCSV(csvText);
+                    currentData = [...connectionData];
+                    updateStats();
+                    renderTable();
+                    csvLoaded = true;
+                    console.log(`Loaded data from ${csvFile}`);
+                    break;
+                }
+            } catch (error) {
+                console.log(`Failed to load ${csvFile}:`, error);
+            }
+        }
+        
+        if (!csvLoaded) {
+            throw new Error('No CSV file found');
+        }
     } catch (error) {
         console.error('Error loading CSV:', error);
         // Fallback to sample data if CSV not found
@@ -1037,14 +1100,19 @@ async function loadCSVData() {
     }
 }
 
-// Sample data fallback
+// Sample data fallback (with ₹600 for current year)
 function loadSampleData() {
     connectionData = [
-        { con_no: 'JAL001', ward_no: '5', owner_name: 'रमेश कुमार', mobile: '9876543210', current_amount: 2500, arrear_balance: 1200, remaining_balance: 3700, status: 'paid' },
-        { con_no: 'JAL002', ward_no: '7', owner_name: 'सीता देवी', mobile: '8765432109', current_amount: 2000, arrear_balance: 1500, remaining_balance: 3500, status: 'pending' },
-        { con_no: 'JAL003', ward_no: '3', owner_name: 'अमित शर्मा', mobile: '7654321098', current_amount: 3000, arrear_balance: 0, remaining_balance: 3000, status: 'paid' },
-        { con_no: 'JAL004', ward_no: '2', owner_name: 'प्रिया सिंह', mobile: '6543210987', current_amount: 2800, arrear_balance: 800, remaining_balance: 3600, status: 'pending' },
-        { con_no: 'JAL005', ward_no: '9', owner_name: 'राजेश यादव', mobile: '5432109876', current_amount: 2200, arrear_balance: 1000, remaining_balance: 3200, status: 'paid' }
+        { con_no: 'JAL001', ward_no: '5', owner_name: 'रमेश कुमार', mobile: '9876543210', current_amount: 600, arrear_balance: 1200, remaining_balance: 1800, status: 'pending' },
+        { con_no: 'JAL002', ward_no: '7', owner_name: 'सीता देवी', mobile: '8765432109', current_amount: 600, arrear_balance: 1500, remaining_balance: 2100, status: 'pending' },
+        { con_no: 'JAL003', ward_no: '3', owner_name: 'अमित शर्मा', mobile: '7654321098', current_amount: 600, arrear_balance: 0, remaining_balance: 600, status: 'pending' },
+        { con_no: 'JAL004', ward_no: '2', owner_name: 'प्रिया सिंह', mobile: '6543210987', current_amount: 600, arrear_balance: 800, remaining_balance: 1400, status: 'pending' },
+        { con_no: 'JAL005', ward_no: '9', owner_name: 'राजेश यादव', mobile: '5432109876', current_amount: 600, arrear_balance: 1000, remaining_balance: 1600, status: 'pending' },
+        { con_no: 'JAL006', ward_no: '4', owner_name: 'मोहन लाल', mobile: '4321098765', current_amount: 600, arrear_balance: 500, remaining_balance: 1100, status: 'pending' },
+        { con_no: 'JAL007', ward_no: '6', owner_name: 'गीता देवी', mobile: '3210987654', current_amount: 600, arrear_balance: 0, remaining_balance: 600, status: 'paid' },
+        { con_no: 'JAL008', ward_no: '8', owner_name: 'विकास सिंह', mobile: '2109876543', current_amount: 600, arrear_balance: 900, remaining_balance: 1500, status: 'pending' },
+        { con_no: 'JAL009', ward_no: '1', owner_name: 'नीता कुमारी', mobile: '1098765432', current_amount: 600, arrear_balance: 0, remaining_balance: 600, status: 'paid' },
+        { con_no: 'JAL010', ward_no: '10', owner_name: 'संजय वर्मा', mobile: '0987654321', current_amount: 600, arrear_balance: 1400, remaining_balance: 2000, status: 'pending' }
     ];
     currentData = [...connectionData];
     updateStats();
@@ -1054,7 +1122,7 @@ function loadSampleData() {
 // Update statistics
 function updateStats() {
     const totalConnections = currentData.length;
-    const totalCurrent = currentData.reduce((sum, item) => sum + (item.current_amount || 0), 0);
+    const totalCurrent = currentData.reduce((sum, item) => sum + (item.current_amount || 600), 0);
     const totalArrear = currentData.reduce((sum, item) => sum + (item.arrear_balance || 0), 0);
     const totalRemaining = currentData.reduce((sum, item) => sum + (item.remaining_balance || 0), 0);
     
@@ -1084,12 +1152,15 @@ function renderTable() {
     currentData.forEach((item, index) => {
         const row = document.createElement('tr');
         
+        // Calculate शेष correctly
+        const totalBalance = (item.current_amount || 600) + (item.arrear_balance || 0);
+        
         row.innerHTML = `
             <td class="con-no-col">${item.con_no || ''}</td>
             <td class="ward-no-col">${item.ward_no || ''}</td>
             <td class="owner" title="${item.owner_name || ''}">${item.owner_name || ''}</td>
             <td class="mobile-col">${item.mobile || ''}</td>
-            <td class="current-amount-col">${formatIndianCurrency(item.current_amount || 0)}</td>
+            <td class="current-amount-col">${formatIndianCurrency(item.current_amount || 600)}</td>
             <td class="arrear-col">${formatIndianCurrency(item.arrear_balance || 0)}</td>
             <td class="remaining-col">${formatIndianCurrency(item.remaining_balance || 0)}</td>
             <td class="act">
@@ -1130,7 +1201,7 @@ function performSearch() {
             (item.con_no && item.con_no.toLowerCase().includes(searchTerm)) ||
             (item.owner_name && item.owner_name.toLowerCase().includes(searchTerm)) ||
             (item.mobile && item.mobile.includes(searchTerm)) ||
-            (item.ward_no && item.ward_no.includes(searchTerm))
+            (item.ward_no && item.ward_no.toString().includes(searchTerm))
         );
     }
     
@@ -1140,11 +1211,11 @@ function performSearch() {
 
 // Export to Excel
 function exportToExcel() {
-    // Create CSV content
+    // Create CSV content with correct headers
     let csvContent = "कनेक्शन नंबर,वार्ड,नाम,मोबाइल,2025-26,2024-25,शेष,स्थिति\n";
     
     currentData.forEach(item => {
-        csvContent += `"${item.con_no}","${item.ward_no}","${item.owner_name}","${item.mobile}",${item.current_amount},${item.arrear_balance},${item.remaining_balance},"${item.remaining_balance === 0 ? 'भुगतान' : 'बकाया'}"\n`;
+        csvContent += `"${item.con_no}","${item.ward_no}","${item.owner_name}","${item.mobile}",${item.current_amount || 600},${item.arrear_balance || 0},${item.remaining_balance || 0},"${item.remaining_balance === 0 ? 'भुगतान' : 'बकाया'}"\n`;
     });
     
     // Create download link
@@ -1242,18 +1313,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Auto-hide messages after a few seconds
-    const messageBox = document.querySelector('.message-box');
-    if (messageBox) {
-        setTimeout(() => {
-            messageBox.style.opacity = '0';
-            messageBox.style.transition = 'opacity 0.5s ease-out';
-            setTimeout(() => {
-                messageBox.remove();
-            }, 500);
-        }, 5000);
-    }
-    
     // Adjust table height
     adjustTableHeight();
     window.addEventListener('resize', adjustTableHeight);
@@ -1276,6 +1335,42 @@ function adjustTableHeight() {
     
     tableContainer.style.height = Math.max(calculatedHeight, minHeight) + 'px';
 }
+
+// File upload functionality for CSV
+document.addEventListener('DOMContentLoaded', function() {
+    // Create file input element for CSV upload
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.csv';
+    fileInput.style.display = 'none';
+    fileInput.id = 'csvUpload';
+    document.body.appendChild(fileInput);
+    
+    // Add event listener for file upload
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const csvText = event.target.result;
+                connectionData = parseCSV(csvText);
+                currentData = [...connectionData];
+                updateStats();
+                renderTable();
+                alert('CSV फ़ाइल सफलतापूर्वक लोड हो गई!');
+            };
+            reader.readAsText(file);
+        }
+    });
+    
+    // Add upload button to UI
+    const uploadBtn = document.createElement('button');
+    uploadBtn.className = 'export-btn';
+    uploadBtn.innerHTML = '<i class="fas fa-upload"></i> CSV अपलोड';
+    uploadBtn.onclick = () => fileInput.click();
+    
+    document.querySelector('.search-container').appendChild(uploadBtn);
+});
 </script>
 </body>
 </html>
