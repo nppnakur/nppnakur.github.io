@@ -3,1256 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>जल प्रबंधन</title>
+    <title>जल प्रबंधन - लॉगिन</title>
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/869/869869.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* ---------- Global Styles ---------- */
-        :root {
-          --primary: #10b981;
-          --secondary: #059669;
-          --light-green: #d1fae5;
-          --dark-green: #065f46;
-          --gradient-primary: linear-gradient(135deg, #10b981, #059669);
-          --gradient-secondary: linear-gradient(135deg, #34d399, #10b981);
-          --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-          --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-
-        * {
-          box-sizing: border-box;
-          margin: 0;
-          padding: 0;
-        }
-
         body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-          min-height: 100vh;
-          color: #1f2937;
-          overflow-x: hidden;
-        }
-
-        /* ---------- Top Bar Styles ---------- */
-        .topbar {
-          position: sticky;
-          top: 0;
-          z-index: 1000;
-          background: var(--gradient-primary);
-          box-shadow: var(--shadow);
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 12px 24px;
-          height: 70px;
-        }
-
-        .topbar-left {
-          display: flex;
-          align-items: center;
-          gap: 15px;
-        }
-
-        .logo {
-          height: 45px;
-          width: auto;
-          border-radius: 6px;
-        }
-
-        .org-name {
-          color: white;
-          font-size: 20px;
-          font-weight: bold;
-          text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        }
-
-        .topbar-right {
-          display: flex;
-          gap: 15px;
-        }
-
-        .topbar a {
-          color: white;
-          font-size: 16px;
-          text-decoration: none;
-          transition: all 0.3s ease;
-          padding: 8px 16px;
-          border-radius: 8px;
-          background: rgba(255,255,255,0.15);
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .topbar a:hover {
-          background: rgba(255,255,255,0.25);
-          transform: translateY(-1px);
-        }
-
-        /* ---------- Main Container ---------- */
-        .main-container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          width: 100%;
-          max-width: 1400px;
-          margin: 0 auto;
-          padding: 20px 15px;
-        }
-
-        /* ---------- Heading Styles ---------- */
-        .main-heading {
-          text-align: center;
-          color: var(--dark-green);
-          font-size: 32px;
-          margin: 10px 0 20px;
-          font-weight: 700;
-          text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-          width: 100%;
-        }
-
-        /* ---------- Search Box Styles ---------- */
-        .search-container {
-          display: flex;
-          justify-content: center;
-          gap: 12px;
-          margin-bottom: 20px;
-          flex-wrap: wrap;
-          width: 100%;
-          max-width: 650px;
-        }
-
-        .search-box {
-          position: relative;
-          width: 300px;
-          max-width: 100%;
-        }
-
-        .search-box input {
-          width: 100%;
-          padding: 12px 16px;
-          border: 2px solid #d1fae5;
-          border-radius: 10px;
-          font-size: 14px;
-          background: white;
-          box-shadow: var(--shadow);
-          transition: all 0.3s ease;
-        }
-
-        .search-box input:focus {
-          outline: none;
-          border-color: var(--primary);
-          box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-        }
-
-        .search-btn, .export-btn {
-          padding: 12px 16px;
-          border: none;
-          border-radius: 10px;
-          font-size: 13px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          box-shadow: var(--shadow);
-          display: flex;
-          align-items: center;
-          gap: 6px;
-        }
-
-        .search-btn {
-          background: var(--gradient-primary);
-          color: white;
-        }
-
-        .export-btn {
-          background: linear-gradient(135deg, #f59e0b, #d97706);
-          color: white;
-          text-decoration: none;
-        }
-
-        .search-btn:hover, .export-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: var(--shadow-hover);
-        }
-
-        /* ---------- Stats Cards ---------- */
-        .stats-container {
-          display: flex;
-          justify-content: center;
-          gap: 15px;
-          margin: 20px auto;
-          flex-wrap: wrap;
-          width: 100%;
-          max-width: 1200px;
-        }
-
-        .stat-card {
-          flex: 1;
-          min-width: 180px;
-          max-width: 250px;
-          padding: 15px;
-          border-radius: 12px;
-          text-align: center;
-          box-shadow: var(--shadow);
-          transition: all 0.3s ease;
-          background: white;
-          border: 1px solid #e5e7eb;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .stat-card::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 4px;
-          background: var(--gradient-primary);
-        }
-
-        .stat-card:hover {
-          transform: translateY(-3px);
-          box-shadow: var(--shadow-hover);
-        }
-
-        .stat-card.connections {
-          background: var(--gradient-primary);
-          color: white;
-        }
-
-        .stat-card.current {
-          background: var(--gradient-secondary);
-          color: white;
-        }
-
-        .stat-card.arrear {
-          background: linear-gradient(135deg, #f59e0b, #d97706);
-          color: white;
-        }
-
-        .stat-card.remaining {
-          background: linear-gradient(135deg, #ef4444, #dc2626);
-          color: white;
-        }
-
-        .stat-card h3 {
-          margin: 0 0 8px;
-          font-size: 13px;
-          font-weight: 600;
-          opacity: 0.9;
-        }
-
-        .stat-card .number {
-          font-size: 22px;
-          font-weight: 700;
-          margin: 8px 0;
-          text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-        }
-
-        .stat-card .icon {
-          font-size: 24px;
-          margin-bottom: 8px;
-          opacity: 0.9;
-        }
-
-        /* ---------- Main Table Container ---------- */
-        .main-table-container {
-          width: 100%;
-          max-width: 1400px;
-          margin: 0 auto;
-          background: white;
-          border-radius: 12px;
-          box-shadow: var(--shadow-hover);
-          overflow: hidden;
-          border: 1px solid #e5e7eb;
-          display: flex;
-          flex-direction: column;
-          height: calc(100vh - 380px);
-          min-height: 400px;
-        }
-
-        /* ---------- Fixed Table Header Container ---------- */
-        .table-header-container {
-          background: white;
-          border-bottom: 2px solid #e5e7eb;
-          overflow: hidden;
-          flex-shrink: 0;
-          position: sticky;
-          top: 0;
-          z-index: 100;
-        }
-
-        .data-table {
-          width: 100%;
-          border-collapse: collapse;
-          margin: 0;
-          table-layout: fixed;
-        }
-
-        /* Fixed header styling */
-        .data-table thead {
-          position: sticky;
-          top: 0;
-          z-index: 101;
-          background: white;
-        }
-
-        .data-table th {
-          background: var(--gradient-primary);
-          color: white;
-          padding: 15px 8px;
-          font-size: 14px;
-          font-weight: 600;
-          text-align: center;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          border-right: 1px solid rgba(255,255,255,0.2);
-          position: sticky;
-          top: 0;
-          z-index: 102;
-        }
-
-        .data-table th:last-child {
-          border-right: none;
-        }
-
-        /* ---------- Scrollable Table Body Container ---------- */
-        .table-body-container {
-          flex: 1;
-          overflow-y: auto;
-          overflow-x: auto;
-        }
-
-        /* Ensure header stays fixed while body scrolls */
-        .table-body-container table {
-          border-collapse: collapse;
-          width: 100%;
-        }
-
-        .table-body-container thead {
-          display: none; /* Hide thead in body container as we already have fixed header */
-        }
-
-        .data-table tbody tr {
-          transition: all 0.2s ease;
-        }
-
-        .data-table tbody tr:nth-child(even) {
-          background: #f8fafc;
-        }
-
-        .data-table tbody tr:hover {
-          background: var(--light-green);
-        }
-
-        .data-table td {
-          padding: 12px 8px;
-          border-bottom: 1px solid #e5e7eb;
-          font-size: 14px;
-          text-align: center;
-          vertical-align: middle;
-          transition: all 0.2s ease;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-
-        /* Column specific styles - updated for better fit */
-        .con-no-col { width: 12%; font-weight: 600; font-size: 13px; }
-        .ward-no-col { width: 8%; font-size: 13px; }
-        .owner { 
-          width: 22%; 
-          text-align: left; 
-          padding-left: 10px !important; 
-          font-size: 13px; 
-          font-weight: bold !important;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        .mobile-col { width: 10%; font-family: monospace; font-size: 13px; }
-        .current-amount-col { width: 12%; font-weight: 600; color: #059669; font-size: 13px; text-align: right; padding-right: 15px !important; }
-        .arrear-col { width: 12%; font-weight: 600; color: #d97706; font-size: 13px; text-align: right; padding-right: 15px !important; }
-        .remaining-col { width: 12%; font-weight: 600; color: #dc2626; font-size: 13px; text-align: right; padding-right: 15px !important; }
-        .act { width: 12%; }
-
-        /* Status badges */
-        .status-paid {
-          background: #d1fae5;
-          color: #065f46;
-          padding: 6px 10px;
-          border-radius: 20px;
-          font-size: 12px;
-          font-weight: 600;
-          display: inline-block;
-          min-width: 80px;
-        }
-
-        /* Action buttons */
-        .action-buttons {
-          display: flex;
-          justify-content: center;
-          gap: 6px;
-        }
-
-        .action-btn {
-          width: 32px;
-          height: 32px;
-          border-radius: 6px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-decoration: none;
-          transition: all 0.3s ease;
-          font-size: 13px;
-          box-shadow: var(--shadow);
-        }
-
-        .edit-btn {
-          background: var(--gradient-primary);
-          color: white;
-        }
-
-        .delete-btn {
-          background: linear-gradient(135deg, #ef4444, #dc2626);
-          color: white;
-        }
-
-        .print-btn {
-          background: linear-gradient(135deg, #f59e0b, #d97706);
-          color: white;
-        }
-
-        .pay-btn {
-          background: linear-gradient(135deg, #10b981, #059669);
-          color: white;
-        }
-
-        .action-btn:hover {
-          transform: scale(1.1);
-          box-shadow: var(--shadow-hover);
-        }
-
-        /* ---------- Message Styles ---------- */
-        .message-box {
-          background: #d1fae5;
-          color: #065f46;
-          border: 1px solid #a7f3d0;
-          padding: 12px 16px;
-          margin: 15px auto;
-          border-radius: 10px;
-          text-align: center;
-          max-width: 600px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 10px;
-          box-shadow: var(--shadow);
-          font-weight: 500;
-          font-size: 14px;
-        }
-
-        .message-box.error {
-          background: #fecaca;
-          color: #991b1b;
-          border-color: #fca5a5;
-        }
-
-        /* ---------- Empty Table Message ---------- */
-        .empty-table-message {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          padding: 40px;
-          color: #6b7280;
-          text-align: center;
-        }
-
-        .empty-table-message i {
-          font-size: 60px;
-          color: #d1d5db;
-          margin-bottom: 20px;
-          opacity: 0.5;
-        }
-
-        .empty-table-message h3 {
-          font-size: 20px;
-          color: #374151;
-          margin-bottom: 10px;
-          font-weight: 600;
-        }
-
-        .empty-table-message p {
-          font-size: 14px;
-          max-width: 500px;
-          line-height: 1.6;
-          color: #6b7280;
-        }
-
-        /* ---------- Modal Styles ---------- */
-        .modal-content {
-          border-radius: 12px;
-          border: none;
-          box-shadow: var(--shadow-hover);
-          overflow: hidden;
-        }
-
-        .modal-header {
-          background: var(--gradient-primary);
-          color: white;
-          border-bottom: none;
-          padding: 16px 20px;
-        }
-
-        .modal-title {
-          font-weight: 600;
-          font-size: 16px;
-        }
-
-        .btn-close {
-          filter: invert(1);
-          opacity: 0.8;
-        }
-
-        .password-container {
-          position: relative;
-        }
-
-        .toggle-password {
-          position: absolute;
-          right: 12px;
-          top: 50%;
-          transform: translateY(-50%);
-          cursor: pointer;
-          color: #6b7280;
-          z-index: 5;
-        }
-
-        /* ---------- Responsive Styles ---------- */
-        @media (max-width: 1200px) {
-          .stats-container {
-            gap: 12px;
-          }
-          
-          .stat-card {
-            min-width: 160px;
-            max-width: 220px;
-          }
-          
-          .main-table-container {
-            height: calc(100vh - 370px);
-          }
-        }
-
-        @media (max-width: 992px) {
-          .main-heading {
-            font-size: 28px;
-          }
-          
-          .data-table th {
-            padding: 12px 6px;
-            font-size: 12px;
-          }
-          
-          .data-table td {
-            padding: 10px 6px;
-            font-size: 12px;
-          }
-          
-          .action-btn {
-            width: 28px;
-            height: 28px;
-            font-size: 11px;
-          }
-          
-          .org-name {
-            font-size: 18px;
-          }
-          
-          .main-table-container {
-            height: calc(100vh - 350px);
-          }
-          
-          .empty-table-message i {
-            font-size: 50px;
-          }
-          
-          .empty-table-message h3 {
-            font-size: 18px;
-          }
-          
-          .status-paid {
-            font-size: 11px;
-            padding: 5px 8px;
-            min-width: 70px;
-          }
-          
-          /* Adjust column widths for tablet */
-          .owner { 
-            width: 20%; 
-            font-size: 12px; 
-          }
-          .con-no-col { width: 14%; font-size: 12px; }
-          .ward-no-col { width: 9%; font-size: 12px; }
-          .mobile-col { width: 12%; font-size: 12px; }
-          .current-amount-col, .arrear-col, .remaining-col { 
-            width: 11%; 
-            font-size: 12px; 
-          }
-          .act { width: 13%; }
-        }
-
-        @media (max-width: 768px) {
-          .topbar {
-            padding: 10px 15px;
-            height: auto;
-            flex-direction: column;
-            gap: 10px;
-          }
-          
-          .topbar-left, .topbar-right {
-            width: 100%;
-            justify-content: center;
-          }
-          
-          .logo {
-            height: 35px;
-          }
-          
-          .topbar a {
-            font-size: 14px;
-            padding: 6px 12px;
-          }
-          
-          .main-heading {
-            font-size: 24px;
-            margin: 8px 0 15px;
-          }
-          
-          .search-container {
-            flex-direction: column;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            min-height: 100vh;
+            display: flex;
             align-items: center;
-            gap: 10px;
-          }
-          
-          .search-box {
-            width: 100%;
-          }
-          
-          .stats-container {
-            gap: 10px;
-          }
-          
-          .stat-card {
-            min-width: 45%;
-            padding: 12px;
-          }
-          
-          .stat-card .number {
-            font-size: 18px;
-          }
-          
-          .stat-card h3 {
-            font-size: 12px;
-          }
-          
-          .search-box input, .search-btn, .export-btn {
-            padding: 10px 14px;
-            font-size: 13px;
-          }
-          
-          .main-table-container {
-            border-radius: 10px;
-            height: calc(100vh - 330px);
-          }
-          
-          .data-table {
-            min-width: 800px; /* For horizontal scrolling on mobile */
-          }
-          
-          .data-table th, .data-table td {
-            padding: 8px 4px;
-            font-size: 10px;
-          }
-          
-          .org-name {
-            font-size: 16px;
-          }
-          
-          .action-btn {
-            width: 24px;
-            height: 24px;
-            font-size: 10px;
-          }
-          
-          .empty-table-message {
+            justify-content: center;
             padding: 20px;
-          }
-          
-          .empty-table-message i {
-            font-size: 40px;
-          }
-          
-          .empty-table-message h3 {
-            font-size: 16px;
-          }
-          
-          .status-paid {
-            font-size: 9px;
-            padding: 4px 6px;
-            min-width: 60px;
-          }
-          
-          /* Adjust column widths for mobile */
-          .owner { 
-            width: 18%; 
-            font-size: 10px; 
-            padding-left: 6px !important;
-          }
-          .con-no-col { width: 16%; font-size: 10px; }
-          .ward-no-col { width: 10%; font-size: 10px; }
-          .mobile-col { width: 13%; font-size: 10px; }
-          .current-amount-col, .arrear-col, .remaining-col { 
-            width: 9%; 
-            font-size: 10px; 
-          }
-          .act { width: 15%; }
         }
-
-        @media (max-width: 576px) {
-          .main-heading {
-            font-size: 22px;
-          }
-          
-          .stat-card {
-            min-width: 100%;
-            padding: 10px;
-          }
-          
-          .topbar {
-            padding: 8px 12px;
-          }
-          
-          .data-table th,
-          .data-table td {
-            padding: 6px 3px;
-            font-size: 9px;
-          }
-          
-          .action-buttons {
-            gap: 3px;
-          }
-          
-          .action-btn {
-            width: 22px;
-            height: 22px;
-            font-size: 9px;
-          }
-          
-          .org-name {
-            font-size: 14px;
-          }
-          
-          .empty-table-message i {
-            font-size: 35px;
-          }
-          
-          .empty-table-message h3 {
-            font-size: 15px;
-          }
-          
-          .status-paid {
-            font-size: 8px;
-            padding: 3px 5px;
-            min-width: 50px;
-          }
-          
-          .main-table-container {
-            height: calc(100vh - 310px);
-          }
+        
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            border-top: 5px solid #10b981;
         }
-
-        /* Custom scrollbar */
-        .table-body-container::-webkit-scrollbar {
-          width: 8px;
-          height: 8px;
-        }
-
-        .table-body-container::-webkit-scrollbar-track {
-          background: #f1f5f9;
-        }
-
-        .table-body-container::-webkit-scrollbar-thumb {
-          background: linear-gradient(135deg, #10b981, #059669);
-          border-radius: 4px;
-        }
-
-        .table-body-container::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(135deg, #059669, #047857);
-        }
-
-        /* Loading animation */
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        .stat-card, .message-box, .main-table-container {
-          animation: fadeIn 0.4s ease-out;
-        }
-
-        /* No data message */
-        .no-data {
-          text-align: center;
-          padding: 30px;
-          color: #6c757d;
-          font-style: italic;
-          font-size: 14px;
-        }
-
-        .no-data i {
-          font-size: 28px;
-          margin-bottom: 10px;
-          display: block;
-          opacity: 0.5;
-        }
-
-        /* Table cell alignment for better readability */
-        .table-body-container td {
-          vertical-align: middle;
-        }
-
-        /* Make sure table header stays on top during scroll */
-        .table-header-container th {
-          position: sticky;
-          top: 0;
-          z-index: 10;
-        }
-
-        /* Ensure proper z-index for fixed elements */
-        .topbar {
-          z-index: 1000;
-        }
-
-        .table-header-container {
-          z-index: 999;
-        }
-
-        .data-table th {
-          z-index: 1000;
-        }
-
-        /* Search result message */
-        .search-results-message {
-            background: #e0f2fe;
-            color: #0369a1;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin: 15px 0;
+        
+        .logo-container {
             text-align: center;
-            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            height: 80px;
+            width: auto;
+            margin-bottom: 15px;
+        }
+        
+        .app-name {
+            color: #065f46;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .app-subtitle {
+            color: #6b7280;
+            font-size: 16px;
+        }
+        
+        .form-control {
+            padding: 12px 15px;
+            border: 2px solid #d1fae5;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+        
+        .login-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 10px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .alert {
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
             font-weight: 500;
-            border: 1px solid #bae6fd;
+        }
+        
+        .footer-text {
+            text-align: center;
+            margin-top: 25px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        .password-container {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6b7280;
         }
     </style>
 </head>
 <body>
-    <div class="topbar">
-        <div class="topbar-left">
+    <div class="login-container">
+        <div class="logo-container">
             <img src="https://cdn-icons-png.flaticon.com/512/869/869869.png" alt="जल प्रबंधन लोगो" class="logo">
-            <span class="org-name">जल प्रबंधन</span>
+            <h1 class="app-name">जल प्रबंधन विभाग</h1>
+            <p class="app-subtitle">कनेक्शन प्रबंधन सिस्टम</p>
         </div>
-        <div class="topbar-right">
-            <a href="#"><i class="fas fa-home"></i> होम</a>
-            <a href="#"><i class="fas fa-sign-out-alt"></i> लॉगआउट</a>
+        
+        <div id="errorMessage" class="alert alert-danger">
+            गलत उपयोगकर्ता नाम या पासवर्ड
         </div>
-    </div>
-
-    <div class="main-container">
-        <h1 class="main-heading">🚰 जल कनेक्शन विवरण डैशबोर्ड</h1>
-
-        <!-- Success/Error Messages -->
-        <div class="message-box">
-            <i class="fas fa-check-circle"></i> डेटा सफलतापूर्वक लोड किया गया
-        </div>
-
-        <div class="search-container">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="🔍 कनेक्शन नंबर, नाम, मोबाइल, या वार्ड खोजें...">
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username"><i class="fas fa-user me-2"></i>उपयोगकर्ता नाम</label>
+                <input type="text" id="username" class="form-control" placeholder="अपना उपयोगकर्ता नाम दर्ज करें" value="admin">
             </div>
-            <button class="search-btn" id="searchButton">
-                <i class="fas fa-search"></i> खोजें
+            
+            <div class="input-group">
+                <label for="password"><i class="fas fa-lock me-2"></i>पासवर्ड</label>
+                <div class="password-container">
+                    <input type="password" id="password" class="form-control" placeholder="अपना पासवर्ड दर्ज करें" value="admin123">
+                    <span class="toggle-password" onclick="togglePasswordVisibility()">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+            </div>
+            
+            <button type="submit" class="login-btn">
+                <i class="fas fa-sign-in-alt me-2"></i>लॉगिन करें
             </button>
-            <a href="#" class="export-btn" id="exportButton">
-                <i class="fas fa-file-excel"></i> एक्सेल एक्सपोर्ट
-            </a>
-        </div>
-
-        <!-- Stats Cards -->
-        <div class="stats-container">
-            <div class="stat-card connections">
-                <div class="icon">👥</div>
-                <h3>कुल कनेक्शन</h3>
-                <div class="number" id="totalConnections">15</div>
-                <p>सभी कनेक्शनों की कुल संख्या</p>
-            </div>
-            <div class="stat-card current">
-                <div class="icon">💰</div>
-                <h3>वर्तमान राशि</h3>
-                <div class="number">₹1,25,780.00</div>
-                <p>2025-26 वर्ष की राशि</p>
-            </div>
-            <div class="stat-card arrear">
-                <div class="icon">📅</div>
-                <h3>बकाया शेष</h3>
-                <div class="number">₹45,230.50</div>
-                <p>2024-25 वर्ष का बकाया</p>
-            </div>
-            <div class="stat-card remaining">
-                <div class="icon">🧾</div>
-                <h3>शेष राशि</h3>
-                <div class="number">₹1,71,010.50</div>
-                <p>सभी कनेक्शनों का शेष</p>
-            </div>
-        </div>
-
-        <!-- Search Results Message -->
-        <div class="search-results-message" id="searchResultsMessage" style="display: none;">
-            <i class="fas fa-search"></i> <span id="resultsText"></span>
-        </div>
-
-        <!-- Main Table Container -->
-        <div class="main-table-container">
-            <!-- Fixed Header Container -->
-            <div class="table-header-container">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th class="con-no-col">🔗 कनेक्शन</th>
-                            <th class="ward-no-col">🏘️ वार्ड</th>
-                            <th class="owner">👤 नाम</th>
-                            <th class="mobile-col">📱 मोबाइल</th>
-                            <th class="current-amount-col">💰 25‑26</th>
-                            <th class="arrear-col">📅 24‑25</th>
-                            <th class="remaining-col">🧾 शेष</th>
-                            <th class="act">⚙️ क्रिया</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-
-            <!-- Scrollable Body Container -->
-            <div class="table-body-container">
-                <!-- Initially show empty message -->
-                <div class="empty-table-message" id="emptyMessage">
-                    <i class="fas fa-search"></i>
-                    <h3>खोज शुरू करें</h3>
-                    <p>कनेक्शन विवरण देखने के लिए ऊपर दिए गए सर्च बॉक्स में कनेक्शन नंबर, ग्राहक का नाम, मोबाइल नंबर या वार्ड नंबर डालकर सर्च करें।</p>
-                </div>
-
-                <!-- Table with sample data (initially hidden) -->
-                <table class="data-table" id="dataTable" style="display: none;">
-                    <tbody id="tableBody">
-                        <!-- Sample data rows will be inserted here by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
+        </form>
+        
+        <div class="footer-text">
+            <p>डेमो क्रेडेंशियल्स: username: admin, password: admin123</p>
+            <p class="mt-2">© 2024 जल प्रबंधन विभाग</p>
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">
-                        <i class="fas fa-exclamation-triangle me-2"></i>कनेक्शन डिलीट करें
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-danger text-center" role="alert" style="border-radius: 10px;">
-                        <i class="fas fa-exclamation-circle me-2"></i>
-                        <strong>चेतावनी!</strong> यह कार्रवाई पूर्ववत नहीं की जा सकती है
-                    </div>
-                    
-                    <div class="border p-3 mb-3 rounded" style="background: #f8f9fa;">
-                        <h6 class="text-center mb-3">निम्नलिखित कनेक्शन को डिलीट करना चाहते हैं?</h6>
-                        <div class="text-center" id="connectionDetails"></div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="password" class="form-label">पासवर्ड</label>
-                        <div class="password-container">
-                            <input type="password" class="form-control" id="password" 
-                                   placeholder="अपना पासवर्ड दर्ज करें" oninput="validateDelete()" style="padding-right: 40px;">
-                            <span class="toggle-password" onclick="togglePasswordVisibility()">
-                                <i class="fas fa-eye"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">रद्द करें</button>
-                    <button id="deleteConfirmBtn" class="btn btn-danger disabled" onclick="confirmDelete()">डिलीट करें</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap JS and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
-        // Sample data for demonstration
-        const sampleData = [
-            {
-                conNo: 'JAL-001',
-                wardNo: '5',
-                ownerName: 'रमेश कुमार शर्मा',
-                mobile: '9876543210',
-                currentAmount: 8500.00,
-                arrearBalance: 1250.50,
-                remainingBalance: 9750.50
-            },
-            {
-                conNo: 'JAL-002',
-                wardNo: '3',
-                ownerName: 'सीता देवी',
-                mobile: '9123456789',
-                currentAmount: 9200.00,
-                arrearBalance: 0,
-                remainingBalance: 0
-            },
-            {
-                conNo: 'JAL-003',
-                wardNo: '7',
-                ownerName: 'अमित सिंह',
-                mobile: '9988776655',
-                currentAmount: 7800.00,
-                arrearBalance: 3200.00,
-                remainingBalance: 11000.00
-            },
-            {
-                conNo: 'JAL-004',
-                wardNo: '2',
-                ownerName: 'प्रिया पटेल',
-                mobile: '9876123450',
-                currentAmount: 10200.00,
-                arrearBalance: 1500.00,
-                remainingBalance: 11700.00
-            },
-            {
-                conNo: 'JAL-005',
-                wardNo: '8',
-                ownerName: 'विकास जैन',
-                mobile: '8899776655',
-                currentAmount: 6800.00,
-                arrearBalance: 0,
-                remainingBalance: 0
-            },
-            {
-                conNo: 'JAL-006',
-                wardNo: '4',
-                ownerName: 'नीता यादव',
-                mobile: '7766554433',
-                currentAmount: 11500.00,
-                arrearBalance: 4500.75,
-                remainingBalance: 16000.75
-            },
-            {
-                conNo: 'JAL-007',
-                wardNo: '6',
-                ownerName: 'राजेश गुप्ता',
-                mobile: '6655443322',
-                currentAmount: 8900.00,
-                arrearBalance: 2100.25,
-                remainingBalance: 11000.25
-            },
-            {
-                conNo: 'JAL-008',
-                wardNo: '1',
-                ownerName: 'सुनीता सिंह',
-                mobile: '9988771122',
-                currentAmount: 7600.00,
-                arrearBalance: 0,
-                remainingBalance: 0
-            },
-            {
-                conNo: 'JAL-009',
-                wardNo: '9',
-                ownerName: 'मोहन लाल',
-                mobile: '8877665544',
-                currentAmount: 10500.00,
-                arrearBalance: 3800.00,
-                remainingBalance: 14300.00
-            },
-            {
-                conNo: 'JAL-010',
-                wardNo: '5',
-                ownerName: 'अनिल कुमार',
-                mobile: '7788990011',
-                currentAmount: 9400.00,
-                arrearBalance: 1200.00,
-                remainingBalance: 10600.00
-            }
-        ];
-
-        // Function to format Indian currency
-        function formatIndianCurrency(number) {
-            if (isNaN(number)) number = 0;
-            number = parseFloat(number).toFixed(2);
-            
-            let parts = number.toString().split(".");
-            let integerPart = parts[0];
-            let decimalPart = parts.length > 1 ? "." + parts[1] : ".00";
-            
-            let lastThree = integerPart.substring(integerPart.length - 3);
-            let otherNumbers = integerPart.substring(0, integerPart.length - 3);
-            
-            if (otherNumbers !== '') {
-                lastThree = ',' + lastThree;
-            }
-            
-            let result = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + decimalPart;
-            return result;
-        }
-
-        // Function to populate table with data
-        function populateTable(data) {
-            const tableBody = document.getElementById('tableBody');
-            const emptyMessage = document.getElementById('emptyMessage');
-            const dataTable = document.getElementById('dataTable');
-            
-            // Clear existing rows
-            tableBody.innerHTML = '';
-            
-            if (data.length === 0) {
-                emptyMessage.style.display = 'flex';
-                dataTable.style.display = 'none';
-                return;
-            }
-            
-            // Hide empty message, show table
-            emptyMessage.style.display = 'none';
-            dataTable.style.display = 'table';
-            
-            // Populate table with data
-            data.forEach((item, index) => {
-                const row = document.createElement('tr');
-                const isPaid = item.remainingBalance === 0;
-                
-                row.innerHTML = `
-                    <td class="con-no-col">${item.conNo}</td>
-                    <td class="ward-no-col">${item.wardNo}</td>
-                    <td class="owner" title="${item.ownerName}">${item.ownerName}</td>
-                    <td class="mobile-col">${item.mobile}</td>
-                    <td class="current-amount-col">₹${formatIndianCurrency(item.currentAmount)}</td>
-                    <td class="arrear-col">₹${formatIndianCurrency(item.arrearBalance)}</td>
-                    <td class="remaining-col">₹${formatIndianCurrency(item.remainingBalance)}</td>
-                    <td class="act">
-                        <div class="action-buttons">
-                            <a href="#" class="action-btn edit-btn" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a href="#" onclick="showDeleteModal('${item.conNo}', '${item.ownerName}'); return false;" class="action-btn delete-btn" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </a>
-                            <a href="#" onclick="printBill('${item.conNo}')" class="action-btn print-btn" title="Print Bill">
-                                <i class="fas fa-print"></i>
-                            </a>
-                            ${!isPaid ? `<a href="#" onclick="redirectToPayment('${item.conNo}')" class="action-btn pay-btn" title="Pay Now">
-                                <i class="fas fa-money-bill-wave"></i>
-                            </a>` : ''}
-                        </div>
-                        <div class="mt-1">
-                            ${isPaid ? '<span class="status-paid">✅ भुगतान</span>' : '<span style="display: inline-block; width: 80px;">&nbsp;</span>'}
-                        </div>
-                    </td>
-                `;
-                
-                tableBody.appendChild(row);
-            });
-            
-            // Update stats
-            updateStats(data);
-        }
-
-        // Function to update statistics
-        function updateStats(data) {
-            const totalConnections = data.length;
-            const totalCurrentAmount = data.reduce((sum, item) => sum + item.currentAmount, 0);
-            const totalArrearBalance = data.reduce((sum, item) => sum + item.arrearBalance, 0);
-            const totalRemainingBalance = data.reduce((sum, item) => sum + item.remainingBalance, 0);
-            
-            document.getElementById('totalConnections').textContent = totalConnections;
-        }
-
-        // Function to search data
-        function searchData(query) {
-            if (!query.trim()) {
-                // If query is empty, show empty message
-                document.getElementById('emptyMessage').style.display = 'flex';
-                document.getElementById('dataTable').style.display = 'none';
-                document.getElementById('searchResultsMessage').style.display = 'none';
-                return;
-            }
-            
-            query = query.toLowerCase();
-            const filteredData = sampleData.filter(item => 
-                item.conNo.toLowerCase().includes(query) ||
-                item.ownerName.toLowerCase().includes(query) ||
-                item.mobile.includes(query) ||
-                item.wardNo.includes(query)
-            );
-            
-            // Show search results message
-            const resultsMessage = document.getElementById('searchResultsMessage');
-            const resultsText = document.getElementById('resultsText');
-            
-            if (filteredData.length > 0) {
-                resultsText.textContent = `"${query}" के लिए ${filteredData.length} परिणाम मिले`;
-                resultsMessage.style.display = 'block';
-            } else {
-                resultsText.textContent = `"${query}" के लिए कोई परिणाम नहीं मिला`;
-                resultsMessage.style.display = 'block';
-            }
-            
-            populateTable(filteredData);
-        }
-
-        // Delete record with modal confirmation
-        function showDeleteModal(conNo, ownerName) {
-            document.getElementById('connectionDetails').innerHTML = 
-                `<strong>कनेक्शन नंबर:</strong> ${conNo}<br>
-                 <strong>ग्राहक का नाम:</strong> ${ownerName}`;
-            
-            document.getElementById('password').value = '';
-            document.getElementById('deleteConfirmBtn').classList.add('disabled');
-            
-            // Show modal using Bootstrap
-            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            deleteModal.show();
-        }
-
-        // Enable delete button only when password is entered
-        function validateDelete() {
-            const password = document.getElementById('password').value;
-            const deleteBtn = document.getElementById('deleteConfirmBtn');
-            
-            if (password.length > 0) {
-                deleteBtn.classList.remove('disabled');
-            } else {
-                deleteBtn.classList.add('disabled');
-            }
-        }
-
         // Toggle password visibility
         function togglePasswordVisibility() {
             const passwordInput = document.getElementById('password');
@@ -1268,105 +176,43 @@
                 toggleIcon.classList.add('fa-eye');
             }
         }
-
-        // Confirm delete function
-        function confirmDelete() {
-            const password = document.getElementById('password').value;
-            const deleteBtn = document.getElementById('deleteConfirmBtn');
+        
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            if (password !== 'admin123') {
-                alert('❌ गलत पासवर्ड');
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Simple validation
+            if (!username || !password) {
+                errorMessage.textContent = 'कृपया उपयोगकर्ता नाम और पासवर्ड दर्ज करें';
+                errorMessage.style.display = 'block';
                 return;
             }
             
-            const originalText = deleteBtn.innerHTML;
-            deleteBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> डिलीट हो रहा है...';
-            deleteBtn.disabled = true;
-            
-            // Simulate delete process
-            setTimeout(() => {
-                alert('✅ कनेक्शन सफलतापूर्वक डिलीट हो गया');
-                bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
-                deleteBtn.innerHTML = 'डिलीट करें';
-                deleteBtn.disabled = false;
-            }, 1500);
-        }
-
-        // Opens a new window to print bill
-        function printBill(conNo) {
-            alert(`प्रिंट बिल: ${conNo}\n(यह सिर्फ डेमो है - वास्तविक अनुप्रयोग में यह प्रिंट बिल पेज खुलेगा)`);
-        }
-
-        // Redirect to payment page
-        function redirectToPayment(conNo) {
-            alert(`भुगतान पेज: ${conNo}\n(यह सिर्फ डेमो है - वास्तविक अनुप्रयोग में यह भुगतान पेज खुलेगा)`);
-        }
-
-        // Export to Excel
-        function exportToExcel() {
-            alert('एक्सेल एक्सपोर्ट शुरू हो रहा है...\n(यह सिर्फ डेमो है - वास्तविक अनुप्रयोग में यह एक्सेल फ़ाइल डाउनलोड करेगा)');
-        }
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set up search functionality
-            const searchInput = document.getElementById('searchInput');
-            const searchButton = document.getElementById('searchButton');
-            const exportButton = document.getElementById('exportButton');
-            
-            // Search when button is clicked
-            searchButton.addEventListener('click', function() {
-                searchData(searchInput.value);
-            });
-            
-            // Search when Enter is pressed
-            searchInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    searchData(this.value);
-                }
-            });
-            
-            // Export to Excel
-            exportButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                exportToExcel();
-            });
-            
-            // Auto-hide messages after a few seconds
-            const messageBox = document.querySelector('.message-box');
-            if (messageBox) {
-                setTimeout(() => {
-                    messageBox.style.opacity = '0';
-                    messageBox.style.transition = 'opacity 0.5s ease-out';
-                    setTimeout(() => {
-                        messageBox.remove();
-                    }, 500);
-                }, 5000);
+            // Demo credentials
+            if (username === 'admin' && password === 'admin123') {
+                // Store login status in localStorage
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('username', username);
+                
+                // Redirect to dashboard
+                window.location.href = 'connection_detail.html';
+            } else {
+                errorMessage.textContent = 'गलत उपयोगकर्ता नाम या पासवर्ड';
+                errorMessage.style.display = 'block';
             }
-            
-            // Adjust table height based on window size
-            function adjustTableHeight() {
-                const tableContainer = document.querySelector('.main-table-container');
-                if (!tableContainer) return;
-                
-                const windowHeight = window.innerHeight;
-                const topbarHeight = document.querySelector('.topbar')?.offsetHeight || 70;
-                const headingHeight = document.querySelector('.main-heading')?.offsetHeight || 60;
-                const searchHeight = document.querySelector('.search-container')?.offsetHeight || 50;
-                const statsHeight = document.querySelector('.stats-container')?.offsetHeight || 100;
-                
-                const calculatedHeight = windowHeight - topbarHeight - headingHeight - searchHeight - statsHeight - 60;
-                const minHeight = 350;
-                
-                tableContainer.style.height = Math.max(calculatedHeight, minHeight) + 'px';
-            }
-            
-            // Initial adjustment
-            setTimeout(adjustTableHeight, 100);
-            
-            // Adjust on resize
-            window.addEventListener('resize', adjustTableHeight);
         });
+        
+        // Check if already logged in
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            window.location.href = 'connection_detail.html';
+        }
+        
+        // Auto focus on username field
+        document.getElementById('username').focus();
     </script>
 </body>
 </html>
