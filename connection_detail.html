@@ -268,7 +268,7 @@ body {
   border: 1px solid #e5e7eb;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 380px);
+  height: 550px;
   min-height: 400px;
 }
 
@@ -360,10 +360,10 @@ body {
 }
 
 /* Column specific styles */
-.con-no-col { width: 12%; font-weight: 600; font-size: 13px; }
-.ward-no-col { width: 8%; font-size: 13px; }
+.con-no-col { width: 8%; font-weight: 600; font-size: 13px; }
+.ward-no-col { width: 10%; font-size: 13px; }
 .owner { 
-  width: 22%; 
+  width: 25%; 
   text-align: left; 
   padding-left: 10px !important; 
   font-size: 13px; 
@@ -372,16 +372,28 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.house-col { width: 8%; font-size: 13px; }
 .mobile-col { width: 10%; font-family: monospace; font-size: 13px; }
-.current-amount-col { width: 12%; font-weight: 600; color: #059669; font-size: 13px; text-align: right; padding-right: 15px !important; }
-.arrear-col { width: 12%; font-weight: 600; color: #d97706; font-size: 13px; text-align: right; padding-right: 15px !important; }
-.remaining-col { width: 12%; font-weight: 600; color: #dc2626; font-size: 13px; text-align: right; padding-right: 15px !important; }
-.act { width: 12%; }
+.current-amount-col { width: 8%; font-weight: 600; color: #059669; font-size: 13px; text-align: right; padding-right: 15px !important; }
+.arrear-col { width: 8%; font-weight: 600; color: #d97706; font-size: 13px; text-align: right; padding-right: 15px !important; }
+.remaining-col { width: 8%; font-weight: 600; color: #dc2626; font-size: 13px; text-align: right; padding-right: 15px !important; }
+.act { width: 15%; }
 
 /* Status badges */
 .status-paid {
   background: #d1fae5;
   color: #065f46;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+  min-width: 80px;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
   padding: 6px 10px;
   border-radius: 20px;
   font-size: 12px;
@@ -460,6 +472,28 @@ body {
   border-color: #fca5a5;
 }
 
+/* ---------- Loading Spinner ---------- */
+.loading-spinner {
+  display: none;
+  text-align: center;
+  padding: 30px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* ---------- Empty Table Message ---------- */
 .empty-table-message {
   display: flex;
@@ -533,75 +567,6 @@ body {
 }
 
 /* ---------- Responsive Styles ---------- */
-@media (max-width: 1200px) {
-  .stats-container {
-    gap: 12px;
-  }
-  
-  .stat-card {
-    min-width: 160px;
-    max-width: 220px;
-  }
-  
-  .main-table-container {
-    height: calc(100vh - 370px);
-  }
-}
-
-@media (max-width: 992px) {
-  .main-heading {
-    font-size: 28px;
-  }
-  
-  .data-table th {
-    padding: 12px 6px;
-    font-size: 12px;
-  }
-  
-  .data-table td {
-    padding: 10px 6px;
-    font-size: 12px;
-  }
-  
-  .action-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 11px;
-  }
-  
-  .org-name {
-    font-size: 18px;
-  }
-  
-  .main-table-container {
-    height: calc(100vh - 350px);
-  }
-  
-  .empty-table-message i {
-    font-size: 50px;
-  }
-  
-  .empty-table-message h3 {
-    font-size: 18px;
-  }
-  
-  .status-paid {
-    font-size: 11px;
-    padding: 5px 8px;
-    min-width: 70px;
-  }
-  
-  .owner { width: 20%; font-size: 12px; }
-  .con-no-col { width: 14%; font-size: 12px; }
-  .ward-no-col { width: 9%; font-size: 12px; }
-  .mobile-col { width: 12%; font-size: 12px; }
-  .current-amount-col, .arrear-col, .remaining-col { 
-    width: 11%; 
-    font-size: 12px; 
-  }
-  .act { width: 13%; }
-}
-
 @media (max-width: 768px) {
   .topbar {
     padding: 10px 15px;
@@ -663,104 +628,11 @@ body {
   
   .main-table-container {
     border-radius: 10px;
-    height: calc(100vh - 330px);
+    height: 500px;
   }
   
   .data-table {
-    min-width: 800px;
-  }
-  
-  .data-table th, .data-table td {
-    padding: 8px 4px;
-    font-size: 10px;
-  }
-  
-  .org-name {
-    font-size: 16px;
-  }
-  
-  .action-btn {
-    width: 24px;
-    height: 24px;
-    font-size: 10px;
-  }
-  
-  .empty-table-message {
-    padding: 20px;
-  }
-  
-  .empty-table-message i {
-    font-size: 40px;
-  }
-  
-  .empty-table-message h3 {
-    font-size: 16px;
-  }
-  
-  .status-paid {
-    font-size: 9px;
-    padding: 4px 6px;
-    min-width: 60px;
-  }
-  
-  .owner { width: 18%; font-size: 10px; padding-left: 6px !important; }
-  .con-no-col { width: 16%; font-size: 10px; }
-  .ward-no-col { width: 10%; font-size: 10px; }
-  .mobile-col { width: 13%; font-size: 10px; }
-  .current-amount-col, .arrear-col, .remaining-col { width: 9%; font-size: 10px; }
-  .act { width: 15%; }
-}
-
-@media (max-width: 576px) {
-  .main-heading {
-    font-size: 22px;
-  }
-  
-  .stat-card {
-    min-width: 100%;
-    padding: 10px;
-  }
-  
-  .topbar {
-    padding: 8px 12px;
-  }
-  
-  .data-table th,
-  .data-table td {
-    padding: 6px 3px;
-    font-size: 9px;
-  }
-  
-  .action-buttons {
-    gap: 3px;
-  }
-  
-  .action-btn {
-    width: 22px;
-    height: 22px;
-    font-size: 9px;
-  }
-  
-  .org-name {
-    font-size: 14px;
-  }
-  
-  .empty-table-message i {
-    font-size: 35px;
-  }
-  
-  .empty-table-message h3 {
-    font-size: 15px;
-  }
-  
-  .status-paid {
-    font-size: 8px;
-    padding: 3px 5px;
-    min-width: 50px;
-  }
-  
-  .main-table-container {
-    height: calc(100vh - 310px);
+    min-width: 1200px;
   }
 }
 
@@ -792,54 +664,13 @@ body {
 .stat-card, .message-box, .main-table-container {
   animation: fadeIn 0.4s ease-out;
 }
-
-/* No data message */
-.no-data {
-  text-align: center;
-  padding: 30px;
-  color: #6c757d;
-  font-style: italic;
-  font-size: 14px;
-}
-
-.no-data i {
-  font-size: 28px;
-  margin-bottom: 10px;
-  display: block;
-  opacity: 0.5;
-}
-
-/* Make sure table header stays on top during scroll */
-.table-header-container th {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-/* Ensure proper z-index for fixed elements */
-.topbar {
-  z-index: 1000;
-}
-
-.table-header-container {
-  z-index: 999;
-}
-
-.data-table th {
-  z-index: 1000;
-}
-
-/* Indian currency formatting */
-.rupee {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
 </style>
 </head>
 <body>
 <div class="topbar">
     <div class="topbar-left">
         <img src="img1.png" alt="जल प्रबंधन लोगो" class="logo">
-        <span class="org-name">जल प्रबंधन प्रणाली</span>
+        <span class="org-name">जल प्रबंधन प्रणाली - सन्नी ढाका</span>
     </div>
     <div class="topbar-right">
         <a href="dashboard.html"><i class="fas fa-home"></i> होम</a>
@@ -865,32 +696,38 @@ body {
         </button>
     </div>
 
-    <!-- Stats Cards - Updated with Demo Data -->
+    <!-- Stats Cards - Will be updated with real data -->
     <div class="stats-container">
         <div class="stat-card connections">
             <div class="icon">👥</div>
             <h3>कुल कनेक्शन</h3>
-            <div class="number" id="totalConnections">125</div>
+            <div class="number" id="totalConnections">0</div>
             <p>सभी कनेक्शनों की कुल संख्या</p>
         </div>
         <div class="stat-card current">
             <div class="icon">💰</div>
             <h3>वर्तमान राशि</h3>
-            <div class="number" id="currentAmount">₹8,45,750.00</div>
+            <div class="number" id="currentAmount">₹0.00</div>
             <p>2025-26 वर्ष की राशि</p>
         </div>
         <div class="stat-card arrear">
             <div class="icon">📅</div>
             <h3>बकाया शेष</h3>
-            <div class="number" id="arrearBalance">₹1,25,450.00</div>
+            <div class="number" id="arrearBalance">₹0.00</div>
             <p>2024-25 वर्ष का बकाया</p>
         </div>
         <div class="stat-card remaining">
             <div class="icon">🧾</div>
             <h3>शेष राशि</h3>
-            <div class="number" id="remainingBalance">₹2,35,680.00</div>
+            <div class="number" id="remainingBalance">₹0.00</div>
             <p>सभी कनेक्शनों का शेष</p>
         </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
+        <p>डेटा लोड हो रहा है...</p>
     </div>
 
     <!-- Main Table Container -->
@@ -903,6 +740,7 @@ body {
                         <th class="con-no-col">🔗 कनेक्शन</th>
                         <th class="ward-no-col">🏘️ वार्ड</th>
                         <th class="owner">👤 नाम</th>
+                        <th class="house-col">🏠 हाउस</th>
                         <th class="mobile-col">📱 मोबाइल</th>
                         <th class="current-amount-col">💰 25‑26</th>
                         <th class="arrear-col">📅 24‑25</th>
@@ -916,10 +754,10 @@ body {
         <!-- Scrollable Body Container -->
         <div class="table-body-container">
             <!-- Initially show empty message -->
-            <div class="empty-table-message">
-                <i class="fas fa-search"></i>
-                <h3>खोज शुरू करें</h3>
-                <p>कनेक्शन विवरण देखने के लिए ऊपर दिए गए सर्च बॉक्स में कनेक्शन नंबर, ग्राहक का नाम, मोबाइल नंबर या वार्ड नंबर डालकर सर्च करें।</p>
+            <div class="empty-table-message" id="emptyMessage">
+                <i class="fas fa-database"></i>
+                <h3>डेटा लोड हो रहा है...</h3>
+                <p>कनेक्शन विवरण लोड किया जा रहा है। कृपया प्रतीक्षा करें...</p>
             </div>
             
             <!-- Table will be populated dynamically -->
@@ -975,79 +813,62 @@ body {
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// Demo Data - Replace this with your actual database data
-const demoData = [
+// आपका वास्तविक डेटा
+const yourDatabaseData = [
     {
-        connectionNo: "JLP001234",
-        wardNo: "1",
-        ownerName: "राम कुमार शर्मा",
-        mobile: "9876543210",
-        currentAmount: 1200.00,
-        arrearBalance: 0.00,
-        remainingBalance: 0.00
+        connectionNo: "1612",
+        wardNo: "18-बन्जारान",
+        ownerName: "श्री मौo इकराम s/o श्री मौo हनीफ",
+        houseNo: "0",
+        oldHouseNo: "2378/1",
+        mobile: "0",
+        currentAmount: 600,
+        arrearBalance: 600,
+        remainingBalance: 1200
     },
     {
-        connectionNo: "JLP001235",
-        wardNo: "2",
-        ownerName: "सीता देवी",
-        mobile: "9876543211",
-        currentAmount: 1500.00,
-        arrearBalance: 350.00,
-        remainingBalance: 850.00
+        connectionNo: "2496",
+        wardNo: "23-चौधरीयान",
+        ownerName: "श्री सुदर्शन पुत्र श्री यशपाल पुत्र श्री कलीराम",
+        houseNo: "51",
+        oldHouseNo: "325",
+        mobile: "0",
+        currentAmount: 600,
+        arrearBalance: 7600,
+        remainingBalance: 8200
     },
     {
-        connectionNo: "JLP001236",
-        wardNo: "3",
-        ownerName: "कृष्णा ट्रेडर्स",
-        mobile: "9876543212",
-        currentAmount: 4500.00,
-        arrearBalance: 1250.00,
-        remainingBalance: 2500.00
+        connectionNo: "2578",
+        wardNo: "4-चौधरीयन",
+        ownerName: "श्री सुभाष चंद व अशोक कुमार s /o स्व बलवंत सिंह",
+        houseNo: "0",
+        oldHouseNo: "175",
+        mobile: "0",
+        currentAmount: 600,
+        arrearBalance: 750,
+        remainingBalance: 1350
     },
     {
-        connectionNo: "JLP001237",
-        wardNo: "4",
-        ownerName: "मोहन लाल",
-        mobile: "9876543213",
-        currentAmount: 1200.00,
-        arrearBalance: 600.00,
-        remainingBalance: 1200.00
+        connectionNo: "3236",
+        wardNo: "18-बन्जारान",
+        ownerName: "श्री मुनव्वर उर्फ भोला s/o श्री अनवर",
+        houseNo: "47",
+        oldHouseNo: "2345/1",
+        mobile: "6398342376",
+        currentAmount: 600,
+        arrearBalance: 5965,
+        remainingBalance: 6565
     },
     {
-        connectionNo: "JLP001238",
-        wardNo: "5",
-        ownerName: "गंगा प्रसाद",
-        mobile: "9876543214",
-        currentAmount: 1200.00,
-        arrearBalance: 0.00,
-        remainingBalance: 0.00
-    },
-    {
-        connectionNo: "JLP001239",
-        wardNo: "6",
-        ownerName: "राधा कृष्ण होटल",
-        mobile: "9876543215",
-        currentAmount: 6500.00,
-        arrearBalance: 1750.00,
-        remainingBalance: 3750.00
-    },
-    {
-        connectionNo: "JLP001240",
-        wardNo: "7",
-        ownerName: "सुरेश चंद्र",
-        mobile: "9876543216",
-        currentAmount: 1200.00,
-        arrearBalance: 150.00,
-        remainingBalance: 450.00
-    },
-    {
-        connectionNo: "JLP001241",
-        wardNo: "8",
-        ownerName: "जवाहर लाल स्कूल",
-        mobile: "9876543217",
-        currentAmount: 3000.00,
-        arrearBalance: 0.00,
-        remainingBalance: 0.00
+        connectionNo: "866",
+        wardNo: "23-चौधरीयान",
+        ownerName: "श्री फूलसिंह s/o रूड़ा सिंह",
+        houseNo: "137",
+        oldHouseNo: "248",
+        mobile: "9412849527",
+        currentAmount: 600,
+        arrearBalance: 600,
+        remainingBalance: 1200
     }
 ];
 
@@ -1085,48 +906,130 @@ function formatIndianCurrency(number) {
     return result + '.' + decimalPart;
 }
 
-// Update stats based on data
-function updateStats(data) {
-    const totalConnections = data.length;
+// Function to show loading
+function showLoading() {
+    document.getElementById('loadingSpinner').style.display = 'block';
+}
+
+// Function to hide loading
+function hideLoading() {
+    document.getElementById('loadingSpinner').style.display = 'none';
+}
+
+// Load all data on page load
+function loadAllData() {
+    showLoading();
+    
+    setTimeout(() => {
+        try {
+            // Calculate totals
+            const totals = calculateTotals(yourDatabaseData);
+            
+            // Update stats
+            updateStats(totals);
+            
+            // Populate table
+            populateTable(yourDatabaseData);
+            
+            // Hide empty message
+            document.getElementById('emptyMessage').style.display = 'none';
+            document.getElementById('dataTableBody').style.display = 'table';
+            
+            showMessage(`✅ ${yourDatabaseData.length} कनेक्शन लोड किए गए`, 'success');
+            
+        } catch (error) {
+            showMessage(`❌ डेटा लोड करने में त्रुटि: ${error.message}`, 'error');
+        } finally {
+            hideLoading();
+        }
+    }, 1000);
+}
+
+// Calculate totals from data
+function calculateTotals(data) {
+    let totalConnections = data.length;
     let totalCurrent = 0;
     let totalArrear = 0;
     let totalRemaining = 0;
     
     data.forEach(item => {
-        totalCurrent += item.currentAmount;
-        totalArrear += item.arrearBalance;
-        totalRemaining += item.remainingBalance;
+        totalCurrent += parseFloat(item.currentAmount) || 0;
+        totalArrear += parseFloat(item.arrearBalance) || 0;
+        totalRemaining += parseFloat(item.remainingBalance) || 0;
     });
     
-    document.getElementById('totalConnections').textContent = totalConnections;
-    document.getElementById('currentAmount').textContent = '₹' + formatIndianCurrency(totalCurrent);
-    document.getElementById('arrearBalance').textContent = '₹' + formatIndianCurrency(totalArrear);
-    document.getElementById('remainingBalance').textContent = '₹' + formatIndianCurrency(totalRemaining);
+    return {
+        totalConnections,
+        totalCurrent,
+        totalArrear,
+        totalRemaining
+    };
+}
+
+// Update stats based on totals
+function updateStats(totals) {
+    document.getElementById('totalConnections').textContent = totals.totalConnections;
+    document.getElementById('currentAmount').textContent = '₹' + formatIndianCurrency(totals.totalCurrent);
+    document.getElementById('arrearBalance').textContent = '₹' + formatIndianCurrency(totals.totalArrear);
+    document.getElementById('remainingBalance').textContent = '₹' + formatIndianCurrency(totals.totalRemaining);
 }
 
 // Search functionality
 function searchData(query) {
-    const searchTerm = query.toLowerCase().trim();
+    showLoading();
     
-    if (!searchTerm) {
-        // Show empty message if no search term
-        document.querySelector('.empty-table-message').style.display = 'flex';
-        document.getElementById('dataTableBody').style.display = 'none';
-        updateStats([]); // Reset stats
-        return;
-    }
-    
-    // Filter data based on search term
-    const filteredData = demoData.filter(item => 
-        item.connectionNo.toLowerCase().includes(searchTerm) ||
-        item.ownerName.toLowerCase().includes(searchTerm) ||
-        item.mobile.includes(searchTerm) ||
-        item.wardNo.includes(searchTerm)
-    );
-    
-    // Update table with filtered data
-    populateTable(filteredData);
-    updateStats(filteredData);
+    setTimeout(() => {
+        const searchTerm = query.toLowerCase().trim();
+        
+        if (!searchTerm) {
+            // If empty search, show all data
+            loadAllData();
+            return;
+        }
+        
+        // Filter data based on search term
+        const filteredData = yourDatabaseData.filter(item => 
+            (item.connectionNo && item.connectionNo.toString().includes(searchTerm)) ||
+            (item.ownerName && item.ownerName.toLowerCase().includes(searchTerm)) ||
+            (item.mobile && item.mobile.includes(searchTerm)) ||
+            (item.wardNo && item.wardNo.toLowerCase().includes(searchTerm)) ||
+            (item.houseNo && item.houseNo.toString().includes(searchTerm)) ||
+            (item.oldHouseNo && item.oldHouseNo.toLowerCase().includes(searchTerm))
+        );
+        
+        if (filteredData.length === 0) {
+            // Show no results message
+            document.getElementById('emptyMessage').innerHTML = `
+                <i class="fas fa-search"></i>
+                <h3>कोई परिणाम नहीं मिला</h3>
+                <p>"${query}" के लिए कोई डेटा नहीं मिला। कृपया दूसरा कीवर्ड आजमाएं।</p>
+            `;
+            document.getElementById('emptyMessage').style.display = 'flex';
+            document.getElementById('dataTableBody').style.display = 'none';
+            
+            // Reset stats
+            updateStats({
+                totalConnections: 0,
+                totalCurrent: 0,
+                totalArrear: 0,
+                totalRemaining: 0
+            });
+            
+            showMessage(`❌ "${query}" के लिए कोई डेटा नहीं मिला`, 'error');
+        } else {
+            // Update table with filtered data
+            const totals = calculateTotals(filteredData);
+            updateStats(totals);
+            populateTable(filteredData);
+            
+            document.getElementById('emptyMessage').style.display = 'none';
+            document.getElementById('dataTableBody').style.display = 'table';
+            
+            showMessage(`✅ "${query}" के लिए ${filteredData.length} परिणाम मिले`, 'success');
+        }
+        
+        hideLoading();
+    }, 500);
 }
 
 // Populate table with data
@@ -1134,53 +1037,61 @@ function populateTable(data) {
     const tableBody = document.getElementById('tableData');
     tableBody.innerHTML = '';
     
-    if (data.length === 0) {
-        document.querySelector('.empty-table-message').style.display = 'flex';
-        document.getElementById('dataTableBody').style.display = 'none';
-        return;
-    }
-    
-    document.querySelector('.empty-table-message').style.display = 'none';
-    document.getElementById('dataTableBody').style.display = 'table';
-    
     data.forEach((item, index) => {
         const row = document.createElement('tr');
         
+        // Format mobile number for display
+        let mobileDisplay = item.mobile;
+        if (mobileDisplay === "0" || !mobileDisplay) {
+            mobileDisplay = "N/A";
+        } else if (mobileDisplay.length === 10) {
+            mobileDisplay = mobileDisplay.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+        }
+        
+        // Format house number
+        let houseDisplay = item.houseNo;
+        if (houseDisplay === "0" || !houseDisplay) {
+            houseDisplay = item.oldHouseNo || "N/A";
+        }
+        
         row.innerHTML = `
-            <td class="con-no-col">${item.connectionNo}</td>
-            <td class="ward-no-col">${item.wardNo}</td>
-            <td class="owner" title="${item.ownerName}">${item.ownerName}</td>
-            <td class="mobile-col">${item.mobile}</td>
-            <td class="current-amount-col">₹${formatIndianCurrency(item.currentAmount)}</td>
-            <td class="arrear-col">₹${formatIndianCurrency(item.arrearBalance)}</td>
-            <td class="remaining-col">₹${formatIndianCurrency(item.remainingBalance)}</td>
+            <td class="con-no-col">${item.connectionNo || 'N/A'}</td>
+            <td class="ward-no-col">${item.wardNo || 'N/A'}</td>
+            <td class="owner" title="${item.ownerName || 'N/A'}">${item.ownerName || 'N/A'}</td>
+            <td class="house-col">${houseDisplay}</td>
+            <td class="mobile-col">${mobileDisplay}</td>
+            <td class="current-amount-col">₹${formatIndianCurrency(item.currentAmount || 0)}</td>
+            <td class="arrear-col">₹${formatIndianCurrency(item.arrearBalance || 0)}</td>
+            <td class="remaining-col">₹${formatIndianCurrency(item.remainingBalance || 0)}</td>
             <td class="act">
                 <div class="action-buttons">
-                    <a href="edit_connection.html?id=${encodeURIComponent(item.connectionNo)}" class="action-btn edit-btn" title="Edit">
+                    <a href="edit_connection.html?id=${encodeURIComponent(item.connectionNo || '')}" class="action-btn edit-btn" title="संपादित करें">
                         <i class="fas fa-edit"></i>
                     </a>
-                    <a href="#" onclick="showDeleteModal('${encodeURIComponent(item.connectionNo)}', '${item.ownerName}'); return false;" class="action-btn delete-btn" title="Delete">
+                    <a href="#" onclick="showDeleteModal('${encodeURIComponent(item.connectionNo || '')}', '${item.ownerName || ''}'); return false;" class="action-btn delete-btn" title="हटाएं">
                         <i class="fas fa-trash"></i>
                     </a>
-                    <a href="#" onclick="printBill('${encodeURIComponent(item.connectionNo)}')" class="action-btn print-btn" title="Print Bill">
+                    <a href="#" onclick="printBill('${encodeURIComponent(item.connectionNo || '')}')" class="action-btn print-btn" title="बिल प्रिंट करें">
                         <i class="fas fa-print"></i>
                     </a>
-                    ${item.remainingBalance > 0 ? `
-                    <a href="#" onclick="redirectToPayment('${encodeURIComponent(item.connectionNo)}')" class="action-btn pay-btn" title="Pay Now">
+                    ${(item.remainingBalance || 0) > 0 ? `
+                    <a href="#" onclick="redirectToPayment('${encodeURIComponent(item.connectionNo || '')}')" class="action-btn pay-btn" title="भुगतान करें">
                         <i class="fas fa-money-bill-wave"></i>
                     </a>
                     ` : ''}
                 </div>
                 <div class="mt-1">
-                    ${item.remainingBalance == 0 ? 
+                    ${(item.remainingBalance || 0) == 0 ? 
                     `<span class="status-paid">✅ भुगतान</span>` : 
-                    `<span style="display: inline-block; width: 80px;">&nbsp;</span>`}
+                    `<span class="status-pending">❌ बकाया</span>`}
                 </div>
             </td>
         `;
         
         tableBody.appendChild(row);
     });
+    
+    document.getElementById('dataTableBody').style.display = 'table';
 }
 
 // Delete record with modal confirmation
@@ -1223,6 +1134,7 @@ function confirmDelete() {
     }
     
     // In real application, you would make an AJAX call to delete
+    // For now, just show success message
     showMessage(`✅ कनेक्शन ${conNo} सफलतापूर्वक डिलीट कर दिया गया`, 'success');
     
     // Close modal
@@ -1236,13 +1148,13 @@ function confirmDelete() {
 
 // Opens a new window to print bill
 function printBill(conNo) {
-    alert(`प्रिंटिंग बिल: ${conNo}`);
+    showMessage(`🖨️ बिल प्रिंट किया जा रहा है: ${conNo}`, 'success');
     // In real application: window.open('print_bill.html?id=' + encodeURIComponent(conNo), '_blank');
 }
 
 // Redirect to payment page
 function redirectToPayment(conNo) {
-    alert(`भुगतान पेज: ${conNo}`);
+    showMessage(`💳 भुगतान पेज लोड हो रहा है: ${conNo}`, 'success');
     // In real application: window.open('payment.html?search=' + encodeURIComponent(conNo), '_blank');
 }
 
@@ -1272,99 +1184,116 @@ function showMessage(message, type = 'success') {
 
 // Excel Export
 function exportToExcel() {
-    // Create table for Excel
-    let excelContent = `
-    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-    <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <style>
-    body { font-family: "Segoe UI", "Arial Unicode MS", Arial, sans-serif; margin: 20px; }
-    table { border-collapse: collapse; width: 100%; margin: 20px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    td { border: 1px solid #e0e0e0; padding: 12px 8px; font-size: 12px; vertical-align: middle; }
-    th { background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: bold; padding: 15px 10px; border: 1px solid #0da271; text-align: center; font-size: 13px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
-    .excel-header { background: linear-gradient(135deg, #1e40af, #1e3a8a); color: white; font-size: 24px; font-weight: bold; padding: 25px; text-align: center; border: 2px solid #1e3a8a; margin-bottom: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
-    .excel-subheader { background: #dbeafe; color: #1e40af; padding: 15px; text-align: center; border: 1px solid #bfdbfe; font-weight: bold; font-size: 14px; }
-    </style>
-    </head>
-    <body>
-    <table width="100%" cellspacing="0" cellpadding="0">
-    <tr><td colspan="7" class="excel-header">🚰 जल कनेक्शन विवरण - विस्तृत रिपोर्ट</td></tr>
-    <tr><td colspan="7" class="excel-subheader">
-    <strong>📅 रिपोर्ट तिथि:</strong> ${new Date().toLocaleDateString()} | 
-    <strong>⏰ समय:</strong> ${new Date().toLocaleTimeString()} | 
-    <strong>👤 उपयोगकर्ता:</strong> प्रशासन
-    </td></tr>
-    <tr>
-        <th>कनेक्शन नंबर</th>
-        <th>वार्ड नंबर</th>
-        <th>मालिक का नाम</th>
-        <th>मोबाइल नंबर</th>
-        <th>वर्तमान राशि</th>
-        <th>बकाया शेष</th>
-        <th>शेष राशि</th>
-    </tr>
-    `;
+    showLoading();
     
-    const searchTerm = document.getElementById('searchInput').value;
-    const dataToExport = searchTerm ? 
-        demoData.filter(item => 
-            item.connectionNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.ownerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.mobile.includes(searchTerm) ||
-            item.wardNo.includes(searchTerm)
-        ) : demoData;
-    
-    let totalCurrent = 0, totalArrear = 0, totalRemaining = 0;
-    
-    dataToExport.forEach(item => {
-        totalCurrent += item.currentAmount;
-        totalArrear += item.arrearBalance;
-        totalRemaining += item.remainingBalance;
-        
-        excelContent += `
+    setTimeout(() => {
+        // Create table for Excel
+        let excelContent = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <style>
+        body { font-family: "Segoe UI", "Arial Unicode MS", Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        td { border: 1px solid #e0e0e0; padding: 12px 8px; font-size: 12px; vertical-align: middle; }
+        th { background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: bold; padding: 15px 10px; border: 1px solid #0da271; text-align: center; font-size: 13px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        .excel-header { background: linear-gradient(135deg, #1e40af, #1e3a8a); color: white; font-size: 24px; font-weight: bold; padding: 25px; text-align: center; border: 2px solid #1e3a8a; margin-bottom: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .excel-subheader { background: #dbeafe; color: #1e40af; padding: 15px; text-align: center; border: 1px solid #bfdbfe; font-weight: bold; font-size: 14px; }
+        .total-row { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; font-weight: bold; }
+        </style>
+        </head>
+        <body>
+        <table width="100%" cellspacing="0" cellpadding="0">
+        <tr><td colspan="9" class="excel-header">🚰 जल कनेक्शन विवरण - विस्तृत रिपोर्ट</td></tr>
+        <tr><td colspan="9" class="excel-subheader">
+        <strong>📅 रिपोर्ट तिथि:</strong> ${new Date().toLocaleDateString('hi-IN')} | 
+        <strong>⏰ समय:</strong> ${new Date().toLocaleTimeString('hi-IN')} | 
+        <strong>👤 उपयोगकर्ता:</strong> सन्नी ढाका
+        </td></tr>
         <tr>
-            <td>${item.connectionNo}</td>
-            <td>${item.wardNo}</td>
-            <td>${item.ownerName}</td>
-            <td>${item.mobile}</td>
-            <td style="text-align:right;">₹${formatIndianCurrency(item.currentAmount)}</td>
-            <td style="text-align:right;">₹${formatIndianCurrency(item.arrearBalance)}</td>
-            <td style="text-align:right;">₹${formatIndianCurrency(item.remainingBalance)}</td>
+            <th>कनेक्शन नंबर</th>
+            <th>वार्ड नंबर</th>
+            <th>मालिक का नाम</th>
+            <th>हाउस नंबर</th>
+            <th>पुराना हाउस</th>
+            <th>मोबाइल नंबर</th>
+            <th>वर्तमान राशि 2025-26</th>
+            <th>बकाया शेष 2024-25</th>
+            <th>शेष राशि</th>
         </tr>
         `;
-    });
-    
-    // Add totals row
-    excelContent += `
-    <tr style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; font-weight: bold;">
-        <td colspan="4" style="text-align:right;"><strong>कुल योग:</strong></td>
-        <td style="text-align:right;">₹${formatIndianCurrency(totalCurrent)}</td>
-        <td style="text-align:right;">₹${formatIndianCurrency(totalArrear)}</td>
-        <td style="text-align:right;">₹${formatIndianCurrency(totalRemaining)}</td>
-    </tr>
-    </table>
-    </body>
-    </html>
-    `;
-    
-    // Create download link
-    const blob = new Blob(['\ufeff' + excelContent], { type: 'application/vnd.ms-excel' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `connection_details_${new Date().toISOString().split('T')[0]}.xls`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    showMessage('✅ एक्सेल फाइल डाउनलोड हो रही है...', 'success');
+        
+        const searchTerm = document.getElementById('searchInput').value;
+        const dataToExport = searchTerm ? 
+            yourDatabaseData.filter(item => 
+                (item.connectionNo && item.connectionNo.toString().includes(searchTerm)) ||
+                (item.ownerName && item.ownerName.toLowerCase().includes(searchTerm)) ||
+                (item.mobile && item.mobile.includes(searchTerm)) ||
+                (item.wardNo && item.wardNo.toLowerCase().includes(searchTerm))
+            ) : yourDatabaseData;
+        
+        let totalCurrent = 0, totalArrear = 0, totalRemaining = 0;
+        
+        dataToExport.forEach(item => {
+            totalCurrent += parseFloat(item.currentAmount) || 0;
+            totalArrear += parseFloat(item.arrearBalance) || 0;
+            totalRemaining += parseFloat(item.remainingBalance) || 0;
+            
+            excelContent += `
+            <tr>
+                <td>${item.connectionNo || 'N/A'}</td>
+                <td>${item.wardNo || 'N/A'}</td>
+                <td>${item.ownerName || 'N/A'}</td>
+                <td>${item.houseNo || '0'}</td>
+                <td>${item.oldHouseNo || 'N/A'}</td>
+                <td>${item.mobile || '0'}</td>
+                <td style="text-align:right;">₹${formatIndianCurrency(item.currentAmount || 0)}</td>
+                <td style="text-align:right;">₹${formatIndianCurrency(item.arrearBalance || 0)}</td>
+                <td style="text-align:right;">₹${formatIndianCurrency(item.remainingBalance || 0)}</td>
+            </tr>
+            `;
+        });
+        
+        // Add totals row
+        excelContent += `
+        <tr class="total-row">
+            <td colspan="6" style="text-align:right;"><strong>कुल योग:</strong></td>
+            <td style="text-align:right;">₹${formatIndianCurrency(totalCurrent)}</td>
+            <td style="text-align:right;">₹${formatIndianCurrency(totalArrear)}</td>
+            <td style="text-align:right;">₹${formatIndianCurrency(totalRemaining)}</td>
+        </tr>
+        <tr>
+            <td colspan="9" style="text-align:center; padding:10px; font-size:11px; color:#666;">
+                🖨️ जनरेटेड ऑन: ${new Date().toLocaleDateString('hi-IN')} ${new Date().toLocaleTimeString('hi-IN')} | 
+                🔢 कुल कनेक्शन: ${dataToExport.length} | 
+                💰 कुल राशि: ₹${formatIndianCurrency(totalCurrent + totalArrear + totalRemaining)}
+            </td>
+        </tr>
+        </table>
+        </body>
+        </html>
+        `;
+        
+        // Create download link
+        const blob = new Blob(['\ufeff' + excelContent], { type: 'application/vnd.ms-excel' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `जल_कनेक्शन_विवरण_${new Date().toISOString().split('T')[0]}.xls`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showMessage('✅ एक्सेल फाइल डाउनलोड हो रही है...', 'success');
+        hideLoading();
+    }, 1000);
 }
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', function() {
-    // Initial stats update
-    updateStats(demoData);
+    // Load all data on page load
+    loadAllData();
     
     // Search button click
     document.getElementById('searchButton').addEventListener('click', function() {
@@ -1381,27 +1310,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Export button click
     document.getElementById('exportButton').addEventListener('click', exportToExcel);
-    
-    // Adjust table height on resize
-    function adjustTableHeight() {
-        const tableContainer = document.querySelector('.main-table-container');
-        if (!tableContainer) return;
-        
-        const windowHeight = window.innerHeight;
-        const topbarHeight = document.querySelector('.topbar')?.offsetHeight || 70;
-        const headingHeight = document.querySelector('.main-heading')?.offsetHeight || 60;
-        const searchHeight = document.querySelector('.search-container')?.offsetHeight || 50;
-        const statsHeight = document.querySelector('.stats-container')?.offsetHeight || 100;
-        
-        const calculatedHeight = windowHeight - topbarHeight - headingHeight - searchHeight - statsHeight - 60;
-        const minHeight = 350;
-        
-        tableContainer.style.height = Math.max(calculatedHeight, minHeight) + 'px';
-    }
-    
-    // Initial adjustment
-    setTimeout(adjustTableHeight, 100);
-    window.addEventListener('resize', adjustTableHeight);
 });
 </script>
 </body>
