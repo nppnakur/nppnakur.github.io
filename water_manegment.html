@@ -11,8 +11,6 @@
 :root {
    --primary-color: #007bff;
    --primary-dark: #0047b3;
-   --primary-light: #4da3ff;
-   --secondary-color: #17a2b8;
    --text-color: #333;
    --light-bg: #eef2f9;
    --card-bg: #ffffff;
@@ -37,23 +35,29 @@ html, body {
    line-height: 1.6;
 }
 
-body {
-   display: flex;
-   flex-direction: column;
-   min-height: 100vh;
-}
-
 /* ---------- Top bar with Logo & Buttons ---------- */
 .nav-top {
    display: flex;
    justify-content: space-between;
    align-items: center;
-   padding: 12px 3%;
+   padding: 8px 2%;
    position: sticky;
    top: 0;
    background: linear-gradient(135deg, #0056b3, #007bff);
    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
    z-index: 100;
+}
+
+.nav-top::before {
+   content: '';
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background: url('path/to/texture.png') repeat;
+   opacity: 0.1;
+   pointer-events: none;
 }
 
 .nav-logo {
@@ -63,11 +67,10 @@ body {
 }
 
 .logo-img {
-   height: 60px;
-   width: 60px;
+   height: 50px;
+   width: 50px;
    border-radius: 50%;
    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-   border: 2px solid white;
 }
 
 .logo-text {
@@ -89,7 +92,7 @@ body {
    color: #fff;
    font-size: 16px;
    text-decoration: none;
-   padding: 10px 20px;
+   padding: 10px 16px;
    border-radius: 25px;
    background: rgba(255, 255, 255, 0.2);
    backdrop-filter: blur(5px);
@@ -107,38 +110,29 @@ body {
 }
 
 .nav-btn i {
-   margin-right: 8px;
+   margin-right: 0;
+   font-size: 18px;
 }
 
-/* ---------- Welcome Section ---------- */
-.welcome-section {
-   text-align: center;
-   padding: 20px 20px 10px;
-   margin: 20px auto 0;
-   max-width: 800px;
-}
-
-.welcome-text {
-   font-size: 20px;
-   color: var(--primary-dark);
-   margin-bottom: 10px;
-}
-
-.user-name {
-   font-weight: 700;
-   color: var(--primary-color);
-   text-decoration: underline;
-}
-
-.current-date {
-   font-size: 16px;
-   color: #555;
-   margin-top: 5px;
+/* Hiding text for icon-only buttons on small screens */
+@media (max-width: 480px) {
+    .nav-btn {
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        border-radius: 50%;
+    }
+    .nav-btn i {
+        margin: 0;
+    }
+    .nav-btn span {
+        display: none;
+    }
 }
 
 /* ---------- Page Heading ---------- */
 .page-heading {
-   margin: 20px 0 30px;
+   margin: 40px 0 30px;
    text-align: center;
    font-size: 32px;
    color: var(--primary-color);
@@ -146,52 +140,34 @@ body {
    padding: 0 20px;
 }
 
-/* ---------- Dashboard Stats ---------- */
-.dashboard-stats {
-   display: grid;
-   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-   gap: 20px;
-   max-width: 1200px;
-   margin: 0 auto 40px;
-   padding: 0 20px;
-}
-
-.stat-card {
-   background: linear-gradient(145deg, #e8f0ff, var(--card-bg));
-   border-radius: 12px;
-   padding: 20px;
-   box-shadow: var(--card-shadow);
-   text-align: center;
-   transition: transform 0.3s ease;
-   border: 1px solid rgba(0,0,0,.04);
-}
-
-.stat-card:hover {
-   transform: translateY(-5px);
-}
-
-.stat-icon {
-   font-size: 28px;
-   color: var(--primary-color);
-   margin-bottom: 10px;
-   height: 50px;
-   width: 50px;
-   line-height: 50px;
-   background: rgba(0, 123, 255, 0.1);
-   border-radius: 50%;
-   margin: 0 auto 15px;
-}
-
-.stat-value {
-   font-size: 28px;
-   font-weight: 700;
-   color: var(--primary-dark);
-   margin-bottom: 5px;
-}
-
-.stat-label {
-   font-size: 14px;
-   color: #666;
+@media (max-width: 768px) {
+   .page-heading {
+      font-size: 28px;
+      margin: 30px 0 25px;
+   }
+   
+   .logo-img {
+      height: 40px;
+      width: 40px;
+   }
+   
+   .logo-text {
+      font-size: 20px;
+   }
+   
+   .nav-btn {
+      padding: 8px 12px;
+      font-size: 14px;
+   }
+   
+   .nav-btn i {
+      font-size: 16px;
+      margin-right: 5px;
+   }
+   
+   .nav-top {
+      padding: 10px 4%;
+   }
 }
 
 /* ---------- Button Cards Container ---------- */
@@ -200,8 +176,16 @@ body {
    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
    gap: 25px;
    max-width: 1200px;
-   margin: 0 auto 40px;
-   padding: 0 20px;
+   margin: 0 auto;
+   padding: 0 20px 60px;
+}
+
+@media (max-width: 480px) {
+   .nav-wrap {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      padding: 0 15px 40px;
+   }
 }
 
 /* ---------- Card Styles ---------- */
@@ -210,7 +194,7 @@ body {
    flex-direction: column;
    align-items: center;
    justify-content: center;
-   min-height: 160px;
+   min-height: 140px;
    padding: 25px 20px;
    border-radius: 16px;
    font-size: 20px;
@@ -228,7 +212,7 @@ body {
 
 .btn-nav:hover, 
 .btn-nav:focus {
-   transform: translateY(-8px);
+   transform: translateY(-5px);
    box-shadow: var(--card-shadow-hover);
    outline: none;
 }
@@ -252,15 +236,12 @@ body {
 }
 
 .btn-icon {
-   font-size: 36px;
-   margin-bottom: 15px;
-   height: 60px;
-   width: 60px;
+   font-size: 32px;
+   margin-bottom: 12px;
+   height: 40px;
    display: flex;
    align-items: center;
    justify-content: center;
-   border-radius: 50%;
-   background: rgba(0, 123, 255, 0.1);
 }
 
 /* ---------- Footer ---------- */
@@ -272,81 +253,6 @@ footer {
    background: var(--card-bg);
    border-top: 1px solid rgba(0,0,0,0.05);
    margin-top: auto;
-}
-
-/* ---------- Responsive Styles ---------- */
-@media (max-width: 768px) {
-   .page-heading {
-      font-size: 28px;
-      margin: 25px 0;
-   }
-   
-   .logo-img {
-      height: 50px;
-      width: 50px;
-   }
-   
-   .logo-text {
-      font-size: 20px;
-   }
-   
-   .nav-btn {
-      padding: 8px 16px;
-      font-size: 14px;
-   }
-   
-   .nav-btn i {
-      margin-right: 5px;
-   }
-   
-   .nav-top {
-      padding: 10px 4%;
-   }
-   
-   .dashboard-stats {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-      padding: 0 15px;
-   }
-   
-   .stat-value {
-      font-size: 24px;
-   }
-}
-
-@media (max-width: 480px) {
-   .nav-wrap {
-      grid-template-columns: 1fr;
-      gap: 20px;
-      padding: 0 15px;
-   }
-   
-   .dashboard-stats {
-      grid-template-columns: 1fr;
-   }
-   
-   .nav-btn span {
-      display: none;
-   }
-   
-   .nav-btn i {
-      margin-right: 0;
-   }
-   
-   .nav-btn {
-      width: 50px;
-      height: 50px;
-      padding: 0;
-      border-radius: 50%;
-   }
-   
-   .welcome-text {
-      font-size: 18px;
-   }
-   
-   .page-heading {
-      font-size: 24px;
-   }
 }
 
 /* High contrast mode support */
@@ -384,8 +290,7 @@ footer {
 /* Print styles */
 @media print {
    .nav-top,
-   footer,
-   .dashboard-stats {
+   footer {
       display: none;
    }
    
@@ -398,10 +303,44 @@ footer {
    body {
       background: #fff;
    }
-   
-   .page-heading {
-      color: #000;
+}
+
+/* Animation for cards */
+@keyframes fadeInUp {
+   from {
+      opacity: 0;
+      transform: translateY(30px);
    }
+   to {
+      opacity: 1;
+      transform: translateY(0);
+   }
+}
+
+.btn-nav {
+   animation: fadeInUp 0.5s ease-out forwards;
+   opacity: 0;
+}
+
+.btn-nav:nth-child(1) { animation-delay: 0.1s; }
+.btn-nav:nth-child(2) { animation-delay: 0.2s; }
+.btn-nav:nth-child(3) { animation-delay: 0.3s; }
+.btn-nav:nth-child(4) { animation-delay: 0.4s; }
+.btn-nav:nth-child(5) { animation-delay: 0.5s; }
+.btn-nav:nth-child(6) { animation-delay: 0.6s; }
+
+/* Welcome message animation */
+@keyframes fadeIn {
+   from {
+      opacity: 0;
+   }
+   to {
+      opacity: 1;
+   }
+}
+
+.page-heading {
+   animation: fadeIn 1s ease-out;
 }
 </style>
 </head>
@@ -414,44 +353,16 @@ footer {
    <div class="nav-buttons">
       <a class="nav-btn" href="dashboard.php" title="होम">
          <i class="fas fa-home"></i>
-         <span>होम</span>
+         <span class="btn-text">होम</span>
       </a>
       <a class="nav-btn" href="logout.php" title="लॉगआउट">
          <i class="fas fa-sign-out-alt"></i>
-         <span>लॉगआउट</span>
+         <span class="btn-text">लॉगआउट</span>
       </a>
    </div>
 </div>
 
-<div class="welcome-section">
-   <div class="welcome-text">स्वागत है, <span class="user-name">उपयोगकर्ता</span>!</div>
-   <div class="current-date" id="currentDate"></div>
-</div>
-
 <h1 class="page-heading">💧 जल प्रबंधन डैशबोर्ड</h1>
-
-<div class="dashboard-stats">
-   <div class="stat-card">
-      <div class="stat-icon">📈</div>
-      <div class="stat-value">1,250</div>
-      <div class="stat-label">कुल कनेक्शन</div>
-   </div>
-   <div class="stat-card">
-      <div class="stat-icon">💰</div>
-      <div class="stat-value">₹ 1,85,000</div>
-      <div class="stat-label">कुल संग्रहण</div>
-   </div>
-   <div class="stat-card">
-      <div class="stat-icon">⏳</div>
-      <div class="stat-value">42</div>
-      <div class="stat-label">बकायादार</div>
-   </div>
-   <div class="stat-card">
-      <div class="stat-icon">📅</div>
-      <div class="stat-value">15</div>
-      <div class="stat-label">आज के भुगतान</div>
-   </div>
-</div>
 
 <div class="nav-wrap">
    <a class="btn-nav" href="connection_detail.php">
@@ -483,47 +394,15 @@ footer {
       <span class="btn-icon">🖨️</span>
       सभी बिल प्रिंट करें
    </a>
-   
-   <a class="btn-nav" href="reports.php">
-      <span class="btn-icon">📋</span>
-      रिपोर्ट्स
-   </a>
-   
-   <a class="btn-nav" href="settings.php">
-      <span class="btn-icon">⚙️</span>
-      सेटिंग्स
-   </a>
 </div>
 
 <footer>
-   <p>© जल प्रबंधन बोर्ड <span id="currentYear"></span> | नगर पालिका परिषद नकुर, सहारनपुर</p>
+   <p>© जल प्रबंधन बोर्ड <span id="currentYear">2024</span></p>
 </footer>
 
 <script>
-// वर्तमान दिनांक प्रदर्शित करने के लिए
-function updateCurrentDate() {
-   const dateElement = document.getElementById('currentDate');
-   const yearElement = document.getElementById('currentYear');
-   const now = new Date();
-   
-   // हिंदी में माह के नाम
-   const months = ["जनवरी", "फरवरी", "मार्च", "अप्रैल", "मई", "जून", "जुलाई", "अगस्त", "सितम्बर", "अक्टूबर", "नवम्बर", "दिसम्बर"];
-   const days = ["रविवार", "सोमवार", "मंगलवार", "बुधवार", "गुरुवार", "शुक्रवार", "शनिवार"];
-   
-   const dayName = days[now.getDay()];
-   const day = now.getDate();
-   const month = months[now.getMonth()];
-   const year = now.getFullYear();
-   
-   dateElement.textContent = `${dayName}, ${day} ${month} ${year}`;
-   yearElement.textContent = year;
-}
-
 // कीबोर्ड नेविगेशन के लिए
 document.addEventListener('DOMContentLoaded', function() {
-   // वर्तमान दिनांक अपडेट करें
-   updateCurrentDate();
-   
    const navItems = document.querySelectorAll('.btn-nav, .nav-btn');
    
    // पहला नेविगेशन आइटम फोकस करने के लिए
@@ -543,40 +422,29 @@ document.addEventListener('DOMContentLoaded', function() {
       document.body.classList.remove('user-tabbing');
    });
    
-   // सांख्यिकी कार्डों में एनिमेशन जोड़ें
-   const statCards = document.querySelectorAll('.stat-card');
-   statCards.forEach((card, index) => {
-      card.style.animationDelay = `${index * 0.1}s`;
+   // वर्ष अपडेट करें
+   document.getElementById('currentYear').textContent = new Date().getFullYear();
+   
+   // कार्ड हॉवर एनिमेशन
+   const cards = document.querySelectorAll('.btn-nav');
+   cards.forEach(card => {
+      card.addEventListener('mouseenter', function() {
+         this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+         this.style.transition = 'all 0.3s ease';
+      });
    });
+   
+   // पेज लोड होने पर एनिमेशन
+   setTimeout(() => {
+      document.body.classList.add('loaded');
+   }, 100);
 });
 
-// सांख्यिकी कार्डों में रैंडम डेटा अपडेट (डेमो प्रयोजन के लिए)
-function updateRandomStats() {
-   const statValues = document.querySelectorAll('.stat-value');
-   
-   // कुल कनेक्शन
-   let currentConnections = parseInt(statValues[0].textContent.replace(/,/g, ''));
-   let newConnections = currentConnections + Math.floor(Math.random() * 10);
-   statValues[0].textContent = newConnections.toLocaleString();
-   
-   // कुल संग्रहण
-   let currentCollection = parseInt(statValues[1].textContent.replace(/[₹,]/g, ''));
-   let newCollection = currentCollection + Math.floor(Math.random() * 5000);
-   statValues[1].textContent = `₹ ${newCollection.toLocaleString()}`;
-   
-   // बकायादार
-   let currentDefaulters = parseInt(statValues[2].textContent);
-   let newDefaulters = Math.max(0, currentDefaulters + Math.floor(Math.random() * 5) - 2);
-   statValues[2].textContent = newDefaulters;
-   
-   // आज के भुगतान
-   let currentPayments = parseInt(statValues[3].textContent);
-   let newPayments = Math.max(0, currentPayments + Math.floor(Math.random() * 4) - 1);
-   statValues[3].textContent = newPayments;
-}
-
-// हर 30 सेकंड में सांख्यिकी अपडेट करें (डेमो के लिए)
-setInterval(updateRandomStats, 30000);
+// टच डिवाइस के लिए हॉवर इफेक्ट
+document.addEventListener('touchstart', function() {}, true);
 </script>
 </body>
 </html>
