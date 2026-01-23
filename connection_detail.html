@@ -146,7 +146,7 @@ body {
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
-.search-btn, .export-btn, .upload-btn {
+.search-btn, .export-btn, .upload-btn, .add-btn {
   padding: 12px 16px;
   border: none;
   border-radius: 10px;
@@ -175,7 +175,12 @@ body {
   color: white;
 }
 
-.search-btn:hover, .export-btn:hover, .upload-btn:hover {
+.add-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.search-btn:hover, .export-btn:hover, .upload-btn:hover, .add-btn:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-hover);
 }
@@ -359,9 +364,10 @@ body {
   text-align: center;
   vertical-align: middle;
   transition: all 0.2s ease;
-  overflow: hidden;
+  overflow: visible;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 /* Column specific styles */
@@ -373,20 +379,40 @@ body {
   padding-left: 10px !important; 
   font-size: 13px; 
   font-weight: bold !important;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  word-wrap: break-word;
+  min-width: 150px;
 }
-.mobile-col { width: 10%; font-family: monospace; font-size: 13px; }
+.mobile-col { 
+  width: 12%; 
+  font-family: monospace; 
+  font-size: 13px; 
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: unset;
+}
 .current-amount-col { width: 12%; font-weight: 600; color: #059669; font-size: 13px; text-align: right; padding-right: 15px !important; }
 .arrear-col { width: 12%; font-weight: 600; color: #d97706; font-size: 13px; text-align: right; padding-right: 15px !important; }
 .remaining-col { width: 12%; font-weight: 600; color: #dc2626; font-size: 13px; text-align: right; padding-right: 15px !important; }
-.act { width: 11%; }
+.act { width: 13%; min-width: 120px; }
 
 /* Status badges */
 .status-paid {
   background: #d1fae5;
   color: #065f46;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+  min-width: 80px;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
   padding: 6px 10px;
   border-radius: 20px;
   font-size: 12px;
@@ -606,6 +632,99 @@ body {
   margin-bottom: 20px;
 }
 
+/* ---------- Add Connection Form ---------- */
+.add-form-container {
+  display: none;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  margin: 20px auto;
+  max-width: 600px;
+  width: 100%;
+}
+
+.add-form-container.active {
+  display: block;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.form-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* ---------- Data Management Buttons ---------- */
+.data-management-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 15px 0;
+  flex-wrap: wrap;
+}
+
+.manage-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.clear-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+.save-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.load-btn {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+}
+
+.manage-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
 /* ---------- Responsive Styles ---------- */
 @media (max-width: 768px) {
   .topbar {
@@ -661,7 +780,7 @@ body {
     font-size: 12px;
   }
   
-  .search-box input, .search-btn, .export-btn {
+  .search-box input, .search-btn, .export-btn, .upload-btn, .add-btn {
     padding: 10px 14px;
     font-size: 13px;
   }
@@ -672,7 +791,15 @@ body {
   }
   
   .data-table {
-    min-width: 800px;
+    min-width: 900px;
+  }
+  
+  .owner {
+    min-width: 120px;
+  }
+  
+  .mobile-col {
+    min-width: 100px;
   }
 }
 
@@ -713,7 +840,7 @@ body {
         <span class="org-name">जल प्रबंधन प्रणाली</span>
     </div>
     <div class="topbar-right">
-        <a href="dashboard.html"><i class="fas fa-home"></i> होम</a>
+        <a href="water_management.html"><i class="fas fa-home"></i> होम</a>
         <a href="logout.html"><i class="fas fa-sign-out-alt"></i> लॉगआउट</a>
     </div>
 </div>
@@ -746,6 +873,60 @@ body {
         </div>
     </div>
 
+    <!-- Add Connection Form -->
+    <div class="add-form-container" id="addFormContainer">
+        <h4 class="text-center mb-4" style="color: var(--dark-green);">
+            <i class="fas fa-plus-circle"></i> नया कनेक्शन जोड़ें
+        </h4>
+        <form id="addConnectionForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="newConnectionNo">कनेक्शन नंबर *</label>
+                    <input type="text" id="newConnectionNo" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="newWardNo">वार्ड नंबर *</label>
+                    <input type="text" id="newWardNo" class="form-control" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="newOwnerName">मालिक का नाम *</label>
+                    <input type="text" id="newOwnerName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="newMobile">मोबाइल नंबर *</label>
+                    <input type="tel" id="newMobile" class="form-control" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="newCurrentAmount">वर्तमान राशि (2025-26)</label>
+                    <input type="number" id="newCurrentAmount" class="form-control" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="newArrearBalance">बकाया शेष (2024-25)</label>
+                    <input type="number" id="newArrearBalance" class="form-control" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="newRemainingBalance">शेष राशि</label>
+                    <input type="number" id="newRemainingBalance" class="form-control" value="0">
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> कनेक्शन जोड़ें
+                </button>
+                <button type="button" class="btn btn-secondary ms-2" onclick="hideAddForm()">
+                    <i class="fas fa-times"></i> रद्द करें
+                </button>
+            </div>
+        </form>
+    </div>
+
     <div class="search-container">
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="🔍 कनेक्शन नंबर, नाम, मोबाइल, या वार्ड खोजें...">
@@ -756,8 +937,24 @@ body {
         <button class="upload-btn" id="uploadButton">
             <i class="fas fa-upload"></i> CSV अपलोड
         </button>
+        <button class="add-btn" id="addButton">
+            <i class="fas fa-plus"></i> नया जोड़ें
+        </button>
         <button class="export-btn" id="exportButton">
             <i class="fas fa-file-excel"></i> एक्सेल एक्सपोर्ट
+        </button>
+    </div>
+
+    <!-- Data Management Buttons -->
+    <div class="data-management-buttons" id="dataManagementButtons" style="display: none;">
+        <button class="manage-btn save-btn" onclick="saveDataToStorage()">
+            <i class="fas fa-save"></i> डेटा सेव करें
+        </button>
+        <button class="manage-btn load-btn" onclick="loadDataFromStorage()">
+            <i class="fas fa-download"></i> डेटा लोड करें
+        </button>
+        <button class="manage-btn clear-btn" onclick="clearAllData()">
+            <i class="fas fa-trash"></i> सभी डेटा हटाएं
         </button>
     </div>
 
@@ -821,9 +1018,12 @@ body {
             <div class="empty-table-message" id="emptyMessage">
                 <i class="fas fa-upload"></i>
                 <h3>डेटा लोड करें</h3>
-                <p>CSV फ़ाइल अपलोड करके या "CSV अपलोड" बटन पर क्लिक करके अपना डेटा लोड करें।</p>
+                <p>CSV फ़ाइल अपलोड करके या "नया जोड़ें" बटन पर क्लिक करके अपना डेटा लोड करें।</p>
                 <button class="btn btn-primary mt-3" onclick="showUploadSection()">
                     <i class="fas fa-upload"></i> CSV अपलोड करें
+                </button>
+                <button class="btn btn-success mt-2" onclick="showAddForm()">
+                    <i class="fas fa-plus"></i> नया कनेक्शन जोड़ें
                 </button>
             </div>
             
@@ -883,6 +1083,70 @@ body {
     </div>
 </div>
 
+<!-- Edit Connection Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">
+                    <i class="fas fa-edit me-2"></i>कनेक्शन संपादित करें
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editConnectionForm">
+                    <input type="hidden" id="editConnectionId">
+                    
+                    <div class="form-group mb-3">
+                        <label for="editConnectionNo">कनेक्शन नंबर</label>
+                        <input type="text" id="editConnectionNo" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="editWardNo">वार्ड नंबर</label>
+                        <input type="text" id="editWardNo" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="editOwnerName">मालिक का नाम</label>
+                        <input type="text" id="editOwnerName" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="editMobile">मोबाइल नंबर</label>
+                        <input type="tel" id="editMobile" class="form-control" required>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label for="editCurrentAmount">वर्तमान राशि</label>
+                                <input type="number" id="editCurrentAmount" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label for="editArrearBalance">बकाया शेष</label>
+                                <input type="number" id="editArrearBalance" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label for="editRemainingBalance">शेष राशि</label>
+                                <input type="number" id="editRemainingBalance" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">रद्द करें</button>
+                <button type="button" class="btn btn-primary" onclick="saveEdit()">सेव करें</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -890,6 +1154,7 @@ body {
 // Global variables
 let allData = [];
 let filteredData = [];
+const STORAGE_KEY = 'water_connection_data';
 
 // Indian Currency Formatting Function
 function formatIndianCurrency(number) {
@@ -940,12 +1205,29 @@ function hideLoading() {
 // Show upload section
 function showUploadSection() {
     document.getElementById('fileUploadContainer').classList.add('active');
+    document.getElementById('addFormContainer').classList.remove('active');
     document.getElementById('emptyMessage').style.display = 'none';
 }
 
 // Hide upload section
 function hideUploadSection() {
     document.getElementById('fileUploadContainer').classList.remove('active');
+    if (allData.length === 0) {
+        document.getElementById('emptyMessage').style.display = 'flex';
+    }
+}
+
+// Show add form
+function showAddForm() {
+    document.getElementById('addFormContainer').classList.add('active');
+    document.getElementById('fileUploadContainer').classList.remove('active');
+    document.getElementById('emptyMessage').style.display = 'none';
+    document.getElementById('addConnectionForm').reset();
+}
+
+// Hide add form
+function hideAddForm() {
+    document.getElementById('addFormContainer').classList.remove('active');
     if (allData.length === 0) {
         document.getElementById('emptyMessage').style.display = 'flex';
     }
@@ -978,40 +1260,56 @@ function parseCSVFile(file) {
 
 // Process CSV data and convert to our format
 function processCSVData(csvData) {
-    allData = [];
+    let newData = [];
     
     csvData.forEach((row, index) => {
         // Clean and process each row
         const processedRow = {
-            connectionNo: row['Connection No'] || row['Connection No'] || `CON${index + 1}`,
-            wardNo: row['Ward No'] || row['Ward No'] || 'N/A',
-            ownerName: row['Owner Name'] || row['Owner Name'] || 'नाम उपलब्ध नहीं',
-            mobile: cleanMobileNumber(row['Mobile'] || row['Mobile'] || ''),
-            currentAmount: parseFloat(row['Current amount 2025-26'] || row['Current amount 2025-26'] || 0),
-            arrearBalance: parseFloat(row['Arrear Balance'] || row['Arrear Balance'] || 0),
-            remainingBalance: parseFloat(row['Remaining Balance'] || row['Remaining Balance'] || 0),
-            houseNo: row['House No'] || row['House No'] || '',
-            oldHouseNo: row['Old House No'] || row['Old House No'] || ''
+            id: Date.now() + index, // Unique ID
+            connectionNo: row['Connection No'] || row['connectionNo'] || `CON${index + 1}`,
+            wardNo: row['Ward No'] || row['wardNo'] || 'N/A',
+            ownerName: row['Owner Name'] || row['ownerName'] || 'नाम उपलब्ध नहीं',
+            mobile: cleanMobileNumber(row['Mobile'] || row['mobile'] || ''),
+            currentAmount: parseFloat(row['Current amount 2025-26'] || row['currentAmount'] || 0),
+            arrearBalance: parseFloat(row['Arrear Balance'] || row['arrearBalance'] || 0),
+            remainingBalance: parseFloat(row['Remaining Balance'] || row['remainingBalance'] || 0),
+            houseNo: row['House No'] || row['houseNo'] || '',
+            oldHouseNo: row['Old House No'] || row['oldHouseNo'] || ''
         };
         
         // Clean mobile number
         processedRow.mobile = cleanMobileNumber(processedRow.mobile);
         
-        allData.push(processedRow);
+        newData.push(processedRow);
     });
     
-    showMessage(`✅ ${allData.length} कनेक्शन सफलतापूर्वक लोड किए गए`, 'success');
+    // Merge with existing data, avoid duplicates
+    const existingConnections = new Set(allData.map(item => item.connectionNo));
+    const uniqueNewData = newData.filter(item => !existingConnections.has(item.connectionNo));
     
-    // Update table with all data
-    filteredData = [...allData];
-    const totals = calculateTotals(allData);
-    updateStats(totals);
-    populateTable(allData);
-    
-    // Hide empty message and show table
-    document.getElementById('emptyMessage').style.display = 'none';
-    document.getElementById('dataTableBody').style.display = 'table';
-    document.getElementById('fileUploadContainer').classList.remove('active');
+    if (uniqueNewData.length === 0 && newData.length > 0) {
+        showMessage('⚠️ सभी कनेक्शन पहले से मौजूद हैं', 'error');
+    } else {
+        // Add new data to existing data
+        allData = [...allData, ...uniqueNewData];
+        
+        showMessage(`✅ ${uniqueNewData.length} नए कनेक्शन सफलतापूर्वक जोड़े गए`, 'success');
+        
+        // Update table with all data
+        filteredData = [...allData];
+        const totals = calculateTotals(allData);
+        updateStats(totals);
+        populateTable(allData);
+        
+        // Save to localStorage
+        saveDataToStorage();
+        
+        // Hide empty message and show table
+        document.getElementById('emptyMessage').style.display = 'none';
+        document.getElementById('dataTableBody').style.display = 'table';
+        document.getElementById('fileUploadContainer').classList.remove('active');
+        document.getElementById('dataManagementButtons').style.display = 'flex';
+    }
 }
 
 // Clean mobile number
@@ -1064,8 +1362,7 @@ function updateStats(totals) {
 // Search functionality
 function searchData(query) {
     if (allData.length === 0) {
-        showMessage('❌ कृपया पहले CSV फ़ाइल अपलोड करें', 'error');
-        showUploadSection();
+        showMessage('❌ कृपया पहले CSV फ़ाइल अपलोड करें या डेटा जोड़ें', 'error');
         return;
     }
     
@@ -1160,17 +1457,17 @@ function populateTable(data) {
             <td class="remaining-col">₹${formatIndianCurrency(item.remainingBalance || 0)}</td>
             <td class="act">
                 <div class="action-buttons">
-                    <a href="edit_connection.html?id=${encodeURIComponent(item.connectionNo || '')}" class="action-btn edit-btn" title="Edit">
+                    <a href="#" onclick="editConnection(${item.id}); return false;" class="action-btn edit-btn" title="Edit">
                         <i class="fas fa-edit"></i>
                     </a>
-                    <a href="#" onclick="showDeleteModal('${encodeURIComponent(item.connectionNo || '')}', '${item.ownerName || ''}'); return false;" class="action-btn delete-btn" title="Delete">
+                    <a href="#" onclick="showDeleteModal('${item.connectionNo || ''}', '${item.ownerName || ''}', ${item.id}); return false;" class="action-btn delete-btn" title="Delete">
                         <i class="fas fa-trash"></i>
                     </a>
-                    <a href="#" onclick="printBill('${encodeURIComponent(item.connectionNo || '')}')" class="action-btn print-btn" title="Print Bill">
+                    <a href="#" onclick="printBill('${item.connectionNo || ''}')" class="action-btn print-btn" title="Print Bill">
                         <i class="fas fa-print"></i>
                     </a>
                     ${(item.remainingBalance || 0) > 0 ? `
-                    <a href="#" onclick="redirectToPayment('${encodeURIComponent(item.connectionNo || '')}')" class="action-btn pay-btn" title="Pay Now">
+                    <a href="#" onclick="redirectToPayment('${item.connectionNo || ''}')" class="action-btn pay-btn" title="Pay Now">
                         <i class="fas fa-money-bill-wave"></i>
                     </a>
                     ` : ''}
@@ -1178,7 +1475,7 @@ function populateTable(data) {
                 <div class="mt-1">
                     ${(item.remainingBalance || 0) == 0 ? 
                     `<span class="status-paid">✅ भुगतान</span>` : 
-                    `<span style="display: inline-block; width: 80px;">&nbsp;</span>`}
+                    `<span class="status-pending">⏳ बकाया</span>`}
                 </div>
             </td>
         `;
@@ -1189,13 +1486,149 @@ function populateTable(data) {
     document.getElementById('dataTableBody').style.display = 'table';
 }
 
+// Add new connection
+function addNewConnection() {
+    const connectionNo = document.getElementById('newConnectionNo').value.trim();
+    const wardNo = document.getElementById('newWardNo').value.trim();
+    const ownerName = document.getElementById('newOwnerName').value.trim();
+    const mobile = document.getElementById('newMobile').value.trim();
+    const currentAmount = parseFloat(document.getElementById('newCurrentAmount').value) || 0;
+    const arrearBalance = parseFloat(document.getElementById('newArrearBalance').value) || 0;
+    const remainingBalance = parseFloat(document.getElementById('newRemainingBalance').value) || 0;
+    
+    // Validation
+    if (!connectionNo || !wardNo || !ownerName || !mobile) {
+        showMessage('❌ कृपया सभी आवश्यक फ़ील्ड भरें', 'error');
+        return false;
+    }
+    
+    // Check for duplicate connection number
+    const duplicate = allData.find(item => item.connectionNo === connectionNo);
+    if (duplicate) {
+        showMessage('❌ यह कनेक्शन नंबर पहले से मौजूद है', 'error');
+        return false;
+    }
+    
+    const newConnection = {
+        id: Date.now(),
+        connectionNo,
+        wardNo,
+        ownerName,
+        mobile: cleanMobileNumber(mobile),
+        currentAmount,
+        arrearBalance,
+        remainingBalance
+    };
+    
+    // Add to data arrays
+    allData.push(newConnection);
+    filteredData.push(newConnection);
+    
+    // Update table and stats
+    const totals = calculateTotals(allData);
+    updateStats(totals);
+    populateTable(filteredData);
+    
+    // Save to localStorage
+    saveDataToStorage();
+    
+    // Hide add form
+    hideAddForm();
+    
+    // Show success message
+    showMessage(`✅ नया कनेक्शन "${connectionNo}" सफलतापूर्वक जोड़ा गया`, 'success');
+    
+    // Show data management buttons
+    document.getElementById('dataManagementButtons').style.display = 'flex';
+    
+    return false; // Prevent form submission
+}
+
+// Edit connection
+function editConnection(id) {
+    const item = allData.find(item => item.id === id);
+    if (!item) return;
+    
+    document.getElementById('editConnectionId').value = item.id;
+    document.getElementById('editConnectionNo').value = item.connectionNo || '';
+    document.getElementById('editWardNo').value = item.wardNo || '';
+    document.getElementById('editOwnerName').value = item.ownerName || '';
+    document.getElementById('editMobile').value = item.mobile || '';
+    document.getElementById('editCurrentAmount').value = item.currentAmount || 0;
+    document.getElementById('editArrearBalance').value = item.arrearBalance || 0;
+    document.getElementById('editRemainingBalance').value = item.remainingBalance || 0;
+    
+    const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+    editModal.show();
+}
+
+// Save edited connection
+function saveEdit() {
+    const id = parseInt(document.getElementById('editConnectionId').value);
+    const connectionNo = document.getElementById('editConnectionNo').value.trim();
+    const wardNo = document.getElementById('editWardNo').value.trim();
+    const ownerName = document.getElementById('editOwnerName').value.trim();
+    const mobile = document.getElementById('editMobile').value.trim();
+    const currentAmount = parseFloat(document.getElementById('editCurrentAmount').value) || 0;
+    const arrearBalance = parseFloat(document.getElementById('editArrearBalance').value) || 0;
+    const remainingBalance = parseFloat(document.getElementById('editRemainingBalance').value) || 0;
+    
+    // Validation
+    if (!connectionNo || !wardNo || !ownerName || !mobile) {
+        showMessage('❌ कृपया सभी आवश्यक फ़ील्ड भरें', 'error');
+        return;
+    }
+    
+    // Find and update item
+    const index = allData.findIndex(item => item.id === id);
+    if (index !== -1) {
+        // Check for duplicate connection number (excluding current item)
+        const duplicate = allData.find((item, i) => i !== index && item.connectionNo === connectionNo);
+        if (duplicate) {
+            showMessage('❌ यह कनेक्शन नंबर पहले से मौजूद है', 'error');
+            return;
+        }
+        
+        allData[index] = {
+            ...allData[index],
+            connectionNo,
+            wardNo,
+            ownerName,
+            mobile: cleanMobileNumber(mobile),
+            currentAmount,
+            arrearBalance,
+            remainingBalance
+        };
+        
+        // Update filtered data
+        const filteredIndex = filteredData.findIndex(item => item.id === id);
+        if (filteredIndex !== -1) {
+            filteredData[filteredIndex] = allData[index];
+        }
+        
+        // Update table and stats
+        const totals = calculateTotals(allData);
+        updateStats(totals);
+        populateTable(filteredData);
+        
+        // Save to localStorage
+        saveDataToStorage();
+        
+        // Close modal
+        const editModal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+        editModal.hide();
+        
+        showMessage(`✅ कनेक्शन "${connectionNo}" सफलतापूर्वक अपडेट किया गया`, 'success');
+    }
+}
+
 // Delete record with modal confirmation
-function showDeleteModal(conNo, ownerName) {
+function showDeleteModal(conNo, ownerName, id) {
     document.getElementById('connectionDetails').innerHTML = 
         `<strong>कनेक्शन नंबर:</strong> ${conNo}<br>
          <strong>ग्राहक का नाम:</strong> ${ownerName}`;
     
-    document.getElementById('deleteConfirmBtn').setAttribute('data-conn', conNo);
+    document.getElementById('deleteConfirmBtn').setAttribute('data-id', id);
     document.getElementById('password').value = '';
     
     const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
@@ -1221,7 +1654,7 @@ function togglePasswordVisibility() {
 // Confirm delete function
 function confirmDelete() {
     const password = document.getElementById('password').value;
-    const conNo = document.getElementById('deleteConfirmBtn').getAttribute('data-conn');
+    const id = parseInt(document.getElementById('deleteConfirmBtn').getAttribute('data-id'));
     
     if (password !== 'admin123') {
         showMessage('❌ गलत पासवर्ड!', 'error');
@@ -1229,13 +1662,14 @@ function confirmDelete() {
     }
     
     // Remove from data arrays
-    const index = allData.findIndex(item => item.connectionNo === conNo);
+    const index = allData.findIndex(item => item.id === id);
     if (index > -1) {
+        const deletedConnection = allData[index];
         allData.splice(index, 1);
     }
     
     // Update filtered data
-    filteredData = filteredData.filter(item => item.connectionNo !== conNo);
+    filteredData = filteredData.filter(item => item.id !== id);
     
     // Update table
     if (filteredData.length > 0) {
@@ -1251,9 +1685,13 @@ function confirmDelete() {
             totalArrear: 0,
             totalRemaining: 0
         });
+        document.getElementById('dataManagementButtons').style.display = 'none';
     }
     
-    showMessage(`✅ कनेक्शन ${conNo} सफलतापूर्वक डिलीट कर दिया गया`, 'success');
+    // Save to localStorage
+    saveDataToStorage();
+    
+    showMessage(`✅ कनेक्शन सफलतापूर्वक डिलीट कर दिया गया`, 'success');
     
     // Close modal
     const modal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
@@ -1300,6 +1738,68 @@ function showMessage(message, type = 'success') {
             messageBox.remove();
         }, 500);
     }, 5000);
+}
+
+// Save data to localStorage
+function saveDataToStorage() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
+        showMessage('✅ डेटा सफलतापूर्वक सेव किया गया', 'success');
+    } catch (e) {
+        showMessage('❌ डेटा सेव करने में त्रुटि', 'error');
+    }
+}
+
+// Load data from localStorage
+function loadDataFromStorage() {
+    try {
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        if (savedData) {
+            allData = JSON.parse(savedData);
+            filteredData = [...allData];
+            
+            if (allData.length > 0) {
+                const totals = calculateTotals(allData);
+                updateStats(totals);
+                populateTable(allData);
+                
+                document.getElementById('emptyMessage').style.display = 'none';
+                document.getElementById('dataTableBody').style.display = 'table';
+                document.getElementById('dataManagementButtons').style.display = 'flex';
+                
+                showMessage(`✅ ${allData.length} रिकॉर्ड्स लोड किए गए`, 'success');
+            } else {
+                showMessage('⚠️ सेव किया गया कोई डेटा नहीं मिला', 'error');
+            }
+        } else {
+            showMessage('⚠️ सेव किया गया कोई डेटा नहीं मिला', 'error');
+        }
+    } catch (e) {
+        showMessage('❌ डेटा लोड करने में त्रुटि', 'error');
+    }
+}
+
+// Clear all data
+function clearAllData() {
+    if (confirm('क्या आप वाकई सभी डेटा हटाना चाहते हैं? यह कार्रवाई पूर्ववत नहीं की जा सकती।')) {
+        allData = [];
+        filteredData = [];
+        localStorage.removeItem(STORAGE_KEY);
+        
+        document.getElementById('emptyMessage').style.display = 'flex';
+        document.getElementById('dataTableBody').style.display = 'none';
+        document.getElementById('dataManagementButtons').style.display = 'none';
+        document.getElementById('searchInput').value = '';
+        
+        updateStats({
+            totalConnections: 0,
+            totalCurrent: 0,
+            totalArrear: 0,
+            totalRemaining: 0
+        });
+        
+        showMessage('✅ सभी डेटा सफलतापूर्वक हटाए गए', 'success');
+    }
 }
 
 // Excel Export
@@ -1397,6 +1897,9 @@ function exportToExcel() {
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', function() {
+    // Check for saved data on page load
+    loadDataFromStorage();
+    
     // File input change event
     document.getElementById('csvFileInput').addEventListener('change', function(e) {
         const file = e.target.files[0];
@@ -1457,6 +1960,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Upload button click
     document.getElementById('uploadButton').addEventListener('click', function() {
         showUploadSection();
+    });
+    
+    // Add button click
+    document.getElementById('addButton').addEventListener('click', function() {
+        showAddForm();
+    });
+    
+    // Add connection form submit
+    document.getElementById('addConnectionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        addNewConnection();
     });
     
     // Search button click
