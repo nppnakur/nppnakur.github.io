@@ -1,419 +1,1477 @@
-<?php
-session_start();
-
-// यदि उपयोगकर्ता लॉगिन नहीं किया है तो लॉगिन पेज पर रीडायरेक्ट करें
-if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
-    exit();
-}
-
-// उपयोगकर्ता का नाम सुरक्षित रूप से प्रदर्शित करने के लिए
-$username = htmlspecialchars($_SESSION['username']);
-?>
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>डैशबोर्ड - जल प्रबंधन प्रणाली</title>
-<link rel="icon" href="img1.png" type="image/x-icon">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-/* ---------- Global Styles ---------- */
-:root {
-   --primary-color: #007bff;
-   --primary-dark: #0047b3;
-   --text-color: #333;
-   --light-bg: #eef2f9;
-   --card-bg: #ffffff;
-   --shadow: 0 4px 12px rgba(0,0,0,0.15);
-   --card-shadow: 8px 8px 15px rgba(0,0,0,.15),
-                  -6px -6px 12px rgba(255,255,255,.8);
-   --card-shadow-hover: 12px 12px 25px rgba(0,0,0,.22),
-                        -8px -8px 20px rgba(255,255,255,.9);
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>जल प्रबंधन डैशबोर्ड</title>
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/869/869869.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+          --primary: #10b981;
+          --secondary: #059669;
+          --light-green: #d1fae5;
+          --dark-green: #065f46;
+          --gradient-primary: linear-gradient(135deg, #10b981, #059669);
+          --gradient-secondary: linear-gradient(135deg, #34d399, #10b981);
+          --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
 
-* {
-   box-sizing: border-box;
-   margin: 0;
-   padding: 0;
-}
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+        }
 
-html, body {
-   height: 100%;
-   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-   background: var(--light-bg);
-   color: var(--text-color);
-   line-height: 1.6;
-}
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+          min-height: 100vh;
+          color: #1f2937;
+        }
 
-/* ---------- Top bar with Logo & Buttons ---------- */
-.nav-top {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   padding: 8px 2%;
-   position: sticky;
-   top: 0;
-   background: linear-gradient(135deg, #0056b3, #007bff);
-   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-   z-index: 100;
-}
+        /* Top Bar */
+        .topbar {
+          position: sticky;
+          top: 0;
+          z-index: 1000;
+          background: var(--gradient-primary);
+          box-shadow: var(--shadow);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 12px 24px;
+          height: 70px;
+        }
 
-.nav-top::before {
-   content: '';
-   position: absolute;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
-   background: url('path/to/texture.png') repeat;
-   opacity: 0.1;
-   pointer-events: none;
-}
+        .topbar-left {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+        }
 
-.nav-logo {
-   display: flex;
-   align-items: center;
-   gap: 15px;
-}
+        .logo {
+          height: 45px;
+          width: auto;
+          border-radius: 6px;
+        }
 
-.logo-img {
-   height: 50px;
-   width: 50px;
-   border-radius: 50%;
-   box-shadow: 0 0 10px rgba(0,0,0,0.3);
-}
+        .org-name {
+          color: white;
+          font-size: 20px;
+          font-weight: bold;
+          text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
 
-.logo-text {
-   color: #fff;
-   font-size: 24px;
-   font-weight: 600;
-   text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-}
+        .topbar-right {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+        }
 
-.user-welcome {
-   color: #fff;
-   font-size: 16px;
-   background: rgba(255, 255, 255, 0.2);
-   padding: 5px 15px;
-   border-radius: 20px;
-   backdrop-filter: blur(5px);
-   border: 1px solid rgba(255, 255, 255, 0.3);
-}
+        .topbar a {
+          color: white;
+          font-size: 16px;
+          text-decoration: none;
+          transition: all 0.3s ease;
+          padding: 8px 16px;
+          border-radius: 8px;
+          background: rgba(255,255,255,0.15);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
 
-.nav-buttons {
-   display: flex;
-   gap: 15px;
-   align-items: center;
-}
+        .topbar a:hover {
+          background: rgba(255,255,255,0.25);
+          transform: translateY(-1px);
+        }
 
-.nav-btn {
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   color: #fff;
-   font-size: 16px;
-   text-decoration: none;
-   padding: 10px 16px;
-   border-radius: 25px;
-   background: rgba(255, 255, 255, 0.2);
-   backdrop-filter: blur(5px);
-   border: 1px solid rgba(255, 255, 255, 0.3);
-   transition: all 0.3s ease;
-   font-weight: 500;
-}
+        .user-info {
+          color: white;
+          font-size: 14px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
 
-.nav-btn:hover, 
-.nav-btn:focus {
-   background: rgba(255, 255, 255, 0.3);
-   transform: translateY(-2px);
-   box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-   outline: none;
-}
+        /* Main Container */
+        .main-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 20px 15px;
+        }
 
-.nav-btn i {
-   margin-right: 0;
-   font-size: 18px;
-}
+        .main-heading {
+          text-align: center;
+          color: var(--dark-green);
+          font-size: 32px;
+          margin: 10px 0 20px;
+          font-weight: 700;
+          text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+          width: 100%;
+        }
 
-/* Hiding text for icon-only buttons on small screens */
-@media (max-width: 480px) {
-    .nav-btn {
-        width: 45px;
-        height: 45px;
-        padding: 0;
-        border-radius: 50%;
-    }
-    .nav-btn i {
-        margin: 0;
-    }
-    .nav-btn span {
-        display: none;
-    }
-    .user-welcome {
-        font-size: 12px;
-        padding: 3px 10px;
-    }
-}
+        /* Search Box */
+        .search-container {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          margin-bottom: 20px;
+          flex-wrap: wrap;
+          width: 100%;
+          max-width: 650px;
+        }
 
-/* ---------- Page Heading ---------- */
-.page-heading {
-   margin: 40px 0 30px;
-   text-align: center;
-   font-size: 32px;
-   color: var(--primary-color);
-   text-shadow: 1px 1px 2px rgba(0,0,0,.1);
-   padding: 0 20px;
-}
+        .search-box {
+          position: relative;
+          width: 300px;
+          max-width: 100%;
+        }
 
-@media (max-width: 768px) {
-   .page-heading {
-      font-size: 28px;
-      margin: 30px 0 25px;
-   }
-   
-   .logo-img {
-      height: 40px;
-      width: 40px;
-   }
-   
-   .logo-text {
-      font-size: 20px;
-   }
-   
-   .nav-btn {
-      padding: 8px 12px;
-      font-size: 14px;
-   }
-   
-   .nav-btn i {
-      font-size: 16px;
-      margin-right: 5px;
-   }
-   
-   .nav-top {
-      padding: 10px 4%;
-   }
-}
+        .search-box input {
+          width: 100%;
+          padding: 12px 16px;
+          border: 2px solid #d1fae5;
+          border-radius: 10px;
+          font-size: 14px;
+          background: white;
+          box-shadow: var(--shadow);
+          transition: all 0.3s ease;
+        }
 
-/* ---------- Button Cards Container ---------- */
-.nav-wrap {
-   display: grid;
-   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-   gap: 25px;
-   max-width: 1200px;
-   margin: 0 auto;
-   padding: 0 20px 60px;
-}
+        .search-box input:focus {
+          outline: none;
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
 
-@media (max-width: 480px) {
-   .nav-wrap {
-      grid-template-columns: 1fr;
-      gap: 20px;
-      padding: 0 15px 40px;
-   }
-}
+        .search-btn, .export-btn, .upload-btn {
+          padding: 12px 16px;
+          border: none;
+          border-radius: 10px;
+          font-size: 13px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: var(--shadow);
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
 
-/* ---------- Card Styles ---------- */
-.btn-nav {
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   justify-content: center;
-   min-height: 140px;
-   padding: 25px 20px;
-   border-radius: 16px;
-   font-size: 20px;
-   text-decoration: none;
-   font-weight: 600;
-   color: var(--primary-color);
-   background: linear-gradient(145deg, #e8f0ff, var(--card-bg));
-   box-shadow: var(--card-shadow);
-   border: 1px solid rgba(0,0,0,.04);
-   transition: all 0.3s ease;
-   text-align: center;
-   position: relative;
-   overflow: hidden;
-}
+        .search-btn {
+          background: var(--gradient-primary);
+          color: white;
+        }
 
-.btn-nav:hover, 
-.btn-nav:focus {
-   transform: translateY(-5px);
-   box-shadow: var(--card-shadow-hover);
-   outline: none;
-}
+        .export-btn {
+          background: linear-gradient(135deg, #f59e0b, #d97706);
+          color: white;
+          text-decoration: none;
+        }
 
-.btn-nav::after {
-   content: '';
-   position: absolute;
-   bottom: 0;
-   left: 0;
-   width: 100%;
-   height: 4px;
-   background: var(--primary-color);
-   transform: scaleX(0);
-   transform-origin: right;
-   transition: transform 0.3s ease;
-}
+        .upload-btn {
+          background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+          color: white;
+          text-decoration: none;
+        }
 
-.btn-nav:hover::after {
-   transform: scaleX(1);
-   transform-origin: left;
-}
+        .search-btn:hover, .export-btn:hover, .upload-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: var(--shadow-hover);
+        }
 
-.btn-icon {
-   font-size: 32px;
-   margin-bottom: 12px;
-   height: 40px;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-}
+        /* Stats Cards */
+        .stats-container {
+          display: flex;
+          justify-content: center;
+          gap: 15px;
+          margin: 20px auto;
+          flex-wrap: wrap;
+          width: 100%;
+          max-width: 1200px;
+        }
 
-/* ---------- Footer ---------- */
-footer {
-   text-align: center;
-   padding: 20px;
-   color: #555;
-   font-size: 14px;
-   background: var(--card-bg);
-   border-top: 1px solid rgba(0,0,0,0.05);
-   margin-top: auto;
-}
+        .stat-card {
+          flex: 1;
+          min-width: 180px;
+          max-width: 250px;
+          padding: 15px;
+          border-radius: 12px;
+          text-align: center;
+          box-shadow: var(--shadow);
+          transition: all 0.3s ease;
+          background: white;
+          border: 1px solid #e5e7eb;
+          position: relative;
+          overflow: hidden;
+        }
 
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-   .btn-nav {
-      border: 2px solid var(--primary-color);
-   }
-   
-   .nav-btn:hover,
-   .nav-btn:focus {
-      background: #fff;
-      color: var(--primary-dark);
-   }
-}
+        .stat-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: var(--gradient-primary);
+        }
 
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-   .btn-nav,
-   .btn-nav:hover,
-   .btn-nav:focus,
-   .nav-btn,
-   .nav-btn:hover {
-      transition: none;
-      transform: none;
-   }
-}
+        .stat-card:hover {
+          transform: translateY(-3px);
+          box-shadow: var(--shadow-hover);
+        }
 
-/* Focus styles for accessibility */
-.btn-nav:focus,
-.nav-btn:focus {
-   outline: 2px solid var(--primary-dark);
-   outline-offset: 2px;
-}
+        .stat-card.connections {
+          background: var(--gradient-primary);
+          color: white;
+        }
 
-/* Print styles */
-@media print {
-   .nav-top,
-   footer {
-      display: none;
-   }
-   
-   .btn-nav {
-      box-shadow: none;
-      border: 1px solid #000;
-      break-inside: avoid;
-   }
-   
-   body {
-      background: #fff;
-   }
-}
-</style>
+        .stat-card.current {
+          background: var(--gradient-secondary);
+          color: white;
+        }
+
+        .stat-card.arrear {
+          background: linear-gradient(135deg, #f59e0b, #d97706);
+          color: white;
+        }
+
+        .stat-card.remaining {
+          background: linear-gradient(135deg, #ef4444, #dc2626);
+          color: white;
+        }
+
+        .stat-card h3 {
+          margin: 0 0 8px;
+          font-size: 13px;
+          font-weight: 600;
+          opacity: 0.9;
+        }
+
+        .stat-card .number {
+          font-size: 22px;
+          font-weight: 700;
+          margin: 8px 0;
+          text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .stat-card .icon {
+          font-size: 24px;
+          margin-bottom: 8px;
+          opacity: 0.9;
+        }
+
+        /* Main Table Container */
+        .main-table-container {
+          width: 100%;
+          max-width: 1400px;
+          margin: 0 auto;
+          background: white;
+          border-radius: 12px;
+          box-shadow: var(--shadow-hover);
+          overflow: hidden;
+          border: 1px solid #e5e7eb;
+          display: flex;
+          flex-direction: column;
+          height: calc(100vh - 380px);
+          min-height: 400px;
+        }
+
+        .table-header-container {
+          background: white;
+          border-bottom: 2px solid #e5e7eb;
+          overflow: hidden;
+          flex-shrink: 0;
+          position: sticky;
+          top: 0;
+          z-index: 100;
+        }
+
+        .data-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 0;
+          table-layout: fixed;
+        }
+
+        .data-table thead {
+          position: sticky;
+          top: 0;
+          z-index: 101;
+          background: white;
+        }
+
+        .data-table th {
+          background: var(--gradient-primary);
+          color: white;
+          padding: 15px 8px;
+          font-size: 14px;
+          font-weight: 600;
+          text-align: center;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          border-right: 1px solid rgba(255,255,255,0.2);
+          position: sticky;
+          top: 0;
+          z-index: 102;
+        }
+
+        .data-table th:last-child {
+          border-right: none;
+        }
+
+        .table-body-container {
+          flex: 1;
+          overflow-y: auto;
+          overflow-x: auto;
+        }
+
+        .table-body-container table {
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        .table-body-container thead {
+          display: none;
+        }
+
+        .data-table tbody tr {
+          transition: all 0.2s ease;
+        }
+
+        .data-table tbody tr:nth-child(even) {
+          background: #f8fafc;
+        }
+
+        .data-table tbody tr:hover {
+          background: var(--light-green);
+        }
+
+        .data-table td {
+          padding: 12px 8px;
+          border-bottom: 1px solid #e5e7eb;
+          font-size: 14px;
+          text-align: center;
+          vertical-align: middle;
+          transition: all 0.2s ease;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .con-no-col { width: 12%; font-weight: 600; font-size: 13px; }
+        .ward-no-col { width: 8%; font-size: 13px; }
+        .owner { 
+          width: 22%; 
+          text-align: left; 
+          padding-left: 10px !important; 
+          font-size: 13px; 
+          font-weight: bold !important;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .mobile-col { width: 10%; font-family: monospace; font-size: 13px; }
+        .current-amount-col { width: 12%; font-weight: 600; color: #059669; font-size: 13px; text-align: right; padding-right: 15px !important; }
+        .arrear-col { width: 12%; font-weight: 600; color: #d97706; font-size: 13px; text-align: right; padding-right: 15px !important; }
+        .remaining-col { width: 12%; font-weight: 600; color: #dc2626; font-size: 13px; text-align: right; padding-right: 15px !important; }
+        .act { width: 12%; }
+
+        /* Status badges */
+        .status-paid {
+          background: #d1fae5;
+          color: #065f46;
+          padding: 6px 10px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+          display: inline-block;
+          min-width: 80px;
+        }
+
+        .status-pending {
+          background: #fef3c7;
+          color: #92400e;
+          padding: 6px 10px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+          display: inline-block;
+          min-width: 80px;
+        }
+
+        /* Action buttons */
+        .action-buttons {
+          display: flex;
+          justify-content: center;
+          gap: 6px;
+        }
+
+        .action-btn {
+          width: 32px;
+          height: 32px;
+          border-radius: 6px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-decoration: none;
+          transition: all 0.3s ease;
+          font-size: 13px;
+          box-shadow: var(--shadow);
+        }
+
+        .edit-btn {
+          background: var(--gradient-primary);
+          color: white;
+        }
+
+        .delete-btn {
+          background: linear-gradient(135deg, #ef4444, #dc2626);
+          color: white;
+        }
+
+        .print-btn {
+          background: linear-gradient(135deg, #f59e0b, #d97706);
+          color: white;
+        }
+
+        .pay-btn {
+          background: linear-gradient(135deg, #10b981, #059669);
+          color: white;
+        }
+
+        .action-btn:hover {
+          transform: scale(1.1);
+          box-shadow: var(--shadow-hover);
+        }
+
+        /* Message Styles */
+        .message-box {
+          background: #d1fae5;
+          color: #065f46;
+          border: 1px solid #a7f3d0;
+          padding: 12px 16px;
+          margin: 15px auto;
+          border-radius: 10px;
+          text-align: center;
+          max-width: 600px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          box-shadow: var(--shadow);
+          font-weight: 500;
+          font-size: 14px;
+        }
+
+        .message-box.error {
+          background: #fecaca;
+          color: #991b1b;
+          border-color: #fca5a5;
+        }
+
+        /* Empty Table Message */
+        .empty-table-message {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          padding: 40px;
+          color: #6b7280;
+          text-align: center;
+        }
+
+        .empty-table-message i {
+          font-size: 60px;
+          color: #d1d5db;
+          margin-bottom: 20px;
+          opacity: 0.5;
+        }
+
+        .empty-table-message h3 {
+          font-size: 20px;
+          color: #374151;
+          margin-bottom: 10px;
+          font-weight: 600;
+        }
+
+        .empty-table-message p {
+          font-size: 14px;
+          max-width: 500px;
+          line-height: 1.6;
+          color: #6b7280;
+        }
+
+        /* Modal Styles */
+        .modal-content {
+          border-radius: 12px;
+          border: none;
+          box-shadow: var(--shadow-hover);
+          overflow: hidden;
+        }
+
+        .modal-header {
+          background: var(--gradient-primary);
+          color: white;
+          border-bottom: none;
+          padding: 16px 20px;
+        }
+
+        .modal-title {
+          font-weight: 600;
+          font-size: 16px;
+        }
+
+        .btn-close {
+          filter: invert(1);
+          opacity: 0.8;
+        }
+
+        .password-container {
+          position: relative;
+        }
+
+        .toggle-password {
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          cursor: pointer;
+          color: #6b7280;
+          z-index: 5;
+        }
+
+        /* CSV Upload Styles */
+        .upload-container {
+          display: none;
+          background: white;
+          border-radius: 12px;
+          padding: 25px;
+          margin: 20px auto;
+          max-width: 600px;
+          box-shadow: var(--shadow-hover);
+          border: 1px solid #e5e7eb;
+        }
+
+        .upload-container h3 {
+          color: var(--dark-green);
+          margin-bottom: 20px;
+          text-align: center;
+        }
+
+        .upload-area {
+          border: 2px dashed #d1fae5;
+          border-radius: 10px;
+          padding: 40px 20px;
+          text-align: center;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+          border-color: var(--primary);
+          background: #f0fdf4;
+        }
+
+        .upload-area i {
+          font-size: 48px;
+          color: #10b981;
+          margin-bottom: 15px;
+        }
+
+        .file-input {
+          display: none;
+        }
+
+        /* No data message */
+        .no-data {
+          text-align: center;
+          padding: 30px;
+          color: #6c757d;
+          font-style: italic;
+          font-size: 14px;
+        }
+
+        .no-data i {
+          font-size: 28px;
+          margin-bottom: 10px;
+          display: block;
+          opacity: 0.5;
+        }
+
+        /* Search result message */
+        .search-results-message {
+            background: #e0fdf9;
+            color: #0d9488;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid #99f6e4;
+        }
+
+        /* Loading spinner */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #10b981;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Custom scrollbar */
+        .table-body-container::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+
+        .table-body-container::-webkit-scrollbar-track {
+          background: #f1f5f9;
+        }
+
+        .table-body-container::-webkit-scrollbar-thumb {
+          background: linear-gradient(135deg, #10b981, #059669);
+          border-radius: 4px;
+        }
+
+        .table-body-container::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+          .topbar {
+            flex-direction: column;
+            height: auto;
+            padding: 10px;
+          }
+          
+          .topbar-left, .topbar-right {
+            width: 100%;
+            justify-content: center;
+            margin: 5px 0;
+          }
+          
+          .main-heading {
+            font-size: 24px;
+          }
+          
+          .search-container {
+            flex-direction: column;
+          }
+          
+          .search-box {
+            width: 100%;
+          }
+          
+          .stat-card {
+            min-width: 45%;
+          }
+        }
+
+        @media (max-width: 576px) {
+          .stat-card {
+            min-width: 100%;
+          }
+          
+          .topbar a {
+            font-size: 14px;
+            padding: 6px 12px;
+          }
+          
+          .data-table th,
+          .data-table td {
+            padding: 6px 3px;
+            font-size: 10px;
+          }
+          
+          .action-btn {
+            width: 24px;
+            height: 24px;
+            font-size: 10px;
+          }
+          
+          .status-paid, .status-pending {
+            font-size: 9px;
+            padding: 4px 6px;
+            min-width: 60px;
+          }
+        }
+    </style>
 </head>
 <body>
-<div class="nav-top">
-   <div class="nav-logo">
-      <img src="img1.png" alt="Nagar Palika Parishad Nakur, Saharanpur Logo" class="logo-img">
-      <div class="logo-text">जल प्रबंधन प्रणाली</div>
-   </div>
-   
-   <div class="user-welcome">
-      स्वागत है, <?php echo $username; ?>!
-   </div>
-   
-   <div class="nav-buttons">
-      <a class="nav-btn" href="dashboard.html" title="होम">
-         <i class="fas fa-home"></i>
-      </a>
-      <a class="nav-btn" href="logout.html" title="लॉगआउट">
-         <i class="fas fa-sign-out-alt"></i>
-      </a>
-   </div>
-</div>
+    <div class="topbar">
+        <div class="topbar-left">
+            <img src="https://cdn-icons-png.flaticon.com/512/869/869869.png" alt="जल प्रबंधन लोगो" class="logo">
+            <span class="org-name">जल प्रबंधन डैशबोर्ड</span>
+        </div>
+        <div class="topbar-right">
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <span id="loggedInUser">Admin</span>
+            </div>
+            <a href="dashboard.html" id="homeLink">
+                <i class="fas fa-home"></i> होम
+            </a>
+            <a href="#" id="logoutLink">
+                <i class="fas fa-sign-out-alt"></i> लॉगआउट
+            </a>
+        </div>
+    </div>
 
-<h1 class="page-heading">💧 जल प्रबंधन डैशबोर्ड</h1>
+    <div class="main-container">
+        <h1 class="main-heading">🚰 जल कनेक्शन विवरण</h1>
 
-<div class="nav-wrap">
-   <a class="btn-nav" href="connection_detail.html">
-      <span class="btn-icon">🔗</span>
-      कनेक्शन विवरण
-   </a>
-   
-   <a class="btn-nav" href="add_connection.php">
-      <span class="btn-icon">➕</span>
-      नया कनेक्शन
-   </a>
-   
-   <a class="btn-nav" href="payment.php">
-      <span class="btn-icon">💵</span>
-      भुगतान करें
-   </a>
-   
-   <a class="btn-nav" href="base_defaulter.php">
-      <span class="btn-icon">📊</span>
-      बड़े बकायादार
-   </a>
-   
-   <a class="btn-nav" href="demand_notice.php">
-      <span class="btn-icon">📄</span>
-      मांग नोटिस 
-   </a>
-   
-   <a class="btn-nav" href="print_all_bills.php">
-      <span class="btn-icon">🖨️</span>
-      सभी बिल प्रिंट करें
-   </a>
-</div>
+        <!-- Messages -->
+        <div id="messageContainer"></div>
 
-<footer>
-   <p>© जल प्रबंधन बोर्ड <?php echo date('Y'); ?></p>
-</footer>
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 कनेक्शन नंबर, नाम, मोबाइल, या वार्ड खोजें...">
+            </div>
+            <button class="search-btn" id="searchButton">
+                <i class="fas fa-search"></i> खोजें
+            </button>
+            <button class="upload-btn" id="uploadButton">
+                <i class="fas fa-upload"></i> CSV अपलोड
+            </button>
+            <button class="export-btn" id="exportButton">
+                <i class="fas fa-file-excel"></i> एक्सेल एक्सपोर्ट
+            </button>
+        </div>
 
-<script>
-// कीबोर्ड नेविगेशन के लिए
-document.addEventListener('DOMContentLoaded', function() {
-   const navItems = document.querySelectorAll('.btn-nav, .nav-btn');
-   
-   // पहला नेविगेशन आइटम फोकस करने के लिए
-   if (navItems.length > 0) {
-      navItems[0].setAttribute('tabindex', '0');
-   }
-   
-   // कीप्रेस इवेंट हैंडलिंग
-   document.addEventListener('keydown', function(e) {
-      if (e.key === 'Tab') {
-         document.body.classList.add('user-tabbing');
-      }
-   });
-   
-   // माउस इवेंट के बाद टैबिंग क्लास हटाने के लिए
-   document.addEventListener('mousedown', function() {
-      document.body.classList.remove('user-tabbing');
-   });
-});
-</script>
+        <!-- Search Results Message -->
+        <div class="search-results-message" id="searchResultsMessage" style="display: none;"></div>
+
+        <!-- Loading Spinner -->
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner"></div>
+            <p>डेटा लोड हो रहा है...</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-container" id="statsContainer">
+            <!-- Stats will be loaded here -->
+        </div>
+
+        <!-- Main Table Container -->
+        <div class="main-table-container">
+            <!-- Fixed Header Container -->
+            <div class="table-header-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th class="con-no-col">🔗 कनेक्शन</th>
+                            <th class="ward-no-col">🏘️ वार्ड</th>
+                            <th class="owner">👤 नाम</th>
+                            <th class="mobile-col">📱 मोबाइल</th>
+                            <th class="current-amount-col">💰 25‑26</th>
+                            <th class="arrear-col">📅 24‑25</th>
+                            <th class="remaining-col">🧾 शेष</th>
+                            <th class="act">⚙️ क्रिया</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <!-- Scrollable Body Container -->
+            <div class="table-body-container">
+                <!-- Initially show empty message -->
+                <div class="empty-table-message" id="emptyMessage">
+                    <i class="fas fa-search"></i>
+                    <h3>खोज शुरू करें</h3>
+                    <p>कनेक्शन विवरण देखने के लिए ऊपर दिए गए सर्च बॉक्स में कनेक्शन नंबर, ग्राहक का नाम, मोबाइल नंबर या वार्ड नंबर डालकर सर्च करें।</p>
+                </div>
+
+                <!-- Table with data -->
+                <table class="data-table" id="dataTable" style="display: none;">
+                    <tbody id="tableBody">
+                        <!-- Data rows will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- CSV Upload Modal -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">
+                        <i class="fas fa-file-csv me-2"></i>CSV फ़ाइल अपलोड करें
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h5>CSV फ़ाइल यहाँ ड्रॉप करें या क्लिक करें</h5>
+                        <p class="text-muted">समर्थित प्रारूप: .csv (अधिकतम आकार: 10MB)</p>
+                        <button type="button" class="btn btn-primary mt-2" id="browseFileBtn">
+                            <i class="fas fa-folder-open me-2"></i>फ़ाइल चुनें
+                        </button>
+                    </div>
+                    
+                    <input type="file" id="csvFileInput" class="file-input" accept=".csv">
+                    
+                    <div id="selectedFileInfo" class="mt-3" style="display: none;">
+                        <div class="alert alert-info">
+                            <i class="fas fa-file me-2"></i>
+                            <span id="fileName"></span>
+                            <span id="fileSize" class="ms-2"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <label class="form-label">CSV प्रारूप के लिए निर्देश:</label>
+                        <div class="alert alert-light">
+                            <small>
+                                CSV फ़ाइल में निम्नलिखित कॉलम होने चाहिए:<br>
+                                <code>connection_no, ward_no, owner_name, mobile, current_amount, arrear_balance, remaining_balance</code>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">रद्द करें</button>
+                    <button type="button" class="btn btn-primary" id="uploadCsvBtn" disabled>
+                        <i class="fas fa-upload me-2"></i>अपलोड करें
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">
+                        <i class="fas fa-exclamation-triangle me-2"></i>कनेक्शन डिलीट करें
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger text-center" role="alert" style="border-radius: 10px;">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>चेतावनी!</strong> यह कार्रवाई पूर्ववत नहीं की जा सकती है
+                    </div>
+                    
+                    <div class="border p-3 mb-3 rounded" style="background: #f8f9fa;">
+                        <h6 class="text-center mb-3">निम्नलिखित कनेक्शन को डिलीट करना चाहते हैं?</h6>
+                        <div class="text-center" id="connectionDetails"></div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">पासवर्ड</label>
+                        <div class="password-container">
+                            <input type="password" class="form-control" id="password" 
+                                   placeholder="अपना पासवर्ड दर्ज करें" oninput="validateDelete()" style="padding-right: 40px;">
+                            <span class="toggle-password" onclick="togglePasswordVisibility()">
+                                <i class="fas fa-eye"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">रद्द करें</button>
+                    <button id="deleteConfirmBtn" class="btn btn-danger disabled" onclick="confirmDelete()">डिलीट करें</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <script>
+        // Check if user is logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('isLoggedIn') !== 'true') {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Set username
+            const username = localStorage.getItem('username') || 'Admin';
+            document.getElementById('loggedInUser').textContent = username;
+            
+            // Load data
+            loadData();
+            
+            // Setup event listeners
+            setupEventListeners();
+        });
+        
+        // Sample CSV data structure
+        const sampleCSVData = `connection_no,ward_no,owner_name,mobile,current_amount,arrear_balance,remaining_balance
+JAL-001,5,रमेश कुमार शर्मा,9876543210,8500.00,1250.50,9750.50
+JAL-002,3,सीता देवी,9123456789,9200.00,0.00,0.00
+JAL-003,7,अमित सिंह,9988776655,7800.00,3200.00,11000.00
+JAL-004,2,प्रिया पटेल,9876123450,10200.00,1500.00,11700.00
+JAL-005,8,विकास जैन,8899776655,6800.00,0.00,0.00
+JAL-006,4,नीता यादव,7766554433,11500.00,4500.75,16000.75
+JAL-007,6,राजेश गुप्ता,6655443322,8900.00,2100.25,11000.25
+JAL-008,1,सुनीता सिंह,9988771122,7600.00,0.00,0.00
+JAL-009,9,मोहन लाल,8877665544,10500.00,3800.00,14300.00
+JAL-010,5,अनिल कुमार,7788990011,9400.00,1200.00,10600.00
+JAL-011,3,रीता शर्मा,9900112233,8200.00,950.50,9150.50
+JAL-012,7,संजय वर्मा,8811223344,10800.00,0.00,0.00
+JAL-013,2,मीना देवी,7722334455,7500.00,1800.00,9300.00
+JAL-014,6,अजय पटेल,6633445566,9600.00,2200.00,11800.00
+JAL-015,4,पूजा सिंह,5544332211,8900.00,0.00,0.00`;
+        
+        // Global data storage
+        let connectionData = [];
+        
+        // Function to format Indian currency
+        function formatIndianCurrency(number) {
+            if (isNaN(number) || number === null || number === '') {
+                number = 0;
+            }
+            
+            number = parseFloat(number);
+            number = Math.round(number * 100) / 100;
+            
+            let [integerPart, decimalPart] = number.toFixed(2).split('.');
+            decimalPart = decimalPart || '00';
+            
+            let lastThree = integerPart.substring(integerPart.length - 3);
+            let otherNumbers = integerPart.substring(0, integerPart.length - 3);
+            
+            if (otherNumbers !== '') {
+                lastThree = ',' + lastThree;
+            }
+            
+            let result = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + '.' + decimalPart;
+            return result;
+        }
+        
+        // Function to load data
+        function loadData() {
+            showLoading();
+            
+            // Try to get data from localStorage first
+            const savedData = localStorage.getItem('connectionData');
+            
+            if (savedData) {
+                connectionData = JSON.parse(savedData);
+                displayData(connectionData);
+                updateStats(connectionData);
+                hideLoading();
+            } else {
+                // Parse sample CSV data
+                Papa.parse(sampleCSVData, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        connectionData = results.data.map(row => ({
+                            connection_no: row.connection_no || '',
+                            ward_no: row.ward_no || '',
+                            owner_name: row.owner_name || '',
+                            mobile: row.mobile || '',
+                            current_amount: parseFloat(row.current_amount) || 0,
+                            arrear_balance: parseFloat(row.arrear_balance) || 0,
+                            remaining_balance: parseFloat(row.remaining_balance) || 0
+                        }));
+                        
+                        // Save to localStorage
+                        localStorage.setItem('connectionData', JSON.stringify(connectionData));
+                        
+                        displayData(connectionData);
+                        updateStats(connectionData);
+                        hideLoading();
+                    },
+                    error: function(error) {
+                        showMessage('CSV डेटा पार्स करने में त्रुटि: ' + error.message, 'error');
+                        hideLoading();
+                    }
+                });
+            }
+        }
+        
+        // Function to display data in table
+        function displayData(data) {
+            const tableBody = document.getElementById('tableBody');
+            const emptyMessage = document.getElementById('emptyMessage');
+            const dataTable = document.getElementById('dataTable');
+            
+            tableBody.innerHTML = '';
+            
+            if (!data || data.length === 0) {
+                emptyMessage.style.display = 'flex';
+                dataTable.style.display = 'none';
+                return;
+            }
+            
+            emptyMessage.style.display = 'none';
+            dataTable.style.display = 'table';
+            
+            data.forEach((item, index) => {
+                const isPaid = item.remaining_balance === 0;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="con-no-col">${item.connection_no || ''}</td>
+                    <td class="ward-no-col">${item.ward_no || ''}</td>
+                    <td class="owner" title="${item.owner_name || ''}">${item.owner_name || ''}</td>
+                    <td class="mobile-col">${item.mobile || ''}</td>
+                    <td class="current-amount-col">₹${formatIndianCurrency(item.current_amount)}</td>
+                    <td class="arrear-col">₹${formatIndianCurrency(item.arrear_balance)}</td>
+                    <td class="remaining-col">₹${formatIndianCurrency(item.remaining_balance)}</td>
+                    <td class="act">
+                        <div class="action-buttons">
+                            <a href="#" onclick="editConnection('${item.connection_no}'); return false;" class="action-btn edit-btn" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="#" onclick="showDeleteModal('${item.connection_no}', '${item.owner_name}'); return false;" class="action-btn delete-btn" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                            <a href="#" onclick="printBill('${item.connection_no}')" class="action-btn print-btn" title="Print Bill">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            ${!isPaid ? `<a href="#" onclick="redirectToPayment('${item.connection_no}')" class="action-btn pay-btn" title="Pay Now">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </a>` : ''}
+                        </div>
+                        <div class="mt-1">
+                            ${isPaid ? '<span class="status-paid">✅ भुगतान</span>' : '<span class="status-pending">❌ बकाया</span>'}
+                        </div>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Function to update statistics
+        function updateStats(data) {
+            const statsContainer = document.getElementById('statsContainer');
+            
+            if (!data || data.length === 0) {
+                statsContainer.innerHTML = '<p class="text-center">कोई डेटा उपलब्ध नहीं है</p>';
+                return;
+            }
+            
+            const totalConnections = data.length;
+            const totalCurrentAmount = data.reduce((sum, item) => sum + (item.current_amount || 0), 0);
+            const totalArrearBalance = data.reduce((sum, item) => sum + (item.arrear_balance || 0), 0);
+            const totalRemainingBalance = data.reduce((sum, item) => sum + (item.remaining_balance || 0), 0);
+            
+            const paidConnections = data.filter(item => item.remaining_balance === 0).length;
+            const pendingConnections = totalConnections - paidConnections;
+            
+            statsContainer.innerHTML = `
+                <div class="stat-card connections">
+                    <div class="icon">👥</div>
+                    <h3>कुल कनेक्शन</h3>
+                    <div class="number">${totalConnections}</div>
+                    <small>${paidConnections} भुगतान, ${pendingConnections} बकाया</small>
+                </div>
+                <div class="stat-card current">
+                    <div class="icon">💰</div>
+                    <h3>वर्तमान राशि</h3>
+                    <div class="number">₹${formatIndianCurrency(totalCurrentAmount)}</div>
+                    <small>2025-26 वर्ष की राशि</small>
+                </div>
+                <div class="stat-card arrear">
+                    <div class="icon">📅</div>
+                    <h3>बकाया शेष</h3>
+                    <div class="number">₹${formatIndianCurrency(totalArrearBalance)}</div>
+                    <small>2024-25 वर्ष का बकाया</small>
+                </div>
+                <div class="stat-card remaining">
+                    <div class="icon">🧾</div>
+                    <h3>शेष राशि</h3>
+                    <div class="number">₹${formatIndianCurrency(totalRemainingBalance)}</div>
+                    <small>कुल बकाया राशि</small>
+                </div>
+            `;
+        }
+        
+        // Function to search data
+        function searchData() {
+            const searchInput = document.getElementById('searchInput');
+            const query = searchInput.value.trim().toLowerCase();
+            const resultsMessage = document.getElementById('searchResultsMessage');
+            
+            if (!query) {
+                resultsMessage.style.display = 'none';
+                displayData(connectionData);
+                updateStats(connectionData);
+                return;
+            }
+            
+            const filteredData = connectionData.filter(item => 
+                (item.connection_no && item.connection_no.toLowerCase().includes(query)) ||
+                (item.owner_name && item.owner_name.toLowerCase().includes(query)) ||
+                (item.mobile && item.mobile.includes(query)) ||
+                (item.ward_no && item.ward_no.includes(query))
+            );
+            
+            if (filteredData.length > 0) {
+                resultsMessage.innerHTML = `<i class="fas fa-search me-2"></i>"${query}" के लिए ${filteredData.length} परिणाम मिले`;
+                resultsMessage.style.display = 'block';
+            } else {
+                resultsMessage.innerHTML = `<i class="fas fa-exclamation-circle me-2"></i>"${query}" के लिए कोई परिणाम नहीं मिला`;
+                resultsMessage.style.display = 'block';
+            }
+            
+            displayData(filteredData);
+            updateStats(filteredData);
+        }
+        
+        // Function to setup event listeners
+        function setupEventListeners() {
+            // Search button
+            document.getElementById('searchButton').addEventListener('click', searchData);
+            
+            // Search input enter key
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchData();
+                }
+            });
+            
+            // Upload button
+            document.getElementById('uploadButton').addEventListener('click', function() {
+                const uploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
+                uploadModal.show();
+            });
+            
+            // Export button
+            document.getElementById('exportButton').addEventListener('click', exportToExcel);
+            
+            // Home link
+            document.getElementById('homeLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = 'dashboard.html';
+            });
+            
+            // Logout link
+            document.getElementById('logoutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                logout();
+            });
+            
+            // Upload CSV functionality
+            document.getElementById('browseFileBtn').addEventListener('click', function() {
+                document.getElementById('csvFileInput').click();
+            });
+            
+            document.getElementById('uploadArea').addEventListener('click', function() {
+                document.getElementById('csvFileInput').click();
+            });
+            
+            document.getElementById('csvFileInput').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    document.getElementById('fileName').textContent = file.name;
+                    document.getElementById('fileSize').textContent = `(${(file.size / 1024).toFixed(2)} KB)`;
+                    document.getElementById('selectedFileInfo').style.display = 'block';
+                    document.getElementById('uploadCsvBtn').disabled = false;
+                }
+            });
+            
+            document.getElementById('uploadCsvBtn').addEventListener('click', function() {
+                const fileInput = document.getElementById('csvFileInput');
+                const file = fileInput.files[0];
+                
+                if (!file) {
+                    showMessage('कृपया एक CSV फ़ाइल चुनें', 'error');
+                    return;
+                }
+                
+                if (!file.name.toLowerCase().endsWith('.csv')) {
+                    showMessage('कृपया केवल CSV फ़ाइल अपलोड करें', 'error');
+                    return;
+                }
+                
+                Papa.parse(file, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        if (results.data.length === 0) {
+                            showMessage('CSV फ़ाइल खाली है या डेटा नहीं मिला', 'error');
+                            return;
+                        }
+                        
+                        // Process and save data
+                        connectionData = results.data.map(row => ({
+                            connection_no: row.connection_no || row['connection No'] || '',
+                            ward_no: row.ward_no || row.ward_no || '',
+                            owner_name: row.owner_name || row['Owner Name'] || '',
+                            mobile: row.mobile || row.Mobile || '',
+                            current_amount: parseFloat(row.current_amount || row['Current amount 2025-26'] || 0),
+                            arrear_balance: parseFloat(row.arrear_balance || row['Arrear Balance'] || 0),
+                            remaining_balance: parseFloat(row.remaining_balance || 0)
+                        }));
+                        
+                        // Save to localStorage
+                        localStorage.setItem('connectionData', JSON.stringify(connectionData));
+                        
+                        // Update display
+                        displayData(connectionData);
+                        updateStats(connectionData);
+                        
+                        // Close modal and reset
+                        bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
+                        document.getElementById('csvFileInput').value = '';
+                        document.getElementById('selectedFileInfo').style.display = 'none';
+                        document.getElementById('uploadCsvBtn').disabled = true;
+                        
+                        showMessage(`सफलतापूर्वक ${connectionData.length} रिकॉर्ड अपलोड किए गए`, 'success');
+                    },
+                    error: function(error) {
+                        showMessage('CSV फ़ाइल पार्स करने में त्रुटि: ' + error.message, 'error');
+                    }
+                });
+            });
+        }
+        
+        // Function to export to Excel
+        function exportToExcel() {
+            if (connectionData.length === 0) {
+                showMessage('एक्सपोर्ट करने के लिए कोई डेटा नहीं है', 'error');
+                return;
+            }
+            
+            // Create worksheet
+            const wsData = [
+                ['कनेक्शन नंबर', 'वार्ड नंबर', 'मालिक का नाम', 'मोबाइल नंबर', 'वर्तमान राशि 2025-26', 'बकाया शेष', 'शेष राशि', 'स्थिति']
+            ];
+            
+            connectionData.forEach(item => {
+                const status = item.remaining_balance === 0 ? 'भुगतान' : 'बकाया';
+                wsData.push([
+                    item.connection_no,
+                    item.ward_no,
+                    item.owner_name,
+                    item.mobile,
+                    item.current_amount,
+                    item.arrear_balance,
+                    item.remaining_balance,
+                    status
+                ]);
+            });
+            
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+            
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "जल कनेक्शन");
+            
+            // Generate and download file
+            const date = new Date().toISOString().split('T')[0];
+            XLSX.writeFile(wb, `जल_कनेक्शन_${date}.xlsx`);
+            
+            showMessage('एक्सेल फ़ाइल डाउनलोड शुरू हो गई है', 'success');
+        }
+        
+        // Function to edit connection
+        function editConnection(conNo) {
+            showMessage(`संपादन मोड: ${conNo} (यह सिर्फ डेमो है)`, 'success');
+        }
+        
+        // Function to show delete modal
+        function showDeleteModal(conNo, ownerName) {
+            document.getElementById('connectionDetails').innerHTML = 
+                `<strong>कनेक्शन नंबर:</strong> ${conNo}<br>
+                 <strong>ग्राहक का नाम:</strong> ${ownerName}`;
+            
+            document.getElementById('password').value = '';
+            document.getElementById('deleteConfirmBtn').classList.add('disabled');
+            
+            // Store connection to delete
+            window.currentDeleteConNo = conNo;
+            
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+        }
+        
+        // Function to validate delete password
+        function validateDelete() {
+            const password = document.getElementById('password').value;
+            const deleteBtn = document.getElementById('deleteConfirmBtn');
+            
+            if (password.length > 0) {
+                deleteBtn.classList.remove('disabled');
+            } else {
+                deleteBtn.classList.add('disabled');
+            }
+        }
+        
+        // Function to toggle password visibility
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.querySelector('#deleteModal .toggle-password i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+        
+        // Function to confirm delete
+        function confirmDelete() {
+            const password = document.getElementById('password').value;
+            
+            if (password !== 'admin123') {
+                showMessage('गलत पासवर्ड', 'error');
+                return;
+            }
+            
+            // Remove from data
+            const index = connectionData.findIndex(item => item.connection_no === window.currentDeleteConNo);
+            if (index !== -1) {
+                connectionData.splice(index, 1);
+                
+                // Update localStorage
+                localStorage.setItem('connectionData', JSON.stringify(connectionData));
+                
+                // Update display
+                displayData(connectionData);
+                updateStats(connectionData);
+                
+                showMessage('कनेक्शन सफलतापूर्वक डिलीट हो गया', 'success');
+            }
+            
+            // Close modal
+            bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+        }
+        
+        // Function to print bill
+        function printBill(conNo) {
+            const connection = connectionData.find(item => item.connection_no === conNo);
+            if (connection) {
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(`
+                    <html>
+                    <head>
+                        <title>बिल प्रिंट - ${conNo}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                            .bill-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
+                            .bill-details { width: 100%; border-collapse: collapse; }
+                            .bill-details td { padding: 8px; border-bottom: 1px solid #ddd; }
+                            .total-row { font-weight: bold; background: #f0f0f0; }
+                            .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="bill-header">
+                            <h2>जल प्रबंधन विभाग</h2>
+                            <h3>जल बिल</h3>
+                        </div>
+                        <table class="bill-details">
+                            <tr><td>कनेक्शन नंबर:</td><td>${connection.connection_no}</td></tr>
+                            <tr><td>ग्राहक नाम:</td><td>${connection.owner_name}</td></tr>
+                            <tr><td>वार्ड नंबर:</td><td>${connection.ward_no}</td></tr>
+                            <tr><td>मोबाइल:</td><td>${connection.mobile}</td></tr>
+                            <tr><td>वर्तमान राशि (2025-26):</td><td>₹${formatIndianCurrency(connection.current_amount)}</td></tr>
+                            <tr><td>बकाया शेष (2024-25):</td><td>₹${formatIndianCurrency(connection.arrear_balance)}</td></tr>
+                            <tr class="total-row"><td>कुल बकाया:</td><td>₹${formatIndianCurrency(connection.remaining_balance)}</td></tr>
+                        </table>
+                        <div class="footer">
+                            <p>बिल जनरेट की तिथि: ${new Date().toLocaleDateString('hi-IN')}</p>
+                            <p>कृपया समय पर भुगतान करें</p>
+                        </div>
+                        <script>
+                            window.onload = function() {
+                                window.print();
+                            };
+                        </script>
+                    </body>
+                    </html>
+                `);
+                printWindow.document.close();
+            }
+        }
+        
+        // Function to redirect to payment
+        function redirectToPayment(conNo) {
+            const connection = connectionData.find(item => item.connection_no === conNo);
+            if (connection) {
+                const amount = connection.remaining_balance;
+                showMessage(`${conNo} के लिए भुगतान पेज खुल रहा है - राशि: ₹${formatIndianCurrency(amount)}`, 'success');
+                // In real app: window.open(`payment.php?con=${conNo}&amount=${amount}`, '_blank');
+            }
+        }
+        
+        // Function to logout
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            window.location.href = 'index.html';
+        }
+        
+        // Function to show message
+        function showMessage(message, type = 'success') {
+            const messageContainer = document.getElementById('messageContainer');
+            const messageClass = type === 'error' ? 'message-box error' : 'message-box';
+            
+            messageContainer.innerHTML = `
+                <div class="${messageClass}">
+                    <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'}"></i>
+                    ${message}
+                </div>
+            `;
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                messageContainer.innerHTML = '';
+            }, 5000);
+        }
+        
+        // Function to show loading
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('statsContainer').style.display = 'none';
+            document.getElementById('main-table-container').style.display = 'none';
+        }
+        
+        // Function to hide loading
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.getElementById('statsContainer').style.display = 'flex';
+            document.getElementById('main-table-container').style.display = 'flex';
+        }
+    </script>
 </body>
 </html>
