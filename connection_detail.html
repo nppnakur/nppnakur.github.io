@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>जल प्रबंधन - डैशबोर्ड</title>
-    <link rel="icon" type="image/png" href="img1.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
             --primary: #10b981;
             --secondary: #059669;
-            --light-green: #d1fae5;
             --dark-green: #065f46;
             --gradient-primary: linear-gradient(135deg, #10b981, #059669);
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -19,192 +17,177 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-            min-height: 100vh;
+            background: #f8fafc;
             color: #1f2937;
         }
 
         /* Topbar */
         .topbar {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            position: sticky; top: 0; z-index: 1000;
             background: var(--gradient-primary);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 24px;
-            height: 70px;
-            box-shadow: var(--shadow);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 24px; height: 70px; box-shadow: var(--shadow);
         }
 
-        .topbar-left { display: flex; align-items: center; gap: 15px; }
-        .logo { height: 45px; width: auto; border-radius: 6px; }
         .org-name { color: white; font-size: 20px; font-weight: bold; }
-
         .topbar-right a {
-            color: white;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.15);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.3s;
+            color: white; text-decoration: none; padding: 8px 16px;
+            background: rgba(255,255,255,0.2); border-radius: 8px;
         }
 
-        /* Stats Cards */
-        .main-container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-        .main-heading { text-align: center; color: var(--dark-green); font-weight: 700; margin-bottom: 25px; }
+        /* Stats */
+        .main-container { max-width: 1500px; margin: 0 auto; padding: 20px; }
+        .stats-container { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+        .stat-card { 
+            flex: 1; min-width: 220px; padding: 20px; border-radius: 12px; 
+            color: white; text-align: center; box-shadow: var(--shadow);
+            animation: fadeIn 0.6s ease-out;
+        }
+        .bg-total { background: var(--gradient-primary); }
+        .bg-current { background: #3b82f6; }
+        .bg-remaining { background: #ef4444; }
 
-        .stats-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
-        .stat-card { flex: 1; min-width: 200px; padding: 20px; border-radius: 12px; text-align: center; color: white; box-shadow: var(--shadow); }
-        .stat-card.total { background: var(--gradient-primary); }
-        .stat-card.current { background: linear-gradient(135deg, #34d399, #10b981); }
-        .stat-card.remaining { background: linear-gradient(135deg, #ef4444, #dc2626); }
-
-        /* Search Box */
-        .search-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-        #searchInput { width: 400px; padding: 12px; border: 2px solid #d1fae5; border-radius: 10px; }
-        .search-btn { background: var(--gradient-primary); color: white; border: none; padding: 0 25px; border-radius: 10px; font-weight: 600; }
-
-        /* Table */
-        .main-table-container { background: white; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); overflow: hidden; }
+        /* Table & Search */
+        .search-box { width: 100%; max-width: 500px; margin: 0 auto 20px; }
+        .main-table-container { 
+            background: white; border-radius: 12px; box-shadow: var(--shadow); 
+            overflow: hidden; border: 1px solid #e2e8f0;
+        }
+        
         .data-table { width: 100%; border-collapse: collapse; }
         
-        /* Table Headers Centered as requested */
+        /* Centered Headers */
         .data-table th { 
-            background: var(--gradient-primary); 
-            color: white; 
-            padding: 15px; 
-            text-align: center; 
-            font-size: 14px;
+            background: #f1f5f9; color: #475569; padding: 15px; 
+            text-align: center !important; font-size: 13px; text-transform: uppercase;
+            border-bottom: 2px solid #e2e8f0;
         }
 
-        .data-table td { padding: 12px; border-bottom: 1px solid #f3f4f6; text-align: center; font-size: 14px; }
-        .data-table tbody tr:hover { background-color: #f0fdf4; }
+        .data-table td { 
+            padding: 12px; border-bottom: 1px solid #f1f5f9; 
+            text-align: center; font-size: 14px; 
+        }
 
-        .status-paid { background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 12px; }
+        .owner-name { text-align: left !important; font-weight: 600; color: #1e293b; }
+        .status-badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
+        .paid { background: #d1fae5; color: #065f46; }
+        .unpaid { background: #fee2e2; color: #991b1b; }
 
-        /* Animation */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .stat-card, .main-table-container { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div class="topbar">
-    <div class="topbar-left">
-        <img src="img1.png" alt="Logo" class="logo">
-        <span class="org-name">जल प्रबंधन</span>
-    </div>
-    <div class="topbar-right">
-        <a href="water_management.html"><i class="fas fa-home"></i> होम</a>
-    </div>
+    <div class="topbar-left"><span class="org-name">🚰 जल प्रबंधन प्रणाली</span></div>
+    <div class="topbar-right"><a href="water_management.html"><i class="fas fa-home"></i> होम</a></div>
 </div>
 
 <div class="main-container">
-    <h1 class="main-heading">🚰 जल कनेक्शन विवरण डैशबोर्ड</h1>
-
     <div class="stats-container">
-        <div class="stat-card total"><h3>कुल कनेक्शन</h3><div class="number" id="countTotal">0</div></div>
-        <div class="stat-card current"><h3>कुल राशि</h3><div class="number" id="sumCurrent">₹0</div></div>
-        <div class="stat-card remaining"><h3>शेष राशि</h3><div class="number" id="sumRemaining">₹0</div></div>
+        <div class="stat-card bg-total"><h5>कुल कनेक्शन</h5><h2 id="totalConn">0</h2></div>
+        <div class="stat-card bg-current"><h5>कुल चालू मांग (25-26)</h5><h2 id="totalCurr">₹0</h2></div>
+        <div class="stat-card bg-remaining"><h5>कुल बकाया राशि</h5><h2 id="totalRem">₹0</h2></div>
     </div>
 
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="नाम, कनेक्शन नंबर या वार्ड से खोजें..." onkeyup="filterTable()">
-        <button class="search-btn"><i class="fas fa-search"></i> खोजें</button>
+    <div class="search-box">
+        <div class="input-group">
+            <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
+            <input type="text" id="searchInput" class="form-control" placeholder="नाम, वार्ड या कनेक्शन नंबर खोजें..." onkeyup="filterTable()">
+        </div>
     </div>
 
     <div class="main-table-container">
-        <table class="data-table" id="connectionTable">
+        <table class="data-table">
             <thead>
                 <tr>
-                    <th>🔗 कनेक्शन</th>
-                    <th>🏘️ वार्ड</th>
-                    <th>👤 नाम</th>
-                    <th>📱 मोबाइल</th>
-                    <th>💰 राशि (25-26)</th>
-                    <th>📅 बकाया</th>
-                    <th>🧾 शेष राशि</th>
-                    <th>📊 स्थिति</th>
+                    <th>कन. नं.</th>
+                    <th>वार्ड</th>
+                    <th style="text-align: left !important;">उपभोक्ता का नाम</th>
+                    <th>मकान नं.</th>
+                    <th>मोबाइल</th>
+                    <th>चालू राशि</th>
+                    <th>बकाया</th>
+                    <th>कुल शेष</th>
+                    <th>स्थिति</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
-                </tbody>
+                <tr><td colspan="9">डेटा लोड हो रहा है...</td></tr>
+            </tbody>
         </table>
     </div>
 </div>
 
 <script>
-    // CSV file ko fetch karne ka function
-    async function loadCSV() {
+    async function loadCSVData() {
         try {
-            // "data.csv" ko apni file ke sahi naam se badal dein
-            const response = await fetch('data.csv'); 
+            // Aapki file ka naam yahan sahi hona chahiye
+            const response = await fetch('connection_data (1).csv');
             const data = await response.text();
-            const rows = data.split('\n').slice(1); // Header row ko chhod kar
-            const tableBody = document.getElementById('tableBody');
             
-            let totalRecords = 0;
-            let totalCurrent = 0;
-            let totalRemaining = 0;
+            // CSV parsing (handling quotes for names like "S/O")
+            const rows = data.split(/\r?\n/).slice(1); 
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            let count = 0, sumCurr = 0, sumRem = 0;
 
             rows.forEach(row => {
-                const cols = row.split(',');
-                if (cols.length >= 7) {
-                    const tr = document.createElement('tr');
+                // Regex to handle commas inside quotes
+                const cols = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+                
+                if (cols && cols.length >= 9) {
+                    count++;
+                    const current = parseFloat(cols[6]) || 0;
+                    const arrear = parseFloat(cols[7]) || 0;
+                    const remaining = parseFloat(cols[8]) || 0;
                     
-                    // Dashboard stats calculation
-                    totalRecords++;
-                    const currentVal = parseFloat(cols[4]) || 0;
-                    const remainingVal = parseFloat(cols[6]) || 0;
-                    totalCurrent += currentVal;
-                    totalRemaining += remainingVal;
+                    sumCurr += current;
+                    sumRem += remaining;
 
-                    // Row HTML
+                    const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td>${cols[0]}</td>
                         <td>${cols[1]}</td>
-                        <td style="text-align:left; font-weight:bold;">${cols[2]}</td>
+                        <td class="owner-name">${cols[2].replace(/"/g, '')}</td>
                         <td>${cols[3]}</td>
-                        <td>₹${currentVal.toLocaleString('en-IN')}</td>
-                        <td>₹${(parseFloat(cols[5]) || 0).toLocaleString('en-IN')}</td>
-                        <td style="color: ${remainingVal > 0 ? 'red' : 'green'}; font-weight:bold;">
-                            ₹${remainingVal.toLocaleString('en-IN')}
+                        <td>${cols[5] === '0' ? '-' : cols[5]}</td>
+                        <td>₹${current}</td>
+                        <td>₹${arrear}</td>
+                        <td class="fw-bold ${remaining > 0 ? 'text-danger' : 'text-success'}">₹${remaining}</td>
+                        <td>
+                            <span class="status-badge ${remaining <= 0 ? 'paid' : 'unpaid'}">
+                                ${remaining <= 0 ? 'चुक्ता' : 'बकाया'}
+                            </span>
                         </td>
-                        <td>${remainingVal == 0 ? '<span class="status-paid">✅ भुगतान</span>' : '❌ बकाया'}</td>
                     `;
                     tableBody.appendChild(tr);
                 }
             });
 
-            // Dashboard update
-            document.getElementById('countTotal').innerText = totalRecords;
-            document.getElementById('sumCurrent').innerText = '₹' + totalCurrent.toLocaleString('en-IN');
-            document.getElementById('sumRemaining').innerText = '₹' + totalRemaining.toLocaleString('en-IN');
+            // Update Stats
+            document.getElementById('totalConn').innerText = count;
+            document.getElementById('totalCurr').innerText = '₹' + sumCurr.toLocaleString('en-IN');
+            document.getElementById('totalRem').innerText = '₹' + sumRem.toLocaleString('en-IN');
 
         } catch (error) {
-            console.error('Error loading CSV:', error);
-            document.getElementById('tableBody').innerHTML = '<tr><td colspan="8">CSV file load nahi ho saki. Kripya check karein.</td></tr>';
+            console.error('Error:', error);
+            document.getElementById('tableBody').innerHTML = '<tr><td colspan="9" class="text-danger">CSV फाइल नहीं मिली! कृपया फाइल को फोल्डर में रखें।</td></tr>';
         }
     }
 
-    // Search Filter Function
     function filterTable() {
         const input = document.getElementById("searchInput").value.toUpperCase();
         const rows = document.getElementById("tableBody").getElementsByTagName("tr");
-
+        
         for (let i = 0; i < rows.length; i++) {
-            const textContent = rows[i].textContent || rows[i].innerText;
-            rows[i].style.display = textContent.toUpperCase().indexOf(input) > -1 ? "" : "none";
+            const text = rows[i].textContent || rows[i].innerText;
+            rows[i].style.display = text.toUpperCase().indexOf(input) > -1 ? "" : "none";
         }
     }
 
-    // Page load hone par CSV load karein
-    window.onload = loadCSV;
+    window.onload = loadCSVData;
 </script>
 
 </body>
