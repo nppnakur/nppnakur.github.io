@@ -3,230 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>जल प्रबंधन - डैशबोर्ड</title>
+    <title>नगर पालिका परिषद - डैशबोर्ड</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            --accent-orange: linear-gradient(135deg, #f59e0b, #d97706);
-            --danger-red: linear-gradient(135deg, #ef4444, #dc2626);
-            --glass-bg: rgba(255, 255, 255, 0.95);
+            --primary-green: #10b981;
+            --dark-green: #059669;
+            --gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
         body { 
             background: #f0fdf4; 
-            font-family: 'Segoe UI', Arial, sans-serif;
-            overflow-x: hidden;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
         }
 
-        /* Topbar Design */
+        /* Topbar with Logo */
         .topbar {
-            background: var(--primary-gradient);
-            height: 70px;
+            background: var(--gradient);
+            height: 75px;
             padding: 0 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             position: sticky;
-            top: 0;
-            z-index: 1000;
+            top: 0; z-index: 1000;
         }
 
-        .home-btn {
-            background: rgba(255,255,255,0.2);
-            padding: 8px 20px;
-            border-radius: 50px;
-            color: white;
-            text-decoration: none;
-            transition: 0.3s;
-            backdrop-filter: blur(5px);
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .logo-img { height: 55px; width: 55px; border-radius: 50%; border: 2px solid white; background: white; }
+        .nav-link { color: white; text-decoration: none; background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 30px; transition: 0.3s; }
+        .nav-link:hover { background: white; color: var(--dark-green); }
+
+        /* Search Section (Ab upar aayega) */
+        .search-section { margin: 30px auto; max-width: 700px; text-align: center; }
+        .search-box {
+            position: relative;
+            animation: fadeInDown 0.8s ease;
         }
-
-        .home-btn:hover { background: white; color: #059669; }
-
-        /* Dashboard Stats Animation */
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 25px 0;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            text-align: center;
-            border-top: 6px solid #10b981;
-            animation: slideUp 0.6s ease-out forwards;
-            opacity: 0;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .stat-card h3 { font-size: 15px; color: #64748b; text-transform: uppercase; margin-bottom: 10px; }
-        .stat-card .num { font-size: 28px; font-weight: 800; color: #1e293b; }
-
-        /* Search Bar Design */
-        .search-wrapper {
-            background: white;
-            padding: 5px;
-            border-radius: 50px;
-            display: flex;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            max-width: 600px;
-            margin: 0 auto 30px;
-        }
-
         #searchInput {
-            border: none;
-            padding: 12px 25px;
-            width: 100%;
-            border-radius: 50px;
-            outline: none;
+            width: 100%; padding: 15px 25px 15px 55px;
+            border-radius: 50px; border: 2px solid var(--primary-green);
+            font-size: 18px; box-shadow: var(--shadow); outline: none;
         }
+        .search-icon { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--primary-green); font-size: 20px; }
 
-        /* Table Design & Animation */
-        .table-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        /* Stats Dashboard (Ab niche aayega) */
+        .dashboard-stats {
+            display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease;
+        }
+        .stat-card {
+            flex: 1; min-width: 280px; background: white; padding: 25px;
+            border-radius: 15px; box-shadow: var(--shadow);
+            text-align: center; border-bottom: 5px solid var(--primary-green);
+            transition: 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-card h3 { font-size: 14px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-card .value { font-size: 28px; font-weight: 800; color: #1e293b; margin-top: 10px; }
+
+        /* Table Design */
+        .table-container {
+            background: white; border-radius: 20px; overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             animation: fadeIn 1s ease;
         }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         .data-table { width: 100%; border-collapse: collapse; }
+        .data-table thead { background: var(--gradient); color: white; }
+        
+        /* Headers Centered */
+        .data-table th { padding: 20px; text-align: center !important; font-size: 15px; }
+        .data-table td { padding: 15px; text-align: center; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        
+        /* Name Full Width Style */
+        .name-col { text-align: left !important; font-weight: 700; color: #111; min-width: 250px; }
 
-        .data-table th {
-            background: #f8fafc;
-            padding: 20px;
-            text-align: center !important; /* Headers Center */
-            font-weight: 700;
-            color: #475569;
-            border-bottom: 2px solid #f1f5f9;
-        }
+        .badge-status { padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; }
+        .paid { background: #d1fae5; color: #065f46; }
+        .unpaid { background: #fee2e2; color: #991b1b; }
 
-        .data-table td {
-            padding: 15px;
-            text-align: center;
-            border-bottom: 1px solid #f1f5f9;
-            transition: 0.2s;
-        }
-
-        .data-table tbody tr:hover {
-            background-color: #f0fdf4;
-            transform: scale(1.002);
-        }
-
-        /* Custom Badges */
-        .badge-paid { background: #d1fae5; color: #065f46; padding: 6px 12px; border-radius: 8px; font-weight: 700; }
-        .badge-unpaid { background: #fee2e2; color: #991b1b; padding: 6px 12px; border-radius: 8px; font-weight: 700; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     </style>
 </head>
 <body>
 
 <div class="topbar">
-    <div style="font-size: 22px; font-weight: 800;"><i class="fas fa-tint me-2"></i> WATER MANAGEMENT</div>
-    <a href="water_management.html" class="home-btn"><i class="fas fa-home me-2"></i>होम</a>
+    <div class="logo-area">
+        <img src="img1.png" alt="Logo" class="logo-img">
+        <div style="line-height: 1.2;">
+            <span style="font-size: 20px; font-weight: 800; display: block;">नगर पालिका परिषद</span>
+            <span style="font-size: 14px; opacity: 0.9;">जल प्रबंधन प्रणाली</span>
+        </div>
+    </div>
+    <a href="water_management.html" class="nav-link"><i class="fas fa-home me-2"></i>मुख्य पृष्ठ</a>
 </div>
 
-<div class="container-fluid" style="max-width: 1500px;">
+<div class="container-fluid" style="max-width: 1500px; padding: 20px;">
     
-    <div class="stats-container">
-        <div class="stat-card" style="border-top-color: #10b981;">
-            <h3>कुल कनेक्शन</h3>
-            <div class="num" id="statTotal">0</div>
-        </div>
-        <div class="stat-card" style="border-top-color: #3b82f6;">
-            <h3>चालू मांग (25-26)</h3>
-            <div class="num" id="statCurrent">₹0</div>
-        </div>
-        <div class="stat-card" style="border-top-color: #ef4444;">
-            <h3>कुल बकाया राशि</h3>
-            <div class="num" id="statRem">₹0</div>
+    <div class="search-section">
+        <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="searchInput" placeholder="उपभोक्ता का नाम, वार्ड या कनेक्शन नंबर से खोजें..." onkeyup="filterTable()">
         </div>
     </div>
 
-    <div class="search-wrapper">
-        <input type="text" id="searchInput" placeholder="नाम, वार्ड या कनेक्शन नं. से सर्च करें..." onkeyup="filterTable()">
-        <button class="btn btn-success rounded-pill px-4 m-1">खोजें</button>
+    <div class="dashboard-stats">
+        <div class="stat-card">
+            <h3>कुल कनेक्शन</h3>
+            <div class="value" id="statTotal">0</div>
+        </div>
+        <div class="stat-card" style="border-bottom-color: #3b82f6;">
+            <h3>कुल मांग (2025-26)</h3>
+            <div class="value" id="statCurrent">₹0</div>
+        </div>
+        <div class="stat-card" style="border-bottom-color: #ef4444;">
+            <h3>कुल बकाया (2024-25)</h3>
+            <div class="value" id="statArrear">₹0</div>
+        </div>
+        <div class="stat-card" style="border-bottom-color: #f59e0b;">
+            <h3>सम्पूर्ण बकाया राशि (Total)</h3>
+            <div class="value" id="statTotalRem">₹0</div>
+        </div>
     </div>
 
     <div class="table-card">
-        <div class="table-responsive">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>कन. नं.</th>
-                        <th>वार्ड</th>
-                        <th>उपभोक्ता का नाम</th>
-                        <th>मकान नं.</th>
-                        <th>मोबाइल</th>
-                        <th>चालू मांग</th>
-                        <th>बकाया</th>
-                        <th>कुल शेष</th>
-                        <th>स्थिति</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <tr><td colspan="9" class="p-5">डेटा लोड हो रहा है...</td></tr>
-                </tbody>
-            </table>
+        <div class="table-container">
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>कन. नं.</th>
+                            <th>वार्ड</th>
+                            <th style="text-align: left !important; padding-left: 20px;">उपभोक्ता का नाम (Full Name)</th>
+                            <th>मोबाइल</th>
+                            <th>चालू मांग</th>
+                            <th>बकाया (24-25)</th>
+                            <th>सम्पूर्ण शेष</th>
+                            <th>स्थिति</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr><td colspan="8" class="p-5">डेटा लोड हो रहा है...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    async function loadData() {
+    async function fetchData() {
         try {
-            // File ka naam: Connection_data.csv
+            // File name check: Connection_data.csv
             const response = await fetch('Connection_data.csv');
-            if (!response.ok) throw new Error('CSV File Not Found');
+            if (!response.ok) throw new Error();
             
             const data = await response.text();
-            const rows = data.split(/\r?\n/).filter(row => row.trim() !== "").slice(1); 
+            const rows = data.split(/\r?\n/).filter(r => r.trim() !== "").slice(1);
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
 
-            let tCount = 0, tCurr = 0, tRem = 0;
+            let tConn = 0, tCurr = 0, tArrear = 0, tRem = 0;
 
-            rows.forEach((row, index) => {
+            rows.forEach(row => {
                 const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 
                 if (cols.length >= 9) {
-                    tCount++;
-                    const currVal = parseFloat(cols[6]) || 0;
-                    const remVal = parseFloat(cols[8]) || 0;
+                    tConn++;
+                    const cVal = parseFloat(cols[6]) || 0;
+                    const aVal = parseFloat(cols[7]) || 0;
+                    const rVal = parseFloat(cols[8]) || 0;
                     
-                    tCurr += currVal;
-                    tRem += remVal;
+                    tCurr += cVal;
+                    tArrear += aVal;
+                    tRem += rVal;
 
                     const tr = document.createElement('tr');
-                    // Staggered animation delay
-                    tr.style.animationDelay = (index * 0.05) + 's';
-                    
                     tr.innerHTML = `
                         <td><b>${cols[0]}</b></td>
                         <td>${cols[1]}</td>
-                        <td style="text-align: left !important; font-weight:600;">${cols[2].replace(/"/g, '')}</td>
-                        <td>${cols[3]}</td>
+                        <td class="name-col">${cols[2].replace(/"/g, '')}</td>
                         <td>${cols[5] || '-'}</td>
-                        <td>₹${currVal.toLocaleString('en-IN')}</td>
-                        <td>₹${(parseFloat(cols[7]) || 0).toLocaleString('en-IN')}</td>
-                        <td style="color:${remVal > 0 ? '#dc2626' : '#059669'}; font-weight:800">₹${remVal.toLocaleString('en-IN')}</td>
+                        <td>₹${cVal.toLocaleString('en-IN')}</td>
+                        <td>₹${aVal.toLocaleString('en-IN')}</td>
+                        <td style="color:${rVal > 0 ? '#dc2626' : '#059669'}; font-weight:800">₹${rVal.toLocaleString('en-IN')}</td>
                         <td>
-                            <span class="${remVal <= 0 ? 'badge-paid' : 'badge-unpaid'}">
-                                ${remVal <= 0 ? 'चुक्ता' : 'बकाया'}
+                            <span class="badge-status ${rVal <= 0 ? 'paid' : 'unpaid'}">
+                                ${rVal <= 0 ? 'चुक्ता' : 'बकाया'}
                             </span>
                         </td>
                     `;
@@ -234,30 +205,17 @@
                 }
             });
 
-            // Update Dashboard with Counter Animation
-            animateValue("statTotal", 0, tCount, 1000);
+            // Update Stats
+            document.getElementById('statTotal').innerText = tConn;
             document.getElementById('statCurrent').innerText = '₹' + tCurr.toLocaleString('en-IN');
-            document.getElementById('statRem').innerText = '₹' + tRem.toLocaleString('en-IN');
+            document.getElementById('statArrear').innerText = '₹' + tArrear.toLocaleString('en-IN');
+            document.getElementById('statTotalRem').innerText = '₹' + tRem.toLocaleString('en-IN');
 
         } catch (err) {
-            document.getElementById('tableBody').innerHTML = `<tr><td colspan="9" class="p-5 text-danger"><b>Error:</b> CSV फ़ाइल 'Connection_data.csv' नहीं मिली!</td></tr>`;
+            document.getElementById('tableBody').innerHTML = `<tr><td colspan="8" class="p-5 text-danger"><b>Error:</b> Connection_data.csv file nahi mili. Live Server ka use karein.</td></tr>`;
         }
     }
 
-    // Numbers animation function
-    function animateValue(id, start, end, duration) {
-        const obj = document.getElementById(id);
-        let startTimestamp = null;
-        const step = (timestamp) => {
-            if (!startTimestamp) startTimestamp = timestamp;
-            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            obj.innerHTML = Math.floor(progress * (end - start) + start);
-            if (progress < 1) window.requestAnimationFrame(step);
-        };
-        window.requestAnimationFrame(step);
-    }
-
-    // Search filter
     function filterTable() {
         const input = document.getElementById("searchInput").value.toUpperCase();
         const rows = document.getElementById("tableBody").getElementsByTagName("tr");
@@ -267,7 +225,7 @@
         }
     }
 
-    window.onload = loadData;
+    window.onload = fetchData;
 </script>
 </body>
 </html>
