@@ -239,7 +239,7 @@ body {
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
-.search-btn, .export-btn {
+.search-btn, .export-btn, .print-btn {
   padding: 12px 16px;
   border: none;
   border-radius: 10px;
@@ -263,7 +263,12 @@ body {
   color: white;
 }
 
-.search-btn:hover, .export-btn:hover {
+.print-btn {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+}
+
+.search-btn:hover, .export-btn:hover, .print-btn:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-hover);
 }
@@ -802,7 +807,7 @@ body {
     font-size: 12px;
   }
   
-  .search-box input, .search-btn, .export-btn {
+  .search-box input, .search-btn, .export-btn, .print-btn {
     padding: 10px 14px;
     font-size: 13px;
   }
@@ -998,7 +1003,7 @@ body {
     </div>
     <div class="topbar-right">
         <a href="javascript:void(0)" onclick="refreshPage()"><i class="fas fa-home"></i> होम</a>
-        <a href="javascript:void(0)" onclick="showLoginModal()"><i class="fas fa-sign-out-alt"></i> लॉगआउट</a>
+        <a href="javascript:void(0)" onclick="showLogoutModal()"><i class="fas fa-sign-out-alt"></i> लॉगआउट</a>
     </div>
 </div>
 
@@ -1024,13 +1029,8 @@ body {
             <div class="file-size" id="fileSize"></div>
         </div>
         
-        <button class="upload-btn" id="uploadBtn" onclick="processCSV()" disabled>
+        <button class="upload-btn" id="uploadBtn" onclick="askUploadPassword()" disabled>
             <i class="fas fa-upload"></i> डेटा लोड करें
-        </button>
-        
-        <!-- Demo Button -->
-        <button class="upload-btn mt-3" onclick="loadSampleData()">
-            <i class="fas fa-vial"></i> डेमो डेटा लोड करें
         </button>
     </div>
 
@@ -1047,8 +1047,8 @@ body {
         <button class="export-btn" onclick="exportToExcel()">
             <i class="fas fa-file-excel"></i> एक्सेल एक्सपोर्ट
         </button>
-        <button class="export-btn" onclick="printAllData()">
-            <i class="fas fa-print"></i> सब प्रिंट करें
+        <button class="print-btn" onclick="printAllData()">
+            <i class="fas fa-print"></i> सब प्रिंट
         </button>
     </div>
 
@@ -1120,6 +1120,52 @@ body {
     </div>
 </div>
 
+<!-- Upload Password Modal -->
+<div class="modal fade" id="uploadPasswordModal" tabindex="-1" aria-labelledby="uploadPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadPasswordModalLabel">
+                    <i class="fas fa-lock me-2"></i>फाइल अपलोड करें
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info text-center" role="alert" style="border-radius: 10px;">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>सुरक्षा जांच!</strong> CSV फाइल अपलोड करने के लिए पासवर्ड दर्ज करें
+                </div>
+                
+                <div class="mb-3">
+                    <label for="uploadPassword" class="form-label">पासवर्ड *</label>
+                    <div class="password-container">
+                        <input type="password" class="form-control" id="uploadPassword" 
+                               placeholder="अपना पासवर्ड दर्ज करें" style="padding-right: 40px;">
+                        <span class="toggle-password" onclick="toggleUploadPasswordVisibility()">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                    <small class="text-muted">डिफ़ॉल्ट पासवर्ड: admin123</small>
+                </div>
+                
+                <div class="border p-3 rounded" style="background: #f8f9fa;">
+                    <h6 class="text-center mb-3">फाइल विवरण</h6>
+                    <div class="text-center" id="uploadFileDetails">
+                        <p><strong>फाइल नाम:</strong> <span id="modalFileName">-</span></p>
+                        <p><strong>फाइल आकार:</strong> <span id="modalFileSize">-</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">रद्द करें</button>
+                <button id="uploadConfirmBtn" class="btn btn-primary" onclick="processCSVWithPassword()">
+                    <i class="fas fa-upload me-2"></i>अपलोड करें
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -1142,14 +1188,15 @@ body {
                 </div>
                 
                 <div class="mb-3">
-                    <label for="password" class="form-label">पासवर्ड</label>
+                    <label for="deletePassword" class="form-label">पासवर्ड *</label>
                     <div class="password-container">
-                        <input type="password" class="form-control" id="password" 
+                        <input type="password" class="form-control" id="deletePassword" 
                                placeholder="अपना पासवर्ड दर्ज करें" oninput="validateDelete()" style="padding-right: 40px;">
-                        <span class="toggle-password" onclick="togglePasswordVisibility()">
+                        <span class="toggle-password" onclick="toggleDeletePasswordVisibility()">
                             <i class="fas fa-eye"></i>
                         </span>
                     </div>
+                    <small class="text-muted">डिलीट करने के लिए पासवर्ड दर्ज करें</small>
                 </div>
             </div>
             <div class="modal-footer">
@@ -1187,19 +1234,19 @@ body {
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="editMobile" class="form-label">मोबाइल नंबर *</label>
-                            <input type="text" class="form-control" id="editMobile" required>
+                            <input type="text" class="form-control" id="editMobile" required pattern="[0-9]{10}" title="10 अंकों का मोबाइल नंबर दर्ज करें">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="editCurrentAmount" class="form-label">वर्तमान राशि (2025-26) *</label>
-                            <input type="number" class="form-control" id="editCurrentAmount" required>
+                            <input type="number" class="form-control" id="editCurrentAmount" required min="0" step="1">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="editArrearBalance" class="form-label">बकाया शेष (2024-25) *</label>
-                            <input type="number" class="form-control" id="editArrearBalance" required>
+                            <input type="number" class="form-control" id="editArrearBalance" required min="0" step="1">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="editRemainingBalance" class="form-label">शेष राशि *</label>
-                            <input type="number" class="form-control" id="editRemainingBalance" required>
+                            <input type="number" class="form-control" id="editRemainingBalance" required min="0" step="1">
                         </div>
                     </div>
                     <div class="alert alert-info">
@@ -1222,7 +1269,7 @@ body {
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="printModalLabel">
-                    <i class="fas fa-print me-2"></i>बिल प्रिंट करें
+                    <i class="fas fa-print me-2"></i>प्रिंट प्रीव्यू
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -1239,6 +1286,41 @@ body {
     </div>
 </div>
 
+<!-- Logout Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">
+                    <i class="fas fa-sign-out-alt me-2"></i>लॉगआउट करें
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning text-center" role="alert" style="border-radius: 10px;">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>सावधान!</strong> क्या आप लॉगआउट करना चाहते हैं?
+                </div>
+                
+                <div class="mb-3">
+                    <label for="logoutPassword" class="form-label">पासवर्ड *</label>
+                    <div class="password-container">
+                        <input type="password" class="form-control" id="logoutPassword" 
+                               placeholder="अपना पासवर्ड दर्ज करें" style="padding-right: 40px;">
+                        <span class="toggle-password" onclick="toggleLogoutPasswordVisibility()">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">रद्द करें</button>
+                <button type="button" class="btn btn-danger" onclick="performLogout()">लॉगआउट करें</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -1246,6 +1328,8 @@ body {
 let csvData = [];
 let filteredData = [];
 let currentEditIndex = -1;
+let currentDeleteIndex = -1;
+const ADMIN_PASSWORD = "admin123";
 
 // Format Indian Currency Function
 function formatIndianCurrency(number) {
@@ -1255,12 +1339,10 @@ function formatIndianCurrency(number) {
     number = parseFloat(number);
     number = Math.round(number * 100) / 100;
 
-    // Separate whole number and decimal part
     let parts = number.toString().split('.');
     let whole = parts[0];
     let decimal = parts.length > 1 ? '.' + parts[1].padEnd(2, '0') : '.00';
 
-    // Handle negative sign
     let is_negative = false;
     if (whole.startsWith('-')) {
         is_negative = true;
@@ -1273,17 +1355,12 @@ function formatIndianCurrency(number) {
     if (len <= 3) {
         formatted_whole = whole;
     } else {
-        // Extract last three digits (thousands)
         let last_three = whole.substring(len - 3);
         let remaining = whole.substring(0, len - 3);
-
-        // Format remaining part by pairs (Lakhs, Crores, etc.)
         let formatted_remaining = '';
         
-        // Reverse the remaining part to apply 2-digit grouping from the right
         let temp_remaining = remaining.split('').reverse().join('');
         
-        // Loop and extract pairs (e.g., '84', '61', '1')
         for (let i = 0; i < temp_remaining.length; i += 2) {
             if (formatted_remaining !== '') {
                 formatted_remaining += ',';
@@ -1291,14 +1368,10 @@ function formatIndianCurrency(number) {
             formatted_remaining += temp_remaining.substring(i, i + 2);
         }
         
-        // Reverse the result back to normal order (e.g., '1,16,48')
         formatted_remaining = formatted_remaining.split('').reverse().join('');
-        
-        // Combine the formatted parts
         formatted_whole = formatted_remaining + ',' + last_three;
     }
 
-    // Add negative sign back if necessary
     if (is_negative) {
         formatted_whole = '-' + formatted_whole;
     }
@@ -1346,23 +1419,19 @@ function parseCSV(text) {
     
     if (lines.length === 0) return rows;
     
-    // Try to detect header
     const firstLine = lines[0];
     let delimiter = ',';
     
-    // Check for different delimiters
     if (firstLine.includes(';')) {
         delimiter = ';';
     } else if (firstLine.includes('\t')) {
         delimiter = '\t';
     }
     
-    // Process each line
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line) continue;
         
-        // Handle quoted fields
         const cells = [];
         let currentCell = '';
         let insideQuotes = false;
@@ -1375,7 +1444,7 @@ function parseCSV(text) {
                 insideQuotes = true;
             } else if (char === '"' && insideQuotes && nextChar === '"') {
                 currentCell += '"';
-                j++; // Skip next quote
+                j++;
             } else if (char === '"' && insideQuotes) {
                 insideQuotes = false;
             } else if (char === delimiter && !insideQuotes) {
@@ -1387,7 +1456,7 @@ function parseCSV(text) {
         }
         cells.push(currentCell);
         
-        // If we have at least 7 columns (minimum required)
+        // Check for required columns
         if (cells.length >= 7) {
             const row = {
                 'Connection No': cells[0] || '',
@@ -1420,8 +1489,8 @@ function convertCsvData(originalData) {
     });
 }
 
-// Process CSV file
-function processCSV() {
+// Ask for upload password
+function askUploadPassword() {
     const fileInput = document.getElementById('csvFile');
     const file = fileInput.files[0];
     
@@ -1430,10 +1499,33 @@ function processCSV() {
         return;
     }
 
+    // Show file details in modal
+    document.getElementById('modalFileName').textContent = file.name;
+    document.getElementById('modalFileSize').textContent = formatFileSize(file.size);
+    
+    // Show password modal
+    const uploadModal = new bootstrap.Modal(document.getElementById('uploadPasswordModal'));
+    uploadModal.show();
+}
+
+// Process CSV with password
+function processCSVWithPassword() {
+    const password = document.getElementById('uploadPassword').value;
+    
+    if (password !== ADMIN_PASSWORD) {
+        showMessage('गलत पासवर्ड! CSV फाइल अपलोड करने के लिए सही पासवर्ड दर्ज करें।', 'error');
+        return;
+    }
+
+    const fileInput = document.getElementById('csvFile');
+    const file = fileInput.files[0];
+    
     // Show loading
     showMessage('CSV फाइल प्रोसेस हो रही है...', 'warning');
     document.getElementById('uploadBtn').disabled = true;
     document.getElementById('uploadBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> प्रोसेसिंग...';
+    document.getElementById('uploadConfirmBtn').disabled = true;
+    document.getElementById('uploadConfirmBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> प्रोसेसिंग...';
 
     const reader = new FileReader();
     
@@ -1455,6 +1547,9 @@ function processCSV() {
             // Show success message
             showMessage(`सफलतापूर्वक ${csvData.length} कनेक्शन लोड किए गए।`, 'success');
             
+            // Close modal
+            bootstrap.Modal.getInstance(document.getElementById('uploadPasswordModal')).hide();
+            
             // Show UI components
             document.getElementById('searchContainer').style.display = 'flex';
             document.getElementById('statsContainer').style.display = 'flex';
@@ -1467,15 +1562,24 @@ function processCSV() {
             renderTable();
             adjustTableHeight();
             
+            // Reset upload button
+            resetUploadButton();
+            document.getElementById('uploadConfirmBtn').disabled = false;
+            document.getElementById('uploadConfirmBtn').innerHTML = '<i class="fas fa-upload me-2"></i>अपलोड करें';
+            
         } catch (error) {
             showMessage('CSV फाइल प्रोसेस करने में त्रुटि: ' + error.message, 'error');
             resetUploadButton();
+            document.getElementById('uploadConfirmBtn').disabled = false;
+            document.getElementById('uploadConfirmBtn').innerHTML = '<i class="fas fa-upload me-2"></i>अपलोड करें';
         }
     };
     
     reader.onerror = function() {
         showMessage('फाइल पढ़ने में त्रुटि।', 'error');
         resetUploadButton();
+        document.getElementById('uploadConfirmBtn').disabled = false;
+        document.getElementById('uploadConfirmBtn').innerHTML = '<i class="fas fa-upload me-2"></i>अपलोड करें';
     };
     
     reader.readAsText(file, 'UTF-8');
@@ -1576,7 +1680,7 @@ function renderTable() {
     updateStatistics();
 }
 
-// Search data - Improved to search in all fields
+// Search data
 function searchData() {
     const searchInput = document.getElementById('searchInput');
     const query = searchInput.value.toLowerCase().trim();
@@ -1585,7 +1689,6 @@ function searchData() {
         filteredData = [...csvData];
     } else {
         filteredData = csvData.filter(row => {
-            // Search in all fields
             const searchFields = [
                 row.connectionNo,
                 row.wardNo,
@@ -1613,14 +1716,13 @@ function handleSearchKeyPress(event) {
     }
 }
 
-// Export to Excel - Improved with all data
+// Export to Excel
 function exportToExcel() {
     if (filteredData.length === 0) {
         showMessage('एक्सपोर्ट करने के लिए कोई डेटा नहीं है।', 'error');
         return;
     }
 
-    // Create Excel content with UTF-8 encoding for Hindi
     let excelContent = `
         <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
         <head>
@@ -1940,12 +2042,16 @@ function editConnection(index) {
 function saveEditedConnection() {
     if (currentEditIndex === -1) return;
     
-    // Validate form
     const form = document.getElementById('editForm');
     if (!form.checkValidity()) {
         form.reportValidity();
         return;
     }
+    
+    // Calculate remaining balance
+    const currentAmount = parseFloat(document.getElementById('editCurrentAmount').value);
+    const arrearBalance = parseFloat(document.getElementById('editArrearBalance').value);
+    const remainingBalance = currentAmount + arrearBalance;
     
     // Update data
     const updatedRow = {
@@ -1953,9 +2059,9 @@ function saveEditedConnection() {
         wardNo: document.getElementById('editWardNo').value,
         ownerName: document.getElementById('editOwnerName').value,
         mobile: document.getElementById('editMobile').value,
-        currentAmount: parseFloat(document.getElementById('editCurrentAmount').value),
-        arrearBalance: parseFloat(document.getElementById('editArrearBalance').value),
-        remainingBalance: parseFloat(document.getElementById('editRemainingBalance').value)
+        currentAmount: currentAmount,
+        arrearBalance: arrearBalance,
+        remainingBalance: remainingBalance
     };
     
     // Update in filteredData and csvData
@@ -1979,7 +2085,7 @@ function saveEditedConnection() {
 
 // Show delete modal
 function showDeleteModal(index) {
-    currentEditIndex = index;
+    currentDeleteIndex = index;
     const row = filteredData[index];
     
     document.getElementById('connectionDetails').innerHTML = 
@@ -1987,13 +2093,17 @@ function showDeleteModal(index) {
          <strong>ग्राहक का नाम:</strong> ${row.ownerName}<br>
          <strong>शेष राशि:</strong> ₹${formatIndianCurrency(row.remainingBalance)}`;
     
+    // Reset password field
+    document.getElementById('deletePassword').value = '';
+    document.getElementById('deleteConfirmBtn').classList.add('disabled');
+    
     const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
     deleteModal.show();
 }
 
 // Validate delete
 function validateDelete() {
-    const password = document.getElementById('password').value;
+    const password = document.getElementById('deletePassword').value;
     const deleteBtn = document.getElementById('deleteConfirmBtn');
     
     if (password.length > 0) {
@@ -2003,10 +2113,42 @@ function validateDelete() {
     }
 }
 
-// Toggle password visibility
-function togglePasswordVisibility() {
-    const passwordInput = document.getElementById('password');
-    const toggleIcon = document.querySelector('.toggle-password i');
+// Toggle password visibility for upload modal
+function toggleUploadPasswordVisibility() {
+    const passwordInput = document.getElementById('uploadPassword');
+    const toggleIcon = document.querySelector('#uploadPasswordModal .toggle-password i');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
+
+// Toggle password visibility for delete modal
+function toggleDeletePasswordVisibility() {
+    const passwordInput = document.getElementById('deletePassword');
+    const toggleIcon = document.querySelector('#deleteModal .toggle-password i');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
+
+// Toggle password visibility for logout modal
+function toggleLogoutPasswordVisibility() {
+    const passwordInput = document.getElementById('logoutPassword');
+    const toggleIcon = document.querySelector('#logoutModal .toggle-password i');
     
     if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
@@ -2021,10 +2163,10 @@ function togglePasswordVisibility() {
 
 // Confirm delete
 function confirmDelete() {
-    const password = document.getElementById('password').value;
+    const password = document.getElementById('deletePassword').value;
     const deleteBtn = document.getElementById('deleteConfirmBtn');
     
-    if (password !== 'admin123') {
+    if (password !== ADMIN_PASSWORD) {
         showMessage('❌ गलत पासवर्ड', 'error');
         return;
     }
@@ -2034,8 +2176,8 @@ function confirmDelete() {
     
     setTimeout(() => {
         // Remove from filteredData and csvData
-        const deletedRow = filteredData[currentEditIndex];
-        filteredData.splice(currentEditIndex, 1);
+        const deletedRow = filteredData[currentDeleteIndex];
+        filteredData.splice(currentDeleteIndex, 1);
         
         // Remove from csvData
         const csvIndex = csvData.findIndex(row => row.connectionNo === deletedRow.connectionNo);
@@ -2048,7 +2190,7 @@ function confirmDelete() {
         bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
         deleteBtn.innerHTML = 'डिलीट करें';
         deleteBtn.disabled = false;
-        document.getElementById('password').value = '';
+        document.getElementById('deletePassword').value = '';
         
         // Refresh table
         renderTable();
@@ -2059,9 +2201,33 @@ function confirmDelete() {
 function redirectToPayment(index) {
     const row = filteredData[index];
     showMessage(`पेमेंट पेज: ${row.connectionNo} - ₹${formatIndianCurrency(row.remainingBalance)}`, 'success');
+}
+
+// Show logout modal
+function showLogoutModal() {
+    document.getElementById('logoutPassword').value = '';
+    const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+    logoutModal.show();
+}
+
+// Perform logout
+function performLogout() {
+    const password = document.getElementById('logoutPassword').value;
     
-    // In real app, redirect to payment page
-    // window.location.href = `payment.html?conNo=${row.connectionNo}&amount=${row.remainingBalance}`;
+    if (password !== ADMIN_PASSWORD) {
+        showMessage('❌ गलत पासवर्ड', 'error');
+        return;
+    }
+    
+    showMessage('सफलतापूर्वक लॉगआउट किया गया...', 'success');
+    
+    setTimeout(() => {
+        // In real app, redirect to login page
+        // window.location.href = 'login.html';
+        
+        // For demo, just refresh the page
+        location.reload();
+    }, 1500);
 }
 
 // Utility functions
@@ -2121,51 +2287,6 @@ function adjustTableHeight() {
     if (tableContainer.style.display !== 'none') {
         tableContainer.style.height = Math.max(calculatedHeight, minHeight) + 'px';
     }
-}
-
-// Show login modal
-function showLoginModal() {
-    const password = prompt('लॉगआउट करने के लिए पासवर्ड दर्ज करें:');
-    if (password === 'admin123') {
-        showMessage('सफलतापूर्वक लॉगआउट किया गया।', 'success');
-        setTimeout(() => {
-            window.location.href = 'login.html';
-        }, 1500);
-    } else if (password !== null) {
-        showMessage('गलत पासवर्ड', 'error');
-    }
-}
-
-// Sample data for demo
-function loadSampleData() {
-    const sampleData = `Connection No,Ward No,Owner Name,House No,Old House No,Mobile,Current amount 2025-26,Arrear Balance,Remaining Balance
-1612,18-बन्जारान,श्री मौ0 इकराम s/o श्री मौ0 हनीफ,0,2378/1,6398342376,600,600,1200
-2496,23-चौधरीयान,श्री सुदर्शन पुत्र श्री यशपाल पुत्र श्री कलीराम,51,325,9412849527,600,7600,8200
-2578,4-चौधरीयन,श्री सुभाष चंद व अशोक कुमार s /o स्व बलवंत सिंह,0,175,9759217358,600,750,1350
-3456,12-शिवाजी नगर,श्री राम सिंह पुत्र श्री हरि सिंह,45,789,9876543210,600,1200,1800
-4567,15-गांधी नगर,श्रीमती गीता देवी पत्नी श्री रमेश कुमार,23,456,8765432109,600,0,600
-5678,22-नेहरू नगर,श्री अमित शर्मा पुत्र श्री राजेश शर्मा,67,123,7654321098,600,450,1050
-6789,9-इंदिरा नगर,श्री सुनील वर्मा पुत्र श्री विजय वर्मा,89,234,6543210987,600,0,600
-7890,7-लाल बहादुर नगर,श्रीमती सीमा देवी पत्नी श्री विजय कुमार,12,567,5432109876,600,800,1400`;
-    
-    // Process sample data
-    const rows = parseCSV(sampleData);
-    csvData = convertCsvData(rows);
-    filteredData = [...csvData];
-    
-    // Show UI components
-    document.getElementById('searchContainer').style.display = 'flex';
-    document.getElementById('statsContainer').style.display = 'flex';
-    document.getElementById('tableContainer').style.display = 'flex';
-    document.getElementById('initialMessage').style.display = 'none';
-    document.getElementById('uploadContainer').style.display = 'none';
-    
-    // Update statistics and render table
-    updateStatistics();
-    renderTable();
-    adjustTableHeight();
-    
-    showMessage(`${csvData.length} डेमो कनेक्शन लोड किए गए।`, 'success');
 }
 
 // Initialize
