@@ -239,7 +239,7 @@ body {
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
-.search-btn, .export-btn, .print-btn {
+.search-btn, .export-btn {
   padding: 12px 16px;
   border: none;
   border-radius: 10px;
@@ -263,12 +263,7 @@ body {
   color: white;
 }
 
-.print-btn {
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-  color: white;
-}
-
-.search-btn:hover, .export-btn:hover, .print-btn:hover {
+.search-btn:hover, .export-btn:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-hover);
 }
@@ -807,7 +802,7 @@ body {
     font-size: 12px;
   }
   
-  .search-box input, .search-btn, .export-btn, .print-btn {
+  .search-box input, .search-btn, .export-btn {
     padding: 10px 14px;
     font-size: 13px;
   }
@@ -1003,7 +998,7 @@ body {
     </div>
     <div class="topbar-right">
         <a href="javascript:void(0)" onclick="refreshPage()"><i class="fas fa-home"></i> होम</a>
-        <a href="javascript:void(0)" onclick="showLogoutModal()"><i class="fas fa-sign-out-alt"></i> लॉगआउट</a>
+        <a href="javascript:void(0)"><i class="fas fa-sign-out-alt"></i> लॉगआउट</a>
     </div>
 </div>
 
@@ -1029,7 +1024,7 @@ body {
             <div class="file-size" id="fileSize"></div>
         </div>
         
-        <button class="upload-btn" id="uploadBtn" onclick="askUploadPassword()" disabled>
+        <button class="upload-btn" id="uploadBtn" onclick="processCSV()" disabled>
             <i class="fas fa-upload"></i> डेटा लोड करें
         </button>
     </div>
@@ -1039,16 +1034,13 @@ body {
     <!-- Search Container -->
     <div class="search-container" style="display: none;" id="searchContainer">
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 कनेक्शन नंबर, नाम, मोबाइल, या वार्ड खोजें..." onkeypress="handleSearchKeyPress(event)">
+            <input type="text" id="searchInput" placeholder="🔍 कनेक्शन नंबर, नाम, मोबाइल, या वार्ड खोजें...">
         </div>
         <button class="search-btn" onclick="searchData()">
             <i class="fas fa-search"></i> खोजें
         </button>
         <button class="export-btn" onclick="exportToExcel()">
             <i class="fas fa-file-excel"></i> एक्सेल एक्सपोर्ट
-        </button>
-        <button class="print-btn" onclick="printAllData()">
-            <i class="fas fa-print"></i> सब प्रिंट
         </button>
     </div>
 
@@ -1120,52 +1112,6 @@ body {
     </div>
 </div>
 
-<!-- Upload Password Modal -->
-<div class="modal fade" id="uploadPasswordModal" tabindex="-1" aria-labelledby="uploadPasswordModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="uploadPasswordModalLabel">
-                    <i class="fas fa-lock me-2"></i>फाइल अपलोड करें
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-info text-center" role="alert" style="border-radius: 10px;">
-                    <i class="fas fa-info-circle me-2"></i>
-                    <strong>सुरक्षा जांच!</strong> CSV फाइल अपलोड करने के लिए पासवर्ड दर्ज करें
-                </div>
-                
-                <div class="mb-3">
-                    <label for="uploadPassword" class="form-label">पासवर्ड *</label>
-                    <div class="password-container">
-                        <input type="password" class="form-control" id="uploadPassword" 
-                               placeholder="अपना पासवर्ड दर्ज करें" style="padding-right: 40px;">
-                        <span class="toggle-password" onclick="toggleUploadPasswordVisibility()">
-                            <i class="fas fa-eye"></i>
-                        </span>
-                    </div>
-                    <small class="text-muted">डिफ़ॉल्ट पासवर्ड: admin123</small>
-                </div>
-                
-                <div class="border p-3 rounded" style="background: #f8f9fa;">
-                    <h6 class="text-center mb-3">फाइल विवरण</h6>
-                    <div class="text-center" id="uploadFileDetails">
-                        <p><strong>फाइल नाम:</strong> <span id="modalFileName">-</span></p>
-                        <p><strong>फाइल आकार:</strong> <span id="modalFileSize">-</span></p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">रद्द करें</button>
-                <button id="uploadConfirmBtn" class="btn btn-primary" onclick="processCSVWithPassword()">
-                    <i class="fas fa-upload me-2"></i>अपलोड करें
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -1188,134 +1134,19 @@ body {
                 </div>
                 
                 <div class="mb-3">
-                    <label for="deletePassword" class="form-label">पासवर्ड *</label>
+                    <label for="password" class="form-label">पासवर्ड</label>
                     <div class="password-container">
-                        <input type="password" class="form-control" id="deletePassword" 
+                        <input type="password" class="form-control" id="password" 
                                placeholder="अपना पासवर्ड दर्ज करें" oninput="validateDelete()" style="padding-right: 40px;">
-                        <span class="toggle-password" onclick="toggleDeletePasswordVisibility()">
+                        <span class="toggle-password" onclick="togglePasswordVisibility()">
                             <i class="fas fa-eye"></i>
                         </span>
                     </div>
-                    <small class="text-muted">डिलीट करने के लिए पासवर्ड दर्ज करें</small>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">रद्द करें</button>
                 <button id="deleteConfirmBtn" class="btn btn-danger disabled" onclick="confirmDelete()">डिलीट करें</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Edit Connection Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">
-                    <i class="fas fa-edit me-2"></i>कनेक्शन संपादित करें
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editForm">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="editConnectionNo" class="form-label">कनेक्शन नंबर *</label>
-                            <input type="text" class="form-control" id="editConnectionNo" required readonly>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="editWardNo" class="form-label">वार्ड नंबर *</label>
-                            <input type="text" class="form-control" id="editWardNo" required>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <label for="editOwnerName" class="form-label">मालिक का नाम *</label>
-                            <input type="text" class="form-control" id="editOwnerName" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="editMobile" class="form-label">मोबाइल नंबर *</label>
-                            <input type="text" class="form-control" id="editMobile" required pattern="[0-9]{10}" title="10 अंकों का मोबाइल नंबर दर्ज करें">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="editCurrentAmount" class="form-label">वर्तमान राशि (2025-26) *</label>
-                            <input type="number" class="form-control" id="editCurrentAmount" required min="0" step="1">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="editArrearBalance" class="form-label">बकाया शेष (2024-25) *</label>
-                            <input type="number" class="form-control" id="editArrearBalance" required min="0" step="1">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="editRemainingBalance" class="form-label">शेष राशि *</label>
-                            <input type="number" class="form-control" id="editRemainingBalance" required min="0" step="1">
-                        </div>
-                    </div>
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        * वाले फील्ड आवश्यक हैं। शेष राशि = वर्तमान राशि + बकाया शेष
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">रद्द करें</button>
-                <button type="button" class="btn btn-primary" onclick="saveEditedConnection()">सेव करें</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Print Bill Modal -->
-<div class="modal fade" id="printModal" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="printModalLabel">
-                    <i class="fas fa-print me-2"></i>प्रिंट प्रीव्यू
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="printContent">
-                <!-- Print content will be loaded here -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">बंद करें</button>
-                <button type="button" class="btn btn-success" onclick="printBillContent()">
-                    <i class="fas fa-print me-2"></i>प्रिंट करें
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Logout Modal -->
-<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="logoutModalLabel">
-                    <i class="fas fa-sign-out-alt me-2"></i>लॉगआउट करें
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-warning text-center" role="alert" style="border-radius: 10px;">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>सावधान!</strong> क्या आप लॉगआउट करना चाहते हैं?
-                </div>
-                
-                <div class="mb-3">
-                    <label for="logoutPassword" class="form-label">पासवर्ड *</label>
-                    <div class="password-container">
-                        <input type="password" class="form-control" id="logoutPassword" 
-                               placeholder="अपना पासवर्ड दर्ज करें" style="padding-right: 40px;">
-                        <span class="toggle-password" onclick="toggleLogoutPasswordVisibility()">
-                            <i class="fas fa-eye"></i>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">रद्द करें</button>
-                <button type="button" class="btn btn-danger" onclick="performLogout()">लॉगआउट करें</button>
             </div>
         </div>
     </div>
@@ -1327,9 +1158,6 @@ body {
 // Global variables
 let csvData = [];
 let filteredData = [];
-let currentEditIndex = -1;
-let currentDeleteIndex = -1;
-const ADMIN_PASSWORD = "admin123";
 
 // Format Indian Currency Function
 function formatIndianCurrency(number) {
@@ -1339,10 +1167,12 @@ function formatIndianCurrency(number) {
     number = parseFloat(number);
     number = Math.round(number * 100) / 100;
 
+    // Separate whole number and decimal part
     let parts = number.toString().split('.');
     let whole = parts[0];
     let decimal = parts.length > 1 ? '.' + parts[1].padEnd(2, '0') : '.00';
 
+    // Handle negative sign
     let is_negative = false;
     if (whole.startsWith('-')) {
         is_negative = true;
@@ -1355,12 +1185,17 @@ function formatIndianCurrency(number) {
     if (len <= 3) {
         formatted_whole = whole;
     } else {
+        // Extract last three digits (thousands)
         let last_three = whole.substring(len - 3);
         let remaining = whole.substring(0, len - 3);
+
+        // Format remaining part by pairs (Lakhs, Crores, etc.)
         let formatted_remaining = '';
         
+        // Reverse the remaining part to apply 2-digit grouping from the right
         let temp_remaining = remaining.split('').reverse().join('');
         
+        // Loop and extract pairs (e.g., '84', '61', '1')
         for (let i = 0; i < temp_remaining.length; i += 2) {
             if (formatted_remaining !== '') {
                 formatted_remaining += ',';
@@ -1368,10 +1203,14 @@ function formatIndianCurrency(number) {
             formatted_remaining += temp_remaining.substring(i, i + 2);
         }
         
+        // Reverse the result back to normal order (e.g., '1,16,48')
         formatted_remaining = formatted_remaining.split('').reverse().join('');
+        
+        // Combine the formatted parts
         formatted_whole = formatted_remaining + ',' + last_three;
     }
 
+    // Add negative sign back if necessary
     if (is_negative) {
         formatted_whole = '-' + formatted_whole;
     }
@@ -1419,19 +1258,23 @@ function parseCSV(text) {
     
     if (lines.length === 0) return rows;
     
+    // Try to detect header
     const firstLine = lines[0];
     let delimiter = ',';
     
+    // Check for different delimiters
     if (firstLine.includes(';')) {
         delimiter = ';';
     } else if (firstLine.includes('\t')) {
         delimiter = '\t';
     }
     
+    // Process each line
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line) continue;
         
+        // Handle quoted fields
         const cells = [];
         let currentCell = '';
         let insideQuotes = false;
@@ -1444,7 +1287,7 @@ function parseCSV(text) {
                 insideQuotes = true;
             } else if (char === '"' && insideQuotes && nextChar === '"') {
                 currentCell += '"';
-                j++;
+                j++; // Skip next quote
             } else if (char === '"' && insideQuotes) {
                 insideQuotes = false;
             } else if (char === delimiter && !insideQuotes) {
@@ -1456,7 +1299,7 @@ function parseCSV(text) {
         }
         cells.push(currentCell);
         
-        // Check for required columns
+        // If we have at least 7 columns (minimum required)
         if (cells.length >= 7) {
             const row = {
                 'Connection No': cells[0] || '',
@@ -1489,8 +1332,8 @@ function convertCsvData(originalData) {
     });
 }
 
-// Ask for upload password
-function askUploadPassword() {
+// Process CSV file
+function processCSV() {
     const fileInput = document.getElementById('csvFile');
     const file = fileInput.files[0];
     
@@ -1499,33 +1342,10 @@ function askUploadPassword() {
         return;
     }
 
-    // Show file details in modal
-    document.getElementById('modalFileName').textContent = file.name;
-    document.getElementById('modalFileSize').textContent = formatFileSize(file.size);
-    
-    // Show password modal
-    const uploadModal = new bootstrap.Modal(document.getElementById('uploadPasswordModal'));
-    uploadModal.show();
-}
-
-// Process CSV with password
-function processCSVWithPassword() {
-    const password = document.getElementById('uploadPassword').value;
-    
-    if (password !== ADMIN_PASSWORD) {
-        showMessage('गलत पासवर्ड! CSV फाइल अपलोड करने के लिए सही पासवर्ड दर्ज करें।', 'error');
-        return;
-    }
-
-    const fileInput = document.getElementById('csvFile');
-    const file = fileInput.files[0];
-    
     // Show loading
     showMessage('CSV फाइल प्रोसेस हो रही है...', 'warning');
     document.getElementById('uploadBtn').disabled = true;
     document.getElementById('uploadBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> प्रोसेसिंग...';
-    document.getElementById('uploadConfirmBtn').disabled = true;
-    document.getElementById('uploadConfirmBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> प्रोसेसिंग...';
 
     const reader = new FileReader();
     
@@ -1547,9 +1367,6 @@ function processCSVWithPassword() {
             // Show success message
             showMessage(`सफलतापूर्वक ${csvData.length} कनेक्शन लोड किए गए।`, 'success');
             
-            // Close modal
-            bootstrap.Modal.getInstance(document.getElementById('uploadPasswordModal')).hide();
-            
             // Show UI components
             document.getElementById('searchContainer').style.display = 'flex';
             document.getElementById('statsContainer').style.display = 'flex';
@@ -1562,24 +1379,15 @@ function processCSVWithPassword() {
             renderTable();
             adjustTableHeight();
             
-            // Reset upload button
-            resetUploadButton();
-            document.getElementById('uploadConfirmBtn').disabled = false;
-            document.getElementById('uploadConfirmBtn').innerHTML = '<i class="fas fa-upload me-2"></i>अपलोड करें';
-            
         } catch (error) {
             showMessage('CSV फाइल प्रोसेस करने में त्रुटि: ' + error.message, 'error');
             resetUploadButton();
-            document.getElementById('uploadConfirmBtn').disabled = false;
-            document.getElementById('uploadConfirmBtn').innerHTML = '<i class="fas fa-upload me-2"></i>अपलोड करें';
         }
     };
     
     reader.onerror = function() {
         showMessage('फाइल पढ़ने में त्रुटि।', 'error');
         resetUploadButton();
-        document.getElementById('uploadConfirmBtn').disabled = false;
-        document.getElementById('uploadConfirmBtn').innerHTML = '<i class="fas fa-upload me-2"></i>अपलोड करें';
     };
     
     reader.readAsText(file, 'UTF-8');
@@ -1652,17 +1460,17 @@ function renderTable() {
                 <td class="remaining-col rupee">₹${formatIndianCurrency(row.remainingBalance)}</td>
                 <td class="act">
                     <div class="action-buttons">
-                        <a href="javascript:void(0)" class="action-btn edit-btn" title="Edit" onclick="editConnection(${index})">
+                        <a href="javascript:void(0)" class="action-btn edit-btn" title="Edit" onclick="editConnection('${escapeHtml(row.connectionNo)}')">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a href="javascript:void(0)" onclick="showDeleteModal(${index})" class="action-btn delete-btn" title="Delete">
+                        <a href="javascript:void(0)" onclick="showDeleteModal('${escapeHtml(row.connectionNo)}', '${escapeHtml(row.ownerName)}')" class="action-btn delete-btn" title="Delete">
                             <i class="fas fa-trash"></i>
                         </a>
-                        <a href="javascript:void(0)" onclick="printSingleBill(${index})" class="action-btn print-btn" title="Print Bill">
+                        <a href="javascript:void(0)" onclick="printBill('${escapeHtml(row.connectionNo)}')" class="action-btn print-btn" title="Print Bill">
                             <i class="fas fa-print"></i>
                         </a>
                         ${row.remainingBalance > 0 ? `
-                        <a href="javascript:void(0)" onclick="redirectToPayment(${index})" class="action-btn pay-btn" title="Pay Now">
+                        <a href="javascript:void(0)" onclick="redirectToPayment('${escapeHtml(row.connectionNo)}')" class="action-btn pay-btn" title="Pay Now">
                             <i class="fas fa-money-bill-wave"></i>
                         </a>
                         ` : ''}
@@ -1689,31 +1497,16 @@ function searchData() {
         filteredData = [...csvData];
     } else {
         filteredData = csvData.filter(row => {
-            const searchFields = [
-                row.connectionNo,
-                row.wardNo,
-                row.ownerName,
-                row.mobile,
-                row.currentAmount.toString(),
-                row.arrearBalance.toString(),
-                row.remainingBalance.toString()
-            ];
-            
-            return searchFields.some(field => 
-                field && field.toString().toLowerCase().includes(query)
+            return (
+                (row.connectionNo && row.connectionNo.toLowerCase().includes(query)) ||
+                (row.ownerName && row.ownerName.toLowerCase().includes(query)) ||
+                (row.mobile && row.mobile.includes(query)) ||
+                (row.wardNo && row.wardNo.toLowerCase().includes(query))
             );
         });
     }
     
     renderTable();
-    showMessage(`खोज परिणाम: ${filteredData.length} कनेक्शन मिले`, 'success');
-}
-
-// Handle search on Enter key
-function handleSearchKeyPress(event) {
-    if (event.key === 'Enter') {
-        searchData();
-    }
 }
 
 // Export to Excel
@@ -1723,26 +1516,25 @@ function exportToExcel() {
         return;
     }
 
+    // Create Excel content
     let excelContent = `
         <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
             <style>
-                body { font-family: "Arial Unicode MS", Arial, sans-serif; }
+                body { font-family: "Segoe UI", Arial, sans-serif; }
                 table { border-collapse: collapse; width: 100%; }
                 th { background: #10b981; color: white; padding: 10px; border: 1px solid #0da271; }
                 td { border: 1px solid #e0e0e0; padding: 8px; }
                 .total { background: #f59e0b; color: white; font-weight: bold; }
                 .paid { background: #d1fae5; color: #065f46; }
                 .pending { background: #fef3c7; color: #92400e; }
-                .amount { text-align: right; }
             </style>
         </head>
         <body>
             <h2>जल कनेक्शन विवरण - ${new Date().toLocaleDateString('hi-IN')}</h2>
             <table>
                 <tr>
-                    <th>क्र.</th>
                     <th>कनेक्शन नंबर</th>
                     <th>वार्ड नंबर</th>
                     <th>मालिक का नाम</th>
@@ -1755,20 +1547,19 @@ function exportToExcel() {
     `;
 
     // Add rows
-    filteredData.forEach((row, index) => {
+    filteredData.forEach(row => {
         const status = row.remainingBalance === 0 ? 'भुगतान' : 'बकाया';
         const statusClass = row.remainingBalance === 0 ? 'paid' : 'pending';
         
         excelContent += `
             <tr>
-                <td>${index + 1}</td>
                 <td>${escapeHtml(row.connectionNo)}</td>
                 <td>${escapeHtml(row.wardNo)}</td>
                 <td>${escapeHtml(row.ownerName)}</td>
                 <td>${escapeHtml(row.mobile)}</td>
-                <td class="amount">₹${formatIndianCurrency(row.currentAmount)}</td>
-                <td class="amount">₹${formatIndianCurrency(row.arrearBalance)}</td>
-                <td class="amount">₹${formatIndianCurrency(row.remainingBalance)}</td>
+                <td>₹${formatIndianCurrency(row.currentAmount)}</td>
+                <td>₹${formatIndianCurrency(row.arrearBalance)}</td>
+                <td>₹${formatIndianCurrency(row.remainingBalance)}</td>
                 <td class="${statusClass}">${status}</td>
             </tr>
         `;
@@ -1788,42 +1579,20 @@ function exportToExcel() {
 
     excelContent += `
         <tr class="total">
-            <td colspan="5" style="text-align:right;"><strong>कुल योग:</strong></td>
-            <td class="amount"><strong>₹${formatIndianCurrency(totals.totalCurrentAmount)}</strong></td>
-            <td class="amount"><strong>₹${formatIndianCurrency(totals.totalArrearBalance)}</strong></td>
-            <td class="amount"><strong>₹${formatIndianCurrency(totals.totalRemainingBalance)}</strong></td>
+            <td colspan="4" style="text-align:right;"><strong>कुल योग:</strong></td>
+            <td><strong>₹${formatIndianCurrency(totals.totalCurrentAmount)}</strong></td>
+            <td><strong>₹${formatIndianCurrency(totals.totalArrearBalance)}</strong></td>
+            <td><strong>₹${formatIndianCurrency(totals.totalRemainingBalance)}</strong></td>
             <td><strong>${filteredData.length} कनेक्शन</strong></td>
         </tr>
         </table>
-        <br>
-        <h3>सारांश</h3>
-        <table style="width: 50%;">
-            <tr>
-                <td><strong>कुल कनेक्शन:</strong></td>
-                <td>${filteredData.length}</td>
-            </tr>
-            <tr>
-                <td><strong>कुल वर्तमान राशि:</strong></td>
-                <td>₹${formatIndianCurrency(totals.totalCurrentAmount)}</td>
-            </tr>
-            <tr>
-                <td><strong>कुल बकाया शेष:</strong></td>
-                <td>₹${formatIndianCurrency(totals.totalArrearBalance)}</td>
-            </tr>
-            <tr>
-                <td><strong>कुल शेष राशि:</strong></td>
-                <td>₹${formatIndianCurrency(totals.totalRemainingBalance)}</td>
-            </tr>
-            <tr>
-                <td><strong>रिपोर्ट तिथि:</strong></td>
-                <td>${new Date().toLocaleString('hi-IN')}</td>
-            </tr>
-        </table>
+        <p>रिपोर्ट तिथि: ${new Date().toLocaleString('hi-IN')}</p>
+        <p>कुल कनेक्शन: ${filteredData.length} | कुल राशि: ₹${formatIndianCurrency(totals.totalRemainingBalance)}</p>
         </body></html>
     `;
 
     // Create and download file
-    const blob = new Blob([excelContent], { type: 'application/vnd.ms-excel;charset=utf-8' });
+    const blob = new Blob([excelContent], { type: 'application/vnd.ms-excel' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -1834,400 +1603,6 @@ function exportToExcel() {
     URL.revokeObjectURL(url);
     
     showMessage('एक्सेल फाइल डाउनलोड हो रही है...', 'success');
-}
-
-// Print all data
-function printAllData() {
-    if (filteredData.length === 0) {
-        showMessage('प्रिंट करने के लिए कोई डेटा नहीं है।', 'error');
-        return;
-    }
-
-    let printContent = `
-        <div style="font-family: Arial, sans-serif; padding: 20px;">
-            <h2 style="text-align: center; color: #065f46;">जल कनेक्शन विवरण - सभी रिकॉर्ड</h2>
-            <p style="text-align: center;">रिपोर्ट तिथि: ${new Date().toLocaleString('hi-IN')}</p>
-            <hr>
-            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-                <thead>
-                    <tr style="background: #10b981; color: white;">
-                        <th style="padding: 10px; border: 1px solid #ddd;">क्र.</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">कनेक्शन नंबर</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">वार्ड नंबर</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">मालिक का नाम</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">वर्तमान राशि</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">बकाया शेष</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">शेष राशि</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">स्थिति</th>
-                    </tr>
-                </thead>
-                <tbody>
-    `;
-
-    // Add rows
-    filteredData.forEach((row, index) => {
-        const status = row.remainingBalance === 0 ? 'भुगतान' : 'बकाया';
-        const statusColor = row.remainingBalance === 0 ? '#065f46' : '#92400e';
-        
-        printContent += `
-            <tr>
-                <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${index + 1}</td>
-                <td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(row.connectionNo)}</td>
-                <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${escapeHtml(row.wardNo)}</td>
-                <td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(row.ownerName)}</td>
-                <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">₹${formatIndianCurrency(row.currentAmount)}</td>
-                <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">₹${formatIndianCurrency(row.arrearBalance)}</td>
-                <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">₹${formatIndianCurrency(row.remainingBalance)}</td>
-                <td style="padding: 8px; border: 1px solid #ddd; text-align: center; color: ${statusColor};">${status}</td>
-            </tr>
-        `;
-    });
-
-    // Add totals
-    const totals = filteredData.reduce((acc, row) => {
-        acc.totalCurrentAmount += row.currentAmount || 0;
-        acc.totalArrearBalance += row.arrearBalance || 0;
-        acc.totalRemainingBalance += row.remainingBalance || 0;
-        return acc;
-    }, {
-        totalCurrentAmount: 0,
-        totalArrearBalance: 0,
-        totalRemainingBalance: 0
-    });
-
-    printContent += `
-                </tbody>
-                <tfoot>
-                    <tr style="background: #f59e0b; color: white; font-weight: bold;">
-                        <td colspan="4" style="padding: 10px; border: 1px solid #ddd; text-align: right;">कुल योग:</td>
-                        <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₹${formatIndianCurrency(totals.totalCurrentAmount)}</td>
-                        <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₹${formatIndianCurrency(totals.totalArrearBalance)}</td>
-                        <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₹${formatIndianCurrency(totals.totalRemainingBalance)}</td>
-                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${filteredData.length} कनेक्शन</td>
-                    </tr>
-                </tfoot>
-            </table>
-            
-            <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
-                <h4>सारांश</h4>
-                <p>कुल कनेक्शन: <strong>${filteredData.length}</strong></p>
-                <p>कुल वसूली योग्य राशि: <strong>₹${formatIndianCurrency(totals.totalRemainingBalance)}</strong></p>
-                <p>प्रिंट समय: ${new Date().toLocaleTimeString('hi-IN')}</p>
-            </div>
-        </div>
-    `;
-
-    // Show in modal
-    document.getElementById('printContent').innerHTML = printContent;
-    const printModal = new bootstrap.Modal(document.getElementById('printModal'));
-    printModal.show();
-}
-
-// Print single bill
-function printSingleBill(index) {
-    const row = filteredData[index];
-    
-    let printContent = `
-        <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 800px;">
-            <div style="text-align: center; border-bottom: 2px solid #10b981; padding-bottom: 15px; margin-bottom: 20px;">
-                <h1 style="color: #065f46; margin: 0;">जल विभाग बिल</h1>
-                <p style="color: #6b7280; margin: 5px 0;">सरकारी जल आपूर्ति विभाग</p>
-            </div>
-            
-            <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
-                <div>
-                    <h3 style="color: #065f46; margin-bottom: 10px;">ग्राहक विवरण</h3>
-                    <p><strong>कनेक्शन नंबर:</strong> ${escapeHtml(row.connectionNo)}</p>
-                    <p><strong>वार्ड नंबर:</strong> ${escapeHtml(row.wardNo)}</p>
-                    <p><strong>मालिक का नाम:</strong> ${escapeHtml(row.ownerName)}</p>
-                    <p><strong>मोबाइल नंबर:</strong> ${escapeHtml(row.mobile || 'N/A')}</p>
-                </div>
-                <div>
-                    <h3 style="color: #065f46; margin-bottom: 10px;">बिल विवरण</h3>
-                    <p><strong>बिल तिथि:</strong> ${new Date().toLocaleDateString('hi-IN')}</p>
-                    <p><strong>बिल संख्या:</strong> BIL-${row.connectionNo}-${new Date().getFullYear()}</p>
-                    <p><strong>स्थिति:</strong> ${row.remainingBalance === 0 ? 'भुगतान' : 'बकाया'}</p>
-                </div>
-            </div>
-            
-            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-                <thead>
-                    <tr style="background: #10b981; color: white;">
-                        <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">विवरण</th>
-                        <th style="padding: 12px; border: 1px solid #ddd; text-align: right;">राशि (₹)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="padding: 10px; border: 1px solid #ddd;">वर्तमान राशि (2025-26)</td>
-                        <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₹${formatIndianCurrency(row.currentAmount)}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px; border: 1px solid #ddd;">बकाया शेष (2024-25)</td>
-                        <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">₹${formatIndianCurrency(row.arrearBalance)}</td>
-                    </tr>
-                    <tr style="background: #f8f9fa; font-weight: bold;">
-                        <td style="padding: 10px; border: 1px solid #ddd;">कुल देय राशि</td>
-                        <td style="padding: 10px; border: 1px solid #ddd; text-align: right; color: #dc2626;">₹${formatIndianCurrency(row.remainingBalance)}</td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <div style="margin-top: 30px; padding: 15px; background: #f0fdf4; border-radius: 5px;">
-                <h4 style="color: #065f46; margin-bottom: 10px;">भुगतान निर्देश</h4>
-                <p>1. बिल की अंतिम तिथि: ${new Date(new Date().setDate(new Date().getDate() + 30)).toLocaleDateString('hi-IN')}</p>
-                <p>2. भुगतान ऑनलाइन या कार्यालय में किया जा सकता है</p>
-                <p>3. विलंब शुल्क: ₹50 प्रति माह</p>
-            </div>
-            
-            <div style="margin-top: 40px; text-align: center; color: #6b7280; font-size: 14px;">
-                <p>यह एक कंप्यूटर जनित बिल है, हस्ताक्षर की आवश्यकता नहीं है</p>
-                <p>अधिक जानकारी के लिए संपर्क करें: 1800-XXX-XXXX</p>
-            </div>
-        </div>
-    `;
-
-    // Show in modal
-    document.getElementById('printContent').innerHTML = printContent;
-    const printModal = new bootstrap.Modal(document.getElementById('printModal'));
-    printModal.show();
-}
-
-// Print bill content
-function printBillContent() {
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-        <html>
-        <head>
-            <title>जल बिल प्रिंट</title>
-            <style>
-                body { font-family: Arial, sans-serif; margin: 20px; }
-                @media print {
-                    @page { size: auto; margin: 0mm; }
-                    body { margin: 0; }
-                }
-            </style>
-        </head>
-        <body>
-            ${document.getElementById('printContent').innerHTML}
-        </body>
-        </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-    setTimeout(() => {
-        printWindow.print();
-        printWindow.close();
-    }, 500);
-}
-
-// Edit connection
-function editConnection(index) {
-    currentEditIndex = index;
-    const row = filteredData[index];
-    
-    document.getElementById('editConnectionNo').value = row.connectionNo;
-    document.getElementById('editWardNo').value = row.wardNo;
-    document.getElementById('editOwnerName').value = row.ownerName;
-    document.getElementById('editMobile').value = row.mobile;
-    document.getElementById('editCurrentAmount').value = row.currentAmount;
-    document.getElementById('editArrearBalance').value = row.arrearBalance;
-    document.getElementById('editRemainingBalance').value = row.remainingBalance;
-    
-    const editModal = new bootstrap.Modal(document.getElementById('editModal'));
-    editModal.show();
-}
-
-// Save edited connection
-function saveEditedConnection() {
-    if (currentEditIndex === -1) return;
-    
-    const form = document.getElementById('editForm');
-    if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-    }
-    
-    // Calculate remaining balance
-    const currentAmount = parseFloat(document.getElementById('editCurrentAmount').value);
-    const arrearBalance = parseFloat(document.getElementById('editArrearBalance').value);
-    const remainingBalance = currentAmount + arrearBalance;
-    
-    // Update data
-    const updatedRow = {
-        connectionNo: document.getElementById('editConnectionNo').value,
-        wardNo: document.getElementById('editWardNo').value,
-        ownerName: document.getElementById('editOwnerName').value,
-        mobile: document.getElementById('editMobile').value,
-        currentAmount: currentAmount,
-        arrearBalance: arrearBalance,
-        remainingBalance: remainingBalance
-    };
-    
-    // Update in filteredData and csvData
-    filteredData[currentEditIndex] = updatedRow;
-    
-    // Find and update in csvData
-    const conNo = updatedRow.connectionNo;
-    const csvIndex = csvData.findIndex(row => row.connectionNo === conNo);
-    if (csvIndex !== -1) {
-        csvData[csvIndex] = updatedRow;
-    }
-    
-    // Close modal
-    bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
-    
-    // Refresh table
-    renderTable();
-    
-    showMessage('कनेक्शन सफलतापूर्वक अपडेट किया गया।', 'success');
-}
-
-// Show delete modal
-function showDeleteModal(index) {
-    currentDeleteIndex = index;
-    const row = filteredData[index];
-    
-    document.getElementById('connectionDetails').innerHTML = 
-        `<strong>कनेक्शन नंबर:</strong> ${row.connectionNo}<br>
-         <strong>ग्राहक का नाम:</strong> ${row.ownerName}<br>
-         <strong>शेष राशि:</strong> ₹${formatIndianCurrency(row.remainingBalance)}`;
-    
-    // Reset password field
-    document.getElementById('deletePassword').value = '';
-    document.getElementById('deleteConfirmBtn').classList.add('disabled');
-    
-    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-    deleteModal.show();
-}
-
-// Validate delete
-function validateDelete() {
-    const password = document.getElementById('deletePassword').value;
-    const deleteBtn = document.getElementById('deleteConfirmBtn');
-    
-    if (password.length > 0) {
-        deleteBtn.classList.remove('disabled');
-    } else {
-        deleteBtn.classList.add('disabled');
-    }
-}
-
-// Toggle password visibility for upload modal
-function toggleUploadPasswordVisibility() {
-    const passwordInput = document.getElementById('uploadPassword');
-    const toggleIcon = document.querySelector('#uploadPasswordModal .toggle-password i');
-    
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        toggleIcon.classList.remove('fa-eye');
-        toggleIcon.classList.add('fa-eye-slash');
-    } else {
-        passwordInput.type = 'password';
-        toggleIcon.classList.remove('fa-eye-slash');
-        toggleIcon.classList.add('fa-eye');
-    }
-}
-
-// Toggle password visibility for delete modal
-function toggleDeletePasswordVisibility() {
-    const passwordInput = document.getElementById('deletePassword');
-    const toggleIcon = document.querySelector('#deleteModal .toggle-password i');
-    
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        toggleIcon.classList.remove('fa-eye');
-        toggleIcon.classList.add('fa-eye-slash');
-    } else {
-        passwordInput.type = 'password';
-        toggleIcon.classList.remove('fa-eye-slash');
-        toggleIcon.classList.add('fa-eye');
-    }
-}
-
-// Toggle password visibility for logout modal
-function toggleLogoutPasswordVisibility() {
-    const passwordInput = document.getElementById('logoutPassword');
-    const toggleIcon = document.querySelector('#logoutModal .toggle-password i');
-    
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        toggleIcon.classList.remove('fa-eye');
-        toggleIcon.classList.add('fa-eye-slash');
-    } else {
-        passwordInput.type = 'password';
-        toggleIcon.classList.remove('fa-eye-slash');
-        toggleIcon.classList.add('fa-eye');
-    }
-}
-
-// Confirm delete
-function confirmDelete() {
-    const password = document.getElementById('deletePassword').value;
-    const deleteBtn = document.getElementById('deleteConfirmBtn');
-    
-    if (password !== ADMIN_PASSWORD) {
-        showMessage('❌ गलत पासवर्ड', 'error');
-        return;
-    }
-    
-    deleteBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> डिलीट हो रहा है...';
-    deleteBtn.disabled = true;
-    
-    setTimeout(() => {
-        // Remove from filteredData and csvData
-        const deletedRow = filteredData[currentDeleteIndex];
-        filteredData.splice(currentDeleteIndex, 1);
-        
-        // Remove from csvData
-        const csvIndex = csvData.findIndex(row => row.connectionNo === deletedRow.connectionNo);
-        if (csvIndex !== -1) {
-            csvData.splice(csvIndex, 1);
-        }
-        
-        showMessage(`कनेक्शन ${deletedRow.connectionNo} सफलतापूर्वक डिलीट किया गया।`, 'success');
-        
-        bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
-        deleteBtn.innerHTML = 'डिलीट करें';
-        deleteBtn.disabled = false;
-        document.getElementById('deletePassword').value = '';
-        
-        // Refresh table
-        renderTable();
-    }, 1500);
-}
-
-// Redirect to payment
-function redirectToPayment(index) {
-    const row = filteredData[index];
-    showMessage(`पेमेंट पेज: ${row.connectionNo} - ₹${formatIndianCurrency(row.remainingBalance)}`, 'success');
-}
-
-// Show logout modal
-function showLogoutModal() {
-    document.getElementById('logoutPassword').value = '';
-    const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
-    logoutModal.show();
-}
-
-// Perform logout
-function performLogout() {
-    const password = document.getElementById('logoutPassword').value;
-    
-    if (password !== ADMIN_PASSWORD) {
-        showMessage('❌ गलत पासवर्ड', 'error');
-        return;
-    }
-    
-    showMessage('सफलतापूर्वक लॉगआउट किया गया...', 'success');
-    
-    setTimeout(() => {
-        // In real app, redirect to login page
-        // window.location.href = 'login.html';
-        
-        // For demo, just refresh the page
-        location.reload();
-    }, 1500);
 }
 
 // Utility functions
@@ -2289,6 +1664,103 @@ function adjustTableHeight() {
     }
 }
 
+// Modal functions
+function showDeleteModal(conNo, ownerName) {
+    document.getElementById('connectionDetails').innerHTML = 
+        `<strong>कनेक्शन नंबर:</strong> ${conNo}<br>
+         <strong>ग्राहक का नाम:</strong> ${ownerName}`;
+    
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    deleteModal.show();
+}
+
+function validateDelete() {
+    const password = document.getElementById('password').value;
+    const deleteBtn = document.getElementById('deleteConfirmBtn');
+    
+    if (password.length > 0) {
+        deleteBtn.classList.remove('disabled');
+    } else {
+        deleteBtn.classList.add('disabled');
+    }
+}
+
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.querySelector('.toggle-password i');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
+
+function confirmDelete() {
+    const password = document.getElementById('password').value;
+    const deleteBtn = document.getElementById('deleteConfirmBtn');
+    
+    if (password !== 'admin123') {
+        alert('❌ गलत पासवर्ड');
+        return;
+    }
+    
+    deleteBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> डिलीट हो रहा है...';
+    deleteBtn.disabled = true;
+    
+    setTimeout(() => {
+        showMessage('कनेक्शन सफलतापूर्वक डिलीट किया गया।', 'success');
+        bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+        deleteBtn.innerHTML = 'डिलीट करें';
+        deleteBtn.disabled = false;
+        document.getElementById('password').value = '';
+    }, 1500);
+}
+
+function editConnection(conNo) {
+    showMessage(`संपादित करें: ${conNo} (यह एक डेमो फंक्शन है)`, 'warning');
+}
+
+function printBill(conNo) {
+    showMessage(`प्रिंट बिल: ${conNo} (यह एक डेमो फंक्शन है)`, 'success');
+}
+
+function redirectToPayment(conNo) {
+    showMessage(`पेमेंट पेज: ${conNo} (यह एक डेमो फंक्शन है)`, 'success');
+}
+
+// Sample data for demo
+function loadSampleData() {
+    // This is just for demonstration
+    const sampleData = `Connection No,Ward No,Owner Name,House No,Old House No,Mobile,Current amount 2025-26,Arrear Balance,Remaining Balance
+1612,18-बन्जारान,श्री मौo इकराम s/o श्री मौo हनीफ,0,2378/1,6398342376,600,600,1200
+2496,23-चौधरीयान,श्री सुदर्शन पुत्र श्री यशपाल पुत्र श्री कलीराम,51,325,9412849527,600,7600,8200
+2578,4-चौधरीयन,श्री सुभाष चंद व अशोक कुमार s /o स्व बलवंत सिंह,0,175,9759217358,600,750,1350`;
+    
+    // Process sample data
+    const rows = parseCSV(sampleData);
+    csvData = convertCsvData(rows);
+    filteredData = [...csvData];
+    
+    // Show UI components
+    document.getElementById('searchContainer').style.display = 'flex';
+    document.getElementById('statsContainer').style.display = 'flex';
+    document.getElementById('tableContainer').style.display = 'flex';
+    document.getElementById('initialMessage').style.display = 'none';
+    document.getElementById('uploadContainer').style.display = 'none';
+    
+    // Update statistics and render table
+    updateStatistics();
+    renderTable();
+    adjustTableHeight();
+    
+    showMessage('डेमो डेटा लोड किया गया। अपना CSV फाइल अपलोड करने के लिए पेज रीफ्रेश करें।', 'success');
+}
+
 // Initialize
 window.onload = function() {
     // Adjust table height on resize
@@ -2303,6 +1775,14 @@ window.onload = function() {
             }
         });
     }
+    
+    // Add demo button for testing
+    const uploadContainer = document.getElementById('uploadContainer');
+    const demoButton = document.createElement('button');
+    demoButton.className = 'upload-btn mt-3';
+    demoButton.innerHTML = '<i class="fas fa-vial"></i> डेमो डेटा लोड करें';
+    demoButton.onclick = loadSampleData;
+    uploadContainer.appendChild(demoButton);
     
     // Initial height adjustment
     setTimeout(adjustTableHeight, 100);
