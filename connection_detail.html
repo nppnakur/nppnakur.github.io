@@ -1,100 +1,96 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>जल प्रबंधन - डैशबोर्ड</title>
-<link rel="icon" type="image/png" href="img1.png">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-/* ---------- PHP File Se Li Gayi Same Design/CSS ---------- */
-:root {
-  --primary: #10b981;
-  --secondary: #059669;
-  --light-green: #d1fae5;
-  --dark-green: #065f46;
-  --gradient-primary: linear-gradient(135deg, #10b981, #059669);
-  --gradient-secondary: linear-gradient(135deg, #34d399, #10b981);
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>जल प्रबंधन - डैशबोर्ड</title>
+    <link rel="icon" type="image/png" href="img1.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #10b981;
+            --secondary: #059669;
+            --light-green: #d1fae5;
+            --dark-green: #065f46;
+            --gradient-primary: linear-gradient(135deg, #10b981, #059669);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
 
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-  min-height: 100vh;
-  color: #1f2937;
-  overflow-x: hidden;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            min-height: 100vh;
+            color: #1f2937;
+        }
 
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background: var(--gradient-primary);
-  box-shadow: var(--shadow);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 24px;
-  height: 70px;
-}
+        /* Topbar */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--gradient-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            height: 70px;
+            box-shadow: var(--shadow);
+        }
 
-.topbar-left { display: flex; align-items: center; gap: 15px; }
-.logo { height: 45px; width: auto; border-radius: 6px; }
-.org-name { color: white; font-size: 20px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        .topbar-left { display: flex; align-items: center; gap: 15px; }
+        .logo { height: 45px; width: auto; border-radius: 6px; }
+        .org-name { color: white; font-size: 20px; font-weight: bold; }
 
-.topbar-right a {
-  color: white;
-  text-decoration: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.15);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+        .topbar-right a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
 
-.main-container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 20px 15px; }
-.main-heading { text-align: center; color: var(--dark-green); font-size: 32px; margin: 10px 0 20px; font-weight: 700; }
+        /* Stats Cards */
+        .main-container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .main-heading { text-align: center; color: var(--dark-green); font-weight: 700; margin-bottom: 25px; }
 
-/* Search & Stats */
-.search-container { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-.search-box input { width: 300px; padding: 12px; border: 2px solid #d1fae5; border-radius: 10px; box-shadow: var(--shadow); }
-.search-btn, .export-btn { padding: 12px 20px; border-radius: 10px; border: none; color: white; font-weight: 600; cursor: pointer; transition: 0.3s; }
-.search-btn { background: var(--gradient-primary); }
-.export-btn { background: linear-gradient(135deg, #f59e0b, #d97706); text-decoration: none; }
+        .stats-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+        .stat-card { flex: 1; min-width: 200px; padding: 20px; border-radius: 12px; text-align: center; color: white; box-shadow: var(--shadow); }
+        .stat-card.total { background: var(--gradient-primary); }
+        .stat-card.current { background: linear-gradient(135deg, #34d399, #10b981); }
+        .stat-card.remaining { background: linear-gradient(135deg, #ef4444, #dc2626); }
 
-.stats-container { display: flex; justify-content: center; gap: 15px; margin: 20px auto; flex-wrap: wrap; }
-.stat-card { flex: 1; min-width: 200px; padding: 15px; border-radius: 12px; text-align: center; color: white; box-shadow: var(--shadow); transition: 0.3s; }
-.stat-card.connections { background: var(--gradient-primary); }
-.stat-card.current { background: var(--gradient-secondary); }
-.stat-card.arrear { background: linear-gradient(135deg, #f59e0b, #d97706); }
-.stat-card.remaining { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        /* Search Box */
+        .search-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        #searchInput { width: 400px; padding: 12px; border: 2px solid #d1fae5; border-radius: 10px; }
+        .search-btn { background: var(--gradient-primary); color: white; border: none; padding: 0 25px; border-radius: 10px; font-weight: 600; }
 
-/* Table Design */
-.main-table-container { background: white; border-radius: 12px; box-shadow: var(--shadow-hover); overflow: hidden; height: 500px; display: flex; flex-direction: column; }
-.table-header-container { background: var(--gradient-primary); color: white; position: sticky; top: 0; }
-.data-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-.data-table th, .data-table td { padding: 15px 10px; text-align: center; border-bottom: 1px solid #eee; }
-.table-body-container { overflow-y: auto; flex: 1; }
+        /* Table */
+        .main-table-container { background: white; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); overflow: hidden; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        
+        /* Table Headers Centered as requested */
+        .data-table th { 
+            background: var(--gradient-primary); 
+            color: white; 
+            padding: 15px; 
+            text-align: center; 
+            font-size: 14px;
+        }
 
-.status-paid { background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
-.action-buttons { display: flex; justify-content: center; gap: 8px; }
-.action-btn { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; }
-.edit-btn { background: var(--primary); }
-.delete-btn { background: #ef4444; }
-.print-btn { background: #f59e0b; }
+        .data-table td { padding: 12px; border-bottom: 1px solid #f3f4f6; text-align: center; font-size: 14px; }
+        .data-table tbody tr:hover { background-color: #f0fdf4; }
 
-/* Animation */
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.stat-card, .main-table-container { animation: fadeIn 0.5s ease-out; }
+        .status-paid { background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 12px; }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
-</style>
+        /* Animation */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .stat-card, .main-table-container { animation: fadeIn 0.5s ease-out; }
+    </style>
 </head>
 <body>
 
@@ -104,141 +100,112 @@ body {
         <span class="org-name">जल प्रबंधन</span>
     </div>
     <div class="topbar-right">
-        <a href="#"><i class="fas fa-home"></i> होम</a>
+        <a href="water_management.html"><i class="fas fa-home"></i> होम</a>
     </div>
 </div>
 
 <div class="main-container">
     <h1 class="main-heading">🚰 जल कनेक्शन विवरण डैशबोर्ड</h1>
 
-    <div class="search-container">
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="खोजें (नाम, नंबर या वार्ड)...">
-        </div>
-        <button class="search-btn" onclick="filterTable()"><i class="fas fa-search"></i> खोजें</button>
-        <button class="export-btn" onclick="exportToExcel()"><i class="fas fa-file-excel"></i> एक्सेल एक्सपोर्ट</button>
+    <div class="stats-container">
+        <div class="stat-card total"><h3>कुल कनेक्शन</h3><div class="number" id="countTotal">0</div></div>
+        <div class="stat-card current"><h3>कुल राशि</h3><div class="number" id="sumCurrent">₹0</div></div>
+        <div class="stat-card remaining"><h3>शेष राशि</h3><div class="number" id="sumRemaining">₹0</div></div>
     </div>
 
-    <div class="stats-container">
-        <div class="stat-card connections"><h3>कुल कनेक्शन</h3><div class="number" id="statTotal">3</div></div>
-        <div class="stat-card current"><h3>वर्तमान राशि</h3><div class="number">₹15,500.00</div></div>
-        <div class="stat-card arrear"><h3>बकाया शेष</h3><div class="number">₹4,200.00</div></div>
-        <div class="stat-card remaining"><h3>कुल शेष</h3><div class="number" id="statRemaining">₹19,700.00</div></div>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="नाम, कनेक्शन नंबर या वार्ड से खोजें..." onkeyup="filterTable()">
+        <button class="search-btn"><i class="fas fa-search"></i> खोजें</button>
     </div>
 
     <div class="main-table-container">
-        <div class="table-header-container">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th style="width:15%">🔗 कनेक्शन</th>
-                        <th style="width:10%">🏘️ वार्ड</th>
-                        <th style="width:25%">👤 नाम</th>
-                        <th style="width:15%">📱 मोबाइल</th>
-                        <th style="width:12%">💰 25-26</th>
-                        <th style="width:12%">🧾 शेष</th>
-                        <th style="width:11%">⚙️ क्रिया</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-        <div class="table-body-container">
-            <table class="data-table" id="myTable">
-                <tbody>
-                    <tr>
-                        <td style="width:15%">CON-1001</td>
-                        <td style="width:10%">05</td>
-                        <td style="width:25%; text-align:left;"><b>राजेश कुमार</b></td>
-                        <td style="width:15%">9876543210</td>
-                        <td style="width:12%">₹5,000.00</td>
-                        <td style="width:12%; color:red; font-weight:bold;">₹1,200.00</td>
-                        <td style="width:11%">
-                            <div class="action-buttons">
-                                <a href="#" class="action-btn edit-btn"><i class="fas fa-edit"></i></a>
-                                <a href="#" class="action-btn delete-btn" onclick="showDeleteModal('CON-1001', 'राजेश कुमार')"><i class="fas fa-trash"></i></a>
-                                <a href="#" class="action-btn print-btn"><i class="fas fa-print"></i></a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>CON-1002</td>
-                        <td>08</td>
-                        <td style="text-align:left;"><b>सुनील ढाका</b></td>
-                        <td>9988776655</td>
-                        <td>₹4,500.00</td>
-                        <td style="color:green; font-weight:bold;">₹0.00 <br><span class="status-paid">✅ भुगतान</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <a href="#" class="action-btn edit-btn"><i class="fas fa-edit"></i></a>
-                                <a href="#" class="action-btn delete-btn" onclick="showDeleteModal('CON-1002', 'सुनील ढाका')"><i class="fas fa-trash"></i></a>
-                                <a href="#" class="action-btn print-btn"><i class="fas fa-print"></i></a>
-                            </div>
-                        </td>
-                    </tr>
+        <table class="data-table" id="connectionTable">
+            <thead>
+                <tr>
+                    <th>🔗 कनेक्शन</th>
+                    <th>🏘️ वार्ड</th>
+                    <th>👤 नाम</th>
+                    <th>📱 मोबाइल</th>
+                    <th>💰 राशि (25-26)</th>
+                    <th>📅 बकाया</th>
+                    <th>🧾 शेष राशि</th>
+                    <th>📊 स्थिति</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
                 </tbody>
-            </table>
-        </div>
+        </table>
     </div>
 </div>
 
-<div class="modal fade" id="deleteModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="background: var(--gradient-primary); color:white;">
-                <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>कनेक्शन डिलीट करें</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter:invert(1)"></button>
-            </div>
-            <div class="modal-body">
-                <p id="delInfo" class="text-center p-3 border rounded bg-light"></p>
-                <div class="mb-3">
-                    <label>पासवर्ड दर्ज करें:</label>
-                    <input type="password" id="passInput" class="form-control" placeholder="admin123">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">रद्द करें</button>
-                <button type="button" class="btn btn-danger" onclick="checkPass()">डिलीट करें</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// Search Functionality
-function filterTable() {
-    let input = document.getElementById("searchInput").value.toUpperCase();
-    let rows = document.getElementById("myTable").getElementsByTagName("tr");
-    for (let i = 0; i < rows.length; i++) {
-        let text = rows[i].textContent || rows[i].innerText;
-        rows[i].style.display = text.toUpperCase().indexOf(input) > -1 ? "" : "none";
+    // CSV file ko fetch karne ka function
+    async function loadCSV() {
+        try {
+            // "data.csv" ko apni file ke sahi naam se badal dein
+            const response = await fetch('data.csv'); 
+            const data = await response.text();
+            const rows = data.split('\n').slice(1); // Header row ko chhod kar
+            const tableBody = document.getElementById('tableBody');
+            
+            let totalRecords = 0;
+            let totalCurrent = 0;
+            let totalRemaining = 0;
+
+            rows.forEach(row => {
+                const cols = row.split(',');
+                if (cols.length >= 7) {
+                    const tr = document.createElement('tr');
+                    
+                    // Dashboard stats calculation
+                    totalRecords++;
+                    const currentVal = parseFloat(cols[4]) || 0;
+                    const remainingVal = parseFloat(cols[6]) || 0;
+                    totalCurrent += currentVal;
+                    totalRemaining += remainingVal;
+
+                    // Row HTML
+                    tr.innerHTML = `
+                        <td>${cols[0]}</td>
+                        <td>${cols[1]}</td>
+                        <td style="text-align:left; font-weight:bold;">${cols[2]}</td>
+                        <td>${cols[3]}</td>
+                        <td>₹${currentVal.toLocaleString('en-IN')}</td>
+                        <td>₹${(parseFloat(cols[5]) || 0).toLocaleString('en-IN')}</td>
+                        <td style="color: ${remainingVal > 0 ? 'red' : 'green'}; font-weight:bold;">
+                            ₹${remainingVal.toLocaleString('en-IN')}
+                        </td>
+                        <td>${remainingVal == 0 ? '<span class="status-paid">✅ भुगतान</span>' : '❌ बकाया'}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                }
+            });
+
+            // Dashboard update
+            document.getElementById('countTotal').innerText = totalRecords;
+            document.getElementById('sumCurrent').innerText = '₹' + totalCurrent.toLocaleString('en-IN');
+            document.getElementById('sumRemaining').innerText = '₹' + totalRemaining.toLocaleString('en-IN');
+
+        } catch (error) {
+            console.error('Error loading CSV:', error);
+            document.getElementById('tableBody').innerHTML = '<tr><td colspan="8">CSV file load nahi ho saki. Kripya check karein.</td></tr>';
+        }
     }
-}
 
-// Delete Logic
-function showDeleteModal(id, name) {
-    document.getElementById("delInfo").innerHTML = `<b>कनेक्शन:</b> ${id}<br><b>नाम:</b> ${name}`;
-    var myModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-    myModal.show();
-}
+    // Search Filter Function
+    function filterTable() {
+        const input = document.getElementById("searchInput").value.toUpperCase();
+        const rows = document.getElementById("tableBody").getElementsByTagName("tr");
 
-function checkPass() {
-    let pass = document.getElementById("passInput").value;
-    if(pass === "admin123") {
-        alert("सफलतापूर्वक डिलीट कर दिया गया (सिमुलेशन)");
-        location.reload();
-    } else {
-        alert("❌ गलत पासवर्ड!");
+        for (let i = 0; i < rows.length; i++) {
+            const textContent = rows[i].textContent || rows[i].innerText;
+            rows[i].style.display = textContent.toUpperCase().indexOf(input) > -1 ? "" : "none";
+        }
     }
-}
 
-// Simple Excel Export Simulation
-function exportToExcel() {
-    alert("Excel Export शुरू हो रहा है... (HTML Format)");
-    let table = document.getElementById("myTable");
-    let html = table.outerHTML;
-    window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
-}
+    // Page load hone par CSV load karein
+    window.onload = loadCSV;
 </script>
+
 </body>
 </html>
