@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>उपभोक्ता संपादन</title>
+    <title>CONSUMER DETAIL</title>
     
     <link rel="icon" type="image/png" href="img1.png">
     
@@ -16,389 +16,167 @@
             --gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
         }
 
-        body { 
-            background: #f0fdf4; 
-            font-family: 'Segoe UI', sans-serif; 
-            min-height: 100vh;
-        }
+        body { background: #f0fdf4; font-family: 'Segoe UI', sans-serif; }
 
         /* Topbar */
         .topbar {
-            background: var(--gradient); 
-            height: 70px; 
-            padding: 0 20px;
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            color: white; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            background: var(--gradient); height: 70px; padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .back-btn { 
-            color: white; 
-            text-decoration: none; 
-            font-size: 18px; 
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: background 0.3s;
-        }
-        
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
+        .back-btn { color: white; text-decoration: none; font-size: 18px; font-weight: 600; }
 
-        /* Edit Form Container */
-        .edit-container { 
-            max-width: 800px; 
-            margin: 40px auto; 
-            padding: 20px; 
-        }
-        
-        .edit-card {
-            background: white; 
-            border-radius: 20px; 
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-            border: none;
+        /* Detail Card */
+        .detail-container { max-width: 800px; margin: 40px auto; padding: 20px; }
+        .info-card {
+            background: white; border-radius: 20px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: none;
             animation: slideUp 0.5s ease;
         }
-        
-        @keyframes slideUp { 
-            from { 
-                transform: translateY(30px); 
-                opacity: 0; 
-            } 
-            to { 
-                transform: translateY(0); 
-                opacity: 1; 
-            } 
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .card-header { background: var(--gradient); color: white; padding: 25px; text-align: center; }
+        .card-header h2 { margin: 0; font-size: 24px; font-weight: 800; }
+
+        .info-body { padding: 30px; }
+        .info-row { 
+            display: flex; justify-content: space-between; padding: 12px 0; 
+            border-bottom: 1px solid #f1f5f9; font-size: 17px; 
+        }
+        .info-label { color: #64748b; font-weight: 600; }
+        .info-value { color: #1e293b; font-weight: 700; }
+
+        /* Action Icons Bar */
+        .action-bar {
+            display: flex; justify-content: space-around; padding: 25px;
+            background: #f8fafc; border-top: 1px solid #e2e8f0;
+        }
+        .action-btn {
+            display: flex; flex-direction: column; align-items: center;
+            text-decoration: none; font-size: 14px; font-weight: 700; transition: 0.3s;
+        }
+        .icon-circle {
+            width: 55px; height: 55px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-size: 22px;
+            margin-bottom: 8px; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .card-header { 
-            background: var(--gradient); 
-            color: white; 
-            padding: 25px; 
-            text-align: center; 
-        }
-        
-        .card-header h2 { 
-            margin: 0; 
-            font-size: 24px; 
-            font-weight: 800; 
-            margin-bottom: 8px;
-        }
-        
-        .card-header span {
-            display: block;
-            font-size: 16px;
-            opacity: 0.9;
-        }
+        .btn-edit .icon-circle { background: #3b82f6; } /* Blue */
+        .btn-pay .icon-circle { background: #10b981; }  /* Green */
+        .btn-delete .icon-circle { background: #ef4444; } /* Red */
 
-        .edit-body { 
-            padding: 30px; 
-        }
-        
-        .form-label {
-            font-weight: 600;
-            color: #475569;
-            margin-bottom: 8px;
-        }
-        
-        .form-control {
-            padding: 12px 15px;
-            border-radius: 10px;
-            border: 2px solid #cbd5e1;
-            transition: all 0.3s;
-            font-size: 16px;
-        }
-        
-        .form-control:focus {
-            border-color: #10b981;
-            box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.25);
-        }
-        
-        .btn-success {
-            background: var(--gradient);
-            border: none;
-            padding: 12px 30px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 16px;
-            transition: all 0.3s;
-            width: 100%;
-        }
-        
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
-        }
-        
-        .form-text {
-            color: #64748b;
-            font-size: 14px;
-        }
-        
-        /* Success Toast */
-        .toast-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 9999;
-        }
-        
-        .toast {
-            border-radius: 10px;
-        }
+        .action-btn:hover { transform: translateY(-5px); }
 
-        @media (max-width: 768px) {
-            .edit-container {
-                margin: 20px auto;
-                padding: 15px;
-            }
-        }
+        .amount-big { font-size: 28px; color: #dc2626; font-weight: 900; }
     </style>
 </head>
 <body>
 
 <div class="topbar">
-    <a href="#" class="back-btn" onclick="goBack()">
-        <i class="fas fa-arrow-left"></i> वापस जाएं
-    </a>
-    <span style="font-weight: 800; font-size: 20px;" id="pageTitle">उपभोक्ता संपादन</span>
-    <div style="width: 120px;"></div>
+    <a href="dashboard.html" class="back-btn"><i class="fas fa-arrow-left me-2"></i> वापस जाएं</a>
+    <span style="font-weight: 800; font-size: 20px;">उपभोक्ता प्रोफाइल</span>
+    <div></div>
 </div>
 
-<div class="edit-container">
-    <div class="edit-card">
+<div class="detail-container">
+    <div class="info-card">
         <div class="card-header">
-            <h2 id="consumerTitle">उपभोक्ता संपादन</h2>
-            <span id="connectionInfo">कनेक्शन नंबर: --</span>
+            <h2 id="dispName">उपभोक्ता का नाम</h2>
+            <span id="dispConn" style="opacity: 0.9;">कनेक्शन नंबर: --</span>
         </div>
 
-        <div class="edit-body">
-            <form id="editForm">
-                <div class="mb-4">
-                    <label for="editName" class="form-label">उपभोक्ता का नाम *</label>
-                    <input type="text" class="form-control" id="editName" required>
-                </div>
-                
-                <div class="mb-4">
-                    <label for="editConn" class="form-label">कनेक्शन नंबर</label>
-                    <input type="text" class="form-control" id="editConn" readonly>
-                    <div class="form-text">कनेक्शन नंबर बदला नहीं जा सकता</div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <label for="editWard" class="form-label">वार्ड नंबर *</label>
-                        <input type="text" class="form-control" id="editWard" required>
-                    </div>
-                    <div class="col-md-6 mb-4">
-                        <label for="editMobile" class="form-label">मोबाइल नंबर *</label>
-                        <input type="tel" class="form-control" id="editMobile" required>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <label for="editCurrent" class="form-label">चालू मांग (₹) *</label>
-                        <input type="number" class="form-control" id="editCurrent" required min="0">
-                    </div>
-                    <div class="col-md-6 mb-4">
-                        <label for="editArrears" class="form-label">बकाया राशि (₹) *</label>
-                        <input type="number" class="form-control" id="editArrears" required min="0">
-                    </div>
-                </div>
-                
-                <div class="mb-4">
-                    <label for="editAddress" class="form-label">पता</label>
-                    <textarea class="form-control" id="editAddress" rows="3"></textarea>
-                </div>
-                
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-save me-2"></i>सुरक्षित करें
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Success Toast -->
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body">
-                <i class="fas fa-check-circle me-2"></i>
-                <span id="toastMessage">डेटा सफलतापूर्वक अपडेट हुआ!</span>
+        <div class="info-body">
+            <div class="info-row">
+                <span class="info-label">वार्ड नंबर</span>
+                <span class="info-value" id="dispWard">--</span>
             </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            <div class="info-row">
+                <span class="info-label">मोबाइल नंबर</span>
+                <span class="info-value" id="dispMob">--</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">चालू मांग (2025-26)</span>
+                <span class="info-value">₹<span id="dispCur">0</span></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">बकाया (2024-25)</span>
+                <span class="info-value">₹<span id="dispArr">0</span></span>
+            </div>
+            <div class="info-row" style="border: none; margin-top: 15px;">
+                <span class="info-label" style="font-size: 20px; color: #1e293b;">सम्पूर्ण शेष राशि</span>
+                <span class="info-value amount-big">₹<span id="dispTotal">0</span></span>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <a href="#" class="action-btn btn-edit" onclick="handleEdit()">
+                <div class="icon-circle"><i class="fas fa-edit"></i></div>
+                <span style="color: #3b82f6;">एडिट करें</span>
+            </a>
+            <a href="#" class="action-btn btn-pay" onclick="handlePay()">
+                <div class="icon-circle"><i class="fas fa-hand-holding-usd"></i></div>
+                <span style="color: #10b981;">भुगतान करें</span>
+            </a>
+            <a href="#" class="action-btn btn-delete" onclick="handleDelete()">
+                <div class="icon-circle"><i class="fas fa-trash-alt"></i></div>
+                <span style="color: #ef4444;">डिलीट करें</span>
+            </a>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Consumer database (same as main page)
-    const consumersDatabase = [
-        {
-            id: "1612",
-            name: "राम कुमार शर्मा",
-            ward: "5",
-            mobile: "9876543210",
-            current: 1500,
-            arrears: 2500,
-            total: 4000,
-            address: "मुख्य मार्ग, कॉलोनी नंबर 2"
-        },
-        {
-            id: "1613",
-            name: "सीता देवी",
-            ward: "3",
-            mobile: "8765432109",
-            current: 1200,
-            arrears: 1800,
-            total: 3000,
-            address: "वार्ड नंबर 3, पुरानी बस्ती"
-        },
-        {
-            id: "1614",
-            name: "अजय सिंह",
-            ward: "7",
-            mobile: "7654321098",
-            current: 1800,
-            arrears: 3200,
-            total: 5000,
-            address: "नई कॉलोनी, ब्लॉक बी"
-        },
-        {
-            id: "1615",
-            name: "मीना यादव",
-            ward: "2",
-            mobile: "6543210987",
-            current: 900,
-            arrears: 1100,
-            total: 2000,
-            address: "गांधी नगर, स्ट्रीट 5"
-        },
-        {
-            id: "1616",
-            name: "राजेश पटेल",
-            ward: "9",
-            mobile: "5432109876",
-            current: 2000,
-            arrears: 3000,
-            total: 5000,
-            address: "शिवाजी मार्ग, फ्लैट 201"
-        }
-    ];
+    // URL se ID nikalne ke liye
+    const urlParams = new URLSearchParams(window.location.search);
+    const connectionId = urlParams.get('id');
 
-    function showToast(message, type = "success") {
-        const toastElement = document.getElementById('successToast');
-        const toastMessage = document.getElementById('toastMessage');
-        
-        if (type === "success") {
-            toastElement.className = "toast align-items-center text-bg-success border-0";
-        } else if (type === "info") {
-            toastElement.className = "toast align-items-center text-bg-info border-0";
-        } else if (type === "warning") {
-            toastElement.className = "toast align-items-center text-bg-warning border-0";
-        } else if (type === "error") {
-            toastElement.className = "toast align-items-center text-bg-danger border-0";
+    async function loadConsumerDetail() {
+        if (!connectionId) {
+            alert("कोई कनेक्शन आईडी नहीं मिली!");
+            return;
         }
-        
-        toastMessage.innerText = message;
-        
-        const toast = new bootstrap.Toast(toastElement);
-        toast.show();
+
+        try {
+            const response = await fetch('Connection_data.csv');
+            const data = await response.text();
+            const rows = data.split(/\r?\n/).slice(1);
+
+            for (let row of rows) {
+                const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                if (cols[0] === connectionId) {
+                    document.getElementById('dispName').innerText = cols[2].replace(/"/g, '');
+                    document.getElementById('dispConn').innerText = "कनेक्शन नंबर: " + cols[0];
+                    document.getElementById('dispWard').innerText = cols[1];
+                    document.getElementById('dispMob').innerText = cols[5] || 'उपलब्ध नहीं';
+                    document.getElementById('dispCur').innerText = cols[6];
+                    document.getElementById('dispArr').innerText = cols[7];
+                    document.getElementById('dispTotal').innerText = cols[8];
+                    return;
+                }
+            }
+            alert("डेटा नहीं मिला!");
+        } catch (error) {
+            console.error("Error loading CSV:", error);
+        }
     }
 
-    function loadConsumerData() {
-        // Get connection ID from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const consumerId = urlParams.get('id');
-        
-        if (!consumerId) {
-            showToast("URL में कनेक्शन ID नहीं मिली!", "error");
-            return;
-        }
-        
-        // Find consumer in database
-        const consumer = consumersDatabase.find(c => c.id === consumerId);
-        
-        if (!consumer) {
-            showToast(`कनेक्शन ${consumerId} का डेटा नहीं मिला!`, "error");
-            return;
-        }
-        
-        // Fill form with consumer data
-        document.getElementById('editName').value = consumer.name;
-        document.getElementById('editConn').value = consumer.id;
-        document.getElementById('editWard').value = consumer.ward;
-        document.getElementById('editMobile').value = consumer.mobile;
-        document.getElementById('editCurrent').value = consumer.current;
-        document.getElementById('editArrears').value = consumer.arrears;
-        document.getElementById('editAddress').value = consumer.address || '';
-        
-        // Update header
-        document.getElementById('consumerTitle').innerText = `${consumer.name} - संपादन`;
-        document.getElementById('connectionInfo').innerText = `कनेक्शन नंबर: ${consumer.id}`;
-        document.getElementById('pageTitle').innerText = `${consumer.name} - संपादन`;
+    // Buttons Actions
+    function handleEdit() {
+        alert("Edit Functionality: Connection " + connectionId + " को एडिट करने के लिए फॉर्म खोलें।");
     }
 
-    function goBack() {
-        const consumerId = new URLSearchParams(window.location.search).get('id');
-        window.location.href = `consumer_detail.html?id=${consumerId}`;
+    function handlePay() {
+        alert("Payment Functionality: ₹" + document.getElementById('dispTotal').innerText + " का भुगतान प्रोसेस करें।");
     }
 
-    // Form submit handler
-    document.getElementById('editForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Get form values
-        const name = document.getElementById('editName').value;
-        const ward = document.getElementById('editWard').value;
-        const mobile = document.getElementById('editMobile').value;
-        const current = parseFloat(document.getElementById('editCurrent').value);
-        const arrears = parseFloat(document.getElementById('editArrears').value);
-        const address = document.getElementById('editAddress').value;
-        
-        // Validate
-        if (!name || !ward || !mobile || isNaN(current) || isNaN(arrears)) {
-            showToast("कृपया सभी आवश्यक फ़ील्ड भरें", "error");
-            return;
+    function handleDelete() {
+        if(confirm("क्या आप वाकई इस कनेक्शन को डिलीट करना चाहते हैं?")) {
+            alert("Connection " + connectionId + " डिलीट कर दिया गया (Simulated).");
         }
-        
-        if (current < 0 || arrears < 0) {
-            showToast("राशि नकारात्मक नहीं हो सकती", "error");
-            return;
-        }
-        
-        // Calculate total
-        const total = current + arrears;
-        
-        // Show success message
-        showToast(`${name} का डेटा सफलतापूर्वक अपडेट हुआ!`);
-        
-        // Simulate saving and redirect back after 2 seconds
-        setTimeout(() => {
-            const consumerId = new URLSearchParams(window.location.search).get('id');
-            window.location.href = `consumer_detail.html?id=${consumerId}`;
-        }, 2000);
-    });
+    }
 
-    // Initialize
-    window.onload = function() {
-        loadConsumerData();
-    };
+    window.onload = loadConsumerDetail;
 </script>
 </body>
-</html>
+</html> 
