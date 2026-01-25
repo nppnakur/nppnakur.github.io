@@ -277,30 +277,6 @@
             color: #10b981;
         }
         
-        /* Loading Spinner */
-        .spinner-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 300px;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid #f0fdf4;
-            border-top: 5px solid #10b981;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
         /* Responsive */
         @media (max-width: 768px) {
             .detail-container {
@@ -323,6 +299,28 @@
                 gap: 20px;
             }
         }
+        
+        /* Success Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+        
+        .toast {
+            border-radius: 10px;
+        }
+        
+        .connection-id {
+            background: #e2e8f0;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -338,46 +336,37 @@
 <div class="detail-container">
     <div class="info-card">
         <div class="card-header">
-            <h2 id="dispName">लोड हो रहा है...</h2>
-            <span id="dispConn">कनेक्शन नंबर: --</span>
+            <h2 id="dispName">राम कुमार शर्मा</h2>
+            <span id="dispConn">कनेक्शन नंबर: 1612</span>
         </div>
 
         <div class="info-body" id="consumerInfo">
-            <!-- Loading Spinner -->
-            <div class="spinner-container" id="loadingSpinner">
-                <div class="spinner"></div>
-                <p>डेटा लोड हो रहा है...</p>
+            <div class="info-row">
+                <span class="info-label">वार्ड नंबर</span>
+                <span class="info-value" id="dispWard">5</span>
             </div>
-            
-            <!-- Consumer Data (hidden initially) -->
-            <div id="consumerData" style="display: none;">
-                <div class="info-row">
-                    <span class="info-label">वार्ड नंबर</span>
-                    <span class="info-value" id="dispWard">--</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">मोबाइल नंबर</span>
-                    <span class="info-value" id="dispMob">--</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">चालू मांग (2025-26)</span>
-                    <span class="info-value">₹<span id="dispCur">0</span></span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">बकाया (2024-25)</span>
-                    <span class="info-value">₹<span id="dispArr">0</span></span>
-                </div>
-                <div class="info-row" style="border: none; margin-top: 15px;">
-                    <span class="info-label" style="font-size: 20px; color: #1e293b;">सम्पूर्ण शेष राशि</span>
-                    <span class="info-value amount-big">₹<span id="dispTotal">0</span></span>
-                </div>
+            <div class="info-row">
+                <span class="info-label">मोबाइल नंबर</span>
+                <span class="info-value" id="dispMob">9876543210</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">चालू मांग (2025-26)</span>
+                <span class="info-value">₹<span id="dispCur">1,500</span></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">बकाया (2024-25)</span>
+                <span class="info-value">₹<span id="dispArr">2,500</span></span>
+            </div>
+            <div class="info-row" style="border: none; margin-top: 15px;">
+                <span class="info-label" style="font-size: 20px; color: #1e293b;">सम्पूर्ण शेष राशि</span>
+                <span class="info-value amount-big">₹<span id="dispTotal">4,000</span></span>
             </div>
         </div>
 
         <div class="action-bar">
             <button class="action-btn btn-edit" onclick="handleEdit()">
                 <div class="icon-circle"><i class="fas fa-edit"></i></div>
-                <span style="color: #3b82f6;">एडिट करें</span>
+                <span style="color: #3b82f6;">संपादित करें</span>
             </button>
             <button class="action-btn btn-pay" onclick="handlePay()">
                 <div class="icon-circle"><i class="fas fa-hand-holding-usd"></i></div>
@@ -403,23 +392,34 @@
                 <form id="editForm">
                     <div class="mb-3">
                         <label for="editName" class="form-label">उपभोक्ता का नाम</label>
-                        <input type="text" class="form-control" id="editName" required>
+                        <input type="text" class="form-control" id="editName" value="राम कुमार शर्मा" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editConn" class="form-label">कनेक्शन नंबर</label>
+                        <input type="text" class="form-control" id="editConn" value="1612" required>
+                        <div class="form-text">कनेक्शन नंबर बदला नहीं जा सकता</div>
                     </div>
                     <div class="mb-3">
                         <label for="editWard" class="form-label">वार्ड नंबर</label>
-                        <input type="text" class="form-control" id="editWard" required>
+                        <input type="text" class="form-control" id="editWard" value="5" required>
                     </div>
                     <div class="mb-3">
                         <label for="editMobile" class="form-label">मोबाइल नंबर</label>
-                        <input type="tel" class="form-control" id="editMobile" required>
+                        <input type="tel" class="form-control" id="editMobile" value="9876543210" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="editCurrent" class="form-label">चालू मांग (₹)</label>
-                        <input type="number" class="form-control" id="editCurrent" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editArrears" class="form-label">बकाया राशि (₹)</label>
-                        <input type="number" class="form-control" id="editArrears" required>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="editCurrent" class="form-label">चालू मांग (₹)</label>
+                                <input type="number" class="form-control" id="editCurrent" value="1500" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="editArrears" class="form-label">बकाया राशि (₹)</label>
+                                <input type="number" class="form-control" id="editArrears" value="2500" required>
+                            </div>
+                        </div>
                     </div>
                     <div class="text-center mt-4">
                         <button type="submit" class="btn btn-success px-4">सुरक्षित करें</button>
@@ -440,13 +440,14 @@
             </div>
             <div class="modal-body">
                 <div class="text-center mb-4">
-                    <h4>कुल बकाया राशि: ₹<span id="payableAmount">0</span></h4>
-                    <p class="text-muted" id="paymentConsumerName">उपभोक्ता का नाम</p>
+                    <h4>कुल बकाया राशि: ₹<span id="payableAmount">4,000</span></h4>
+                    <p class="text-muted">उपभोक्ता: राम कुमार शर्मा</p>
+                    <p class="text-muted">कनेक्शन नंबर: 1612</p>
                 </div>
                 
                 <div class="mb-4">
                     <label for="paymentAmount" class="form-label">भुगतान राशि (₹)</label>
-                    <input type="number" class="form-control" id="paymentAmount" placeholder="भुगतान राशि दर्ज करें" required>
+                    <input type="number" class="form-control" id="paymentAmount" placeholder="भुगतान राशि दर्ज करें" value="4000" required>
                     <div class="form-text mt-2">
                         <button type="button" class="btn btn-sm btn-outline-success me-2" onclick="setFullPayment()">पूरी राशि</button>
                         <button type="button" class="btn btn-sm btn-outline-primary" onclick="setHalfPayment()">आधी राशि</button>
@@ -468,8 +469,17 @@
                             <i class="fas fa-money-bill-wave"></i>
                             <span>नकद</span>
                         </div>
+                        <div class="payment-option" onclick="selectPaymentMethod('cheque')">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            <span>चेक</span>
+                        </div>
                     </div>
                     <input type="hidden" id="paymentMethod" value="">
+                </div>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    भुगतान सफल होने के बाद रसीद स्वचालित रूप से जनरेट होगी।
                 </div>
                 
                 <div class="text-center mt-4">
@@ -492,8 +502,8 @@
                 <div class="text-center mb-4">
                     <i class="fas fa-exclamation-triangle text-danger fa-3x mb-3"></i>
                     <h5>क्या आप वाकई इस कनेक्शन को डिलीट करना चाहते हैं?</h5>
-                    <p class="text-muted" id="deleteConsumerName">उपभोक्ता: --</p>
-                    <p class="text-muted">कनेक्शन नंबर: <span id="deleteConnNumber">--</span></p>
+                    <p class="text-muted">उपभोक्ता: राम कुमार शर्मा</p>
+                    <p class="text-muted">कनेक्शन नंबर: 1612</p>
                     <div class="alert alert-warning mt-3">
                         <i class="fas fa-info-circle me-2"></i>
                         यह क्रिया पूर्ववत नहीं की जा सकती। सभी डेटा स्थायी रूप से हटा दिया जाएगा।
@@ -524,137 +534,26 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // URL से ID निकालने के लिए
-    const urlParams = new URLSearchParams(window.location.search);
-    const connectionId = urlParams.get('id');
+    // उपभोक्ता डेटा
+    let consumerData = {
+        name: "राम कुमार शर्मा",
+        connectionId: "1612",
+        ward: "5",
+        mobile: "9876543210",
+        current: "1,500",
+        arrears: "2,500",
+        total: "4,000"
+    };
     
-    // अगर URL में ID नहीं है, तो डेमो ID का उपयोग करें
-    const demoId = connectionId || "CONN001";
-    
-    // Mock CSV डेटा (वास्तविक CSV फ़ाइल के लिए)
-    const mockCSVData = `Connection_ID,Ward_No,Consumer_Name,Address,Mobile_No,Current_Demand,Arrears,Total_Balance
-CONN001,5,राम कुमार शर्मा,"मुख्य मार्ग, कॉलोनी नंबर 2",9876543210,1500,2500,4000
-CONN002,3,सीता देवी,"वार्ड नंबर 3, पुरानी बस्ती",8765432109,1200,1800,3000
-CONN003,7,अजय सिंह,"नई कॉलोनी, ब्लॉक बी",7654321098,1800,3200,5000
-CONN004,2,मीना यादव,"गांधी नगर, स्ट्रीट 5",6543210987,900,1100,2000
-CONN005,9,राजेश पटेल,"शिवाजी मार्ग, फ्लैट 201",5432109876,2000,3000,5000`;
-
-    let currentConsumerData = null;
     let selectedPaymentMethod = '';
 
-    async function loadConsumerDetail() {
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const consumerData = document.getElementById('consumerData');
-        
-        if (!demoId) {
-            showError("कोई कनेक्शन आईडी नहीं मिली!");
-            return;
-        }
-
-        try {
-            // यहाँ आप अपनी CSV फ़ाइल लोड कर सकते हैं
-            // const response = await fetch('Connection_data.csv');
-            // const data = await response.text();
-            
-            // मॉक डेटा का उपयोग करें
-            const data = mockCSVData;
-            const rows = data.split(/\r?\n/);
-            
-            // हेडर निकालें
-            const headers = rows[0].split(',');
-            
-            for (let i = 1; i < rows.length; i++) {
-                if (rows[i].trim() === '') continue;
-                
-                const cols = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                
-                if (cols[0] && cols[0].trim() === demoId.trim()) {
-                    currentConsumerData = {
-                        id: cols[0].trim(),
-                        ward: cols[1].trim(),
-                        name: cols[2].trim().replace(/"/g, ''),
-                        address: cols[3] ? cols[3].trim().replace(/"/g, '') : '',
-                        mobile: cols[4] ? cols[4].trim() : 'उपलब्ध नहीं',
-                        current: cols[5] ? cols[5].trim() : '0',
-                        arrears: cols[6] ? cols[6].trim() : '0',
-                        total: cols[7] ? cols[7].trim() : '0'
-                    };
-                    
-                    // डेटा डिस्प्ले करें
-                    displayConsumerData();
-                    
-                    // लोडिंग हटाएं
-                    loadingSpinner.style.display = 'none';
-                    consumerData.style.display = 'block';
-                    
-                    return;
-                }
-            }
-            
-            // अगर डेटा नहीं मिला, तो डेमो डेटा दिखाएं
-            showDemoData();
-            
-        } catch (error) {
-            console.error("Error loading data:", error);
-            showDemoData();
-        }
-    }
-    
-    function displayConsumerData() {
-        if (!currentConsumerData) return;
-        
-        document.getElementById('dispName').innerText = currentConsumerData.name;
-        document.getElementById('dispConn').innerText = "कनेक्शन नंबर: " + currentConsumerData.id;
-        document.getElementById('dispWard').innerText = currentConsumerData.ward;
-        document.getElementById('dispMob').innerText = currentConsumerData.mobile;
-        document.getElementById('dispCur').innerText = formatCurrency(currentConsumerData.current);
-        document.getElementById('dispArr').innerText = formatCurrency(currentConsumerData.arrears);
-        document.getElementById('dispTotal').innerText = formatCurrency(currentConsumerData.total);
-        
-        // मोडल में डेटा भरें
-        document.getElementById('editName').value = currentConsumerData.name;
-        document.getElementById('editWard').value = currentConsumerData.ward;
-        document.getElementById('editMobile').value = currentConsumerData.mobile;
-        document.getElementById('editCurrent').value = currentConsumerData.current;
-        document.getElementById('editArrears').value = currentConsumerData.arrears;
-        
-        // पेमेंट मोडल में डेटा भरें
-        document.getElementById('payableAmount').innerText = formatCurrency(currentConsumerData.total);
-        document.getElementById('paymentConsumerName').innerText = currentConsumerData.name;
-        document.getElementById('paymentAmount').value = currentConsumerData.total;
-        
-        // डिलीट मोडल में डेटा भरें
-        document.getElementById('deleteConsumerName').innerText = `उपभोक्ता: ${currentConsumerData.name}`;
-        document.getElementById('deleteConnNumber').innerText = currentConsumerData.id;
-    }
-    
-    function showDemoData() {
-        currentConsumerData = {
-            id: demoId,
-            ward: "5",
-            name: "राम कुमार शर्मा",
-            address: "मुख्य मार्ग, कॉलोनी नंबर 2",
-            mobile: "9876543210",
-            current: "1500",
-            arrears: "2500",
-            total: "4000"
-        };
-        
-        displayConsumerData();
-        
-        // लोडिंग हटाएं
-        document.getElementById('loadingSpinner').style.display = 'none';
-        document.getElementById('consumerData').style.display = 'block';
-        
-        showToast("डेमो डेटा लोड किया गया", "info");
+    // डेटा फॉर्मेट करें (कॉमा हटाने के लिए)
+    function parseCurrency(value) {
+        return parseFloat(value.replace(/,/g, ''));
     }
     
     function formatCurrency(value) {
-        return parseFloat(value).toLocaleString('hi-IN');
-    }
-    
-    function showError(message) {
-        alert(message);
+        return value.toLocaleString('hi-IN');
     }
     
     function showToast(message, type = "success") {
@@ -680,6 +579,14 @@ CONN005,9,राजेश पटेल,"शिवाजी मार्ग, फ�
 
     // बटन एक्शन्स
     function handleEdit() {
+        // मोडल में डेटा सेट करें (कॉमा हटाकर)
+        document.getElementById('editName').value = consumerData.name;
+        document.getElementById('editConn').value = consumerData.connectionId;
+        document.getElementById('editWard').value = consumerData.ward;
+        document.getElementById('editMobile').value = consumerData.mobile;
+        document.getElementById('editCurrent').value = parseCurrency(consumerData.current);
+        document.getElementById('editArrears').value = parseCurrency(consumerData.arrears);
+        
         const editModal = new bootstrap.Modal(document.getElementById('editModal'));
         editModal.show();
     }
@@ -689,15 +596,29 @@ CONN005,9,राजेश पटेल,"शिवाजी मार्ग, फ�
         e.preventDefault();
         
         // डेटा अपडेट करें
-        currentConsumerData.name = document.getElementById('editName').value;
-        currentConsumerData.ward = document.getElementById('editWard').value;
-        currentConsumerData.mobile = document.getElementById('editMobile').value;
-        currentConsumerData.current = document.getElementById('editCurrent').value;
-        currentConsumerData.arrears = document.getElementById('editArrears').value;
-        currentConsumerData.total = (parseFloat(currentConsumerData.current) + parseFloat(currentConsumerData.arrears)).toString();
+        consumerData.name = document.getElementById('editName').value;
+        consumerData.ward = document.getElementById('editWard').value;
+        consumerData.mobile = document.getElementById('editMobile').value;
+        
+        // नई राशियाँ
+        const newCurrent = parseFloat(document.getElementById('editCurrent').value);
+        const newArrears = parseFloat(document.getElementById('editArrears').value);
+        const newTotal = newCurrent + newArrears;
+        
+        consumerData.current = formatCurrency(newCurrent);
+        consumerData.arrears = formatCurrency(newArrears);
+        consumerData.total = formatCurrency(newTotal);
         
         // डिस्प्ले अपडेट करें
-        displayConsumerData();
+        document.getElementById('dispName').innerText = consumerData.name;
+        document.getElementById('dispWard').innerText = consumerData.ward;
+        document.getElementById('dispMob').innerText = consumerData.mobile;
+        document.getElementById('dispCur').innerText = consumerData.current;
+        document.getElementById('dispArr').innerText = consumerData.arrears;
+        document.getElementById('dispTotal').innerText = consumerData.total;
+        
+        // भुगतान मोडल भी अपडेट करें
+        document.getElementById('payableAmount').innerText = consumerData.total;
         
         // मोडल बंद करें
         const editModal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
@@ -707,6 +628,17 @@ CONN005,9,राजेश पटेल,"शिवाजी मार्ग, फ�
     });
 
     function handlePay() {
+        // मोडल में डेटा सेट करें
+        document.getElementById('payableAmount').innerText = consumerData.total;
+        document.getElementById('paymentAmount').value = parseCurrency(consumerData.total);
+        
+        // पेमेंट ऑप्शन रीसेट करें
+        selectedPaymentMethod = '';
+        document.querySelectorAll('.payment-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+        document.getElementById('paymentMethod').value = '';
+        
         const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
         paymentModal.show();
     }
@@ -725,12 +657,12 @@ CONN005,9,राजेश पटेल,"शिवाजी मार्ग, फ�
     }
     
     function setFullPayment() {
-        document.getElementById('paymentAmount').value = currentConsumerData.total;
+        document.getElementById('paymentAmount').value = parseCurrency(consumerData.total);
     }
     
     function setHalfPayment() {
-        const halfAmount = parseFloat(currentConsumerData.total) / 2;
-        document.getElementById('paymentAmount').value = halfAmount.toFixed(2);
+        const halfAmount = parseCurrency(consumerData.total) / 2;
+        document.getElementById('paymentAmount').value = halfAmount;
     }
     
     function processPayment() {
@@ -747,51 +679,53 @@ CONN005,9,राजेश पटेल,"शिवाजी मार्ग, फ�
             return;
         }
         
+        const paymentAmount = parseFloat(amount);
+        const totalBalance = parseCurrency(consumerData.total);
+        
+        if (paymentAmount > totalBalance) {
+            showToast("भुगतान राशि कुल बकाया से अधिक नहीं हो सकती", "warning");
+            return;
+        }
+        
         // भुगतान प्रोसेसिंग सिम्युलेट करें
         showToast("भुगतान प्रोसेसिंग...", "info");
         
         setTimeout(() => {
-            // बकाया राशि अपडेट करें
-            const paymentAmount = parseFloat(amount);
-            const currentTotal = parseFloat(currentConsumerData.total);
+            // नई राशियाँ कैलकुलेट करें
+            let newArrears = parseCurrency(consumerData.arrears);
+            let newCurrent = parseCurrency(consumerData.current);
             
-            if (paymentAmount >= currentTotal) {
-                // पूरी राशि का भुगतान
-                currentConsumerData.arrears = "0";
-                currentConsumerData.current = "0";
-                currentConsumerData.total = "0";
-            } else if (paymentAmount >= parseFloat(currentConsumerData.arrears)) {
-                // बकाया राशि से ज्यादा का भुगतान
-                const remaining = paymentAmount - parseFloat(currentConsumerData.arrears);
-                currentConsumerData.arrears = "0";
-                currentConsumerData.current = (parseFloat(currentConsumerData.current) - remaining).toString();
-                currentConsumerData.total = (parseFloat(currentConsumerData.total) - paymentAmount).toString();
+            // पहले बकाया से भुगतान काटें
+            if (paymentAmount <= newArrears) {
+                newArrears -= paymentAmount;
             } else {
-                // सिर्फ बकाया राशि का आंशिक भुगतान
-                currentConsumerData.arrears = (parseFloat(currentConsumerData.arrears) - paymentAmount).toString();
-                currentConsumerData.total = (parseFloat(currentConsumerData.total) - paymentAmount).toString();
+                // बकाया पूरा काटने के बाद बची राशि चालू मांग से काटें
+                const remaining = paymentAmount - newArrears;
+                newArrears = 0;
+                newCurrent = Math.max(0, newCurrent - remaining);
             }
             
-            // नेगेटिव वैल्यूज से बचें
-            if (parseFloat(currentConsumerData.current) < 0) currentConsumerData.current = "0";
-            if (parseFloat(currentConsumerData.arrears) < 0) currentConsumerData.arrears = "0";
-            if (parseFloat(currentConsumerData.total) < 0) currentConsumerData.total = "0";
+            // कुल राशि अपडेट करें
+            const newTotal = newArrears + newCurrent;
+            
+            // डेटा अपडेट करें
+            consumerData.arrears = formatCurrency(newArrears);
+            consumerData.current = formatCurrency(newCurrent);
+            consumerData.total = formatCurrency(newTotal);
             
             // डिस्प्ले अपडेट करें
-            displayConsumerData();
+            document.getElementById('dispArr').innerText = consumerData.arrears;
+            document.getElementById('dispCur').innerText = consumerData.current;
+            document.getElementById('dispTotal').innerText = consumerData.total;
             
             // मोडल बंद करें
             const paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
             paymentModal.hide();
             
-            showToast(`₹${formatCurrency(amount)} का भुगतान ${getPaymentMethodName(method)} के माध्यम से सफलतापूर्वक किया गया!`);
+            // रसीद जनरेट करें
+            generateReceipt(paymentAmount, method);
             
-            // पेमेंट मोडल रीसेट करें
-            selectedPaymentMethod = '';
-            document.querySelectorAll('.payment-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            document.getElementById('paymentMethod').value = '';
+            showToast(`₹${formatCurrency(paymentAmount)} का भुगतान ${getPaymentMethodName(method)} के माध्यम से सफलतापूर्वक किया गया!`);
         }, 2000);
     }
     
@@ -800,8 +734,76 @@ CONN005,9,राजेश पटेल,"शिवाजी मार्ग, फ�
             case 'card': return 'कार्ड';
             case 'upi': return 'UPI';
             case 'cash': return 'नकद';
+            case 'cheque': return 'चेक';
             default: return 'चयनित विधि';
         }
+    }
+    
+    function generateReceipt(amount, method) {
+        const receiptContent = `
+            भुगतान रसीद
+            -------------------------
+            उपभोक्ता: ${consumerData.name}
+            कनेक्शन नंबर: ${consumerData.connectionId}
+            वार्ड नंबर: ${consumerData.ward}
+            -------------------------
+            भुगतान राशि: ₹${formatCurrency(amount)}
+            भुगतान विधि: ${getPaymentMethodName(method)}
+            तारीख: ${new Date().toLocaleDateString('hi-IN')}
+            समय: ${new Date().toLocaleTimeString('hi-IN')}
+            -------------------------
+            नई बकाया: ₹${consumerData.total}
+            -------------------------
+            धन्यवाद!
+        `;
+        
+        // नई विंडो में रसीद दिखाएं
+        const receiptWindow = window.open();
+        receiptWindow.document.write(`
+            <html>
+            <head>
+                <title>भुगतान रसीद - ${consumerData.connectionId}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; }
+                    .receipt { max-width: 400px; margin: 0 auto; border: 2px solid #333; padding: 20px; }
+                    h2 { text-align: center; color: #059669; }
+                    .info { margin: 10px 0; }
+                    .amount { font-size: 24px; font-weight: bold; color: #dc2626; text-align: center; }
+                    hr { border: 1px dashed #ccc; }
+                    button { 
+                        background: #10b981; 
+                        color: white; 
+                        border: none; 
+                        padding: 10px 20px; 
+                        border-radius: 5px; 
+                        cursor: pointer;
+                        display: block;
+                        margin: 20px auto;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="receipt">
+                    <h2>भुगतान रसीद</h2>
+                    <hr>
+                    <div class="info"><strong>उपभोक्ता:</strong> ${consumerData.name}</div>
+                    <div class="info"><strong>कनेक्शन नंबर:</strong> ${consumerData.connectionId}</div>
+                    <div class="info"><strong>वार्ड नंबर:</strong> ${consumerData.ward}</div>
+                    <hr>
+                    <div class="amount">₹${formatCurrency(amount)}</div>
+                    <div class="info"><strong>भुगतान विधि:</strong> ${getPaymentMethodName(method)}</div>
+                    <div class="info"><strong>तारीख:</strong> ${new Date().toLocaleDateString('hi-IN')}</div>
+                    <div class="info"><strong>समय:</strong> ${new Date().toLocaleTimeString('hi-IN')}</div>
+                    <hr>
+                    <div class="info"><strong>शेष बकाया:</strong> ₹${consumerData.total}</div>
+                    <hr>
+                    <p style="text-align: center; margin-top: 20px;">धन्यवाद!</p>
+                    <button onclick="window.print()">रसीद प्रिंट करें</button>
+                </div>
+            </body>
+            </html>
+        `);
+        receiptWindow.document.close();
     }
 
     function handleDelete() {
@@ -819,7 +821,7 @@ CONN005,9,राजेश पटेल,"शिवाजी मार्ग, फ�
             deleteModal.hide();
             
             // सफलता संदेश दिखाएं
-            showToast(`कनेक्शन ${currentConsumerData.id} सफलतापूर्वक डिलीट कर दिया गया!`);
+            showToast(`कनेक्शन ${consumerData.connectionId} सफलतापूर्वक डिलीट कर दिया गया!`);
             
             // 2 सेकंड बाद डैशबोर्ड पर रीडायरेक्ट करें
             setTimeout(() => {
@@ -828,8 +830,17 @@ CONN005,9,राजेश पटेल,"शिवाजी मार्ग, फ�
         }, 1500);
     }
 
-    // पेज लोड होने पर डेटा लोड करें
-    window.onload = loadConsumerDetail;
+    // पेज लोड होने पर इनिशियलाइज़ेशन
+    window.onload = function() {
+        // कनेक्शन ID को URL से लें अगर उपलब्ध हो
+        const urlParams = new URLSearchParams(window.location.search);
+        const connId = urlParams.get('id');
+        
+        if (connId) {
+            consumerData.connectionId = connId;
+            document.getElementById('dispConn').innerText = `कनेक्शन नंबर: ${connId}`;
+        }
+    };
 </script>
 </body>
 </html>
