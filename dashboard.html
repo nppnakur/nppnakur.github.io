@@ -242,8 +242,8 @@
       box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
     }
     
-    /* Confirmation Dialog Styles */
-    .confirmation-dialog {
+    /* Confirmation Dialog Styles - FIXED */
+    #confirmationDialog {
       position: fixed;
       top: 0;
       left: 0;
@@ -253,94 +253,91 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 2000;
+      z-index: 9999;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.3s, visibility 0.3s;
+      transition: all 0.3s;
     }
     
-    .confirmation-dialog.active {
+    #confirmationDialog.active {
       opacity: 1;
       visibility: visible;
     }
     
-    .dialog-content {
+    #confirmationDialog .dialog-content {
       background: white;
-      border-radius: 16px;
+      border-radius: 12px;
       width: 90%;
-      max-width: 380px;
+      max-width: 400px;
       padding: 0;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
       overflow: hidden;
-      transform: translateY(-20px);
+      transform: scale(0.9);
       transition: transform 0.3s;
     }
     
-    .confirmation-dialog.active .dialog-content {
-      transform: translateY(0);
+    #confirmationDialog.active .dialog-content {
+      transform: scale(1);
     }
     
-    .dialog-header {
+    #confirmationDialog .dialog-header {
       background: linear-gradient(90deg, #0066cc, #00a8ff);
       padding: 20px;
+      text-align: center;
       color: white;
     }
     
-    .dialog-title {
+    #confirmationDialog .dialog-title {
       font-size: 20px;
       font-weight: bold;
       margin: 0;
     }
     
-    .dialog-body {
-      padding: 25px 20px;
+    #confirmationDialog .dialog-body {
+      padding: 25px;
+      text-align: center;
     }
     
-    .dialog-message {
+    #confirmationDialog .dialog-message {
       font-size: 16px;
       color: #333;
-      line-height: 1.5;
       margin-bottom: 25px;
+      line-height: 1.5;
     }
     
-    .dialog-buttons {
+    #confirmationDialog .dialog-buttons {
       display: flex;
       gap: 15px;
       justify-content: center;
     }
     
-    .dialog-btn {
-      padding: 12px 30px;
+    #confirmationDialog .dialog-btn {
+      padding: 10px 25px;
       border: none;
-      border-radius: 8px;
-      font-size: 15px;
+      border-radius: 6px;
+      font-size: 14px;
       font-weight: bold;
       cursor: pointer;
+      min-width: 120px;
       transition: all 0.3s;
-      min-width: 130px;
     }
     
-    .dialog-btn-cancel {
+    #confirmationDialog .dialog-btn-cancel {
       background: #6c757d;
       color: white;
     }
     
-    .dialog-btn-cancel:hover {
+    #confirmationDialog .dialog-btn-cancel:hover {
       background: #5a6268;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
     }
     
-    .dialog-btn-logout {
+    #confirmationDialog .dialog-btn-logout {
       background: linear-gradient(to right, #ff5e62, #ff2400);
       color: white;
     }
     
-    .dialog-btn-logout:hover {
-      background: linear-gradient(to right, #ff4b4f, #e60000);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(255, 94, 98, 0.3);
+    #confirmationDialog .dialog-btn-logout:hover {
+      background: linear-gradient(to right, #e60000, #cc0000);
     }
     
     @media (max-width: 600px) {
@@ -348,11 +345,9 @@
       .card { height: 170px; padding: 18px 12px; }
       .card-icon { font-size: 42px; }
       .pwa-badge { top: 5px; right: 5px; font-size: 10px; }
-      .dialog-content { max-width: 320px; }
-      .dialog-buttons { flex-direction: column; }
-      .dialog-btn { width: 100%; }
-      .dialog-header { padding: 15px; }
-      .dialog-body { padding: 20px 15px; }
+      #confirmationDialog .dialog-content { width: 95%; }
+      #confirmationDialog .dialog-buttons { flex-direction: column; }
+      #confirmationDialog .dialog-btn { width: 100%; }
     }
     
     @media (display-mode: standalone) {
@@ -541,7 +536,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Logout button functionality - Now shows confirmation dialog
+    // Logout button functionality
     document.getElementById('logoutBtn').addEventListener('click', function(e) {
         e.preventDefault();
         showLogoutConfirmation();
@@ -560,13 +555,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close dialog when clicking outside
     document.getElementById('confirmationDialog').addEventListener('click', function(e) {
         if (e.target === this) {
-            hideLogoutConfirmation();
-        }
-    });
-    
-    // Close dialog with Escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
             hideLogoutConfirmation();
         }
     });
@@ -609,8 +597,6 @@ document.addEventListener('DOMContentLoaded', function() {
 function showLogoutConfirmation() {
     const dialog = document.getElementById('confirmationDialog');
     dialog.classList.add('active');
-    
-    // Prevent body scroll when dialog is open
     document.body.style.overflow = 'hidden';
 }
 
@@ -618,183 +604,54 @@ function showLogoutConfirmation() {
 function hideLogoutConfirmation() {
     const dialog = document.getElementById('confirmationDialog');
     dialog.classList.remove('active');
-    
-    // Restore body scroll
     document.body.style.overflow = '';
 }
 
 // PWA Functions
 function initPWA() {
-    // Check if already in PWA mode
     if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
         document.getElementById('pwaBadge').style.display = 'block';
-        console.log('📱 Running in PWA mode');
     }
     
-    // Register Service Worker
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/service-worker.js')
-            .then(registration => {
-                console.log('✅ Service Worker registered:', registration.scope);
-            })
             .catch(error => {
-                console.log('❌ Service Worker registration failed:', error);
+                console.log('Service Worker registration failed:', error);
             });
     }
     
-    // Handle beforeinstallprompt event
     window.addEventListener('beforeinstallprompt', (e) => {
-        console.log('📱 PWA install prompt available');
         e.preventDefault();
         deferredPrompt = e;
-        
-        // Show install button
         document.getElementById('installBtn').style.display = 'block';
-        
-        // Auto show prompt after 10 seconds
-        setTimeout(() => {
-            if (deferredPrompt) {
-                showInstallPrompt();
-            }
-        }, 10000);
     });
     
-    // Handle app installed event
     window.addEventListener('appinstalled', () => {
-        console.log('🎉 PWA was installed');
         deferredPrompt = null;
         document.getElementById('installBtn').style.display = 'none';
         document.getElementById('pwaBadge').style.display = 'block';
     });
 }
 
-// Show install prompt
 function showInstallPrompt() {
     if (deferredPrompt) {
         deferredPrompt.prompt();
-        
         deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('✅ User accepted PWA installation');
-                showNotification('नगर पालिका ऐप इंस्टॉल हो गया!');
-            } else {
-                console.log('❌ User dismissed PWA installation');
-            }
-            
             deferredPrompt = null;
             document.getElementById('installBtn').style.display = 'none';
         });
     }
 }
 
-// Install PWA
 function installPWA() {
     if (deferredPrompt) {
         showInstallPrompt();
-    } else {
-        // Show manual instructions
-        showInstallInstructions();
     }
 }
 
-// Show manual installation instructions
-function showInstallInstructions() {
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    const isAndroid = /Android/.test(navigator.userAgent);
-    
-    let instructions = '';
-    
-    if (isIOS) {
-        instructions = `
-            <strong>iOS पर इंस्टॉल करें:</strong><br><br>
-            1. Safari ब्राउज़र में खोलें<br>
-            2. 📤 शेयर बटन टैप करें<br>
-            3. "होम स्क्रीन पर ऐड करें" चुनें<br>
-            4. "ऐड" बटन टैप करें
-        `;
-    } else if (isAndroid) {
-        instructions = `
-            <strong>Android पर इंस्टॉल करें:</strong><br><br>
-            1. Chrome ब्राउज़र में खोलें<br>
-            2. ⋮ मेनू बटन टैप करें<br>
-            3. "इंस्टॉल ऐप" चुनें<br>
-            4. "इंस्टॉल" बटन टैप करें
-        `;
-    } else {
-        instructions = `
-            <strong>Desktop पर इंस्टॉल करें:</strong><br><br>
-            1. एड्रेस बार में 📲 आइकन देखें<br>
-            2. उस पर क्लिक करें<br>
-            3. "इंस्टॉल" बटन क्लिक करें
-        `;
-    }
-    
-    // Create custom modal
-    const modal = document.createElement('div');
-    modal.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.8);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-    `;
-    
-    modal.innerHTML = `
-        <div style="
-            background: linear-gradient(135deg, #0066cc, #00a8ff);
-            padding: 30px;
-            border-radius: 20px;
-            max-width: 400px;
-            width: 90%;
-            color: white;
-            text-align: center;
-            border: 2px solid #ffcc00;
-        ">
-            <h2 style="color: #ffcc00; margin-bottom: 20px;">📱 ऐप इंस्टॉल करें</h2>
-            <div style="text-align: left; margin-bottom: 25px; line-height: 1.6; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
-                ${instructions}
-            </div>
-            <button onclick="this.parentElement.parentElement.remove()" style="
-                background: #ffcc00;
-                color: black;
-                border: none;
-                padding: 12px 30px;
-                border-radius: 25px;
-                font-weight: bold;
-                cursor: pointer;
-                font-size: 16px;
-            ">
-                समझ गया
-            </button>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-}
-
-// Show notification
-function showNotification(message) {
-    if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification('NPP NAKUR', {
-            body: message,
-            icon: 'img1.png'
-        });
-    }
-}
-
-// Update network status
 function updateNetworkStatus() {
     const indicator = document.getElementById('offlineIndicator');
-    if (!navigator.onLine) {
-        indicator.style.display = 'block';
-    } else {
-        indicator.style.display = 'none';
-    }
+    indicator.style.display = navigator.onLine ? 'none' : 'block';
 }
 
 function logout() {
@@ -806,7 +663,7 @@ function logout() {
     localStorage.removeItem('username');
     localStorage.removeItem('loginTime');
     
-    // Redirect to login page WITHOUT alert
+    // Redirect to login page
     window.location.href = 'index.html';
 }
 </script>
