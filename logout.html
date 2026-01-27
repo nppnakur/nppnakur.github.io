@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout - Session Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .logout-message {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #6a11cb;
+        }
+        
+        .logout-message h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .logout-message p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #6a11cb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 25px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .redirect-info {
+            background-color: #e9f7fe;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: #31708f;
+        }
+        
+        .redirect-info p {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .countdown {
+            font-weight: bold;
+            font-size: 1.3rem;
+            color: #2575fc;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(106, 17, 203, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #f1f3f5;
+            color: #495057;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e9ecef;
+            transform: translateY(-3px);
+        }
+        
+        .icon {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 15px;
+            }
+            
+            .header, .content {
+                padding: 25px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Session Logout</h1>
+            <p>Secure session termination and redirection</p>
+        </div>
+        
+        <div class="content">
+            <div class="logout-message">
+                <h2>Logging you out...</h2>
+                <p>Your session is being securely terminated. All session data will be cleared and you will be redirected to the homepage.</p>
+            </div>
+            
+            <div class="loading-spinner"></div>
+            
+            <div class="redirect-info">
+                <p>You will be automatically redirected to the homepage in <span id="countdown" class="countdown">5</span> seconds.</p>
+                <p>If you are not redirected, please use the button below.</p>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="index.php" class="btn btn-primary">
+                    <span class="icon">↻</span> Go to Homepage Now
+                </a>
+                <a href="login.php" class="btn btn-secondary">
+                    <span class="icon">↩</span> Return to Login
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Secure Session Management System &copy; 2023</p>
+        </div>
+    </div>
+    
+    <!-- PHP Code for Session Destruction -->
+    <?php
+    // Start the session
+    session_start();
+    
+    // Destroy all session data
+    $_SESSION = array();
+    
+    // If it's desired to kill the session, also delete the session cookie
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000,
+            $params["path"], $params["domain"],
+            $params["secure"], $params["httponly"]
+        );
+    }
+    
+    // Finally, destroy the session
+    session_destroy();
+    ?>
+    
+    <script>
+        // Countdown for automatic redirect
+        let countdown = 5;
+        const countdownElement = document.getElementById('countdown');
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                window.location.href = 'index.php';
+            }
+        }, 1000);
+        
+        // Alternative: redirect after 5 seconds regardless of countdown
+        setTimeout(() => {
+            window.location.href = 'index.php';
+        }, 5000);
+    </script>
+</body>
+</html>
