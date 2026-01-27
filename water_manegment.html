@@ -347,9 +347,91 @@ footer {
    opacity: 1;
    visibility: visible;
 }
+
+/* Logout confirmation dialog */
+#logoutDialog {
+   display: none;
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background: rgba(0, 0, 0, 0.5);
+   z-index: 2000;
+   align-items: center;
+   justify-content: center;
+}
+
+.dialog-content {
+   background: white;
+   padding: 30px;
+   border-radius: 12px;
+   max-width: 400px;
+   width: 90%;
+   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+   text-align: center;
+}
+
+.dialog-content h3 {
+   color: var(--primary-color);
+   margin-bottom: 15px;
+   font-size: 24px;
+}
+
+.dialog-content p {
+   margin-bottom: 25px;
+   font-size: 16px;
+   color: #555;
+}
+
+.dialog-buttons {
+   display: flex;
+   gap: 15px;
+   justify-content: center;
+}
+
+.dialog-btn {
+   padding: 10px 25px;
+   border: none;
+   border-radius: 8px;
+   font-size: 16px;
+   cursor: pointer;
+   font-weight: 600;
+   transition: all 0.3s;
+}
+
+.confirm-btn {
+   background: var(--primary-color);
+   color: white;
+}
+
+.confirm-btn:hover {
+   background: var(--primary-dark);
+}
+
+.cancel-btn {
+   background: #f0f0f0;
+   color: #333;
+}
+
+.cancel-btn:hover {
+   background: #e0e0e0;
+}
 </style>
 </head>
 <body>
+<!-- Logout Confirmation Dialog -->
+<div id="logoutDialog">
+   <div class="dialog-content">
+      <h3>लॉगआउट की पुष्टि करें</h3>
+      <p>क्या आप वाकई डैशबोर्ड से लॉगआउट करना चाहते हैं?</p>
+      <div class="dialog-buttons">
+         <button class="dialog-btn cancel-btn" onclick="closeLogoutDialog()">रद्द करें</button>
+         <button class="dialog-btn confirm-btn" onclick="confirmLogout()">लॉगआउट करें</button>
+      </div>
+   </div>
+</div>
+
 <div class="nav-top">
    <div class="nav-logo">
       <img src="img1.png" alt="Nagar Palika Parishad Nakur, Saharanpur Logo" class="logo-img">
@@ -360,7 +442,7 @@ footer {
          <i class="fas fa-home"></i>
          <span class="btn-text">होम</span>
       </a>
-      <a class="nav-btn" href="logout.html" title="लॉगआउट">
+      <a class="nav-btn" id="logoutBtn" href="#" title="लॉगआउट" onclick="showLogoutDialog(event)">
          <i class="fas fa-sign-out-alt"></i>
          <span class="btn-text">लॉगआउट</span>
       </a>
@@ -406,6 +488,21 @@ footer {
 </footer>
 
 <script>
+// Logout confirmation dialog functions
+function showLogoutDialog(event) {
+   event.preventDefault();
+   document.getElementById('logoutDialog').style.display = 'flex';
+}
+
+function closeLogoutDialog() {
+   document.getElementById('logoutDialog').style.display = 'none';
+}
+
+function confirmLogout() {
+   // Redirect to the specified URL
+   window.location.href = 'https://nppnakur.github.io/index.html';
+}
+
 // कीबोर्ड नेविगेशन के लिए
 document.addEventListener('DOMContentLoaded', function() {
    const navItems = document.querySelectorAll('.btn-nav, .nav-btn');
@@ -419,6 +516,11 @@ document.addEventListener('DOMContentLoaded', function() {
    document.addEventListener('keydown', function(e) {
       if (e.key === 'Tab') {
          document.body.classList.add('user-tabbing');
+      }
+      
+      // ESC key to close dialog
+      if (e.key === 'Escape') {
+         closeLogoutDialog();
       }
    });
    
@@ -440,6 +542,13 @@ document.addEventListener('DOMContentLoaded', function() {
       card.addEventListener('mouseleave', function() {
          this.style.transition = 'all 0.3s ease';
       });
+   });
+   
+   // Click outside dialog to close
+   document.getElementById('logoutDialog').addEventListener('click', function(e) {
+      if (e.target.id === 'logoutDialog') {
+         closeLogoutDialog();
+      }
    });
    
    // पेज लोड होने पर एनिमेशन
