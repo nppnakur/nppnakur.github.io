@@ -4,63 +4,16 @@
   <meta charset="UTF-8">
   <title>NPP NAKUR - Dashboard</title>
   <link rel="icon" href="img1.png" type="image/png">
-  
-  <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0066cc">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="NPP Nakur">
   <link rel="apple-touch-icon" href="img1.png">
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    
-    body {
-      background-color: #f0f8ff;
-      overflow-x: hidden;
-      position: relative;
-      min-height: 100vh;
-      -webkit-tap-highlight-color: transparent;
-    }
-    
-    /* PWA Badge */
-    .pwa-badge {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      background: linear-gradient(90deg, #0066cc, #00a8ff);
-      color: white;
-      padding: 5px 12px;
-      border-radius: 15px;
-      font-size: 12px;
-      font-weight: bold;
-      z-index: 1001;
-      display: none;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-    
-    /* Offline Indicator */
-    .offline-indicator {
-      position: fixed;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #ff3333;
-      color: white;
-      padding: 8px 15px;
-      border-radius: 20px;
-      font-size: 12px;
-      display: none;
-      z-index: 1001;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { background-color: #f0f8ff; min-height: 100vh; }
     
     .background-banner {
       position: fixed;
@@ -84,8 +37,6 @@
       font-weight: bold;
       text-align: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      position: relative;
-      overflow: hidden;
     }
     
     .card-container {
@@ -198,120 +149,51 @@
       box-shadow: 0 8px 14px rgba(255, 94, 98, 0.4);
     }
     
-    .session-timer {
-      position: fixed;
-      bottom: 10px;
-      left: 10px;
-      background: rgba(0, 102, 204, 0.8);
-      color: white;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      z-index: 1000;
-    }
-    
-    .logout-notification {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      background: rgba(255, 87, 34, 0.9);
-      color: white;
-      padding: 10px 15px;
-      border-radius: 8px;
-      font-size: 14px;
-      display: none;
-      z-index: 1000;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    
-    /* Install Button */
-    .install-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: linear-gradient(90deg, #0066cc, #00a8ff);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 25px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      display: none;
-      z-index: 1000;
-      box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
-    }
-    
-    /* Confirmation Dialog Styles - FIXED */
-    #confirmationDialog {
+    /* Logout Dialog Styles */
+    #logoutDialog {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.7);
-      display: flex;
+      display: none;
       justify-content: center;
       align-items: center;
       z-index: 9999;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s;
     }
     
-    #confirmationDialog.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    #confirmationDialog .dialog-content {
+    #logoutDialog .dialog-content {
       background: white;
       border-radius: 12px;
       width: 90%;
       max-width: 400px;
-      padding: 0;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      overflow: hidden;
-      transform: scale(0.9);
-      transition: transform 0.3s;
-    }
-    
-    #confirmationDialog.active .dialog-content {
-      transform: scale(1);
-    }
-    
-    #confirmationDialog .dialog-header {
-      background: linear-gradient(90deg, #0066cc, #00a8ff);
-      padding: 20px;
-      text-align: center;
-      color: white;
-    }
-    
-    #confirmationDialog .dialog-title {
-      font-size: 20px;
-      font-weight: bold;
-      margin: 0;
-    }
-    
-    #confirmationDialog .dialog-body {
       padding: 25px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
       text-align: center;
     }
     
-    #confirmationDialog .dialog-message {
-      font-size: 16px;
+    #logoutDialog h3 {
+      font-size: 22px;
       color: #333;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+    
+    #logoutDialog p {
+      font-size: 16px;
+      color: #555;
       margin-bottom: 25px;
       line-height: 1.5;
     }
     
-    #confirmationDialog .dialog-buttons {
+    .dialog-buttons {
       display: flex;
       gap: 15px;
       justify-content: center;
     }
     
-    #confirmationDialog .dialog-btn {
+    .dialog-btn {
       padding: 10px 25px;
       border: none;
       border-radius: 6px;
@@ -322,21 +204,21 @@
       transition: all 0.3s;
     }
     
-    #confirmationDialog .dialog-btn-cancel {
+    .cancel-btn {
       background: #6c757d;
       color: white;
     }
     
-    #confirmationDialog .dialog-btn-cancel:hover {
+    .cancel-btn:hover {
       background: #5a6268;
     }
     
-    #confirmationDialog .dialog-btn-logout {
+    .confirm-btn {
       background: linear-gradient(to right, #ff5e62, #ff2400);
       color: white;
     }
     
-    #confirmationDialog .dialog-btn-logout:hover {
+    .confirm-btn:hover {
       background: linear-gradient(to right, #e60000, #cc0000);
     }
     
@@ -344,55 +226,24 @@
       .card-container { grid-template-columns: repeat(2, 1fr); gap: 15px; }
       .card { height: 170px; padding: 18px 12px; }
       .card-icon { font-size: 42px; }
-      .pwa-badge { top: 5px; right: 5px; font-size: 10px; }
-      #confirmationDialog .dialog-content { width: 95%; }
-      #confirmationDialog .dialog-buttons { flex-direction: column; }
-      #confirmationDialog .dialog-btn { width: 100%; }
-    }
-    
-    @media (display-mode: standalone) {
-      .pwa-badge { display: block; }
-      .install-btn { display: none !important; }
+      .dialog-buttons { flex-direction: column; }
+      .dialog-btn { width: 100%; }
     }
   </style>
 </head>
 <body>
-  <!-- PWA Badge -->
-  <div class="pwa-badge" id="pwaBadge">📱 ऐप</div>
-  
-  <!-- Offline Indicator -->
-  <div class="offline-indicator" id="offlineIndicator">⚠️ ऑफलाइन</div>
-  
-  <!-- Install Button -->
-  <button class="install-btn" id="installBtn">📲 ऐप इंस्टॉल करें</button>
-  
-  <!-- Confirmation Dialog -->
-  <div class="confirmation-dialog" id="confirmationDialog">
-    <div class="dialog-content">
-      <div class="dialog-header">
-        <div class="dialog-title">लॉगआउट की पुष्टि करें</div>
-      </div>
-      <div class="dialog-body">
-        <div class="dialog-message">
-          क्या आप वाकई डैशबोर्ड से लॉगआउट करना चाहते हैं?
-        </div>
-        <div class="dialog-buttons">
-          <button class="dialog-btn dialog-btn-cancel" id="cancelBtn">रद्द करें</button>
-          <button class="dialog-btn dialog-btn-logout" id="confirmLogoutBtn">लॉगआउट करें</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  
   <div class="background-banner"></div>
   
-  <div class="logout-notification" id="logoutNotification">
-    <strong>⚠️ Session Expiring Soon!</strong><br>
-    You will be logged out in <span id="countdown">60</span> seconds
-  </div>
-  
-  <div class="session-timer" id="sessionTimer">
-    Session: <span id="sessionTime">30:00</span>
+  <!-- Logout Confirmation Dialog -->
+  <div id="logoutDialog">
+     <div class="dialog-content">
+        <h3>लॉगआउट की पुष्टि करें</h3>
+        <p>क्या आप वाकई डैशबोर्ड से लॉगआउट करना चाहते हैं?</p>
+        <div class="dialog-buttons">
+           <button class="dialog-btn cancel-btn" onclick="closeLogoutDialog()">रद्द करें</button>
+           <button class="dialog-btn confirm-btn" onclick="confirmLogout()">लॉगआउट करें</button>
+        </div>
+     </div>
   </div>
 
   <div class="water-tab" id="welcomeTab">
@@ -482,16 +333,13 @@
   </div>
   
   <div class="logout-container">
-    <button class="logout-btn" id="logoutBtn">
+    <button class="logout-btn" onclick="showLogoutDialog()">
       <span style="margin-right: 8px;">🚪</span> लॉगआउट
     </button>
   </div>
 
 <script>
-// PWA Variables
-let deferredPrompt = null;
-
-// Authentication check
+// Check if user is logged in
 document.addEventListener('DOMContentLoaded', function() {
     const isLoggedIn = localStorage.getItem('loggedIn');
     const username = localStorage.getItem('username');
@@ -501,171 +349,49 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
-    // Initialize PWA features
-    initPWA();
-    
     // Update welcome message
     document.getElementById('welcomeTab').innerHTML = `WELCOME ${username.toUpperCase()} TO NPP NAKUR SERVICE`;
-    
-    // Session timeout configuration
-    let sessionTime = 1800; // 30 minutes in seconds
-    const warningTime = 60; // Show warning 60 seconds before logout
-    
-    // Start session timer
-    const timerInterval = setInterval(() => {
-        sessionTime--;
-        updateSessionTimer();
-        
-        // Show warning when time is running out
-        if (sessionTime === warningTime) {
-            showLogoutWarning();
-        }
-        
-        // Logout when time is up
-        if (sessionTime <= 0) {
-            clearInterval(timerInterval);
-            logout();
-        }
-    }, 1000);
-    
-    // Reset timer on user activity
-    ['click', 'keypress', 'mousemove', 'scroll'].forEach(event => {
-        document.addEventListener(event, () => {
-            sessionTime = 1800;
-            updateSessionTimer();
-        });
-    });
-    
-    // Logout button functionality
-    document.getElementById('logoutBtn').addEventListener('click', function(e) {
-        e.preventDefault();
-        showLogoutConfirmation();
-    });
-    
-    // Cancel button in confirmation dialog
-    document.getElementById('cancelBtn').addEventListener('click', function() {
-        hideLogoutConfirmation();
-    });
-    
-    // Confirm logout button in confirmation dialog
-    document.getElementById('confirmLogoutBtn').addEventListener('click', function() {
-        logout();
-    });
-    
-    // Close dialog when clicking outside
-    document.getElementById('confirmationDialog').addEventListener('click', function(e) {
-        if (e.target === this) {
-            hideLogoutConfirmation();
-        }
-    });
-    
-    // Install button functionality
-    document.getElementById('installBtn').addEventListener('click', installPWA);
-    
-    // Network status
-    window.addEventListener('online', updateNetworkStatus);
-    window.addEventListener('offline', updateNetworkStatus);
-    updateNetworkStatus();
-    
-    function updateSessionTimer() {
-        const minutes = Math.floor(sessionTime / 60);
-        const seconds = sessionTime % 60;
-        document.getElementById('sessionTime').textContent = 
-            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
-    
-    function showLogoutWarning() {
-        const notification = document.getElementById('logoutNotification');
-        const countdownSpan = document.getElementById('countdown');
-        
-        notification.style.display = 'block';
-        
-        let warningCountdown = warningTime;
-        const warningInterval = setInterval(() => {
-            warningCountdown--;
-            countdownSpan.textContent = warningCountdown;
-            
-            if (warningCountdown <= 0) {
-                clearInterval(warningInterval);
-                notification.style.display = 'none';
-            }
-        }, 1000);
-    }
 });
 
-// Show logout confirmation dialog
-function showLogoutConfirmation() {
-    const dialog = document.getElementById('confirmationDialog');
-    dialog.classList.add('active');
+// Show logout dialog
+function showLogoutDialog() {
+    document.getElementById('logoutDialog').style.display = 'flex';
     document.body.style.overflow = 'hidden';
 }
 
-// Hide logout confirmation dialog
-function hideLogoutConfirmation() {
-    const dialog = document.getElementById('confirmationDialog');
-    dialog.classList.remove('active');
+// Close logout dialog
+function closeLogoutDialog() {
+    document.getElementById('logoutDialog').style.display = 'none';
     document.body.style.overflow = '';
 }
 
-// PWA Functions
-function initPWA() {
-    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-        document.getElementById('pwaBadge').style.display = 'block';
-    }
-    
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js')
-            .catch(error => {
-                console.log('Service Worker registration failed:', error);
-            });
-    }
-    
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById('installBtn').style.display = 'block';
-    });
-    
-    window.addEventListener('appinstalled', () => {
-        deferredPrompt = null;
-        document.getElementById('installBtn').style.display = 'none';
-        document.getElementById('pwaBadge').style.display = 'block';
-    });
-}
-
-function showInstallPrompt() {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-            deferredPrompt = null;
-            document.getElementById('installBtn').style.display = 'none';
-        });
-    }
-}
-
-function installPWA() {
-    if (deferredPrompt) {
-        showInstallPrompt();
-    }
-}
-
-function updateNetworkStatus() {
-    const indicator = document.getElementById('offlineIndicator');
-    indicator.style.display = navigator.onLine ? 'none' : 'block';
-}
-
-function logout() {
-    // Hide confirmation dialog first
-    hideLogoutConfirmation();
-    
+// Confirm logout
+function confirmLogout() {
     // Clear localStorage
     localStorage.removeItem('loggedIn');
     localStorage.removeItem('username');
     localStorage.removeItem('loginTime');
     
+    // Close dialog
+    closeLogoutDialog();
+    
     // Redirect to login page
     window.location.href = 'index.html';
 }
+
+// Close dialog when clicking outside
+document.getElementById('logoutDialog').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeLogoutDialog();
+    }
+});
+
+// Close dialog with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && document.getElementById('logoutDialog').style.display === 'flex') {
+        closeLogoutDialog();
+    }
+});
 </script>
 </body>
 </html>
