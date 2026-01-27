@@ -502,7 +502,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const username = localStorage.getItem('username');
     
     if (!isLoggedIn || !username) {
-        alert('Please login first!');
         window.location.href = 'index.html';
         return;
     }
@@ -807,8 +806,7 @@ function logout() {
     localStorage.removeItem('username');
     localStorage.removeItem('loginTime');
     
-    // Show message and redirect
-    alert('Successfully logged out!');
+    // Redirect to login page WITHOUT alert
     window.location.href = 'index.html';
 }
 </script>
