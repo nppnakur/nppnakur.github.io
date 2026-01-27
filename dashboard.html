@@ -10,924 +10,330 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* Modern CSS Variables */
-        :root {
-            --primary: #0062ff;
-            --primary-dark: #0047b3;
-            --secondary: #00c9ff;
-            --bg-color: #f4f7fe;
-            --card-bg: #ffffff;
-            --text-main: #1b1b1b;
-            --text-secondary: #666;
-            --danger: #ff3b30;
-            --danger-dark: #e6352b;
-            --success: #4cd964;
-            --warning: #ffcc00;
-            --shadow: 0 10px 30px rgba(0,0,0,0.08);
-            --shadow-hover: 0 20px 40px rgba(0,0,0,0.12);
-            --radius: 16px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif; 
-        }
-
-        body { 
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh; 
-            display: flex; 
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
             flex-direction: column;
-            color: var(--text-main);
-            line-height: 1.6;
-        }
-
-        /* Top Navigation */
-        .navbar {
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            color: white;
-            box-shadow: 0 4px 20px rgba(0, 70, 179, 0.3);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
+            justify-content: center;
+            padding: 20px;
         }
 
-        .brand { 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-        }
-        
-        .brand img { 
-            height: 50px; 
-            width: 50px; 
-            border-radius: 50%; 
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            transition: var(--transition);
-        }
-        
-        .brand img:hover {
-            transform: rotate(10deg);
-            border-color: rgba(255, 255, 255, 0.6);
-        }
-        
-        .brand span { 
-            font-size: 1.4rem; 
-            font-weight: 700; 
-            letter-spacing: 0.5px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 8px 15px;
-            border-radius: 50px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .user-info i {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-        
-        .user-info span {
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-
-        /* Dashboard Content */
         .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-            flex-grow: 1;
-        }
-
-        .welcome-section {
-            text-align: center;
-            margin-bottom: 50px;
-            padding: 30px;
             background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .welcome-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-        }
-
-        .welcome-section h1 {
-            color: var(--primary);
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-        
-        .welcome-section p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            margin-top: 10px;
-        }
-        
-        .datetime {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 8px 20px;
-            border-radius: 50px;
-            display: inline-block;
-            margin-top: 15px;
-            font-weight: 500;
-            box-shadow: 0 4px 15px rgba(0, 98, 255, 0.3);
-        }
-
-        /* Card Grid */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            padding: 30px 25px;
-            border-radius: var(--radius);
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: var(--transition);
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(0,0,0,0.05);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-        
-        .card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-hover);
-        }
-        
-        .card:active {
-            transform: translateY(-5px);
-        }
-
-        .icon-box {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #eef4ff, #d9e6ff);
             border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 32px;
-            color: var(--primary);
-            transition: var(--transition);
-        }
-        
-        .card:hover .icon-box {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .card h3 {
-            color: var(--text-main);
-            font-size: 1.2rem;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        
-        .card p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            text-align: center;
-            line-height: 1.4;
-        }
-
-        /* Logout Button */
-        .logout-container {
-            text-align: center;
-            margin-top: 40px;
-            padding-bottom: 50px;
-        }
-
-        .btn-logout {
-            background: linear-gradient(135deg, var(--danger), var(--danger-dark));
-            color: white;
-            border: none;
-            padding: 16px 50px;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(255, 59, 48, 0.3);
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            letter-spacing: 0.5px;
-        }
-        
-        .btn-logout:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(255, 59, 48, 0.4);
-            background: linear-gradient(135deg, var(--danger-dark), #d32f2f);
-        }
-        
-        .btn-logout:active {
-            transform: translateY(-1px);
-        }
-
-        /* New Modern Dialog */
-        .logout-dialog {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .dialog-content {
-            background: linear-gradient(135deg, #ffffff, #f8f9fa);
-            border-radius: 24px;
-            width: 90%;
             max-width: 500px;
             overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
-            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            animation: slideIn 0.5s ease-out;
         }
 
-        .dialog-header {
-            background: linear-gradient(135deg, var(--danger), var(--danger-dark));
-            padding: 30px;
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0062ff 0%, #0047b3 100%);
+            padding: 40px 30px;
             text-align: center;
             color: white;
+            position: relative;
         }
-        
-        .dialog-header i {
-            font-size: 70px;
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ffcc00, #ff9900);
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid rgba(255,255,255,0.3);
             margin-bottom: 20px;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+            background: white;
+            padding: 10px;
         }
-        
-        .dialog-header h2 {
-            font-size: 1.8rem;
-            font-weight: 700;
+
+        .header h1 {
+            font-size: 28px;
             margin-bottom: 10px;
+            font-weight: 700;
         }
-        
-        .dialog-header p {
-            font-size: 1.1rem;
+
+        .header p {
+            font-size: 16px;
             opacity: 0.9;
         }
 
-        .dialog-body {
-            padding: 40px;
+        .message-box {
+            padding: 40px 30px;
             text-align: center;
         }
-        
-        .dialog-body p {
-            font-size: 1.2rem;
-            color: var(--text-main);
-            margin-bottom: 40px;
-            line-height: 1.6;
-            font-weight: 500;
+
+        .icon {
+            font-size: 60px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite alternate;
         }
 
-        .dialog-actions {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-        }
-        
-        .dialog-btn {
-            padding: 16px 40px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            border: none;
-            min-width: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .dialog-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        }
-        
-        .dialog-btn:active {
-            transform: translateY(-1px);
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
         }
 
-        .btn-cancel {
-            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+        .message-box h2 {
+            font-size: 24px;
             color: #333;
-            border: 2px solid #ddd;
-        }
-        
-        .btn-cancel:hover {
-            background: linear-gradient(135deg, #e8e8e8, #d8d8d8);
-            border-color: #ccc;
+            margin-bottom: 15px;
+            font-weight: 600;
         }
 
-        .btn-confirm {
-            background: linear-gradient(135deg, var(--danger), var(--danger-dark));
-            color: white;
-            box-shadow: 0 6px 20px rgba(255, 59, 48, 0.3);
-        }
-        
-        .btn-confirm:hover {
-            background: linear-gradient(135deg, var(--danger-dark), #d32f2f);
-            box-shadow: 0 10px 25px rgba(255, 59, 48, 0.4);
+        .message-box p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
         }
 
-        /* Footer */
+        .loading-bar {
+            width: 100%;
+            height: 4px;
+            background: #f0f0f0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 30px 0;
+        }
+
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            width: 0%;
+            animation: loading 2s linear forwards;
+            border-radius: 2px;
+        }
+
+        @keyframes loading {
+            to { width: 100%; }
+        }
+
+        .redirect-message {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #0062ff;
+        }
+
+        .redirect-message p {
+            margin-bottom: 0;
+            font-size: 14px;
+        }
+
+        .countdown {
+            color: #0062ff;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
         .footer {
             text-align: center;
-            padding: 20px;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-            background: rgba(255, 255, 255, 0.8);
+            margin-top: 30px;
+            color: white;
+            font-size: 14px;
         }
-        
+
         .footer a {
-            color: var(--primary);
+            color: #ffcc00;
             text-decoration: none;
             font-weight: 500;
         }
-        
+
         .footer a:hover {
             text-decoration: underline;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 12px 4%;
-            }
-            
-            .brand span {
-                font-size: 1.2rem;
-            }
-            
-            .welcome-section h1 {
-                font-size: 1.8rem;
-            }
-            
-            .grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 20px;
-            }
-            
-            .card {
-                padding: 25px 20px;
-            }
-            
-            .dialog-content {
-                max-width: 90%;
-            }
-            
-            .dialog-actions {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .dialog-btn {
-                width: 100%;
-                min-width: auto;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .brand span {
-                font-size: 1rem;
-            }
-            
-            .user-info span {
-                font-size: 0.85rem;
-            }
-            
-            .grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .welcome-section h1 {
-                font-size: 1.5rem;
-            }
-            
-            .btn-logout {
-                padding: 14px 30px;
-                font-size: 1rem;
-            }
-            
-            .dialog-body {
-                padding: 30px 20px;
-            }
+        .button-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
         }
 
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 18px 25px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            z-index: 1001;
-            transform: translateX(150%);
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            max-width: 350px;
-        }
-        
-        .toast.show {
-            transform: translateX(0);
-        }
-        
-        .toast i {
-            font-size: 24px;
-        }
-        
-        .toast-content {
-            flex: 1;
-        }
-        
-        .toast h4 {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
+        .btn {
+            padding: 12px 30px;
+            border-radius: 50px;
             font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-width: 150px;
         }
-        
-        .toast p {
-            font-size: 0.95rem;
-            opacity: 0.9;
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0062ff, #0047b3);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,98,255,0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,98,255,0.4);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            border-color: #ccc;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .message-box {
+                padding: 30px 20px;
+            }
+            
+            .button-container {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
 
-<!-- Logout Confirmation Dialog -->
-<div class="logout-dialog" id="logoutDialog">
-    <div class="dialog-content">
-        <div class="dialog-header">
-            <i class="fas fa-sign-out-alt"></i>
-            <h2>लॉगआउट की पुष्टि करें</h2>
-            <p>नगर पालिका नकुड़ प्रशासन पोर्टल</p>
-        </div>
-        
-        <div class="dialog-body">
-            <p>क्या आप वाकई डैशबोर्ड से लॉगआउट करना चाहते हैं?</p>
-            
-            <div class="dialog-actions">
-                <button class="dialog-btn btn-cancel" onclick="hideLogoutDialog()">
-                    <i class="fas fa-times"></i>
-                    रद्द करें
-                </button>
-                <button class="dialog-btn btn-confirm" onclick="performLogout()">
-                    <i class="fas fa-sign-out-alt"></i>
-                    लॉगआउट करें
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Toast Notification -->
-<div class="toast" id="toast">
-    <i class="fas fa-check-circle"></i>
-    <div class="toast-content">
-        <h4 id="toastTitle">सफल</h4>
-        <p id="toastMessage">कार्रवाई सफलतापूर्वक पूरी हुई</p>
-    </div>
-</div>
-
-<!-- Top Navigation Bar -->
-<div class="navbar">
-    <div class="brand">
-        <img src="img1.png" alt="नगर पालिका नकुड़ लोगो" id="navLogo">
-        <span>NPP NAKUR</span>
-    </div>
-    <div class="user-info">
-        <i class="fas fa-user-circle"></i> 
-        <span id="userSpan">ADMIN</span>
-    </div>
-</div>
-
-<!-- Main Content -->
 <div class="container">
-    <div class="welcome-section">
-        <h1 id="welcomeText">NPP NAKUR डैशबोर्ड में आपका स्वागत है</h1>
-        <p>सभी प्रशासनिक सेवाएं एक ही स्थान पर</p>
-        <div class="datetime" id="datetime"></div>
+    <div class="header">
+        <img src="img1.png" alt="NPP NAKUR Logo" class="logo">
+        <h1>NAGAR PALIKA NAKUR</h1>
+        <p>प्रशासन पोर्टल</p>
     </div>
-
-    <!-- Service Cards Grid -->
-    <div class="grid">
-        <a href="https://nppnakur.github.io/water_manegment.html" class="card" target="_blank">
-            <div class="icon-box"><i class="fas fa-tint"></i></div>
-            <h3>जल प्रबंधन</h3>
-            <p>जल आपूर्ति, बिलिंग और शिकायत प्रबंधन</p>
-        </a>
+    
+    <div class="message-box">
+        <div class="icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
         
-        <a href="https://sunnydhaka.fwh.is/house_tax_dashboard.php" class="card" target="_blank">
-            <div class="icon-box"><i class="fas fa-home"></i></div>
-            <h3>हाउस टैक्स</h3>
-            <p>गृह कर संग्रहण और प्रबंधन प्रणाली</p>
-        </a>
+        <h2>Successfully logged out!</h2>
+        <p>आप सफलतापूर्वक नगर पालिका नकुड़ डैशबोर्ड से लॉगआउट हो गए हैं।</p>
         
-        <a href="https://sunnydhaka.fwh.is/dhaka_ai.php" class="card" target="_blank">
-            <div class="icon-box"><i class="fas fa-robot"></i></div>
-            <h3>DHAKA AI</h3>
-            <p>कृत्रिम बुद्धिमत्ता सहायक प्रणाली</p>
-        </a>
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
+        </div>
         
-        <a href="https://sunnydhaka.fwh.is/idcard_desbord.php" class="card" target="_blank">
-            <div class="icon-box"><i class="fas fa-id-card"></i></div>
-            <h3>ID कार्ड</h3>
-            <p>नागरिक पहचान पत्र प्रबंधन</p>
-        </a>
+        <div class="redirect-message">
+            <p>आपको स्वचालित रूप से लॉगिन पेज पर भेजा जा रहा है... <span class="countdown" id="countdown">5</span> सेकंड</p>
+        </div>
         
-        <a href="#" class="card" onclick="showComingSoon()">
-            <div class="icon-box"><i class="fas fa-bolt"></i></div>
-            <h3>बिजली विभाग</h3>
-            <p>शीघ्र ही उपलब्ध होगा</p>
-        </a>
-        
-        <a href="#" class="card" onclick="showComingSoon()">
-            <div class="icon-box"><i class="fas fa-store"></i></div>
-            <h3>दुकान टैक्स</h3>
-            <p>शीघ्र ही उपलब्ध होगा</p>
-        </a>
-        
-        <a href="#" class="card" onclick="showComingSoon()">
-            <div class="icon-box"><i class="fas fa-car"></i></div>
-            <h3>वाहन कर</h3>
-            <p>शीघ्र ही उपलब्ध होगा</p>
-        </a>
-        
-        <a href="#" class="card" onclick="showComingSoon()">
-            <div class="icon-box"><i class="fas fa-file-invoice"></i></div>
-            <h3>रिपोर्ट्स</h3>
-            <p>विभिन्न रिपोर्ट्स और विश्लेषण</p>
-        </a>
-    </div>
-
-    <!-- Logout Section -->
-    <div class="logout-container">
-        <button class="btn-logout" onclick="showLogoutDialog()">
-            <i class="fas fa-sign-out-alt"></i> लॉगआउट करें
-        </button>
+        <div class="button-container">
+            <button class="btn btn-primary" onclick="redirectNow()">
+                <i class="fas fa-sign-in-alt"></i> तुरंत लॉगिन करें
+            </button>
+            <button class="btn btn-secondary" onclick="stayHere()">
+                <i class="fas fa-times"></i> यहाँ रहें
+            </button>
+        </div>
     </div>
 </div>
 
-<!-- Footer -->
 <div class="footer">
     <p>© 2023 नगर पालिका नकुड़ प्रशासन | सभी अधिकार सुरक्षित</p>
     <p>विकसित: <a href="https://sunnydhaka.fwh.is" target="_blank">Sunny Dhaka</a></p>
 </div>
 
 <script>
-    // Initialize dashboard
-    document.addEventListener('DOMContentLoaded', function() {
-        // Set user name from localStorage
-        const name = localStorage.getItem('username') || "ADMIN";
-        const displayName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-        
-        document.getElementById('userSpan').textContent = displayName;
-        document.getElementById('welcomeText').textContent = `${displayName}, NPP NAKUR डैशबोर्ड में आपका स्वागत है`;
-        
-        // Update date and time
-        updateDateTime();
-        setInterval(updateDateTime, 1000);
-        
-        // Check authentication
-        checkAuth();
-        
-        // Add click sound effect to cards
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-            card.addEventListener('click', function() {
-                playClickSound();
-            });
-        });
-        
-        // Refresh logo
-        const logo = document.getElementById('navLogo');
-        if (logo) {
-            logo.src = 'img1.png?' + new Date().getTime();
-        }
-    });
-
-    // Update current date and time
-    function updateDateTime() {
-        const now = new Date();
-        const options = { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-        };
-        
-        const dateTimeStr = now.toLocaleDateString('hi-IN', options);
-        document.getElementById('datetime').textContent = dateTimeStr;
-    }
-
-    // Check authentication
-    function checkAuth() {
-        const isLoggedIn = localStorage.getItem('loggedIn');
-        const loginTime = localStorage.getItem('loginTime');
-        
-        if (!isLoggedIn || isLoggedIn !== 'true') {
-            // Redirect to login if not authenticated
-            window.location.replace('index.html');
-            return;
-        }
-        
-        // Check session timeout (24 hours)
-        if (loginTime) {
-            const loginDate = new Date(loginTime);
-            const currentDate = new Date();
-            const diffHours = (currentDate - loginDate) / (1000 * 60 * 60);
+    // Clear all authentication data
+    localStorage.removeItem('loggedIn');
+    localStorage.removeItem('username');
+    localStorage.removeItem('loginTime');
+    sessionStorage.clear();
+    
+    let countdown = 5;
+    let countdownElement = document.getElementById('countdown');
+    let redirectTimer;
+    
+    function startRedirectTimer() {
+        redirectTimer = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
             
-            if (diffHours > 24) {
-                // Session expired - show notification and logout
-                showToast('सत्र समाप्त', 'आपका सत्र समाप्त हो गया है। कृपया पुनः लॉगिन करें।', 'warning');
-                setTimeout(() => {
-                    performLogout();
-                }, 3000);
+            if (countdown <= 0) {
+                clearInterval(redirectTimer);
+                window.location.href = 'index.html';
             }
-        }
-    }
-
-    // Show logout dialog
-    function showLogoutDialog() {
-        document.getElementById('logoutDialog').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-        playClickSound();
-    }
-
-    // Hide logout dialog
-    function hideLogoutDialog() {
-        document.getElementById('logoutDialog').style.display = 'none';
-        document.body.style.overflow = 'auto';
-        playClickSound();
-    }
-
-    // Perform logout
-    function performLogout() {
-        // Show loading state
-        const confirmBtn = document.querySelector('.btn-confirm');
-        const originalText = confirmBtn.innerHTML;
-        confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> लॉगआउट हो रहा है...';
-        confirmBtn.disabled = true;
-        
-        // Simulate logout process
-        setTimeout(() => {
-            // Clear all stored data
-            localStorage.clear();
-            sessionStorage.clear();
-            
-            // Show success message
-            showToast('लॉगआउट सफल', 'आप सफलतापूर्वक लॉगआउट हो गए हैं।', 'success');
-            
-            // Redirect to login page after delay
-            setTimeout(() => {
-                window.location.replace('index.html');
-            }, 1500);
         }, 1000);
     }
-
-    // Show coming soon notification
-    function showComingSoon() {
-        showToast('शीघ्र ही उपलब्ध', 'यह सेवा शीघ्र ही उपलब्ध होगी।', 'info');
-        playClickSound();
-    }
-
-    // Show toast notification
-    function showToast(title, message, type = 'info') {
-        const toast = document.getElementById('toast');
-        const toastTitle = document.getElementById('toastTitle');
-        const toastMessage = document.getElementById('toastMessage');
-        
-        // Set icon based on type
-        let icon = 'fa-info-circle';
-        let bgColor = 'linear-gradient(135deg, var(--primary), var(--secondary))';
-        
-        switch(type) {
-            case 'success':
-                icon = 'fa-check-circle';
-                bgColor = 'linear-gradient(135deg, #4cd964, #2ecc71)';
-                break;
-            case 'warning':
-                icon = 'fa-exclamation-triangle';
-                bgColor = 'linear-gradient(135deg, #ffcc00, #ff9900)';
-                break;
-            case 'error':
-                icon = 'fa-times-circle';
-                bgColor = 'linear-gradient(135deg, var(--danger), #d32f2f)';
-                break;
-        }
-        
-        // Update toast content
-        toast.innerHTML = `
-            <i class="fas ${icon}"></i>
-            <div class="toast-content">
-                <h4>${title}</h4>
-                <p>${message}</p>
-            </div>
-        `;
-        
-        // Apply background color
-        toast.style.background = bgColor;
-        
-        // Show toast
-        toast.classList.add('show');
-        
-        // Hide toast after 3 seconds
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
-    }
-
-    // Handle clicks outside dialog to close it
-    document.addEventListener('click', function(event) {
-        const dialog = document.getElementById('logoutDialog');
-        if (event.target === dialog) {
-            hideLogoutDialog();
-        }
-    });
-
-    // Handle Escape key to close dialog
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            hideLogoutDialog();
-        }
-    });
-
-    // Play click sound
-    function playClickSound() {
-        try {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.value = 600;
-            oscillator.type = 'sine';
-            
-            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.1);
-        } catch (e) {
-            // Audio not supported - continue silently
-        }
-    }
-
-    // Auto logout after 30 minutes of inactivity
-    let inactivityTimer;
-    let warningTimer;
     
-    function resetInactivityTimer() {
-        clearTimeout(inactivityTimer);
-        clearTimeout(warningTimer);
-        
-        inactivityTimer = setTimeout(() => {
-            // Show inactivity warning
-            showToast('निष्क्रियता चेतावनी', 'आप 1 मिनट में स्वचालित रूप से लॉगआउट हो जाएंगे।', 'warning');
-            
-            // Set final logout timer
-            warningTimer = setTimeout(() => {
-                showToast('स्वचालित लॉगआउट', 'निष्क्रियता के कारण आप लॉगआउट हो गए हैं।', 'info');
-                performLogout();
-            }, 60000); // 1 minute warning
-        }, 30 * 60 * 1000); // 30 minutes
+    function redirectNow() {
+        clearInterval(redirectTimer);
+        window.location.href = 'index.html';
     }
     
-    // Set up inactivity detection
-    const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
-    events.forEach(event => {
-        document.addEventListener(event, resetInactivityTimer);
-    });
+    function stayHere() {
+        clearInterval(redirectTimer);
+        document.querySelector('.redirect-message').innerHTML = 
+            '<p>आप यहाँ रहने का निर्णय लिया है। जब चाहें लॉगिन बटन क्लिक करें।</p>';
+        document.querySelector('.loading-bar').style.display = 'none';
+        document.getElementById('countdown').style.display = 'none';
+    }
     
-    // Initialize the timer
-    resetInactivityTimer();
-
-    // Prevent browser alerts and confirms
-    window.alert = function() { 
-        console.log("Browser alert blocked by NPP Nakur security policy");
-        return true; 
+    // Start the countdown when page loads
+    document.addEventListener('DOMContentLoaded', startRedirectTimer);
+    
+    // Prevent back button after logout
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
     };
-    
-    window.confirm = function() { 
-        console.log("Browser confirm dialog blocked");
-        return true; 
-    };
-    
-    window.prompt = function() { 
-        console.log("Browser prompt blocked");
-        return null; 
-    };
-
-    // Prevent right-click context menu
-    document.addEventListener('contextmenu', function(e) {
-        if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-            e.preventDefault();
-            showToast('सुरक्षा', 'दाएं क्लिक अवरुद्ध है', 'info');
-        }
-    });
-
-    // Prevent F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
-    document.addEventListener('keydown', function(e) {
-        if (
-            e.key === 'F12' ||
-            (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-            (e.ctrlKey && e.shiftKey && e.key === 'J') ||
-            (e.ctrlKey && e.key === 'U') ||
-            (e.ctrlKey && e.shiftKey && e.key === 'C')
-        ) {
-            e.preventDefault();
-            showToast('सुरक्षा', 'यह कार्रवाई अवरुद्ध है', 'warning');
-        }
-    });
 </script>
 
 </body>
