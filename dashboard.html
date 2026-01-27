@@ -3,146 +3,299 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NPP NAKUR - Dashboard</title>
+    <title>NPP NAKUR | ADMIN DASHBOARD</title>
     <link rel="icon" href="img1.png" type="image/x-icon">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        // 1. ब्राउज़र के किसी भी पुराने Alert/Message को पूरी तरह ब्लॉक करना
+        window.alert = function() { console.log("Alert Blocked"); return true; };
+        window.confirm = function() { return true; };
+    </script>
+
     <style>
+        /* Modern CSS Variables */
         :root {
-            --primary-color: #007bff;
-            --light-bg: #eef2f9;
+            --primary: #0062ff;
+            --bg-color: #f4f7fe;
             --card-bg: #ffffff;
-            --card-shadow: 8px 8px 15px rgba(0,0,0,.15), -6px -6px 12px rgba(255,255,255,.8);
+            --text-main: #1b1b1b;
+            --danger: #ff3b30;
+            --shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light-bg); color: #333; overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Segoe UI', sans-serif; }
 
-        /* Top Bar */
-        .nav-top {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 4%; background: linear-gradient(135deg, #0056b3, #007bff);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); position: sticky; top: 0; z-index: 1000;
-        }
-        .nav-logo { display: flex; align-items: center; gap: 12px; color: #fff; font-size: 20px; font-weight: bold; }
-        .logo-img { height: 45px; width: 45px; border-radius: 50%; }
-
-        /* Welcome Text */
-        .welcome-text { text-align: center; margin: 30px 0 10px; color: #0056b3; font-size: 26px; font-weight: bold; text-transform: uppercase; }
-
-        /* Grid Layout */
-        .nav-wrap {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px; max-width: 1000px; margin: 20px auto; padding: 0 20px 40px;
+        body { 
+            background-color: var(--bg-color); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
         }
 
-        .btn-nav {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            min-height: 160px; padding: 20px; border-radius: 16px; text-decoration: none;
-            background: var(--card-bg); box-shadow: var(--card-shadow); color: var(--primary-color);
-            font-weight: 600; transition: 0.3s; text-align: center;
+        /* Top Navigation */
+        .navbar {
+            background: linear-gradient(135deg, #0047b3, #0062ff);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
-        .btn-nav:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-        .btn-icon { font-size: 45px; margin-bottom: 12px; }
 
-        /* --- Custom Logout Dialog --- */
-        #logoutDialog {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7); z-index: 9999; align-items: center; justify-content: center;
-            backdrop-filter: blur(4px);
-        }
-        .dialog-content {
-            background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 380px;
-            text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            animation: popUp 0.3s ease-out;
-        }
-        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .dialog-content h3 { color: #007bff; margin-bottom: 15px; font-size: 22px; }
-        .dialog-content p { margin-bottom: 25px; color: #555; font-size: 16px; }
-        .dialog-buttons { display: flex; gap: 15px; }
-        .dialog-btn { padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; flex: 1; font-size: 15px; transition: 0.3s; }
-        .confirm-btn { background: #ff2400; color: white; }
-        .confirm-btn:hover { background: #cc1d00; }
-        .cancel-btn { background: #f0f0f0; color: #333; }
-        .cancel-btn:hover { background: #e0e0e0; }
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand img { height: 45px; width: 45px; border-radius: 50%; border: 2px solid white; }
+        .brand span { font-size: 1.2rem; font-weight: bold; letter-spacing: 1px; }
 
-        .logout-section { text-align: center; margin-bottom: 50px; }
-        .logout-trigger-btn {
-            padding: 12px 40px; background: #ff2400; color: white; border: none;
-            border-radius: 50px; font-weight: bold; cursor: pointer;
-            box-shadow: 0 4px 12px rgba(255,0,0,0.3); font-size: 16px;
+        /* Dashboard Content */
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+            flex-grow: 1;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .welcome-section h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        /* Card Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 30px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+        }
+
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            background: #eef4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 30px;
+            color: var(--primary);
+        }
+
+        .card h3 {
+            color: var(--text-main);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Logout Button */
+        .logout-container {
+            text-align: center;
+            margin-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        .btn-logout {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            padding: 14px 45px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255, 59, 48, 0.3);
+            transition: 0.3s;
+        }
+
+        .btn-logout:hover {
+            transform: scale(1.05);
+            background-color: #e6352b;
+        }
+
+        /* --- NEW MODAL DIALOG (FIXED) --- */
+        #customDialog {
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.7); 
+            z-index: 2000; 
+            align-items: center; 
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .dialog-box {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dialog-box i { font-size: 50px; color: var(--danger); margin-bottom: 20px; }
+        .dialog-box h2 { font-size: 1.5rem; margin-bottom: 15px; color: #1a1a1a; }
+        .dialog-box p { color: #666; margin-bottom: 30px; }
+
+        .btn-group { display: flex; gap: 15px; }
+        .btn-action {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-cancel { background: #f0f0f0; color: #333; }
+        .btn-confirm { background: var(--danger); color: white; }
+
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: 1fr 1fr; gap: 15px; }
+            .card { padding: 20px 10px; }
+            .welcome-section h1 { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
-<div id="logoutDialog">
-   <div class="dialog-content">
-      <h3>लॉगआउट की पुष्टि करें</h3>
-      <p>क्या आप वाकई डैशबोर्ड से लॉगआउट करना चाहते हैं?</p>
-      <div class="dialog-buttons">
-         <button class="dialog-btn cancel-btn" onclick="closeLogoutDialog()">रद्द करें</button>
-         <button class="dialog-btn confirm-btn" onclick="confirmLogout()">लॉगआउट करें</button>
-      </div>
-   </div>
+<div id="customDialog">
+    <div class="dialog-box">
+        <i class="fas fa-sign-out-alt"></i>
+        <h2>लॉगआउट करें?</h2>
+        <p>क्या आप वाकई अपनी आईडी लॉगआउट करना चाहते हैं?</p>
+        <div class="btn-group">
+            <button class="btn-action btn-cancel" onclick="hideModal()">रद्द करें</button>
+            <button class="btn-action btn-confirm" onclick="doLogout()">लॉगआउट</button>
+        </div>
+    </div>
 </div>
 
-<div class="nav-top">
-   <div class="nav-logo">
-      <img src="img1.png" class="logo-img">
-      <span>NPP NAKUR</span>
-   </div>
+<div class="navbar">
+    <div class="brand">
+        <img src="img1.png" alt="Logo">
+        <span>NPP NAKUR</span>
+    </div>
+    <div class="user-info">
+        <i class="fas fa-user-circle"></i> <span id="userSpan">ADMIN</span>
+    </div>
 </div>
 
-<h2 class="welcome-text" id="welcomeUser">WELCOME TO NPP NAKUR SERVICE</h2>
+<div class="container">
+    <div class="welcome-section">
+        <h1 id="welcomeText">WELCOME TO NPP NAKUR SERVICE</h1>
+        <p style="color: #666;">कृपया अपनी सर्विस का चयन करें</p>
+    </div>
 
-<div class="nav-wrap">
-   <a class="btn-nav" href="https://nppnakur.github.io/water_manegment.html"><span class="btn-icon">🚰</span>WATER</a>
-   <a class="btn-nav" href="https://sunnydhaka.fwh.is/house_tax_dashboard.php"><span class="btn-icon">🏠</span>HOUSE TAX</a>
-   <a class="btn-nav" href="#"><span class="btn-icon">⚠️</span>ESTABLISHMENT</a>
-   <a class="btn-nav" href="#"><span class="btn-icon">💰</span>OTHER TAX</a>
-   <a class="btn-nav" href="#"><span class="btn-icon">💡</span>ELECTRICITY</a>
-   <a class="btn-nav" href="#"><span class="btn-icon">🏬</span>SHOP TAX</a>
-   <a class="btn-nav" href="https://sunnydhaka.fwh.is/dhaka_ai.php"><span class="btn-icon">🤖</span>DHAKA-AI</a>
-   <a class="btn-nav" href="https://sunnydhaka.fwh.is/idcard_desbord.php"><span class="btn-icon">🪪</span>ID CARD</a>
-</div>
+    <div class="grid">
+        <a href="https://nppnakur.github.io/water_manegment.html" class="card">
+            <div class="icon-box"><i class="fas fa-tint"></i></div>
+            <h3>जल प्रबंधन</h3>
+        </a>
+        <a href="https://sunnydhaka.fwh.is/house_tax_dashboard.php" class="card">
+            <div class="icon-box"><i class="fas fa-home"></i></div>
+            <h3>हाउस टैक्स</h3>
+        </a>
+        <a href="https://sunnydhaka.fwh.is/dhaka_ai.php" class="card">
+            <div class="icon-box"><i class="fas fa-robot"></i></div>
+            <h3>DHAKA-AI</h3>
+        </a>
+        <a href="https://sunnydhaka.fwh.is/idcard_desbord.php" class="card">
+            <div class="icon-box"><i class="fas fa-id-card"></i></div>
+            <h3>ID कार्ड</h3>
+        </a>
+        <a href="#" class="card">
+            <div class="icon-box"><i class="fas fa-bolt"></i></div>
+            <h3>बिजली विभाग</h3>
+        </a>
+        <a href="#" class="card">
+            <div class="icon-box"><i class="fas fa-store"></i></div>
+            <h3>दुकान टैक्स</h3>
+        </a>
+    </div>
 
-<div class="logout-section">
-    <button class="logout-trigger-btn" onclick="showLogoutDialog()">🚪 लॉगआउट</button>
+    <div class="logout-container">
+        <button class="btn-logout" onclick="showModal()">🚪 लॉगआउट (Logout)</button>
+    </div>
 </div>
 
 <script>
-    // 1. ब्राउज़र के अलर्ट को आने से रोकना
-    window.alert = function() { return true; };
-
-    // 2. यूजरनेम दिखाना
+    // यूजर का नाम सेट करना
     window.onload = function() {
-        const user = localStorage.getItem('username') || "ADMIN";
-        document.getElementById('welcomeUser').innerText = `WELCOME ${user.toUpperCase()} TO NPP NAKUR SERVICE`;
+        const name = localStorage.getItem('username') || "ADMIN";
+        document.getElementById('userSpan').innerText = name.toUpperCase();
+        document.getElementById('welcomeText').innerText = `WELCOME ${name.toUpperCase()} TO NPP NAKUR`;
     };
 
-    // 3. पॉप-अप कंट्रोल
-    function showLogoutDialog() {
-        document.getElementById('logoutDialog').style.display = 'flex';
+    // मॉडल दिखाना
+    function showModal() {
+        document.getElementById('customDialog').style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // बैकग्राउंड स्क्रॉल बंद करें
     }
 
-    function closeLogoutDialog() {
-        document.getElementById('logoutDialog').style.display = 'none';
+    // मॉडल छिपाना
+    function hideModal() {
+        document.getElementById('customDialog').style.display = 'none';
+        document.body.style.overflow = 'auto'; // स्क्रॉल वापस चालू करें
     }
 
-    // 4. लॉगआउट फंक्शन
-    function confirmLogout() {
-        // डेटा साफ़ करें
+    // लॉगआउट करना
+    function doLogout() {
         localStorage.clear();
         sessionStorage.clear();
         
-        // सीधा index.html पर भेजें (मैसेज अब नहीं आएगा क्योंकि index.html ठीक कर दिया है)
-        window.location.replace('https://nppnakur.github.io/index.html');
+        // ब्राउज़र के अलर्ट को दोबारा ब्लॉक करना (डबल सुरक्षा)
+        window.alert = function() { return true; };
+        
+        // सीधा index.html पर भेजें
+        window.location.replace('index.html');
     }
 
-    // बाहर क्लिक करने पर बंद करें
-    window.onclick = function(e) {
-        if (e.target.id === 'logoutDialog') closeLogoutDialog();
-    };
+    // डायलॉग के बाहर क्लिक करने पर बंद करें
+    window.onclick = function(event) {
+        let modal = document.getElementById('customDialog');
+        if (event.target == modal) {
+            hideModal();
+        }
+    }
 </script>
+
 </body>
 </html>
