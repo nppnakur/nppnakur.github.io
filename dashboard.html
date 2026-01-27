@@ -6,295 +6,816 @@
     <title>NPP NAKUR | ADMIN DASHBOARD</title>
     <link rel="icon" href="img1.png" type="image/x-icon">
     
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <script>
-        // 1. ब्राउज़र के किसी भी पुराने Alert/Message को पूरी तरह ब्लॉक करना
-        window.alert = function() { console.log("Alert Blocked"); return true; };
-        window.confirm = function() { return true; };
-    </script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
         /* Modern CSS Variables */
         :root {
             --primary: #0062ff;
+            --primary-dark: #0047b3;
+            --secondary: #00c9ff;
             --bg-color: #f4f7fe;
             --card-bg: #ffffff;
             --text-main: #1b1b1b;
+            --text-secondary: #666;
             --danger: #ff3b30;
+            --danger-dark: #e6352b;
+            --success: #4cd964;
+            --warning: #ffcc00;
             --shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --shadow-hover: 0 20px 40px rgba(0,0,0,0.12);
+            --radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Segoe UI', sans-serif; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif; 
+        }
 
         body { 
-            background-color: var(--bg-color); 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh; 
             display: flex; 
-            flex-direction: column; 
+            flex-direction: column;
+            color: var(--text-main);
+            line-height: 1.6;
         }
 
         /* Top Navigation */
         .navbar {
-            background: linear-gradient(135deg, #0047b3, #0062ff);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
             padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0, 70, 179, 0.3);
             position: sticky;
             top: 0;
             z-index: 1000;
+            backdrop-filter: blur(10px);
         }
 
-        .brand { display: flex; align-items: center; gap: 12px; }
-        .brand img { height: 45px; width: 45px; border-radius: 50%; border: 2px solid white; }
-        .brand span { font-size: 1.2rem; font-weight: bold; letter-spacing: 1px; }
+        .brand { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+        }
+        
+        .brand img { 
+            height: 50px; 
+            width: 50px; 
+            border-radius: 50%; 
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+        
+        .brand img:hover {
+            transform: rotate(10deg);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .brand span { 
+            font-size: 1.4rem; 
+            font-weight: 700; 
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 15px;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .user-info i {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .user-info span {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
 
         /* Dashboard Content */
         .container {
-            max-width: 1100px;
-            margin: 40px auto;
+            max-width: 1200px;
+            margin: 30px auto;
             padding: 0 20px;
             flex-grow: 1;
         }
 
         .welcome-section {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
         }
 
         .welcome-section h1 {
             color: var(--primary);
-            font-size: 2rem;
+            font-size: 2.2rem;
             margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .welcome-section p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+        
+        .datetime {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-top: 15px;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0, 98, 255, 0.3);
         }
 
         /* Card Grid */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 25px;
+            margin-bottom: 40px;
         }
 
         .card {
             background: var(--card-bg);
-            padding: 30px 20px;
-            border-radius: 20px;
+            padding: 30px 25px;
+            border-radius: var(--radius);
             text-decoration: none;
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: var(--transition);
             box-shadow: var(--shadow);
-            border: 1px solid rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover::before {
+            transform: scaleX(1);
         }
 
         .card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .card:active {
+            transform: translateY(-5px);
         }
 
         .icon-box {
-            width: 70px;
-            height: 70px;
-            background: #eef4ff;
-            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #eef4ff, #d9e6ff);
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 15px;
-            font-size: 30px;
+            margin-bottom: 20px;
+            font-size: 32px;
             color: var(--primary);
+            transition: var(--transition);
+        }
+        
+        .card:hover .icon-box {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            transform: scale(1.1) rotate(5deg);
         }
 
         .card h3 {
             color: var(--text-main);
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 600;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-align: center;
+            line-height: 1.4;
         }
 
         /* Logout Button */
         .logout-container {
             text-align: center;
-            margin-top: 50px;
+            margin-top: 40px;
             padding-bottom: 50px;
         }
 
         .btn-logout {
-            background-color: var(--danger);
+            background: linear-gradient(135deg, var(--danger), var(--danger-dark));
             color: white;
             border: none;
-            padding: 14px 45px;
+            padding: 16px 50px;
             border-radius: 50px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
             box-shadow: 0 6px 20px rgba(255, 59, 48, 0.3);
-            transition: 0.3s;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 0.5px;
         }
-
+        
         .btn-logout:hover {
-            transform: scale(1.05);
-            background-color: #e6352b;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 59, 48, 0.4);
+            background: linear-gradient(135deg, var(--danger-dark), #d32f2f);
+        }
+        
+        .btn-logout:active {
+            transform: translateY(-1px);
         }
 
-        /* --- NEW MODAL DIALOG (FIXED) --- */
+        /* Modal Dialog */
         #customDialog {
             display: none; 
             position: fixed; 
-            top: 0; left: 0; 
-            width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.7); 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.8); 
             z-index: 2000; 
             align-items: center; 
             justify-content: center;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .dialog-box {
             background: white;
-            padding: 40px 30px;
+            padding: 40px 35px;
             border-radius: 24px;
             width: 90%;
-            max-width: 400px;
+            max-width: 450px;
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-            animation: slideUp 0.3s ease-out;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
+        
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        .dialog-box i { font-size: 50px; color: var(--danger); margin-bottom: 20px; }
-        .dialog-box h2 { font-size: 1.5rem; margin-bottom: 15px; color: #1a1a1a; }
-        .dialog-box p { color: #666; margin-bottom: 30px; }
+        .dialog-box i { 
+            font-size: 60px; 
+            color: var(--danger); 
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #ffeaea, #ffcccc);
+            width: 100px;
+            height: 100px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .dialog-box h2 { 
+            font-size: 1.8rem; 
+            margin-bottom: 15px; 
+            color: #1a1a1a; 
+            font-weight: 700;
+        }
+        
+        .dialog-box p { 
+            color: #666; 
+            margin-bottom: 35px; 
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
 
-        .btn-group { display: flex; gap: 15px; }
+        .btn-group { 
+            display: flex; 
+            gap: 20px; 
+        }
+        
         .btn-action {
             flex: 1;
-            padding: 12px;
+            padding: 14px;
             border-radius: 12px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             border: none;
-            font-size: 1rem;
+            font-size: 1.05rem;
+            transition: var(--transition);
+        }
+        
+        .btn-action:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-action:active {
+            transform: translateY(0);
         }
 
-        .btn-cancel { background: #f0f0f0; color: #333; }
-        .btn-confirm { background: var(--danger); color: white; }
+        .btn-cancel { 
+            background: #f5f5f5; 
+            color: #333; 
+            border: 2px solid #e0e0e0;
+        }
+        
+        .btn-cancel:hover {
+            background: #e8e8e8;
+            border-color: #ccc;
+        }
+        
+        .btn-confirm { 
+            background: linear-gradient(135deg, var(--danger), var(--danger-dark)); 
+            color: white; 
+            box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
+        }
+        
+        .btn-confirm:hover {
+            background: linear-gradient(135deg, var(--danger-dark), #d32f2f);
+            box-shadow: 0 6px 20px rgba(255, 59, 48, 0.4);
+        }
 
-        @media (max-width: 600px) {
-            .grid { grid-template-columns: 1fr 1fr; gap: 15px; }
-            .card { padding: 20px 10px; }
-            .welcome-section h1 { font-size: 1.5rem; }
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 12px 4%;
+            }
+            
+            .brand span {
+                font-size: 1.2rem;
+            }
+            
+            .welcome-section h1 {
+                font-size: 1.8rem;
+            }
+            
+            .grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+            }
+            
+            .card {
+                padding: 25px 20px;
+            }
+            
+            .dialog-box {
+                padding: 30px 25px;
+                max-width: 90%;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .brand span {
+                font-size: 1rem;
+            }
+            
+            .user-info span {
+                font-size: 0.85rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .welcome-section h1 {
+                font-size: 1.5rem;
+            }
+            
+            .btn-logout {
+                padding: 14px 30px;
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
 
+<!-- Custom Logout Modal -->
 <div id="customDialog">
     <div class="dialog-box">
         <i class="fas fa-sign-out-alt"></i>
         <h2>लॉगआउट करें?</h2>
-        <p>क्या आप वाकई अपनी आईडी लॉगआउट करना चाहते हैं?</p>
+        <p>क्या आप वाकई नगर पालिका नकुड़ डैशबोर्ड से लॉगआउट करना चाहते हैं?</p>
         <div class="btn-group">
             <button class="btn-action btn-cancel" onclick="hideModal()">रद्द करें</button>
-            <button class="btn-action btn-confirm" onclick="doLogout()">लॉगआउट</button>
+            <button class="btn-action btn-confirm" onclick="doLogout()">लॉगआउट करें</button>
         </div>
     </div>
 </div>
 
+<!-- Top Navigation Bar -->
 <div class="navbar">
     <div class="brand">
-        <img src="img1.png" alt="Logo">
+        <img src="img1.png" alt="नगर पालिका नकुड़ लोगो">
         <span>NPP NAKUR</span>
     </div>
     <div class="user-info">
-        <i class="fas fa-user-circle"></i> <span id="userSpan">ADMIN</span>
+        <i class="fas fa-user-circle"></i> 
+        <span id="userSpan">ADMIN</span>
     </div>
 </div>
 
+<!-- Main Content -->
 <div class="container">
     <div class="welcome-section">
-        <h1 id="welcomeText">WELCOME TO NPP NAKUR SERVICE</h1>
-        <p style="color: #666;">कृपया अपनी सर्विस का चयन करें</p>
+        <h1 id="welcomeText">NPP NAKUR डैशबोर्ड में आपका स्वागत है</h1>
+        <p>सभी प्रशासनिक सेवाएं एक ही स्थान पर</p>
+        <div class="datetime" id="datetime"></div>
     </div>
 
+    <!-- Service Cards Grid -->
     <div class="grid">
         <a href="https://nppnakur.github.io/water_manegment.html" class="card">
             <div class="icon-box"><i class="fas fa-tint"></i></div>
             <h3>जल प्रबंधन</h3>
+            <p>जल आपूर्ति, बिलिंग और शिकायत प्रबंधन</p>
         </a>
+        
         <a href="https://sunnydhaka.fwh.is/house_tax_dashboard.php" class="card">
             <div class="icon-box"><i class="fas fa-home"></i></div>
             <h3>हाउस टैक्स</h3>
+            <p>गृह कर संग्रहण और प्रबंधन प्रणाली</p>
         </a>
+        
         <a href="https://sunnydhaka.fwh.is/dhaka_ai.php" class="card">
             <div class="icon-box"><i class="fas fa-robot"></i></div>
-            <h3>DHAKA-AI</h3>
+            <h3>DHAKA AI</h3>
+            <p>कृत्रिम बुद्धिमत्ता सहायक प्रणाली</p>
         </a>
+        
         <a href="https://sunnydhaka.fwh.is/idcard_desbord.php" class="card">
             <div class="icon-box"><i class="fas fa-id-card"></i></div>
             <h3>ID कार्ड</h3>
+            <p>नागरिक पहचान पत्र प्रबंधन</p>
         </a>
-        <a href="#" class="card">
+        
+        <a href="#" class="card" onclick="comingSoon()">
             <div class="icon-box"><i class="fas fa-bolt"></i></div>
             <h3>बिजली विभाग</h3>
+            <p>शीघ्र ही उपलब्ध होगा</p>
         </a>
-        <a href="#" class="card">
+        
+        <a href="#" class="card" onclick="comingSoon()">
             <div class="icon-box"><i class="fas fa-store"></i></div>
             <h3>दुकान टैक्स</h3>
+            <p>शीघ्र ही उपलब्ध होगा</p>
+        </a>
+        
+        <a href="#" class="card" onclick="comingSoon()">
+            <div class="icon-box"><i class="fas fa-car"></i></div>
+            <h3>वाहन कर</h3>
+            <p>शीघ्र ही उपलब्ध होगा</p>
+        </a>
+        
+        <a href="#" class="card" onclick="comingSoon()">
+            <div class="icon-box"><i class="fas fa-file-invoice"></i></div>
+            <h3>रिपोर्ट्स</h3>
+            <p>विभिन्न रिपोर्ट्स और विश्लेषण</p>
         </a>
     </div>
 
+    <!-- Logout Section -->
     <div class="logout-container">
-        <button class="btn-logout" onclick="showModal()">🚪 लॉगआउट (Logout)</button>
+        <button class="btn-logout" onclick="showModal()">
+            <i class="fas fa-sign-out-alt"></i> लॉगआउट करें
+        </button>
     </div>
 </div>
 
+<!-- Footer -->
+<div class="footer">
+    <p>© 2023 नगर पालिका नकुड़ प्रशासन | सभी अधिकार सुरक्षित</p>
+    <p>विकसित: <a href="https://sunnydhaka.fwh.is" target="_blank">Sunny Dhaka</a></p>
+</div>
+
 <script>
-    // यूजर का नाम सेट करना
-    window.onload = function() {
-        const name = localStorage.getItem('username') || "ADMIN";
-        document.getElementById('userSpan').innerText = name.toUpperCase();
-        document.getElementById('welcomeText').innerText = `WELCOME ${name.toUpperCase()} TO NPP NAKUR`;
+    // Prevent browser alerts completely
+    window.alert = function() { 
+        console.log("Alert blocked by security policy"); 
+        return true; 
+    };
+    
+    window.confirm = function() { 
+        console.log("Confirm dialog blocked");
+        return true; 
     };
 
-    // मॉडल दिखाना
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set user name from localStorage
+        const name = localStorage.getItem('username') || "ADMIN";
+        const displayName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+        
+        document.getElementById('userSpan').textContent = displayName;
+        document.getElementById('welcomeText').textContent = `${displayName}, NPP NAKUR डैशबोर्ड में आपका स्वागत है`;
+        
+        // Update date and time
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+        
+        // Check authentication
+        checkAuth();
+        
+        // Add click sound effect to cards
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('click', function() {
+                playClickSound();
+            });
+        });
+    });
+
+    // Update current date and time
+    function updateDateTime() {
+        const now = new Date();
+        const options = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        };
+        
+        const dateTimeStr = now.toLocaleDateString('hi-IN', options);
+        document.getElementById('datetime').textContent = dateTimeStr;
+    }
+
+    // Check authentication
+    function checkAuth() {
+        const isLoggedIn = localStorage.getItem('loggedIn');
+        const loginTime = localStorage.getItem('loginTime');
+        
+        if (!isLoggedIn || isLoggedIn !== 'true') {
+            // Redirect to login if not authenticated
+            window.location.replace('index.html');
+            return;
+        }
+        
+        // Check session timeout (24 hours)
+        if (loginTime) {
+            const loginDate = new Date(loginTime);
+            const currentDate = new Date();
+            const diffHours = (currentDate - loginDate) / (1000 * 60 * 60);
+            
+            if (diffHours > 24) {
+                // Session expired
+                localStorage.clear();
+                window.location.replace('index.html');
+            }
+        }
+    }
+
+    // Show logout confirmation modal
     function showModal() {
         document.getElementById('customDialog').style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // बैकग्राउंड स्क्रॉल बंद करें
+        document.body.style.overflow = 'hidden'; // Disable background scroll
     }
 
-    // मॉडल छिपाना
+    // Hide modal
     function hideModal() {
         document.getElementById('customDialog').style.display = 'none';
-        document.body.style.overflow = 'auto'; // स्क्रॉल वापस चालू करें
+        document.body.style.overflow = 'auto'; // Enable scroll
     }
 
-    // लॉगआउट करना
+    // Perform logout
     function doLogout() {
+        // Clear all stored data
         localStorage.clear();
         sessionStorage.clear();
         
-        // ब्राउज़र के अलर्ट को दोबारा ब्लॉक करना (डबल सुरक्षा)
-        window.alert = function() { return true; };
-        
-        // सीधा index.html पर भेजें
+        // Redirect to login page
         window.location.replace('index.html');
     }
 
-    // डायलॉग के बाहर क्लिक करने पर बंद करें
-    window.onclick = function(event) {
-        let modal = document.getElementById('customDialog');
-        if (event.target == modal) {
+    // Handle clicks outside modal to close it
+    document.addEventListener('click', function(event) {
+        const modal = document.getElementById('customDialog');
+        if (event.target === modal) {
             hideModal();
         }
+    });
+
+    // Handle Escape key to close modal
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            hideModal();
+        }
+    });
+
+    // Coming soon notification
+    function comingSoon() {
+        // Create a temporary notification
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 1001;
+            font-weight: 500;
+            animation: slideInRight 0.3s ease-out;
+        `;
+        
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-clock"></i>
+                <span>यह सेवा शीघ्र ही उपलब्ध होगी</span>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Remove notification after 3 seconds
+        setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.3s ease-out forwards';
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 3000);
     }
+
+    // Add CSS for notification animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Play click sound
+    function playClickSound() {
+        // Create a simple click sound using Web Audio API
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        } catch (e) {
+            console.log("Audio not supported");
+        }
+    }
+
+    // Auto logout after 30 minutes of inactivity
+    let inactivityTimer;
+    
+    function resetInactivityTimer() {
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(() => {
+            // Show auto logout warning
+            const warning = document.createElement('div');
+            warning.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+                z-index: 2001;
+                text-align: center;
+                max-width: 400px;
+                width: 90%;
+            `;
+            
+            warning.innerHTML = `
+                <h3 style="color: var(--danger); margin-bottom: 15px;">
+                    <i class="fas fa-clock"></i> सत्र समाप्ति चेतावनी
+                </h3>
+                <p>निष्क्रियता के कारण आपका सत्र 1 मिनट में समाप्त हो जाएगा।</p>
+                <button onclick="this.parentElement.parentElement.remove(); resetInactivityTimer();" 
+                        style="margin-top: 20px; padding: 10px 30px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;">
+                    सत्र जारी रखें
+                </button>
+            `;
+            
+            document.body.appendChild(warning);
+            
+            // Auto logout after 1 minute if no response
+            setTimeout(() => {
+                if (document.body.contains(warning)) {
+                    document.body.removeChild(warning);
+                    doLogout();
+                }
+            }, 60000);
+            
+        }, 30 * 60 * 1000); // 30 minutes
+    }
+    
+    // Set up inactivity detection
+    document.addEventListener('mousemove', resetInactivityTimer);
+    document.addEventListener('keypress', resetInactivityTimer);
+    document.addEventListener('click', resetInactivityTimer);
+    
+    // Initialize the timer
+    resetInactivityTimer();
 </script>
 
 </body>
