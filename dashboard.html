@@ -5,155 +5,76 @@
     <title>NPP NAKUR - Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* CSS Reset & Basic Styles */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: #f0f8ff; min-height: 100vh; overflow-x: hidden; position: relative; }
+        body { background-color: #f0f8ff; min-height: 100vh; overflow-x: hidden; }
         
         .background-banner {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('https://ptaxsnn.com/Login/images/banner.jpg');
-            background-size: cover;
-            background-position: center;
-            opacity: 0.20;
-            z-index: -1;
+            background-size: cover; background-position: center; opacity: 0.20; z-index: -1;
         }
         
         .water-tab {
             background: linear-gradient(90deg, #0066cc, #00a8ff);
-            color: white;
-            padding: 20px 10px;
-            font-size: clamp(16px, 4vw, 24px);
-            font-weight: bold;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            text-transform: uppercase;
+            color: white; padding: 20px 10px; text-align: center; font-weight: bold;
+            font-size: clamp(16px, 4vw, 24px); text-transform: uppercase;
         }
         
-        /* Grid Layout */
         .card-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            max-width: 950px;
-            margin: 30px auto;
-            padding: 0 20px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px; max-width: 950px; margin: 30px auto; padding: 0 20px;
         }
         
-        /* Card Design */
         .card {
-            background: rgba(255,255,255,0.95);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            height: 190px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid rgba(0,0,0,0.05);
+            background: rgba(255,255,255,0.95); border-radius: 15px; padding: 20px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08); text-align: center; cursor: pointer;
+            height: 190px; display: flex; flex-direction: column; justify-content: space-between;
+            transition: 0.3s; border: 1px solid rgba(0,0,0,0.05);
         }
-        
         .card:hover { transform: translateY(-8px); box-shadow: 0 12px 20px rgba(0,0,0,0.15); }
-        .card h2 { font-size: 18px; color: #222; }
-        .card p { font-size: 12px; color: #666; font-weight: bold; }
-        .card-icon-container { width: 100%; padding-top: 15px; border-top: 1px dashed #ccc; }
-        .card-icon { font-size: 45px; display: inline-block; }
 
-        /* Logout Button */
         .logout-container { display: flex; justify-content: center; margin-bottom: 50px; }
         .logout-btn {
-            background: linear-gradient(135deg, #ff5e62, #ff2400);
-            color: white;
-            border: none;
-            padding: 14px 35px;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 36, 0, 0.3);
-            font-size: 16px;
-            transition: 0.3s;
+            background: linear-gradient(135deg, #ff5e62, #ff2400); color: white;
+            border: none; padding: 14px 35px; border-radius: 50px; font-weight: bold;
+            cursor: pointer; font-size: 16px; transition: 0.3s;
         }
-        .logout-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 36, 0, 0.4); }
 
-        /* --- CUSTOM DIALOG BOX (HINDI) --- */
+        /* --- Custom Hindi Logout Dialog --- */
         #logoutDialog {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none; /* डिफ़ॉल्ट रूप से छिपा हुआ */
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            backdrop-filter: blur(4px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); display: none;
+            justify-content: center; align-items: center; z-index: 9999;
+            backdrop-filter: blur(5px);
         }
         
         .dialog-content {
-            background: white;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 380px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            animation: slideDown 0.3s ease-out;
+            background: white; border-radius: 15px; width: 90%; max-width: 400px;
+            padding: 30px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            animation: popUp 0.3s ease;
         }
 
-        @keyframes slideDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .dialog-content h3 { font-size: 22px; color: #333; margin-bottom: 15px; font-weight: bold; }
+        .dialog-content h3 { font-size: 22px; color: #333; margin-bottom: 15px; }
         .dialog-content p { font-size: 16px; color: #555; margin-bottom: 25px; }
+        .dialog-buttons { display: flex; gap: 15px; }
+        .dialog-btn { padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; flex: 1; }
         
-        .dialog-buttons { display: flex; gap: 15px; justify-content: center; }
-        
-        .dialog-btn {
-            padding: 12px 20px;
-            border-radius: 6px;
-            border: none;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            flex: 1;
-        }
-        
-        .cancel-btn { background: #6c757d; color: white; }
+        .cancel-btn { background: #e0e0e0; color: #333; }
         .confirm-btn { background: #ff2400; color: white; }
-
-        @media (max-width: 600px) {
-            .card-container { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-            .dialog-buttons { flex-direction: column; }
-        }
     </style>
 </head>
 <body>
 
 <div class="background-banner"></div>
-
 <div class="water-tab" id="welcomeTab">WELCOME TO NPP NAKUR SERVICE</div>
 
 <div class="card-container">
-    <div class="card" onclick="location.href='https://nppnakur.github.io/water_manegment.html'">
-        <div><h2>WATER</h2><p>MANAGEMENT</p></div>
-        <div class="card-icon-container"><div class="card-icon">🚰</div></div>
-    </div>
-    <div class="card" onclick="location.href='https://sunnydhaka.fwh.is/house_tax_dashboard.php'">
-        <div><h2>HOUSE TAX</h2><p>MANAGEMENT</p></div>
-        <div class="card-icon-container"><div class="card-icon">🏠</div></div>
-    </div>
-    <div class="card" onclick="location.href='https://sunnydhaka.fwh.is/dhaka_ai.php'">
-        <div><h2>DHAKA-AI</h2><p>ARTIFICIAL INTELLIGENCE</p></div>
-        <div class="card-icon-container"><div class="card-icon">🤖</div></div>
-    </div>
-    <div class="card" onclick="location.href='https://sunnydhaka.fwh.is/idcard_desbord.php'">
-        <div><h2>ID CARD</h2><p>MANAGEMENT</p></div>
-        <div class="card-icon-container"><div class="card-icon">🪪</div></div>
-    </div>
+    <div class="card" onclick="location.href='#'"><h2>WATER</h2><p>MANAGEMENT</p><div style="font-size:40px">🚰</div></div>
+    <div class="card" onclick="location.href='#'"><h2>HOUSE TAX</h2><p>MANAGEMENT</p><div style="font-size:40px">🏠</div></div>
+    <div class="card" onclick="location.href='#'"><h2>DHAKA-AI</h2><p>AI SERVICE</p><div style="font-size:40px">🤖</div></div>
+    <div class="card" onclick="location.href='#'"><h2>ID CARD</h2><p>MANAGEMENT</p><div style="font-size:40px">🪪</div></div>
 </div>
 
 <div class="logout-container">
@@ -172,36 +93,26 @@
 </div>
 
 <script>
-    // 1. पेज लोड पर यूजर सेट करें
-    window.onload = function() {
-        const user = localStorage.getItem('username') || "ADMIN";
-        document.getElementById('welcomeTab').innerText = `WELCOME ${user.toUpperCase()} TO NPP NAKUR SERVICE`;
-    };
+    // **अल्टिमेट फिक्स**: किसी भी तरह के पुराने alert को ब्लॉक करना
+    window.alert = function() { console.log("Alert Blocked!"); };
 
-    // 2. डायलॉग दिखाएँ
     function showLogoutDialog() {
         document.getElementById('logoutDialog').style.display = 'flex';
-        document.body.style.overflow = 'hidden'; 
     }
 
-    // 3. डायलॉग बंद करें
     function closeLogoutDialog() {
         document.getElementById('logoutDialog').style.display = 'none';
-        document.body.style.overflow = 'auto';
     }
 
-    // 4. लॉगआउट प्रक्रिया (No Alert used here)
     function confirmLogout() {
-        localStorage.clear(); 
-        // सीधा रीडायरेक्ट करें, कोई फालतू मैसेज नहीं
-        window.location.href = 'index.html'; 
+        localStorage.clear();
+        // बिना किसी मैसेज के सीधा बाहर भेजें
+        window.location.replace('index.html'); 
     }
 
-    // बाहर क्लिक करने पर बंद करें
-    window.onclick = function(event) {
-        if (event.target == document.getElementById('logoutDialog')) {
-            closeLogoutDialog();
-        }
+    // बाहर क्लिक करने पर बंद
+    window.onclick = function(e) {
+        if (e.target == document.getElementById('logoutDialog')) closeLogoutDialog();
     }
 </script>
 
