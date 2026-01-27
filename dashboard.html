@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>NPP NAKUR - Dashboard</title>
-    <link rel="icon" href="img1.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        /* CSS Reset & Basic Styles */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background-color: #f0f8ff; min-height: 100vh; overflow-x: hidden; position: relative; }
         
-        /* Background Banner */
         .background-banner {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -20,7 +19,6 @@
             z-index: -1;
         }
         
-        /* Welcome Header */
         .water-tab {
             background: linear-gradient(90deg, #0066cc, #00a8ff);
             color: white;
@@ -32,7 +30,7 @@
             text-transform: uppercase;
         }
         
-        /* Cards Container */
+        /* Grid Layout */
         .card-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -42,7 +40,7 @@
             padding: 0 20px;
         }
         
-        /* Card Style */
+        /* Card Design */
         .card {
             background: rgba(255,255,255,0.95);
             border-radius: 15px;
@@ -63,19 +61,9 @@
         .card h2 { font-size: 18px; color: #222; }
         .card p { font-size: 12px; color: #666; font-weight: bold; }
         .card-icon-container { width: 100%; padding-top: 15px; border-top: 1px dashed #ccc; }
-        .card-icon { font-size: 45px; display: inline-block; transition: 0.3s; }
+        .card-icon { font-size: 45px; display: inline-block; }
 
-        /* Hover Animations */
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-
-        .bill-card:hover .card-icon { animation: bounce 0.8s infinite; color: #0066cc; }
-        .payment-card:hover .card-icon { animation: pulse 0.8s infinite; color: #2ecc71; }
-        .shop-card:hover .card-icon { animation: spin 2s linear infinite; color: #9b59b6; }
-        .dhaka-ai-card:hover .card-icon { animation: pulse 1s infinite; filter: drop-shadow(0 0 8px #ff3366); }
-
-        /* Logout Section */
+        /* Logout Button */
         .logout-container { display: flex; justify-content: center; margin-bottom: 50px; }
         .logout-btn {
             background: linear-gradient(135deg, #ff5e62, #ff2400);
@@ -91,61 +79,55 @@
         }
         .logout-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 36, 0, 0.4); }
 
-        /* CUSTOM LOGOUT DIALOG (पॉप-अप डिजाइन) */
+        /* --- CUSTOM DIALOG BOX (HINDI) --- */
         #logoutDialog {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            display: none; /* शुरू में छिपा हुआ */
+            background: rgba(0, 0, 0, 0.8);
+            display: none; /* डिफ़ॉल्ट रूप से छिपा हुआ */
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(4px);
         }
         
         .dialog-content {
             background: white;
-            border-radius: 15px;
+            border-radius: 12px;
             width: 90%;
-            max-width: 400px;
+            max-width: 380px;
             padding: 30px;
             text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            animation: popIn 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: slideDown 0.3s ease-out;
         }
 
-        @keyframes popIn {
-            from { transform: scale(0.7); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
-        .dialog-content h3 { font-size: 24px; color: #333; margin-bottom: 15px; }
-        .dialog-content p { font-size: 16px; color: #555; margin-bottom: 30px; line-height: 1.5; }
+        .dialog-content h3 { font-size: 22px; color: #333; margin-bottom: 15px; font-weight: bold; }
+        .dialog-content p { font-size: 16px; color: #555; margin-bottom: 25px; }
         
         .dialog-buttons { display: flex; gap: 15px; justify-content: center; }
         
         .dialog-btn {
-            padding: 12px 25px;
-            border-radius: 8px;
+            padding: 12px 20px;
+            border-radius: 6px;
             border: none;
             font-size: 15px;
             font-weight: bold;
             cursor: pointer;
             flex: 1;
-            transition: 0.2s;
         }
         
-        .cancel-btn { background: #e0e0e0; color: #333; }
-        .cancel-btn:hover { background: #d0d0d0; }
-        
-        .confirm-btn { background: linear-gradient(to right, #ff5e62, #ff2400); color: white; }
-        .confirm-btn:hover { opacity: 0.9; }
+        .cancel-btn { background: #6c757d; color: white; }
+        .confirm-btn { background: #ff2400; color: white; }
 
-        /* Responsive Grid */
         @media (max-width: 600px) {
             .card-container { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-            .card { height: 170px; }
-            .dialog-buttons { flex-direction: column-reverse; }
+            .dialog-buttons { flex-direction: column; }
         }
     </style>
 </head>
@@ -156,41 +138,18 @@
 <div class="water-tab" id="welcomeTab">WELCOME TO NPP NAKUR SERVICE</div>
 
 <div class="card-container">
-    <div class="card bill-card" onclick="location.href='https://nppnakur.github.io/water_manegment.html'">
+    <div class="card" onclick="location.href='https://nppnakur.github.io/water_manegment.html'">
         <div><h2>WATER</h2><p>MANAGEMENT</p></div>
         <div class="card-icon-container"><div class="card-icon">🚰</div></div>
     </div>
-    
-    <div class="card payment-card" onclick="location.href='https://sunnydhaka.fwh.is/house_tax_dashboard.php'">
+    <div class="card" onclick="location.href='https://sunnydhaka.fwh.is/house_tax_dashboard.php'">
         <div><h2>HOUSE TAX</h2><p>MANAGEMENT</p></div>
         <div class="card-icon-container"><div class="card-icon">🏠</div></div>
     </div>
-
-    <div class="card" onclick="location.href='https://sunnydhaka.fwh.is/establishment.php'">
-        <div><h2>ESTABLISHMENT</h2><p>DEPARTMENT</p></div>
-        <div class="card-icon-container"><div class="card-icon">⚠️</div></div>
-    </div>
-
-    <div class="card" onclick="location.href='https://sunnydhaka.fwh.is/other_tax.php'">
-        <div><h2>OTHER</h2><p>TAXES</p></div>
-        <div class="card-icon-container"><div class="card-icon">💰</div></div>
-    </div>
-
-    <div class="card" onclick="location.href='https://sunnydhaka.fwh.is/electricity.php'">
-        <div><h2>ELECTRICITY</h2><p>DEPARTMENT</p></div>
-        <div class="card-icon-container"><div class="card-icon">💡</div></div>
-    </div>
-
-    <div class="card shop-card" onclick="location.href='https://sunnydhaka.fwh.is/shop_tax.php'">
-        <div><h2>SHOP</h2><p>TAX</p></div>
-        <div class="card-icon-container"><div class="card-icon">🏬</div></div>
-    </div>
-
-    <div class="card dhaka-ai-card" onclick="location.href='https://sunnydhaka.fwh.is/dhaka_ai.php'">
+    <div class="card" onclick="location.href='https://sunnydhaka.fwh.is/dhaka_ai.php'">
         <div><h2>DHAKA-AI</h2><p>ARTIFICIAL INTELLIGENCE</p></div>
         <div class="card-icon-container"><div class="card-icon">🤖</div></div>
     </div>
-
     <div class="card" onclick="location.href='https://sunnydhaka.fwh.is/idcard_desbord.php'">
         <div><h2>ID CARD</h2><p>MANAGEMENT</p></div>
         <div class="card-icon-container"><div class="card-icon">🪪</div></div>
@@ -213,39 +172,34 @@
 </div>
 
 <script>
-    // 1. पेज लोड होते ही यूजर चेक करें
+    // 1. पेज लोड पर यूजर सेट करें
     window.onload = function() {
-        const username = localStorage.getItem('username') || "ADMIN";
-        document.getElementById('welcomeTab').innerText = `WELCOME ${username.toUpperCase()} TO NPP NAKUR SERVICE`;
-        
-        // सुरक्षा के लिए: अगर लॉगिन नहीं है तो वापस भेजें
-        if (localStorage.getItem('loggedIn') !== 'true') {
-            // window.location.href = 'index.html'; 
-        }
+        const user = localStorage.getItem('username') || "ADMIN";
+        document.getElementById('welcomeTab').innerText = `WELCOME ${user.toUpperCase()} TO NPP NAKUR SERVICE`;
     };
 
-    // 2. डायलॉग बॉक्स दिखाएँ
+    // 2. डायलॉग दिखाएँ
     function showLogoutDialog() {
         document.getElementById('logoutDialog').style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // बैकग्राउंड स्क्रॉल बंद करें
+        document.body.style.overflow = 'hidden'; 
     }
 
-    // 3. डायलॉग बॉक्स बंद करें (रद्द करें पर)
+    // 3. डायलॉग बंद करें
     function closeLogoutDialog() {
         document.getElementById('logoutDialog').style.display = 'none';
-        document.body.style.overflow = 'auto'; // स्क्रॉल वापस चालू करें
+        document.body.style.overflow = 'auto';
     }
 
-    // 4. असली लॉगआउट प्रक्रिया
+    // 4. लॉगआउट प्रक्रिया (No Alert used here)
     function confirmLogout() {
-        localStorage.clear(); // सारा डेटा साफ़ करें
-        window.location.href = 'index.html'; // लॉगिन पेज पर भेजें
+        localStorage.clear(); 
+        // सीधा रीडायरेक्ट करें, कोई फालतू मैसेज नहीं
+        window.location.href = 'index.html'; 
     }
 
-    // डायलॉग के बाहर क्लिक करने पर भी बंद हो जाए
+    // बाहर क्लिक करने पर बंद करें
     window.onclick = function(event) {
-        let dialog = document.getElementById('logoutDialog');
-        if (event.target == dialog) {
+        if (event.target == document.getElementById('logoutDialog')) {
             closeLogoutDialog();
         }
     }
