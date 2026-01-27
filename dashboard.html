@@ -2,112 +2,96 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>NPP NAKUR - Dashboard</title>
-    <link rel="icon" href="img1.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPP NAKUR - Dashboard</title>
+    <link rel="icon" href="img1.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script>
+        // ब्राउज़र के किसी भी मैसेज को लोड होने से पहले ही खत्म करना
+        window.alert = function() { return true; };
+        window.confirm = function() { return true; };
+    </script>
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: #f0f8ff; min-height: 100vh; overflow-x: hidden; }
-        
-        /* Background */
-        .background-banner {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://ptaxsnn.com/Login/images/banner.jpg');
-            background-size: cover; background-position: center; opacity: 0.20; z-index: -1;
+        :root {
+            --primary-color: #007bff;
+            --light-bg: #eef2f9;
+            --card-bg: #ffffff;
+            --card-shadow: 8px 8px 15px rgba(0,0,0,.15), -6px -6px 12px rgba(255,255,255,.8);
         }
-        
-        /* Nav Header */
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light-bg); color: #333; }
+
         .nav-top {
-            background: linear-gradient(135deg, #0056b3, #007bff);
-            color: white; padding: 15px 20px; text-align: center; font-weight: bold;
-            font-size: clamp(16px, 4vw, 24px); box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 4%; background: linear-gradient(135deg, #0056b3, #007bff);
+            color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000;
+        }
+        .logo-img { height: 45px; border-radius: 50%; }
+
+        .welcome-text { text-align: center; margin: 30px 0; color: #0056b3; font-size: 24px; font-weight: bold; }
+
+        .nav-wrap {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px; max-width: 1000px; margin: 0 auto; padding: 20px;
         }
 
-        /* Dashboard Grid */
-        .card-container {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px; max-width: 1000px; margin: 40px auto; padding: 0 20px;
+        .btn-nav {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 150px; border-radius: 16px; text-decoration: none;
+            background: var(--card-bg); box-shadow: var(--card-shadow); color: var(--primary-color);
+            font-weight: bold; transition: 0.3s;
         }
-        
-        .card {
-            background: #ffffff; border-radius: 16px; padding: 25px;
-            box-shadow: 8px 8px 15px rgba(0,0,0,.1); text-align: center;
-            transition: all 0.3s ease; cursor: pointer; height: 180px;
-            display: flex; flex-direction: column; justify-content: center;
-            align-items: center; border: 1px solid rgba(0,0,0,.05);
-            text-decoration: none; color: #007bff; font-weight: 600;
-        }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-        .card-icon { font-size: 40px; margin-bottom: 10px; }
+        .btn-nav:hover { transform: translateY(-5px); }
+        .btn-icon { font-size: 40px; margin-bottom: 10px; }
 
-        /* Logout Button Container */
-        .logout-section { text-align: center; margin: 40px 0; }
-        .btn-logout {
-            background: linear-gradient(135deg, #ff5e62, #ff2400); color: white;
-            border: none; padding: 12px 35px; border-radius: 50px; font-weight: bold;
-            cursor: pointer; font-size: 16px; transition: 0.3s;
-        }
-
-        /* --- LOGOUT DIALOG (From your source code) --- */
+        /* Logout Pop-up (FROM YOUR SOURCE) */
         #logoutDialog {
-            display: none; position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);
-            z-index: 2000; align-items: center; justify-content: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); z-index: 9999; align-items: center; justify-content: center;
         }
         .dialog-content {
-            background: white; padding: 30px; border-radius: 12px;
-            max-width: 400px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            text-align: center; animation: fadeIn 0.3s ease-out;
+            background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 380px;
+            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        .dialog-content h3 { color: #007bff; margin-bottom: 15px; font-size: 24px; }
-        .dialog-content p { margin-bottom: 25px; font-size: 16px; color: #555; }
-        .dialog-buttons { display: flex; gap: 15px; justify-content: center; }
-        .dialog-btn {
-            padding: 10px 25px; border: none; border-radius: 8px;
-            font-size: 16px; cursor: pointer; font-weight: 600; flex: 1;
-        }
-        .confirm-btn { background: #007bff; color: white; }
-        .cancel-btn { background: #f0f0f0; color: #333; }
+        .dialog-buttons { display: flex; gap: 15px; margin-top: 20px; }
+        .dialog-btn { padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; flex: 1; }
+        .confirm-btn { background: #ff2400; color: white; }
+        .cancel-btn { background: #eee; color: #333; }
 
-        @media (max-width: 600px) {
-            .card-container { grid-template-columns: repeat(2, 1fr); }
-            .dialog-buttons { flex-direction: column; }
+        .logout-trigger {
+            display: block; margin: 40px auto; padding: 12px 40px;
+            background: #ff2400; color: white; border: none; border-radius: 50px;
+            font-weight: bold; cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<div class="background-banner"></div>
-
-<div class="nav-top" id="headerText">NPP NAKUR SERVICE</div>
-
-<div class="card-container">
-    <a href="https://nppnakur.github.io/water_manegment.html" class="card">
-        <span class="card-icon">🚰</span>जल प्रबंधन
-    </a>
-    <a href="https://sunnydhaka.fwh.is/house_tax_dashboard.php" class="card">
-        <span class="card-icon">🏠</span>हाउस टैक्स
-    </a>
-    <a href="https://sunnydhaka.fwh.is/dhaka_ai.php" class="card">
-        <span class="card-icon">🤖</span>DHAKA-AI
-    </a>
-    <a href="https://sunnydhaka.fwh.is/idcard_desbord.php" class="card">
-        <span class="card-icon">🪪</span>ID कार्ड
-    </a>
+<div class="nav-top">
+    <div style="display:flex; align-items:center; gap:10px;">
+        <img src="img1.png" class="logo-img">
+        <span>NPP NAKUR</span>
+    </div>
 </div>
 
-<div class="logout-section">
-    <button class="btn-logout" onclick="showLogoutDialog(event)">🚪 लॉगआउट</button>
+<h2 class="welcome-text">NPP NAKUR SERVICE DASHBOARD</h2>
+
+<div class="nav-wrap">
+    <a href="https://nppnakur.github.io/water_manegment.html" class="btn-nav"><span class="btn-icon">🚰</span>WATER</a>
+    <a href="https://sunnydhaka.fwh.is/house_tax_dashboard.php" class="btn-nav"><span class="btn-icon">🏠</span>HOUSE TAX</a>
+    <a href="https://sunnydhaka.fwh.is/dhaka_ai.php" class="btn-nav"><span class="btn-icon">🤖</span>DHAKA-AI</a>
+    <a href="https://sunnydhaka.fwh.is/idcard_desbord.php" class="btn-nav"><span class="btn-icon">🪪</span>ID CARD</a>
 </div>
+
+<button class="logout-trigger" onclick="showLogoutDialog()">🚪 लॉगआउट</button>
 
 <div id="logoutDialog">
    <div class="dialog-content">
-      <h3>लॉगआउट की पुष्टि करें</h3>
-      <p>क्या आप वाकई डैशबोर्ड से लॉगआउट करना चाहते हैं?</p>
+      <h3 style="color:#007bff; margin-bottom:10px;">लॉगआउट की पुष्टि करें</h3>
+      <p>क्या आप वाकई लॉगआउट करना चाहते हैं?</p>
       <div class="dialog-buttons">
          <button class="dialog-btn cancel-btn" onclick="closeLogoutDialog()">रद्द करें</button>
          <button class="dialog-btn confirm-btn" onclick="confirmLogout()">लॉगआउट करें</button>
@@ -116,40 +100,28 @@
 </div>
 
 <script>
-// ब्राउज़र के फालतू अलर्ट को बंद करने के लिए
-window.alert = function() { return true; };
-
-// डायलॉग दिखाने का फंक्शन
-function showLogoutDialog(event) {
-    if(event) event.preventDefault();
-    document.getElementById('logoutDialog').style.display = 'flex';
-}
-
-// डायलॉग बंद करने का फंक्शन
-function closeLogoutDialog() {
-    document.getElementById('logoutDialog').style.display = 'none';
-}
-
-// लॉगआउट कन्फर्म करने का फंक्शन
-function confirmLogout() {
-    localStorage.clear();
-    // लॉगआउट के बाद, एक सरल लैंडिंग पृष्ठ पर जाएं, क्योंकि मूल पृष्ठ उपलब्ध नहीं है।
-    window.location.href = 'https://nppnakur.github.io/'; // मुख्य GitHub पेज पर ले जाता है
-}
-
-// वेलकम टेक्स्ट अपडेट
-window.onload = function() {
-    const user = localStorage.getItem('username') || "ADMIN";
-    document.getElementById('headerText').innerText = `WELCOME ${user.toUpperCase()} TO NPP NAKUR SERVICE`;
-};
-
-// डायलॉग के बाहर क्लिक करने पर बंद करें
-document.getElementById('logoutDialog').addEventListener('click', function(e) {
-    if (e.target.id === 'logoutDialog') {
-        closeLogoutDialog();
+    // पॉप-अप दिखाएँ
+    function showLogoutDialog() {
+        document.getElementById('logoutDialog').style.display = 'flex';
     }
-});
-</script>
 
+    // पॉप-अप बंद करें
+    function closeLogoutDialog() {
+        document.getElementById('logoutDialog').style.display = 'none';
+    }
+
+    // लॉगआउट प्रक्रिया
+    function confirmLogout() {
+        // 1. सेशन क्लियर करें
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        // 2. ब्राउज़र के अलर्ट को पूरी तरह से डिसेबल करना
+        window.alert = function() { return true; };
+        
+        // 3. सीधा index.html पर भेजें
+        window.location.href = 'index.html?nocache=' + new Date().getTime();
+    }
+</script>
 </body>
 </html>
