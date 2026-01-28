@@ -31,54 +31,37 @@
     
     .header-container {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       background: linear-gradient(90deg, #0066cc, #00a8ff);
       color: white;
-      padding: 15px 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      padding: 20px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.15);
       position: relative;
       z-index: 10;
+      min-height: 80px;
     }
     
     .header-title {
-      font-size: clamp(18px, 3.5vw, 24px);
+      font-size: clamp(20px, 4vw, 26px);
       font-weight: bold;
-      text-align: left;
+      text-align: center;
       flex-grow: 1;
     }
     
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-right: 15px;
-      font-size: 15px;
-      font-weight: 500;
-    }
-    
-    .user-icon {
-      width: 32px;
-      height: 32px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-    }
-    
     .header-right {
-      display: flex;
-      align-items: center;
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
     }
     
     .logout-header-btn {
       background: rgba(255, 255, 255, 0.2);
       border: 2px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
-      width: 48px;
-      height: 48px;
+      width: 50px;
+      height: 50px;
       color: white;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -90,8 +73,8 @@
     
     .logout-header-btn:hover {
       background: rgba(255, 255, 255, 0.3);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transform: translateY(-3px) scale(1.1);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.25);
     }
     
     .card-container {
@@ -99,15 +82,15 @@
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 20px;
       max-width: 900px;
-      margin: 25px auto;
+      margin: 30px auto;
       padding: 0 20px;
     }
     
     .card {
       background: rgba(255,255,255,0.95);
-      border-radius: 12px;
+      border-radius: 15px;
       padding: 20px 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       text-align: center;
       transition: all 0.3s ease;
       cursor: pointer;
@@ -116,9 +99,25 @@
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      border: 1px solid rgba(0,0,0,0.1);
+      border: 1px solid rgba(0,0,0,0.08);
       position: relative;
       overflow: hidden;
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #0066cc, #00a8ff);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .card:hover::before {
+      opacity: 1;
     }
     
     .card-content {
@@ -155,8 +154,8 @@
     }
     
     .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.18);
     }
     
     .bill-card:hover .card-icon { animation: waterDrop 1.2s ease infinite; color: #0066cc; }
@@ -193,16 +192,16 @@
     
     #logoutDialog .dialog-content {
       background: white;
-      border-radius: 12px;
+      border-radius: 15px;
       width: 90%;
       max-width: 400px;
-      padding: 25px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      padding: 30px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
       text-align: center;
     }
     
     #logoutDialog h3 {
-      font-size: 22px;
+      font-size: 24px;
       color: #333;
       margin-bottom: 15px;
       font-weight: bold;
@@ -211,8 +210,8 @@
     #logoutDialog p {
       font-size: 16px;
       color: #555;
-      margin-bottom: 25px;
-      line-height: 1.5;
+      margin-bottom: 30px;
+      line-height: 1.6;
     }
     
     .dialog-buttons {
@@ -222,13 +221,13 @@
     }
     
     .dialog-btn {
-      padding: 10px 25px;
+      padding: 12px 30px;
       border: none;
-      border-radius: 6px;
-      font-size: 14px;
+      border-radius: 8px;
+      font-size: 15px;
       font-weight: bold;
       cursor: pointer;
-      min-width: 120px;
+      min-width: 130px;
       transition: all 0.3s;
     }
     
@@ -239,6 +238,7 @@
     
     .cancel-btn:hover {
       background: #5a6268;
+      transform: translateY(-2px);
     }
     
     .confirm-btn {
@@ -248,15 +248,7 @@
     
     .confirm-btn:hover {
       background: linear-gradient(to right, #e60000, #cc0000);
-    }
-    
-    /* Footer */
-    .footer {
-      text-align: center;
-      padding: 20px;
-      margin-top: 30px;
-      color: #666;
-      font-size: 14px;
+      transform: translateY(-2px);
     }
     
     /* Tooltip for logout icon */
@@ -270,18 +262,19 @@
       top: 100%;
       right: 50%;
       transform: translateX(50%);
-      margin-top: 8px;
-      background: rgba(0, 0, 0, 0.8);
+      margin-top: 10px;
+      background: rgba(0, 0, 0, 0.85);
       color: white;
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-size: 12px;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 13px;
       white-space: nowrap;
       opacity: 0;
       visibility: hidden;
       transition: all 0.3s ease;
       z-index: 1000;
       pointer-events: none;
+      font-weight: 500;
     }
     
     .logout-header-btn:hover::after {
@@ -289,56 +282,64 @@
       visibility: visible;
     }
     
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 25px 20px 15px;
+      margin-top: 40px;
+      color: #666;
+      font-size: 14px;
+      border-top: 1px solid rgba(0,0,0,0.1);
+    }
+    
     @media (max-width: 768px) {
       .header-container {
-        padding: 12px 15px;
+        flex-direction: column;
+        justify-content: center;
+        padding: 18px 15px;
+        min-height: 90px;
       }
       
       .header-title {
-        font-size: clamp(16px, 3vw, 20px);
         text-align: center;
-        margin-bottom: 0;
+        margin-bottom: 10px;
+        font-size: clamp(18px, 4vw, 22px);
+        width: 100%;
       }
       
       .header-right {
-        width: 100%;
-        justify-content: space-between;
+        position: static;
+        transform: none;
         margin-top: 10px;
-      }
-      
-      .user-info {
-        font-size: 14px;
-      }
-      
-      .user-icon {
-        width: 28px;
-        height: 28px;
-        font-size: 14px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
       }
       
       .logout-header-btn {
-        width: 42px;
-        height: 42px;
+        width: 45px;
+        height: 45px;
         font-size: 20px;
       }
       
       .card-container { 
         grid-template-columns: repeat(2, 1fr); 
-        gap: 15px; 
-        margin-top: 20px;
+        gap: 18px; 
+        margin-top: 25px;
       }
       
       .card { 
-        height: 170px; 
+        height: 180px; 
         padding: 18px 12px; 
       }
       
       .card-icon { 
-        font-size: 42px; 
+        font-size: 44px; 
       }
       
       .dialog-buttons { 
         flex-direction: column; 
+        gap: 12px;
       }
       
       .dialog-btn { 
@@ -349,18 +350,22 @@
     @media (max-width: 480px) {
       .card-container { 
         grid-template-columns: 1fr; 
-        gap: 12px; 
+        gap: 15px; 
       }
       
-      .header-right {
-        flex-direction: row;
-        align-items: center;
+      .header-title {
+        font-size: 18px;
       }
       
       .logout-header-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 18px;
+        width: 42px;
+        height: 42px;
+        font-size: 19px;
+      }
+      
+      .logout-header-btn::after {
+        font-size: 12px;
+        padding: 6px 12px;
       }
     }
   </style>
@@ -380,18 +385,14 @@
      </div>
   </div>
 
-  <!-- Header with Logout Icon -->
+  <!-- Header with Center Welcome Message and Circular Logout Icon -->
   <div class="header-container">
     <div class="header-title" id="welcomeTab">
       WELCOME TO NPP NAKUR SERVICE
     </div>
     
     <div class="header-right">
-      <div class="user-info">
-        <div class="user-icon">👤</div>
-        <span id="usernameDisplay">USER</span>
-      </div>
-      <button class="logout-header-btn" onclick="showLogoutDialog()" title="लॉगआउट">
+      <button class="logout-header-btn" onclick="showLogoutDialog()">
         🚪
       </button>
     </div>
@@ -480,7 +481,7 @@
   </div>
 
 <script>
-// Check if user is logged in
+// Check if user is logged in and update welcome message
 document.addEventListener('DOMContentLoaded', function() {
     const isLoggedIn = localStorage.getItem('loggedIn');
     const username = localStorage.getItem('username');
@@ -490,9 +491,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
-    // Update welcome message
+    // Update welcome message with username
     document.getElementById('welcomeTab').innerHTML = `WELCOME ${username.toUpperCase()} TO NPP NAKUR SERVICE`;
-    document.getElementById('usernameDisplay').textContent = username.toUpperCase();
 });
 
 // Show logout dialog
