@@ -11,10 +11,9 @@
   <meta name="apple-mobile-web-app-title" content="NPP Nakur">
   <link rel="apple-touch-icon" href="img1.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-    body { background-color: #f0f8ff; min-height: 100vh; }
+    body { background-color: #f0f8ff; min-height: 100vh; padding-bottom: 20px; }
     
     .background-banner {
       position: fixed;
@@ -36,70 +35,63 @@
       align-items: center;
       background: linear-gradient(90deg, #0066cc, #00a8ff);
       color: white;
-      padding: 18px 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 15px 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
       position: relative;
       z-index: 10;
     }
     
     .header-title {
-      font-size: clamp(18px, 3.5vw, 26px);
+      font-size: clamp(18px, 3.5vw, 24px);
       font-weight: bold;
       text-align: left;
       flex-grow: 1;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-right: 15px;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    
+    .user-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    
+    .header-right {
+      display: flex;
+      align-items: center;
     }
     
     .logout-header-btn {
       background: rgba(255, 255, 255, 0.2);
       border: 2px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
+      width: 48px;
+      height: 48px;
       color: white;
-      font-weight: bold;
       cursor: pointer;
       transition: all 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-left: 15px;
-      font-size: 24px;
+      font-size: 22px;
     }
     
     .logout-header-btn:hover {
       background: rgba(255, 255, 255, 0.3);
-      transform: translateY(-2px) scale(1.1);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    
-    .logout-header-btn .icon {
-      font-size: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s;
-    }
-    
-    .logout-header-btn:hover .icon {
-      transform: translateX(2px);
-    }
-    
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-right: 10px;
-      font-size: 15px;
-      font-weight: 500;
-    }
-    
-    .user-info .user-icon {
-      font-size: 20px;
-    }
-    
-    .header-right {
-      display: flex;
-      align-items: center;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
     
     .card-container {
@@ -185,33 +177,6 @@
     @keyframes aiGlow { 0%, 100% { transform: scale(1); text-shadow: 0 0 5px rgba(255, 51, 102, 0.5); } 50% { transform: scale(1.15); text-shadow: 0 0 15px rgba(255, 51, 102, 0.8), 0 0 25px rgba(255, 51, 102, 0.4); } }
     @keyframes swing { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(8deg); } 75% { transform: rotate(-8deg); } }
     
-    .logout-container {
-      display: flex;
-      justify-content: center;
-      margin: 25px 0;
-      padding: 0 20px;
-    }
-    
-    .logout-btn {
-      display: inline-block;
-      padding: 12px 28px;
-      background: linear-gradient(to right, #ff5e62, #ff2400);
-      color: white;
-      text-decoration: none;
-      border-radius: 50px;
-      font-weight: bold;
-      font-size: 15px;
-      box-shadow: 0 4px 10px rgba(255, 94, 98, 0.3);
-      transition: all 0.3s;
-      border: none;
-      cursor: pointer;
-    }
-    
-    .logout-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 14px rgba(255, 94, 98, 0.4);
-    }
-    
     /* Logout Dialog Styles */
     #logoutDialog {
       position: fixed;
@@ -285,68 +250,82 @@
       background: linear-gradient(to right, #e60000, #cc0000);
     }
     
-    /* Icon Styles */
-    .icon-logout {
-      font-family: "Font Awesome 6 Free";
-      font-weight: 900;
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 30px;
+      color: #666;
+      font-size: 14px;
     }
     
-    .icon-logout-door::before {
-      content: "\f52b"; /* Door Open icon */
+    /* Tooltip for logout icon */
+    .logout-header-btn {
+      position: relative;
     }
     
-    .icon-logout-arrow::before {
-      content: "\f2f5"; /* Sign-out icon */
+    .logout-header-btn::after {
+      content: 'लॉगआउट';
+      position: absolute;
+      top: 100%;
+      right: 50%;
+      transform: translateX(50%);
+      margin-top: 8px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      pointer-events: none;
     }
     
-    .icon-logout-power::before {
-      content: "\f011"; /* Power-off icon */
-    }
-    
-    .icon-logout-exit::before {
-      content: "\f08b"; /* Sign-out alt icon */
-    }
-    
-    .icon-logout-run::before {
-      content: "\f70c"; /* Person running icon */
+    .logout-header-btn:hover::after {
+      opacity: 1;
+      visibility: visible;
     }
     
     @media (max-width: 768px) {
       .header-container {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 15px;
+        padding: 12px 15px;
       }
       
       .header-title {
-        margin-bottom: 12px;
+        font-size: clamp(16px, 3vw, 20px);
         text-align: center;
-        width: 100%;
+        margin-bottom: 0;
       }
       
       .header-right {
         width: 100%;
         justify-content: space-between;
+        margin-top: 10px;
       }
       
       .user-info {
         font-size: 14px;
       }
       
-      .logout-header-btn {
-        width: 45px;
-        height: 45px;
-        margin-left: 0;
+      .user-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
       }
       
-      .logout-header-btn .icon {
-        font-size: 22px;
+      .logout-header-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 20px;
       }
       
       .card-container { 
         grid-template-columns: repeat(2, 1fr); 
         gap: 15px; 
-        margin-top: 15px;
+        margin-top: 20px;
       }
       
       .card { 
@@ -375,56 +354,14 @@
       
       .header-right {
         flex-direction: row;
-        gap: 10px;
         align-items: center;
-      }
-      
-      .user-info {
-        width: auto;
-        justify-content: flex-start;
       }
       
       .logout-header-btn {
         width: 40px;
         height: 40px;
+        font-size: 18px;
       }
-      
-      .logout-header-btn .icon {
-        font-size: 20px;
-      }
-    }
-    
-    /* Tooltip for logout icon */
-    .logout-header-btn {
-      position: relative;
-    }
-    
-    .logout-header-btn::after {
-      content: 'लॉगआउट';
-      position: absolute;
-      top: 100%;
-      right: 0;
-      margin-top: 8px;
-      background: rgba(0, 0, 0, 0.8);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-size: 12px;
-      white-space: nowrap;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      z-index: 1000;
-    }
-    
-    .logout-header-btn:hover::after {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    /* Icon selector for testing different icons */
-    .icon-selector {
-      display: none;
     }
   </style>
 </head>
@@ -443,7 +380,7 @@
      </div>
   </div>
 
-  <!-- Header with New Logout Icon -->
+  <!-- Header with Logout Icon -->
   <div class="header-container">
     <div class="header-title" id="welcomeTab">
       WELCOME TO NPP NAKUR SERVICE
@@ -451,22 +388,11 @@
     
     <div class="header-right">
       <div class="user-info">
-        <span class="user-icon"><i class="fas fa-user-circle"></i></span>
+        <div class="user-icon">👤</div>
         <span id="usernameDisplay">USER</span>
       </div>
       <button class="logout-header-btn" onclick="showLogoutDialog()" title="लॉगआउट">
-        <!-- यहाँ आप नीचे दिए गए icon में से कोई भी चुन सकते हैं -->
-        <!-- Option 1: Power off icon -->
-        <span class="icon icon-logout icon-logout-power"><i class="fas fa-power-off"></i></span>
-        
-        <!-- Option 2: Sign out arrow icon (uncomment to use) -->
-        <!-- <span class="icon icon-logout icon-logout-arrow"><i class="fas fa-sign-out-alt"></i></span> -->
-        
-        <!-- Option 3: Door open icon (uncomment to use) -->
-        <!-- <span class="icon icon-logout icon-logout-door"><i class="fas fa-door-open"></i></span> -->
-        
-        <!-- Option 4: Exit icon (uncomment to use) -->
-        <!-- <span class="icon icon-logout icon-logout-exit"><i class="fas fa-sign-out"></i></span> -->
+        🚪
       </button>
     </div>
   </div>
@@ -552,12 +478,6 @@
       </div>
     </div>
   </div>
-  
-  <div class="logout-container">
-    <button class="logout-btn" onclick="showLogoutDialog()">
-      <i class="fas fa-power-off" style="margin-right: 8px;"></i> लॉगआउट
-    </button>
-  </div>
 
 <script>
 // Check if user is logged in
@@ -614,30 +534,6 @@ document.addEventListener('keydown', function(e) {
         closeLogoutDialog();
     }
 });
-
-// Function to change logout icon (for testing different icons)
-function changeLogoutIcon(iconType) {
-    const logoutBtn = document.querySelector('.logout-header-btn .icon');
-    switch(iconType) {
-        case 'power':
-            logoutBtn.innerHTML = '<i class="fas fa-power-off"></i>';
-            break;
-        case 'signout':
-            logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i>';
-            break;
-        case 'door':
-            logoutBtn.innerHTML = '<i class="fas fa-door-open"></i>';
-            break;
-        case 'exit':
-            logoutBtn.innerHTML = '<i class="fas fa-sign-out"></i>';
-            break;
-        case 'run':
-            logoutBtn.innerHTML = '<i class="fas fa-running"></i>';
-            break;
-        default:
-            logoutBtn.innerHTML = '<i class="fas fa-power-off"></i>';
-    }
-}
 </script>
 </body>
 </html>
