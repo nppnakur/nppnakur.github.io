@@ -103,37 +103,6 @@
             font-size: 18px;
         }
 
-        /* Logout Button in Sidebar */
-        .logout-btn {
-            position: absolute;
-            bottom: 30px;
-            left: 0;
-            right: 0;
-            padding: 0 25px;
-        }
-
-        .logout-btn a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            background: rgba(255, 50, 50, 0.2);
-            color: #ff6b6b;
-            text-decoration: none;
-            border-radius: 10px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: 2px solid rgba(255, 107, 107, 0.3);
-            cursor: pointer;
-        }
-
-        .logout-btn a:hover {
-            background: rgba(255, 50, 50, 0.3);
-            color: #ff4757;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.2);
-        }
-
         /* Main Content Area */
         .main-content {
             margin-left: 260px;
@@ -269,7 +238,7 @@
             background: white;
             border-radius: 20px;
             width: 90%;
-            max-width: 500px;
+            max-width: 450px;
             overflow: hidden;
             animation: modalSlideIn 0.3s ease;
         }
@@ -361,47 +330,6 @@
             border-color: #ccc;
         }
 
-        /* Logout Info Box */
-        .logout-info {
-            background: #fff9e6;
-            border: 2px solid #ffcc00;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 25px;
-            text-align: left;
-        }
-
-        .logout-info h4 {
-            color: #333;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logout-info ul {
-            list-style: none;
-            padding-left: 10px;
-        }
-
-        .logout-info li {
-            padding: 8px 0;
-            border-bottom: 1px solid #ffeaa7;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-        }
-
-        .logout-info li:last-child {
-            border-bottom: none;
-        }
-
-        .logout-info i {
-            color: #ff6b6b;
-            width: 20px;
-        }
-
         /* Responsive */
         @media (max-width: 992px) {
             .sidebar {
@@ -427,10 +355,6 @@
             .main-content {
                 margin-left: 80px;
                 width: calc(100% - 80px);
-            }
-            
-            .logout-btn a span {
-                display: none;
             }
         }
 
@@ -467,23 +391,14 @@
         </div>
         
         <div class="modal-body">
-            <div class="logout-info">
-                <h4><i class="fas fa-exclamation-triangle"></i> कृपया ध्यान दें:</h4>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> आपकी सत्र जानकारी हट जाएगी</li>
-                    <li><i class="fas fa-check-circle"></i> फिर से लॉगिन करना होगा</li>
-                    <li><i class="fas fa-check-circle"></i> असुरक्षित कार्य सहेज लें</li>
-                </ul>
-            </div>
-            
-            <p><b>क्या आप लॉगआउट करना चाहते हैं या रद्द करना चाहते हैं?</b></p>
+            <p>लॉगआउट करने पर आपको फिर से लॉगिन करना होगा।</p>
             
             <div class="modal-buttons">
                 <button class="modal-btn modal-btn-cancel" onclick="closeLogoutModal()">
                     <i class="fas fa-times"></i> रद्द करें
                 </button>
                 <button class="modal-btn modal-btn-confirm" onclick="performLogout()">
-                    <i class="fas fa-sign-out-alt"></i> हाँ, लॉगआउट करें
+                    <i class="fas fa-sign-out-alt"></i> लॉगआउट करें
                 </button>
             </div>
         </div>
@@ -501,19 +416,13 @@
     <ul class="nav-links">
         <li><a href="#" class="active"><i class="fas fa-home"></i><span>डैशबोर्ड</span></a></li>
         <li><a href="#"><i class="fas fa-users"></i><span>उपयोगकर्ता</span></a></li>
+        <li><a href="#"><i class="fas fa-plus-circle"></i><span>नया उपयोगकर्ता</span></a></li>
         <li><a href="#"><i class="fas fa-file-alt"></i><span>रिपोर्ट्स</span></a></li>
         <li><a href="#"><i class="fas fa-chart-bar"></i><span>विश्लेषण</span></a></li>
+        <li><a href="#"><i class="fas fa-cogs"></i><span>नई सिस्टम</span></a></li>
         <li><a href="#"><i class="fas fa-cog"></i><span>सेटिंग्स</span></a></li>
         <li><a href="#"><i class="fas fa-question-circle"></i><span>सहायता</span></a></li>
     </ul>
-    
-    <!-- Logout Button in Sidebar -->
-    <div class="logout-btn">
-        <a onclick="showLogoutModal()">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>लॉगआउट</span>
-        </a>
-    </div>
 </div>
 
 <!-- Main Content -->
@@ -531,7 +440,7 @@
             </div>
             <button class="logout-top-btn" onclick="showLogoutModal()">
                 <i class="fas fa-sign-out-alt"></i>
-                लॉगआउट करें
+                लॉगआउट
             </button>
         </div>
     </div>
