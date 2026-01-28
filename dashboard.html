@@ -11,9 +11,6 @@
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- SweetAlert2 for confirmation dialogs -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         * {
@@ -26,6 +23,7 @@
         body {
             background: #f5f7fa;
             min-height: 100vh;
+            display: flex;
         }
 
         /* Sidebar Styles */
@@ -38,7 +36,6 @@
             top: 0;
             box-shadow: 0 0 30px rgba(0,0,0,0.1);
             z-index: 1000;
-            transition: all 0.3s ease;
         }
 
         .sidebar-header {
@@ -127,6 +124,7 @@
             font-weight: 600;
             transition: all 0.3s ease;
             border: 2px solid rgba(255, 107, 107, 0.3);
+            cursor: pointer;
         }
 
         .logout-btn a:hover {
@@ -141,6 +139,7 @@
             margin-left: 260px;
             padding: 30px;
             min-height: 100vh;
+            width: calc(100% - 260px);
         }
 
         .top-bar {
@@ -252,20 +251,155 @@
             line-height: 1.6;
         }
 
-        /* Custom SweetAlert Styles */
-        .swal2-popup {
-            border-radius: 20px !important;
-            font-family: 'Poppins', sans-serif !important;
+        /* Custom Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
         }
 
-        .swal2-title {
-            font-size: 24px !important;
-            color: #333 !important;
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            overflow: hidden;
+            animation: modalSlideIn 0.3s ease;
         }
 
-        .swal2-html-container {
-            font-size: 16px !important;
-            color: #666 !important;
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #0062ff, #0047b3);
+            padding: 25px;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-header h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .modal-header i {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .modal-body {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .modal-body p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .modal-btn {
+            padding: 14px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .modal-btn-confirm {
+            background: linear-gradient(135deg, #ff4757, #ff3838);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
+        }
+
+        .modal-btn-confirm:hover {
+            background: linear-gradient(135deg, #ff3838, #ff1e1e);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 71, 87, 0.4);
+        }
+
+        .modal-btn-cancel {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+
+        .modal-btn-cancel:hover {
+            background: #e9ecef;
+            border-color: #ccc;
+        }
+
+        /* Logout Info Box */
+        .logout-info {
+            background: #fff9e6;
+            border: 2px solid #ffcc00;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .logout-info h4 {
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logout-info ul {
+            list-style: none;
+            padding-left: 10px;
+        }
+
+        .logout-info li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ffeaa7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .logout-info li:last-child {
+            border-bottom: none;
+        }
+
+        .logout-info i {
+            color: #ff6b6b;
+            width: 20px;
         }
 
         /* Responsive */
@@ -292,6 +426,7 @@
             
             .main-content {
                 margin-left: 80px;
+                width: calc(100% - 80px);
             }
             
             .logout-btn a span {
@@ -309,10 +444,51 @@
             .dashboard-cards {
                 grid-template-columns: 1fr;
             }
+            
+            .modal-buttons {
+                flex-direction: column;
+            }
+            
+            .modal-btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
+
+<!-- Custom Modal for Logout Confirmation -->
+<div class="modal-overlay" id="logoutModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <i class="fas fa-sign-out-alt"></i>
+            <h3>लॉगआउट करें?</h3>
+            <p>क्या आप वाकई लॉगआउट करना चाहते हैं?</p>
+        </div>
+        
+        <div class="modal-body">
+            <div class="logout-info">
+                <h4><i class="fas fa-exclamation-triangle"></i> कृपया ध्यान दें:</h4>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> आपकी सत्र जानकारी हट जाएगी</li>
+                    <li><i class="fas fa-check-circle"></i> फिर से लॉगिन करना होगा</li>
+                    <li><i class="fas fa-check-circle"></i> असुरक्षित कार्य सहेज लें</li>
+                </ul>
+            </div>
+            
+            <p><b>क्या आप लॉगआउट करना चाहते हैं या रद्द करना चाहते हैं?</b></p>
+            
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" onclick="closeLogoutModal()">
+                    <i class="fas fa-times"></i> रद्द करें
+                </button>
+                <button class="modal-btn modal-btn-confirm" onclick="performLogout()">
+                    <i class="fas fa-sign-out-alt"></i> हाँ, लॉगआउट करें
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Sidebar -->
 <div class="sidebar">
@@ -333,7 +509,7 @@
     
     <!-- Logout Button in Sidebar -->
     <div class="logout-btn">
-        <a href="#" onclick="confirmLogout(event)">
+        <a onclick="showLogoutModal()">
             <i class="fas fa-sign-out-alt"></i>
             <span>लॉगआउट</span>
         </a>
@@ -353,7 +529,7 @@
             <div class="user-avatar">
                 <i class="fas fa-user"></i>
             </div>
-            <button class="logout-top-btn" onclick="confirmLogout(event)">
+            <button class="logout-top-btn" onclick="showLogoutModal()">
                 <i class="fas fa-sign-out-alt"></i>
                 लॉगआउट करें
             </button>
@@ -414,52 +590,60 @@
         document.getElementById('current-date').textContent = dateStr;
     }
     
-    // Logout Confirmation Function
-    function confirmLogout(event) {
-        if(event) event.preventDefault();
-        
-        Swal.fire({
-            title: 'क्या आप लॉगआउट करना चाहते हैं?',
-            html: `
-                <div style="text-align: left; padding: 10px;">
-                    <p><b>लॉगआउट करने से पहले कृपया ध्यान दें:</b></p>
-                    <ul style="margin: 10px 0; padding-left: 20px;">
-                        <li>आपकी सत्र जानकारी हट जाएगी</li>
-                        <li>फिर से लॉगिन करना होगा</li>
-                        <li>असुरक्षित कार्य सहेज लें</li>
-                    </ul>
-                </div>
-            `,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: '<i class="fas fa-sign-out-alt"></i> हाँ, लॉगआउट करें',
-            cancelButtonText: '<i class="fas fa-times"></i> रद्द करें',
-            reverseButtons: true,
-            allowOutsideClick: false,
-            showLoaderOnConfirm: true,
-            preConfirm: () => {
-                // Clear all authentication data
-                localStorage.removeItem('loggedIn');
-                localStorage.removeItem('username');
-                localStorage.removeItem('loginTime');
-                sessionStorage.clear();
-                
-                // Add delay for better UX
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, 1000);
-                });
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Redirect to logout page
-                window.location.href = 'logout.html';
-            }
-        });
+    // Show Logout Modal
+    function showLogoutModal() {
+        const modal = document.getElementById('logoutModal');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
     }
+    
+    // Close Logout Modal
+    function closeLogoutModal() {
+        const modal = document.getElementById('logoutModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Enable scrolling
+    }
+    
+    // Perform Logout
+    function performLogout() {
+        // Show loading state
+        const confirmBtn = document.querySelector('.modal-btn-confirm');
+        const originalText = confirmBtn.innerHTML;
+        confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> लॉगआउट हो रहा है...';
+        confirmBtn.disabled = true;
+        
+        // Clear all authentication data
+        localStorage.removeItem('loggedIn');
+        localStorage.removeItem('username');
+        localStorage.removeItem('loginTime');
+        sessionStorage.clear();
+        
+        // Add delay for better UX
+        setTimeout(() => {
+            // Close modal
+            closeLogoutModal();
+            
+            // Show success message
+            alert('सफलतापूर्वक लॉगआउट हो गया! लॉगिन पेज पर redirect किया जा रहा है...');
+            
+            // Redirect to login page
+            window.location.href = 'index.html';
+        }, 1500);
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('logoutModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeLogoutModal();
+        }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeLogoutModal();
+        }
+    });
     
     // Prevent back button after logout
     history.pushState(null, null, location.href);
