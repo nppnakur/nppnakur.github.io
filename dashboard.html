@@ -11,6 +11,9 @@
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- SweetAlert2 for confirmation dialogs -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         * {
@@ -21,52 +24,27 @@
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f7fa;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
         }
 
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 500px;
-            overflow: hidden;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header {
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
             background: linear-gradient(135deg, #0062ff 0%, #0047b3 100%);
-            padding: 40px 30px;
-            text-align: center;
-            color: white;
-            position: relative;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
 
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #ffcc00, #ff9900);
+        .sidebar-header {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .logo {
@@ -74,266 +52,430 @@
             height: 80px;
             border-radius: 50%;
             border: 4px solid rgba(255,255,255,0.3);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             background: white;
             padding: 10px;
         }
 
-        .header h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .header p {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-
-        .message-box {
-            padding: 40px 30px;
-            text-align: center;
-        }
-
-        .icon {
-            font-size: 60px;
-            color: #4CAF50;
-            margin-bottom: 20px;
-            animation: bounce 1s infinite alternate;
-        }
-
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-10px); }
-        }
-
-        .message-box h2 {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .message-box p {
-            color: #666;
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-
-        .loading-bar {
-            width: 100%;
-            height: 4px;
-            background: #f0f0f0;
-            border-radius: 2px;
-            overflow: hidden;
-            margin: 30px 0;
-        }
-
-        .loading-progress {
-            height: 100%;
-            background: linear-gradient(90deg, #4CAF50, #8BC34A);
-            width: 0%;
-            animation: loading 2s linear forwards;
-            border-radius: 2px;
-        }
-
-        @keyframes loading {
-            to { width: 100%; }
-        }
-
-        .redirect-message {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            border-left: 4px solid #0062ff;
-        }
-
-        .redirect-message p {
-            margin-bottom: 0;
-            font-size: 14px;
-        }
-
-        .countdown {
-            color: #0062ff;
-            font-weight: bold;
-            font-size: 16px;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 30px;
+        .sidebar-header h2 {
             color: white;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .sidebar-header p {
+            color: rgba(255,255,255,0.8);
             font-size: 14px;
         }
 
-        .footer a {
-            color: #ffcc00;
-            text-decoration: none;
-            font-weight: 500;
+        .nav-links {
+            padding: 30px 0;
         }
 
-        .footer a:hover {
-            text-decoration: underline;
+        .nav-links li {
+            list-style: none;
+            margin-bottom: 5px;
         }
 
-        .button-container {
+        .nav-links a {
             display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
+            align-items: center;
+            padding: 15px 25px;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
         }
 
-        .btn {
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s ease;
-            display: inline-flex;
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left: 4px solid #ffcc00;
+        }
+
+        .nav-links a.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-left: 4px solid #ffcc00;
+        }
+
+        .nav-links i {
+            width: 30px;
+            font-size: 18px;
+        }
+
+        /* Logout Button in Sidebar */
+        .logout-btn {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            padding: 0 25px;
+        }
+
+        .logout-btn a {
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            min-width: 150px;
+            padding: 15px;
+            background: rgba(255, 50, 50, 0.2);
+            color: #ff6b6b;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 107, 107, 0.3);
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #0062ff, #0047b3);
-            color: white;
-            box-shadow: 0 5px 15px rgba(0,98,255,0.3);
-        }
-
-        .btn-primary:hover {
+        .logout-btn a:hover {
+            background: rgba(255, 50, 50, 0.3);
+            color: #ff4757;
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,98,255,0.4);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.2);
         }
 
-        .btn-secondary {
-            background: #f8f9fa;
+        /* Main Content Area */
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .welcome-section h1 {
             color: #333;
-            border: 2px solid #ddd;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
         }
 
-        .btn-secondary:hover {
-            background: #e9ecef;
-            border-color: #ccc;
+        .welcome-section p {
+            color: #666;
+            font-size: 14px;
         }
 
-        @media (max-width: 480px) {
-            .container {
-                border-radius: 15px;
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0062ff, #0047b3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .logout-top-btn {
+            background: linear-gradient(135deg, #ff4757, #ff3838);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.2);
+        }
+
+        .logout-top-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 71, 87, 0.3);
+        }
+
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border-left: 5px solid #0062ff;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #0062ff, #0047b3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Custom SweetAlert Styles */
+        .swal2-popup {
+            border-radius: 20px !important;
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        .swal2-title {
+            font-size: 24px !important;
+            color: #333 !important;
+        }
+
+        .swal2-html-container {
+            font-size: 16px !important;
+            color: #666 !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px;
             }
             
-            .header {
-                padding: 30px 20px;
+            .sidebar-header h2,
+            .sidebar-header p,
+            .nav-links span {
+                display: none;
             }
             
-            .header h1 {
-                font-size: 24px;
+            .nav-links a {
+                justify-content: center;
+                padding: 20px;
             }
             
-            .message-box {
-                padding: 30px 20px;
+            .nav-links i {
+                width: auto;
+                font-size: 22px;
             }
             
-            .button-container {
+            .main-content {
+                margin-left: 80px;
+            }
+            
+            .logout-btn a span {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-bar {
                 flex-direction: column;
+                gap: 20px;
+                text-align: center;
             }
             
-            .btn {
-                width: 100%;
+            .dashboard-cards {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="sidebar-header">
         <img src="img1.png" alt="NPP NAKUR Logo" class="logo">
-        <h1>NAGAR PALIKA NAKUR</h1>
-        <p>प्रशासन पोर्टल</p>
+        <h2>NAGAR PALIKA NAKUR</h2>
+        <p>प्रशासन डैशबोर्ड</p>
     </div>
     
-    <div class="message-box">
-        <div class="icon">
-            <i class="fas fa-check-circle"></i>
-        </div>
-        
-        <h2>Successfully logged out!</h2>
-        <p>आप सफलतापूर्वक नगर पालिका नकुड़ डैशबोर्ड से लॉगआउट हो गए हैं।</p>
-        
-        <div class="loading-bar">
-            <div class="loading-progress"></div>
-        </div>
-        
-        <div class="redirect-message">
-            <p>आपको स्वचालित रूप से लॉगिन पेज पर भेजा जा रहा है... <span class="countdown" id="countdown">5</span> सेकंड</p>
-        </div>
-        
-        <div class="button-container">
-            <button class="btn btn-primary" onclick="redirectNow()">
-                <i class="fas fa-sign-in-alt"></i> तुरंत लॉगिन करें
-            </button>
-            <button class="btn btn-secondary" onclick="stayHere()">
-                <i class="fas fa-times"></i> यहाँ रहें
-            </button>
-        </div>
+    <ul class="nav-links">
+        <li><a href="#" class="active"><i class="fas fa-home"></i><span>डैशबोर्ड</span></a></li>
+        <li><a href="#"><i class="fas fa-users"></i><span>उपयोगकर्ता</span></a></li>
+        <li><a href="#"><i class="fas fa-file-alt"></i><span>रिपोर्ट्स</span></a></li>
+        <li><a href="#"><i class="fas fa-chart-bar"></i><span>विश्लेषण</span></a></li>
+        <li><a href="#"><i class="fas fa-cog"></i><span>सेटिंग्स</span></a></li>
+        <li><a href="#"><i class="fas fa-question-circle"></i><span>सहायता</span></a></li>
+    </ul>
+    
+    <!-- Logout Button in Sidebar -->
+    <div class="logout-btn">
+        <a href="#" onclick="confirmLogout(event)">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>लॉगआउट</span>
+        </a>
     </div>
 </div>
 
-<div class="footer">
-    <p>© 2023 नगर पालिका नकुड़ प्रशासन | सभी अधिकार सुरक्षित</p>
-    <p>विकसित: <a href="https://sunnydhaka.fwh.is" target="_blank">Sunny Dhaka</a></p>
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="welcome-section">
+            <h1>नमस्ते, प्रशासक!</h1>
+            <p>आज की तारीख: <span id="current-date"></span></p>
+        </div>
+        
+        <div class="user-profile">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <button class="logout-top-btn" onclick="confirmLogout(event)">
+                <i class="fas fa-sign-out-alt"></i>
+                लॉगआउट करें
+            </button>
+        </div>
+    </div>
+    
+    <!-- Dashboard Cards -->
+    <div class="dashboard-cards">
+        <div class="card">
+            <div class="card-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h3>कुल उपयोगकर्ता</h3>
+            <p>1,250</p>
+            <p><small>सक्रिय उपयोगकर्ता: 980</small></p>
+        </div>
+        
+        <div class="card">
+            <div class="card-icon" style="background: linear-gradient(135deg, #4CAF50, #2E7D32);">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <h3>कुल दस्तावेज़</h3>
+            <p>5,842</p>
+            <p><small>इस महीने: 245</small></p>
+        </div>
+        
+        <div class="card">
+            <div class="card-icon" style="background: linear-gradient(135deg, #FF9800, #EF6C00);">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h3>मासिक विश्लेषण</h3>
+            <p>+15.2% वृद्धि</p>
+            <p><small>पिछले महीने से</small></p>
+        </div>
+        
+        <div class="card">
+            <div class="card-icon" style="background: linear-gradient(135deg, #9C27B0, #6A1B9A);">
+                <i class="fas fa-bell"></i>
+            </div>
+            <h3>सूचनाएं</h3>
+            <p>12 नई सूचनाएं</p>
+            <p><small>2 अवांछित</small></p>
+        </div>
+    </div>
 </div>
 
 <script>
-    // Clear all authentication data
-    localStorage.removeItem('loggedIn');
-    localStorage.removeItem('username');
-    localStorage.removeItem('loginTime');
-    sessionStorage.clear();
+    // Set current date
+    function setCurrentDate() {
+        const now = new Date();
+        const options = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        };
+        const dateStr = now.toLocaleDateString('hi-IN', options);
+        document.getElementById('current-date').textContent = dateStr;
+    }
     
-    let countdown = 5;
-    let countdownElement = document.getElementById('countdown');
-    let redirectTimer;
-    
-    function startRedirectTimer() {
-        redirectTimer = setInterval(() => {
-            countdown--;
-            countdownElement.textContent = countdown;
-            
-            if (countdown <= 0) {
-                clearInterval(redirectTimer);
-                window.location.href = 'index.html';
+    // Logout Confirmation Function
+    function confirmLogout(event) {
+        if(event) event.preventDefault();
+        
+        Swal.fire({
+            title: 'क्या आप लॉगआउट करना चाहते हैं?',
+            html: `
+                <div style="text-align: left; padding: 10px;">
+                    <p><b>लॉगआउट करने से पहले कृपया ध्यान दें:</b></p>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>आपकी सत्र जानकारी हट जाएगी</li>
+                        <li>फिर से लॉगिन करना होगा</li>
+                        <li>असुरक्षित कार्य सहेज लें</li>
+                    </ul>
+                </div>
+            `,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '<i class="fas fa-sign-out-alt"></i> हाँ, लॉगआउट करें',
+            cancelButtonText: '<i class="fas fa-times"></i> रद्द करें',
+            reverseButtons: true,
+            allowOutsideClick: false,
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                // Clear all authentication data
+                localStorage.removeItem('loggedIn');
+                localStorage.removeItem('username');
+                localStorage.removeItem('loginTime');
+                sessionStorage.clear();
+                
+                // Add delay for better UX
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 1000);
+                });
             }
-        }, 1000);
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to logout page
+                window.location.href = 'logout.html';
+            }
+        });
     }
-    
-    function redirectNow() {
-        clearInterval(redirectTimer);
-        window.location.href = 'index.html';
-    }
-    
-    function stayHere() {
-        clearInterval(redirectTimer);
-        document.querySelector('.redirect-message').innerHTML = 
-            '<p>आप यहाँ रहने का निर्णय लिया है। जब चाहें लॉगिन बटन क्लिक करें।</p>';
-        document.querySelector('.loading-bar').style.display = 'none';
-        document.getElementById('countdown').style.display = 'none';
-    }
-    
-    // Start the countdown when page loads
-    document.addEventListener('DOMContentLoaded', startRedirectTimer);
     
     // Prevent back button after logout
     history.pushState(null, null, location.href);
     window.onpopstate = function () {
         history.go(1);
     };
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        setCurrentDate();
+        
+        // Check if user is logged in
+        if(!localStorage.getItem('loggedIn')) {
+            window.location.href = 'index.html';
+        }
+    });
 </script>
 
 </body>
