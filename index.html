@@ -1,128 +1,493 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAGAR PALIKA NAKUR</title>
+  <meta charset="UTF-8">
+  <title>NAGAR PALIKA NAKUR</title>
+  
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
+  <link rel="icon" href="img1.png" type="image/png">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="HandheldFriendly" content="true">
+  <meta name="theme-color" content="#ffcc00">
+  
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  
+  <style>
+    /* आपका ओरिजिनल CSS विद एनीमेशन */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-image: url('https://ptaxsnn.com/Login/images/banner.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      overflow-x: hidden; /* Prevent horizontal scroll from typing effect */
+    }
     
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-
-    <style>
-        body {
-            margin: 0; padding: 0; font-family: sans-serif;
-            background: #1a1a1a url('https://ptaxsnn.com/Login/images/banner.jpg') no-repeat center center fixed;
-            background-size: cover;
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; color: white;
-        }
-        h2 {
-            position: absolute; top: 20px; width: 100%; text-align: center;
-            color: #ffcc00; text-shadow: 2px 2px 5px black;
-            animation: glow 1.5s infinite alternate;
-        }
-        @keyframes glow {
-            from { text-shadow: 0 0 5px #ffcc00; }
-            to { text-shadow: 0 0 20px #ffcc00; }
-        }
-        .container {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 30px; border-radius: 20px;
-            width: 90%; max-width: 400px;
-            border: 2px solid #ffcc00; text-align: center;
-        }
-        .logo-section img {
-            width: 150px; margin-bottom: 20px;
-            animation: flip 5s infinite linear;
-        }
-        @keyframes flip {
-            from { transform: rotateY(0deg); }
-            to { transform: rotateY(360deg); }
-        }
-        input {
-            width: 100%; padding: 12px; margin: 10px 0;
-            border-radius: 10px; border: 1px solid #ffcc00;
-            background: #222; color: white; box-sizing: border-box;
-        }
-        button {
-            width: 100%; padding: 12px; background: #ffcc00;
-            border: none; border-radius: 10px; font-weight: bold;
-            cursor: pointer; margin-top: 10px;
-        }
-        #otp-section { display: none; }
-        .powered { margin-top: 20px; font-size: 12px; color: #ffcc00; }
-    </style>
+    h2 {
+      position: absolute;
+      top: 8px;
+      width: 100%;
+      text-align: center;
+      font-size: 40px;
+      color: #fff;
+      animation: glowing 1.5s infinite alternate;
+      z-index: 1;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7); /* Added for better visibility */
+    }
+    
+    @keyframes glowing {
+      0% { text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00; }
+      50% { text-shadow: 0 0 15px #ffcc00, 0 0 25px #ffcc00, 0 0 35px #ffcc00; }
+      100% { text-shadow: 0 0 20px #ffcc00, 0 0 30px #ffcc00, 0 0 40px #ffcc00; }
+    }
+    
+    .container {
+      background-color: rgba(0, 0, 0, 0.6); /* Slightly darker for better contrast */
+      border-radius: 35px;
+      padding: 20px;
+      display: flex;
+      flex-direction: row;
+      width: 90%;
+      max-width: 1000px;
+      box-shadow: 0 8px 10px rgba(0, 0, 0, 0.4);
+      position: relative;
+      backdrop-filter: blur(5px); /* Added for a modern look */
+    }
+    
+    .logo-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+    
+    .rotating-logo {
+      width: 300px;
+      animation: flipUpright 5s ease infinite;
+      transform-style: preserve-3d;
+    }
+    
+    @keyframes flipUpright {
+      0% { transform: rotateY(0deg) scaleX(1); }
+      100% { transform: rotateY(180deg) scaleX(-1); }
+    }
+    
+    .form-section {
+      flex: 1;
+      padding: 20px;
+    }
+    
+    .form-section h3 {
+      font-size: 28px;
+      text-align: center;
+      color: #ffcc00;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      font-size: 16px;
+      margin-bottom: 10px;
+      display: block;
+      font-weight: bold;
+    }
+    
+    .form-group input {
+      width: 94%;
+      padding: 12px;
+      font-size: 15px;
+      background-color: rgba(0, 0, 0, 0.3); /* Slightly transparent */
+      color: white;
+      border: 1px solid #ffcc00; /* Added border */
+      border-radius: 23px;
+      outline: none; /* Remove default focus outline */
+    }
+    
+    .form-group button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px; /* Slightly larger font */
+      font-weight: bold;
+      background-color: #fbf2f2cf;
+      color: #1a1818;
+      border: none;
+      border-radius: 23px;
+      cursor: pointer;
+      animation: waveButton 2s infinite alternate ease-in-out;
+      transition: background-color 0.3s ease; /* Smooth hover */
+    }
+    
+    .form-group button:hover {
+      background-color: #ffcc00; /* Brighter on hover */
+    }
+    
+    @keyframes waveButton {
+      0% { transform: translateY(0); }
+      30% { transform: translateY(-3px); }
+      50% { transform: translateY(0); }
+      75% { transform: translateY(3px); }
+      100% { transform: translateY(0); }
+    }
+    
+    .powered-by {
+      position: absolute;
+      bottom: 10px; /* Adjusted position */
+      right: 20px;
+      font-size: 16px;
+      color: #f2f2f1;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
+      animation: typing 3s steps(28, end) forwards, floatUpDown 2s ease-in-out infinite;
+    }
+    
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 260px }
+    }
+    
+    @keyframes floatUpDown {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    
+    .error-message {
+      color: #ff6b6b;
+      text-align: center;
+      margin-bottom: 15px;
+      font-weight: bold;
+      display: none;
+    }
+    
+    #otp-section {
+      display: none;
+    }
+    
+    .success-msg {
+      color: #00ff00;
+      text-align: center;
+      margin-bottom: 15px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    
+    .otp-timer {
+      color: #ffcc00;
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    
+    /* Responsive design */
+    @media screen and (max-width: 768px) {
+      .container { flex-direction: column; align-items: center; padding: 15px; }
+      .rotating-logo { width: 180px; margin-bottom: 20px; }
+      h2 { font-size: 30px; top: 10px; }
+      .form-section h3 { font-size: 22px; }
+      .form-group input { font-size: 14px; padding: 10px; }
+      .form-group button { font-size: 14px; padding: 10px; }
+      .powered-by { font-size: 12px; width: 180px; /* Adjust width for typing */ }
+      @keyframes typing { from { width: 0 } to { width: 180px } }
+    }
+  </style>
 </head>
 <body>
 
 <h2>WELCOME TO NAGAR PALIKA NAKUR</h2>
 
 <div class="container">
-    <div class="logo-section">
-        <img src="img1.png" alt="Logo">
-    </div>
+  <div class="logo-section">
+    <img src="img1.png" alt="Logo" class="rotating-logo" id="mainLogo">
+  </div>
 
+  <div class="form-section">
+    <h3>ADMIN LOGIN</h3>
+    <div class="error-message" id="errorMsg"></div>
+    
     <div id="login-section">
-        <h3>ADMIN LOGIN</h3>
-        <input type="text" id="username" placeholder="USER NAME">
-        <input type="password" id="password" placeholder="PASSWORD">
-        <button id="loginBtn">LOG IN →</button>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username"><b>USER NAME</b></label>
+          <input type="text" name="username" id="username" placeholder="ENTER YOUR USER ID" required>
+        </div>
+        <div class="form-group">
+          <label for="password"><b>PASSWORD</b></label>
+          <input type="password" name="password" id="password" placeholder="ENTER YOUR PASSWORD" required>
+        </div>
+        <div class="form-group">
+          <button type="button" id="loginBtn">LOG IN →</button>
+        </div>
+      </form>
     </div>
-
+    
     <div id="otp-section">
-        <h3 style="color: #00ff00;">OTP SENT!</h3>
-        <input type="text" id="user-otp" placeholder="ENTER 6-DIGIT OTP">
-        <button id="verifyBtn">VERIFY & LOGIN</button>
+      <div class="success-msg" id="successMsg">✅ OTP आपके ईमेल पर भेज दिया गया है!</div>
+      <div class="otp-timer" id="otpTimer">OTP valid for: <span id="timer">05:00</span></div>
+      <form id="otpForm">
+        <div class="form-group">
+          <label for="user-otp"><b>ENTER OTP</b></label>
+          <input type="text" name="user-otp" id="user-otp" placeholder="ENTER 6-DIGIT OTP" maxlength="6" required>
+        </div>
+        <div class="form-group">
+          <button type="button" id="verifyBtn">VERIFY & LOGIN</button>
+        </div>
+      </form>
+      <div style="text-align: center; margin-top: 10px;">
+        <button onclick="resendOTP()" style="background: transparent; color: #ffcc00; border: none; cursor: pointer; font-size: 14px;">Resend OTP</button>
+      </div>
     </div>
+  </div>
 
-    <div class="powered">POWERED BY: SUNNY DHAKA</div>
+  <div class="powered-by">POWERED-BY ➤ SUNNY DHAKA</div>
 </div>
 
 <script>
-    // EmailJS Initialize
-    (function(){
-        emailjs.init("u_DDKYPoptkEmoftY");
-    })();
+// --- Service Worker Cleanup (for fresh updates) ---
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+            registration.unregister();
+            console.log("Old Service Worker Unregistered");
+        }
+    });
+}
 
-    const SERVICE_ID = "service_25eenak";
-    const TEMPLATE_ID = "template_hdj6nfo";
-    let generatedOTP = null;
+// --- EmailJS Configuration ---
+const SERVICE_ID = "service_25eenak";
+const TEMPLATE_ID = "template_hdj6nfo";
+const PUBLIC_KEY = "u_DDKYPoptkEmoftY"; // आपकी सही Public Key
 
-    document.getElementById('loginBtn').onclick = function() {
-        const user = document.getElementById('username').value.trim();
-        const pass = document.getElementById('password').value.trim();
+// Initialize EmailJS
+emailjs.init(PUBLIC_KEY);
 
-        if (user === "Sunnydhaka" && pass === "Sunny1990") {
-            generatedOTP = Math.floor(100000 + Math.random() * 900000);
-            this.innerText = "Sending...";
-            this.disabled = true;
+// Global variables for OTP and Timer
+let generatedOTP = null;
+let otpTimer = null;
+let timeLeft = 300; // 5 minutes
 
-            emailjs.send(SERVICE_ID, TEMPLATE_ID, {
-                to_email: "sunnydhaka91@gmail.com",
-                otp: generatedOTP,
-                user_name: user
-            }).then(function() {
+// DOM loaded event listener
+document.addEventListener('DOMContentLoaded', function() {
+    // Force image refresh (cache busting for logo)
+    document.getElementById('mainLogo').src = 'img1.png?' + new Date().getTime();
+    
+    // Set focus on username input
+    document.getElementById('username').focus();
+    
+    // Event listeners for buttons
+    document.getElementById('loginBtn').addEventListener('click', sendOTP);
+    document.getElementById('verifyBtn').addEventListener('click', verifyOTP);
+    
+    // Enter key support for login
+    document.getElementById('password').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') sendOTP();
+    });
+    
+    // Enter key support for OTP
+    document.getElementById('user-otp').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') verifyOTP();
+    });
+});
+
+// --- Function to Send OTP ---
+function sendOTP() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const errorMsg = document.getElementById('errorMsg');
+    const loginBtn = document.getElementById('loginBtn');
+    
+    // Reset error message
+    errorMsg.style.display = 'none';
+    errorMsg.textContent = '';
+    
+    // Input validation
+    if (!username || !password) {
+        errorMsg.textContent = '❌ कृपया यूजरनेम और पासवर्ड दोनों डालें!';
+        errorMsg.style.display = 'block';
+        shakeInputs();
+        return;
+    }
+    
+    // Check hardcoded credentials
+    if (username === "Sunnydhaka" && password === "Sunny1990") {
+        generatedOTP = Math.floor(100000 + Math.random() * 900000);
+        
+        // Update button state
+        loginBtn.innerText = "Sending OTP...";
+        loginBtn.disabled = true;
+
+        // Email parameters
+        const templateParams = {
+            to_email: "sunnydhaka91@gmail.com", // Ensure this is the correct admin email
+            otp: generatedOTP,
+            user_name: username,
+            from_name: "NAGAR PALIKA NAKUR",
+            website_name: "Nagar Palika Nakur Admin Portal"
+        };
+        
+        // Send email via EmailJS
+        emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
+            .then(function(response) {
+                console.log('✅ Email sent successfully:', response);
+                document.getElementById('successMsg').innerHTML = 
+                    `✅ OTP सफलतापूर्वक भेज दिया गया!<br>
+                     <span style="font-size: 11px;">(Check your registered email: sunnydhaka91@gmail.com)</span>`;
+                
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('otp-section').style.display = 'block';
-            }, function(err) {
-                alert("Error: " + err.text);
-                document.getElementById('loginBtn').disabled = false;
-                document.getElementById('loginBtn').innerText = "LOG IN →";
+                startOTPTimer(); // Start the OTP timer
+                document.getElementById('user-otp').focus(); // Focus on OTP input
+            }, function(error) {
+                console.error('❌ Email sending failed:', error);
+                errorMsg.innerHTML = `❌ OTP भेजने में विफल! कृपया फिर से प्रयास करें।<br><span style="font-size:12px;">(Error: ${error.text})</span>`;
+                errorMsg.style.display = 'block';
+                loginBtn.disabled = false;
+                loginBtn.innerText = "LOG IN →";
             });
-        } else {
-            alert("Wrong Credentials!");
-        }
-    };
+            
+    } else {
+        errorMsg.textContent = '❌ अमान्य यूजरनेम या पासवर्ड!';
+        errorMsg.style.display = 'block';
+        shakeInputs();
+    }
+}
 
-    document.getElementById('verifyBtn').onclick = function() {
-        const entered = document.getElementById('user-otp').value.trim();
-        if (parseInt(entered) === generatedOTP) {
-            alert("Login Success!");
-            window.location.href = 'dashboard.html';
-        } else {
-            alert("Invalid OTP!");
-        }
+// --- Function to Verify OTP ---
+function verifyOTP() {
+    const enteredOTP = document.getElementById('user-otp').value.trim();
+    const errorMsg = document.getElementById('errorMsg');
+    const verifyBtn = document.getElementById('verifyBtn');
+    
+    // Reset error message
+    errorMsg.style.display = 'none';
+    errorMsg.textContent = '';
+    
+    if (!enteredOTP || enteredOTP.length !== 6) {
+        errorMsg.textContent = '❌ कृपया 6 अंकों का OTP डालें!';
+        errorMsg.style.display = 'block';
+        shakeInputs(document.getElementById('user-otp'));
+        return;
+    }
+    
+    if (generatedOTP && parseInt(enteredOTP) === generatedOTP) {
+        clearInterval(otpTimer); // Stop the timer
+        
+        verifyBtn.innerText = "Verifying...";
+        verifyBtn.disabled = true;
+
+        // Set login flag in localStorage
+        localStorage.setItem('isLoggedIn', 'true');
+        
+        // Success message
+        document.getElementById('successMsg').innerHTML = 
+            '<div style="color: #00ff00; font-weight: bold; padding: 10px; background: rgba(0,255,0,0.1); border-radius: 8px;">✅ OTP वेरीफाई हो गया! डैशबोर्ड पर रीडायरेक्ट हो रहा है...</div>';
+        
+        // Redirect to dashboard (using replace for security)
+        setTimeout(() => {
+            window.location.replace('dashboard.html');
+        }, 1500);
+        
+    } else {
+        errorMsg.textContent = '❌ अमान्य OTP! कृपया फिर से प्रयास करें।';
+        errorMsg.style.display = 'block';
+        shakeInputs(document.getElementById('user-otp'));
+    }
+}
+
+// --- Function to Resend OTP ---
+function resendOTP() {
+    // Reset timer
+    timeLeft = 300;
+    updateTimerDisplay();
+    clearInterval(otpTimer);
+    startOTPTimer();
+
+    generatedOTP = Math.floor(100000 + Math.random() * 900000);
+    
+    document.getElementById('successMsg').innerHTML = '📧 नया OTP भेजा जा रहा है...';
+
+    const templateParams = {
+        to_email: "sunnydhaka91@gmail.com",
+        otp: generatedOTP,
+        user_name: document.getElementById('username').value.trim(),
+        from_name: "NAGAR PALIKA NAKUR",
+        website_name: "Nagar Palika Nakur Admin Portal"
     };
+    
+    emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
+        .then(function() {
+            document.getElementById('successMsg').innerHTML = 
+                `✅ नया OTP भेज दिया गया!<br>
+                 <span style="font-size: 11px;">(Check your registered email: sunnydhaka91@gmail.com)</span>`;
+        }, function() {
+            document.getElementById('errorMsg').innerHTML = '❌ नया OTP भेजने में विफल!';
+            document.getElementById('errorMsg').style.display = 'block';
+        });
+}
+
+// --- OTP Timer Functions ---
+function startOTPTimer() {
+    timeLeft = 300; // Reset to 5 minutes
+    updateTimerDisplay();
+    
+    if (otpTimer) {
+        clearInterval(otpTimer);
+    }
+    
+    otpTimer = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        
+        if (timeLeft <= 0) {
+            clearInterval(otpTimer);
+            document.getElementById('otpTimer').innerHTML = '⏰ OTP समय सीमा समाप्त! कृपया फिर से भेजें।';
+            generatedOTP = null; // Invalidate OTP
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    document.getElementById('timer').textContent = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+// --- Input Shake Animation (for errors) ---
+function shakeInputs(element = null) {
+    const inputs = element ? [element] : document.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.style.animation = 'shake 0.5s';
+        setTimeout(() => input.style.animation = '', 500);
+    });
+}
+
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-8px); }
+        75% { transform: translateX(8px); }
+    }
+`;
+document.head.appendChild(style);
 </script>
-
 </body>
 </html>
