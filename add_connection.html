@@ -1,184 +1,223 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <title>NPP NAKUR - Dashboard</title>
-  
-  <script>
-    // सुरक्षा जांच: अगर लॉगिन नहीं है तो तुरंत वापस भेजें
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>नया जल कनेक्शन - NPP NAKUR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* आपका ओरिजिनल डिज़ाइन */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', 'Nirmala UI', sans-serif; }
+        body { background: #f5f5f5; min-height: 100vh; display: flex; flex-direction: column; }
+
+        .header {
+            background: white; color: #333; padding: 15px 30px; display: flex;
+            justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky; top: 0; z-index: 100; border-bottom: 2px solid #e0e0e0;
+        }
+
+        .header a {
+            color: #1565c0; text-decoration: none; margin-left: 20px; font-weight: 600;
+            display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px;
+            border-radius: 6px; transition: all 0.3s; border: 1px solid #e0e0e0;
+        }
+
+        .header a:hover { background: #f0f7ff; color: #0d47a1; border-color: #1565c0; }
+
+        .main-container { flex: 1; padding: 25px; display: flex; justify-content: center; align-items: flex-start; position: relative; }
+
+        .form-container {
+            width: 100%; max-width: 1000px; background: white; padding: 30px;
+            border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+            margin-bottom: 80px; border: 1px solid #e0e0e0;
+        }
+
+        .form-group { margin-bottom: 18px; }
+        .full-width { grid-column: span 2; }
+
+        label { font-weight: 600; display: block; margin-bottom: 8px; color: #333; font-size: 14px; }
+        input, select {
+            width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 6px;
+            background: #fafafa; font-size: 15px; transition: all 0.3s;
+        }
+        input:focus, select:focus { outline: none; border-color: #1565c0; background: white; }
+
+        .total-balance {
+            margin-top: 15px; font-weight: bold; color: #2e7d32; background: #f1f8e9;
+            padding: 15px; border-radius: 6px; text-align: center; font-size: 18px; border: 1px solid #c5e1a5;
+        }
+
+        .submit-btn {
+            background: #2e7d32; color: white; padding: 15px; border: none; border-radius: 6px;
+            cursor: pointer; font-size: 16px; font-weight: 600; width: 100%;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+
+        .bottom-center-btn {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #ff9800; color: white; padding: 12px 25px; border-radius: 6px;
+            text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; border: none; cursor: pointer;
+        }
+
+        .error-message { color: #d32f2f; background: #ffebee; padding: 12px 15px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #d32f2f; display: none; align-items: center; gap: 10px; }
+        .success-message { color: #388e3c; background: #e8f5e9; padding: 12px 15px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #388e3c; display: none; align-items: center; gap: 10px; }
+
+        @media (max-width: 768px) {
+            .form-container { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .header { flex-direction: column; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div><strong><i class="fas fa-water" style="color: #1565c0;"></i> नया जल कनेक्शन</strong></div>
+    <div style="display: flex;">
+        <a href="dashboard.html"><i class="fas fa-home"></i> होम</a>
+        <a href="index.html" onclick="localStorage.clear();"><i class="fas fa-sign-out-alt"></i> लॉगआउट</a>
+    </div>
+</div>
+
+<div class="main-container">
+    <div class="form-container">
+        <div id="statusBox" class="full-width">
+            <div id="errorMsg" class="error-message"><i class="fas fa-exclamation-circle"></i> <span id="errorText"></span></div>
+            <div id="successMsg" class="success-message"><i class="fas fa-check-circle"></i> <span id="successText"></span></div>
+        </div>
+
+        <form id="waterForm" style="display: contents;">
+            <div class="form-group">
+                <label for="con_no"><i class="fas fa-id-card"></i> कनेक्शन नंबर*</label>
+                <input type="text" id="con_no" required placeholder="जैसे: JL12345">
+            </div>
+
+            <div class="form-group">
+                <label for="owner"><i class="fas fa-user"></i> स्वामी का नाम*</label>
+                <input type="text" id="owner" required placeholder="पूरा नाम दर्ज करें">
+            </div>
+
+            <div class="form-group">
+                <label for="mobile"><i class="fas fa-mobile-alt"></i> मोबाइल नंबर*</label>
+                <input type="tel" id="mobile" maxlength="10" required placeholder="10 अंकों का मोबाइल नंबर">
+            </div>
+
+            <div class="form-group">
+                <label for="ward_no"><i class="fas fa-map-marker-alt"></i> वार्ड नंबर*</label>
+                <input type="number" id="ward_no" required placeholder="वार्ड नंबर दर्ज करें">
+            </div>
+
+            <div class="form-group">
+                <label for="connection_type"><i class="fas fa-faucet"></i> कनेक्शन प्रकार*</label>
+                <select id="connection_type" required>
+                    <option value="" disabled selected>चुनें...</option>
+                    <option value="Domestic">घरेलू</option>
+                    <option value="Commercial">व्यावसायिक</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="current_amount"><i class="fas fa-rupee-sign"></i> वर्तमान राशि (2025-26)*</label>
+                <input type="number" id="current_amount" step="0.01" value="0.00" oninput="calculateTotal()">
+            </div>
+
+            <div class="form-group">
+                <label for="arrear_balance"><i class="fas fa-hand-holding-usd"></i> बकाया राशि (पिछला)*</label>
+                <input type="number" id="arrear_balance" step="0.01" value="0.00" oninput="calculateTotal()">
+            </div>
+
+            <div class="form-group full-width">
+                <label for="connection_date_time"><i class="fas fa-calendar-alt"></i> कनेक्शन की तिथि एवं समय*</label>
+                <input type="datetime-local" id="connection_date_time" required>
+            </div>
+
+            <div class="form-group full-width">
+                <div class="total-balance">
+                    <strong><i class="fas fa-coins"></i> कुल देय राशि: ₹<span id="totalAmount">0.00</span></strong>
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-save"></i> कनेक्शन सहेजें
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <button onclick="window.location.href='jal.html'" class="bottom-center-btn">
+        <i class="fas fa-arrow-left"></i> सूची पर वापस जाएं
+    </button>
+</div>
+
+<script>
+    // --- सुरक्षा जांच ---
     if (localStorage.getItem('isLoggedIn') !== 'true') {
         window.location.replace('index.html');
     }
-  </script>
 
-  <link rel="icon" href="img1.png" type="image/png">
-  <meta name="theme-color" content="#0066cc">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-    body { background-color: #f0f8ff; min-height: 100vh; padding-bottom: 20px; overflow-x: hidden; }
-    
-    .background-banner {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background-image: url('https://ptaxsnn.com/Login/images/banner.jpg');
-      background-size: cover; background-position: center;
-      opacity: 0.25; z-index: -1; filter: brightness(0.8);
+    function calculateTotal() {
+        const curr = parseFloat(document.getElementById("current_amount").value) || 0;
+        const arrear = parseFloat(document.getElementById("arrear_balance").value) || 0;
+        const total = curr + arrear;
+        document.getElementById("totalAmount").textContent = total.toFixed(2);
     }
-    
-    .header-container {
-      display: flex; justify-content: center; align-items: center;
-      background: linear-gradient(90deg, #0066cc, #00a8ff);
-      color: white; padding: 20px; box-shadow: 0 2px 15px rgba(0,0,0,0.15);
-      position: relative; z-index: 10; min-height: 80px;
-    }
-    
-    .header-title { font-size: clamp(20px, 4vw, 26px); font-weight: bold; text-align: center; flex-grow: 1; }
-    
-    .header-right { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); }
-    
-    .logout-header-btn {
-      background: rgba(255, 255, 255, 0.2); border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%; width: 50px; height: 50px; color: white; cursor: pointer;
-      transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; font-size: 22px;
-    }
-    
-    .logout-header-btn:hover { background: rgba(255, 255, 255, 0.3); transform: translateY(-3px) scale(1.1); box-shadow: 0 5px 15px rgba(0,0,0,0.25); }
-    
-    .card-container {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 20px; max-width: 900px; margin: 30px auto; padding: 0 20px;
-    }
-    
-    .card {
-      background: rgba(255,255,255,0.95); border-radius: 15px; padding: 20px 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center;
-      transition: all 0.3s ease; cursor: pointer; height: 190px;
-      display: flex; flex-direction: column; justify-content: space-between;
-      align-items: center; border: 1px solid rgba(0,0,0,0.08);
-      position: relative; overflow: hidden;
-    }
-    
-    .card::before {
-      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
-      background: linear-gradient(90deg, #0066cc, #00a8ff); opacity: 0; transition: opacity 0.3s ease;
-    }
-    
-    .card:hover::before { opacity: 1; }
-    
-    .card-icon { font-size: 48px; transition: all 0.3s; display: inline-block; margin-top: 10px; }
-    
-    .card h2 { font-size: 18px; margin-bottom: 6px; color: #333; }
-    .card p { font-size: 13px; color: #666; }
-    
-    .card:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0,0,0,0.18); }
-    
-    /* Animations matching your original code */
-    .bill-card:hover .card-icon { animation: waterDrop 1.2s ease infinite; color: #0066cc; }
-    .payment-card:hover .card-icon { animation: pulse 0.9s ease infinite; color: #00aa00; }
-    .arrears-card:hover .card-icon { animation: shake 0.6s ease infinite; color: #cc3300; }
-    .total-card:hover .card-icon { animation: bounce 0.7s ease infinite; color: #ff9900; }
-    .electric-card:hover .card-icon { animation: flash 0.8s ease infinite; color: #ffcc00; }
-    .shop-card:hover .card-icon { animation: spin 1.2s linear infinite; color: #6600cc; }
-    .dhaka-ai-card:hover .card-icon { animation: aiGlow 1.5s ease infinite; color: #ff3366; }
-    .id-card:hover .card-icon { animation: swing 1.1s ease infinite; color: #555; }
-    
-    @keyframes waterDrop { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-6px) scale(1.1); } }
-    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
-    @keyframes shake { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
-    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-    @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    @keyframes aiGlow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
-    @keyframes swing { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(8deg); } 75% { transform: rotate(-8deg); } }
 
-    /* Logout Dialog */
-    #logoutDialog {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.7); display: none; justify-content: center;
-      align-items: center; z-index: 9999;
+    // ऑटो डेट सेट करें
+    window.onload = function() {
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById("connection_date_time").value = now.toISOString().slice(0, 16);
+    };
+
+    // फॉर्म सबमिट हैंडलर
+    document.getElementById('waterForm').onsubmit = function(e) {
+        e.preventDefault();
+        
+        const mobile = document.getElementById('mobile').value;
+        if (!/^[6-9][0-9]{9}$/.test(mobile)) {
+            showMsg('error', 'कृपया वैध 10 अंकों का मोबाइल नंबर दर्ज करें!');
+            return;
+        }
+
+        const formData = {
+            id: Date.now(),
+            con_no: document.getElementById('con_no').value,
+            owner: document.getElementById('owner').value,
+            mobile: mobile,
+            ward: document.getElementById('ward_no').value,
+            type: document.getElementById('connection_type').value,
+            amount: document.getElementById('totalAmount').textContent,
+            date: document.getElementById('connection_date_time').value
+        };
+
+        // डेटा सहेजें
+        let connections = JSON.parse(localStorage.getItem('water_connections') || '[]');
+        connections.push(formData);
+        localStorage.setItem('water_connections', JSON.stringify(connections));
+
+        showMsg('success', 'डेटा सफलतापूर्वक सहेज लिया गया है!');
+        
+        setTimeout(() => {
+            window.location.href = 'jal.html';
+        }, 2000);
+    };
+
+    function showMsg(type, text) {
+        document.getElementById('errorMsg').style.display = 'none';
+        document.getElementById('successMsg').style.display = 'none';
+        
+        if(type === 'error') {
+            document.getElementById('errorText').innerText = text;
+            document.getElementById('errorMsg').style.display = 'flex';
+        } else {
+            document.getElementById('successText').innerText = text;
+            document.getElementById('successMsg').style.display = 'flex';
+        }
+        window.scrollTo(0,0);
     }
-    .dialog-content { background: white; border-radius: 15px; width: 90%; max-width: 400px; padding: 30px; text-align: center; }
-    .dialog-buttons { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
-    .dialog-btn { padding: 12px 25px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-    .cancel-btn { background: #6c757d; color: white; }
-    .confirm-btn { background: linear-gradient(to right, #ff5e62, #ff2400); color: white; }
-
-    @media (max-width: 768px) {
-      .card-container { grid-template-columns: repeat(2, 1fr); gap: 18px; }
-      .header-title { font-size: 20px; }
-    }
-  </style>
-</head>
-<body>
-  <div class="background-banner"></div>
-  
-  <div id="logoutDialog">
-     <div class="dialog-content">
-        <h3>लॉगआउट?</h3>
-        <p>क्या आप वाकई डैशबोर्ड से बाहर जाना चाहते हैं?</p>
-        <div class="dialog-buttons">
-           <button class="dialog-btn cancel-btn" onclick="closeLogoutDialog()">नहीं</button>
-           <button class="dialog-btn confirm-btn" onclick="confirmLogout()">लॉगआउट</button>
-        </div>
-     </div>
-  </div>
-
-  <div class="header-container">
-    <div class="header-title" id="welcomeTab">WELCOME TO NPP NAKUR SERVICE</div>
-    <div class="header-right">
-      <button class="logout-header-btn" onclick="showLogoutDialog()">🚪</button>
-    </div>
-  </div>
-  
-  <div class="card-container">
-    <div class="card bill-card" onclick="window.location.href='https://nppnakur.github.io/water_manegment.html';">
-      <div class="card-content"><h2>WATER</h2><p>MANAGEMENT</p></div>
-      <div class="card-icon">🚰</div>
-    </div>
-    <div class="card payment-card" onclick="window.location.href='https://sunnydhaka.fwh.is/house_tax_dashboard.php';">
-      <div class="card-content"><h2>HOUSE TAX</h2><p>MANAGEMENT</p></div>
-      <div class="card-icon">🏠</div>
-    </div>
-    <div class="card arrears-card" onclick="window.location.href='https://sunnydhaka.fwh.is/establishment.php';">
-      <div class="card-content"><h2>ESTABLISHMENT</h2><p>DEPARTMENT</p></div>
-      <div class="card-icon">⚠️</div>
-    </div>
-    <div class="card total-card" onclick="window.location.href='https://sunnydhaka.fwh.is/other_tax.php';">
-      <div class="card-content"><h2>OTHER</h2><p>TAXES</p></div>
-      <div class="card-icon">💰</div>
-    </div>
-    <div class="card electric-card" onclick="window.location.href='https://sunnydhaka.fwh.is/electricity.php';">
-      <div class="card-content"><h2>ELECTRICITY</h2><p>DEPARTMENT</p></div>
-      <div class="card-icon">💡</div>
-    </div>
-    <div class="card shop-card" onclick="window.location.href='https://sunnydhaka.fwh.is/shop_tax.php';">
-      <div class="card-content"><h2>SHOP</h2><p>TAX</p></div>
-      <div class="card-icon">🏬</div>
-    </div>
-    <div class="card dhaka-ai-card" onclick="window.location.href='https://sunnydhaka.fwh.is/dhaka_ai.php';">
-      <div class="card-content"><h2>DHAKA-AI</h2><p>AI SERVICE</p></div>
-      <div class="card-icon">🤖</div>
-    </div>
-    <div class="card id-card" onclick="window.location.href='https://sunnydhaka.fwh.is/idcard_desbord.php';">
-      <div class="card-content"><h2>ID CARD</h2><p>MANAGEMENT</p></div>
-      <div class="card-icon">🪪</div>
-    </div>
-  </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // लॉगिन के समय सेव किया गया नाम दिखाएं
-    const user = localStorage.getItem('username') || "ADMIN";
-    document.getElementById('welcomeTab').innerHTML = `WELCOME ${user.toUpperCase()} TO NPP NAKUR SERVICE`;
-});
-
-function showLogoutDialog() { document.getElementById('logoutDialog').style.display = 'flex'; }
-function closeLogoutDialog() { document.getElementById('logoutDialog').style.display = 'none'; }
-function confirmLogout() {
-    localStorage.clear(); // सब साफ़ करें
-    window.location.replace('index.html');
-}
 </script>
+
 </body>
 </html>
