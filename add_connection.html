@@ -1,99 +1,369 @@
-<?php
-include "config.php"; // DB connection
-
-// 1. Logic handling
-$where = [];
-if (!empty($_GET['con'])) {
-    $c = $conn->quote("%" . $_GET['con'] . "%");
-    $where[] = "con_no LIKE $c";
-}
-if (!empty($_GET['name'])) {
-    $n = $conn->quote("%" . $_GET['name'] . "%");
-    $where[] = "owner_name LIKE $n";
-}
-
-$sql = "SELECT * FROM bills";
-if ($where) {
-    $sql .= " WHERE " . implode(" AND ", $where);
-}
-$sql .= " ORDER BY con_no";
-$stmt = $conn->query($sql);
-?>
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bill Management System</title>
+    <title>नया जल कनेक्शन</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 20px; }
-        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        
-        /* Search Form Styling */
-        .search-box { margin-bottom: 25px; display: flex; gap: 10px; flex-wrap: wrap; }
-        .search-box input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; flex: 1; min-width: 200px; }
-        .search-box button { padding: 8px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        
-        /* Table Styling */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { background: #007bff; color: white; padding: 12px; }
-        td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; font-size: 14px; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
-        tr:hover { background-color: #f1f1f1; }
-        
-        .id-badge { background: #e9ecef; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 12px; }
+        /* आपका मौजूदा CSS यहाँ रहेगा */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Nirmala UI', sans-serif;
+        }
+
+        body {
+            background: #e3f2fd;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1565c0, #0d47a1);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .header a:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .main-container {
+            flex: 1;
+            padding: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 1000px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 80px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            color: #0d47a1;
+            font-size: 15px;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="number"],
+        input[type="datetime-local"],
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #1565c0;
+            box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.2);
+            background: white;
+        }
+
+        .total-balance {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #004d40;
+            background: #e0f7fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            border: 1px solid #b2ebf2;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #0288d1, #01579b);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #0277bd, #013d6f);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(2, 119, 189, 0.3);
+        }
+
+        .bottom-center-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff5722, #e64a19);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            z-index: 99;
+            border: none;
+            cursor: pointer;
+        }
+
+        .bottom-center-btn:hover {
+            transform: translateX(-50%) scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 87, 34, 0.4);
+        }
+
+        .error-message {
+            color: #d32f2f;
+            background: #ffebee;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #d32f2f;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-message {
+            color: #388e3c;
+            background: #e8f5e9;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #388e3c;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                grid-template-columns: 1fr;
+                padding: 20px;
+                margin-bottom: 70px;
+            }
+            .full-width {
+                grid-column: span 1;
+            }
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+            .header a {
+                margin: 5px 0;
+            }
+            .bottom-center-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+                bottom: 15px;
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2 style="color: #333; text-align: center;">Nagar Palika Bill Records</h2>
+<div class="header">
+    <div><strong><i class="fas fa-water"></i> नया जल कनेक्शन</strong></div>
+    <div>
+        <a href="dashboard.php"><i class="fas fa-home"></i> होम</a>
+        <a href="logout.php"><i class="fas fa-sign-out-alt"></i> लॉगआउट</a>
+    </div>
+</div>
 
-    <form class="search-box" method="GET">
-        <input type="text" name="con" placeholder="Connection No. se khoje..." value="<?php echo $_GET['con'] ?? ''; ?>">
-        <input type="text" name="name" placeholder="Naam se khoje..." value="<?php echo $_GET['name'] ?? ''; ?>">
-        <button type="submit">Search</button>
-        <a href="?" style="text-decoration:none; padding: 8px 15px; background:#6c757d; color:white; border-radius:4px;">Reset</a>
+<div class="main-container">
+    <form method="POST" action="add_connection.php" class="form-container">
+        <?php
+        // PHP कोड - सत्र प्रारंभ करें और सत्यापन करें
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            header("Location: index.php");
+            exit();
+        }
+
+        // त्रुटि संदेश प्रदर्शित करें
+        if (isset($_GET['error'])): ?>
+            <div class="error-message full-width">
+                <i class="fas fa-exclamation-circle"></i>
+                <?php echo htmlspecialchars($_GET['error']); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['success'])): ?>
+            <div class="success-message full-width">
+                <i class="fas fa-check-circle"></i>
+                <?php echo htmlspecialchars($_GET['success']); ?>
+            </div>
+        <?php endif; ?>
+
+        <div class="form-group">
+            <label for="con_no"><i class="fas fa-id-card"></i> कनेक्शन नंबर*</label>
+            <input type="text" id="con_no" name="con_no" required
+                   placeholder="जैसे: JL12345" pattern="[A-Za-z0-9]+"
+                   title="केवल अक्षर और संख्याएं">
+        </div>
+
+        <div class="form-group">
+            <label for="owner"><i class="fas fa-user"></i> स्वामी का नाम*</label>
+            <input type="text" id="owner" name="owner" required
+                   placeholder="पूरा नाम दर्ज करें" pattern="[a-zA-Z\u0900-\u097F ]+"
+                   title="केवल अक्षर दर्ज करें">
+        </div>
+
+        <div class="form-group">
+            <label for="mobile"><i class="fas fa-mobile-alt"></i> मोबाइल नंबर*</label>
+            <input type="tel" id="mobile" name="mobile" pattern="[0-9]{10}"
+                   title="10 अंकों का मोबाइल नंबर" required
+                   placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
+        </div>
+
+        <div class="form-group">
+            <label for="ward_no"><i class="fas fa-map-marker-alt"></i> वार्ड नंबर*</label>
+            <input type="text" id="ward_no" name="ward_no" required
+                   placeholder="वार्ड नंबर दर्ज करें" pattern="[0-9]+"
+                   title="केवल संख्याएं">
+        </div>
+
+        <div class="form-group">
+            <label for="connection_type"><i class="fas fa-faucet"></i> कनेक्शन प्रकार*</label>
+            <select id="connection_type" name="connection_type" required>
+                <option value="" disabled selected>चुनें...</option>
+                <option value="Domestic">घरेलू</option>
+                <option value="Commercial">व्यावसायिक</option>
+                <option value="Industrial">औद्योगिक</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="current_amount"><i class="fas fa-rupee-sign"></i> वर्तमान राशि (2025-26)*</label>
+            <input type="number" id="current_amount" name="current_amount"
+                   step="0.01" required value="0.00" min="0" max="100000">
+        </div>
+
+        <div class="form-group">
+            <label for="arrear_balance"><i class="fas fa-hand-holding-usd"></i> बकाया राशि (पिछला)*</label>
+            <input type="number" id="arrear_balance" name="arrear_balance"
+                   step="0.01" required value="0.00" min="0" max="100000">
+        </div>
+
+        <div class="form-group full-width">
+            <label for="connection_date_time"><i class="fas fa-calendar-alt"></i> कनेक्शन की तिथि एवं समय*</label>
+            <input type="datetime-local" id="connection_date_time" name="connection_date_time" required>
+        </div>
+
+        <div class="form-group full-width">
+            <div class="total-balance">
+                <strong><i class="fas fa-coins"></i> कुल देय राशि: ₹<span id="totalAmount">0.00</span></strong>
+            </div>
+        </div>
+
+        <div class="form-group full-width">
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-save"></i> कनेक्शन सहेजें
+            </button>
+        </div>
     </form>
 
-    <table>
-        <thead>
-            <tr>
-                <th>आईडी</th>
-                <th>Connection No</th>
-                <th>Owner</th>
-                <th>Mobile</th>
-                <th>Year (2025-26)</th>
-                <th>Arrear (24-25)</th>
-                <th>Balance</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php 
-            $i = 1;
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)): 
-            ?>
-            <tr>
-                <td><span class="id-badge">NPPNCO<?php echo str_pad($i, 3, '0', STR_PAD_LEFT); ?></span></td>
-                <td><strong><?php echo htmlspecialchars($row['con_no']); ?></strong></td>
-                <td style="max-width:150px"><?php echo htmlspecialchars($row['owner_name']); ?></td>
-                <td><?php echo htmlspecialchars($row['mobile']); ?></td>
-                <td>₹<?php echo number_format($row['current_amount_2025_26'], 2); ?></td>
-                <td>₹<?php echo number_format($row['arrear_balance'], 2); ?></td>
-                <td style="color: red; font-weight: bold;">₹<?php echo number_format($row['remaining_balance'], 2); ?></td>
-            </tr>
-            <?php 
-            $i++; 
-            endwhile; 
-            
-            if ($i == 1) {
-                echo "<tr><td colspan='7'>Koi record nahi mila.</td></tr>";
-            }
-            ?>
-        </tbody>
-    </table>
+    <button onclick="window.location.href='jal.php'" class="bottom-center-btn">
+        <i class="fas fa-arrow-left"></i> सूची पर वापस जाएं
+    </button>
 </div>
+
+<script>
+    function calculateTotal() {
+        const curr = parseFloat(document.getElementById("current_amount").value) || 0;
+        const arrear = parseFloat(document.getElementById("arrear_balance").value) || 0;
+        const total = curr + arrear;
+        document.getElementById("totalAmount").textContent = total.toFixed(2);
+    }
+
+    window.onload = function() {
+        const now = new Date();
+        // getTimezoneOffset() मिनटों में अंतर देता है, उसे मिलीसेकेंड में बदलें
+        const timezoneOffset = now.getTimezoneOffset() * 60000;
+        // स्थानीय समय को ISO स्ट्रिंग में बदलने के लिए ऑफसेट घटाएं
+        const localISOTime = new Date(now - timezoneOffset).toISOString().slice(0, 16);
+        document.getElementById("connection_date_time").value = localISOTime;
+
+        document.getElementById("current_amount").addEventListener("input", calculateTotal);
+        document.getElementById("arrear_balance").addEventListener("input", calculateTotal);
+
+        document.getElementById("mobile").addEventListener("input", function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 10);
+        });
+
+        calculateTotal();
+    };
+
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const mobile = document.getElementById('mobile').value;
+        if (!/^[0-9]{10}$/.test(mobile)) {
+            alert('कृपया वैध 10 अंकों का मोबाइल नंबर दर्ज करें');
+            e.preventDefault();
+        }
+    });
+</script>
 
 </body>
 </html>
