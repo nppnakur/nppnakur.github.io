@@ -1,204 +1,184 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>नया जल कनेक्शन</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        /* पूरा CSS कोड यहाँ रहेगा (ऊपर जैसा ही) */
-    </style>
+  <meta charset="UTF-8">
+  <title>NPP NAKUR - Dashboard</title>
+  
+  <script>
+    // सुरक्षा जांच: अगर लॉगिन नहीं है तो तुरंत वापस भेजें
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+        window.location.replace('index.html');
+    }
+  </script>
+
+  <link rel="icon" href="img1.png" type="image/png">
+  <meta name="theme-color" content="#0066cc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { background-color: #f0f8ff; min-height: 100vh; padding-bottom: 20px; overflow-x: hidden; }
+    
+    .background-banner {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-image: url('https://ptaxsnn.com/Login/images/banner.jpg');
+      background-size: cover; background-position: center;
+      opacity: 0.25; z-index: -1; filter: brightness(0.8);
+    }
+    
+    .header-container {
+      display: flex; justify-content: center; align-items: center;
+      background: linear-gradient(90deg, #0066cc, #00a8ff);
+      color: white; padding: 20px; box-shadow: 0 2px 15px rgba(0,0,0,0.15);
+      position: relative; z-index: 10; min-height: 80px;
+    }
+    
+    .header-title { font-size: clamp(20px, 4vw, 26px); font-weight: bold; text-align: center; flex-grow: 1; }
+    
+    .header-right { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); }
+    
+    .logout-header-btn {
+      background: rgba(255, 255, 255, 0.2); border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%; width: 50px; height: 50px; color: white; cursor: pointer;
+      transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; font-size: 22px;
+    }
+    
+    .logout-header-btn:hover { background: rgba(255, 255, 255, 0.3); transform: translateY(-3px) scale(1.1); box-shadow: 0 5px 15px rgba(0,0,0,0.25); }
+    
+    .card-container {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px; max-width: 900px; margin: 30px auto; padding: 0 20px;
+    }
+    
+    .card {
+      background: rgba(255,255,255,0.95); border-radius: 15px; padding: 20px 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center;
+      transition: all 0.3s ease; cursor: pointer; height: 190px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      align-items: center; border: 1px solid rgba(0,0,0,0.08);
+      position: relative; overflow: hidden;
+    }
+    
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+      background: linear-gradient(90deg, #0066cc, #00a8ff); opacity: 0; transition: opacity 0.3s ease;
+    }
+    
+    .card:hover::before { opacity: 1; }
+    
+    .card-icon { font-size: 48px; transition: all 0.3s; display: inline-block; margin-top: 10px; }
+    
+    .card h2 { font-size: 18px; margin-bottom: 6px; color: #333; }
+    .card p { font-size: 13px; color: #666; }
+    
+    .card:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0,0,0,0.18); }
+    
+    /* Animations matching your original code */
+    .bill-card:hover .card-icon { animation: waterDrop 1.2s ease infinite; color: #0066cc; }
+    .payment-card:hover .card-icon { animation: pulse 0.9s ease infinite; color: #00aa00; }
+    .arrears-card:hover .card-icon { animation: shake 0.6s ease infinite; color: #cc3300; }
+    .total-card:hover .card-icon { animation: bounce 0.7s ease infinite; color: #ff9900; }
+    .electric-card:hover .card-icon { animation: flash 0.8s ease infinite; color: #ffcc00; }
+    .shop-card:hover .card-icon { animation: spin 1.2s linear infinite; color: #6600cc; }
+    .dhaka-ai-card:hover .card-icon { animation: aiGlow 1.5s ease infinite; color: #ff3366; }
+    .id-card:hover .card-icon { animation: swing 1.1s ease infinite; color: #555; }
+    
+    @keyframes waterDrop { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-6px) scale(1.1); } }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+    @keyframes shake { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @keyframes aiGlow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+    @keyframes swing { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(8deg); } 75% { transform: rotate(-8deg); } }
+
+    /* Logout Dialog */
+    #logoutDialog {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7); display: none; justify-content: center;
+      align-items: center; z-index: 9999;
+    }
+    .dialog-content { background: white; border-radius: 15px; width: 90%; max-width: 400px; padding: 30px; text-align: center; }
+    .dialog-buttons { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
+    .dialog-btn { padding: 12px 25px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+    .cancel-btn { background: #6c757d; color: white; }
+    .confirm-btn { background: linear-gradient(to right, #ff5e62, #ff2400); color: white; }
+
+    @media (max-width: 768px) {
+      .card-container { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+      .header-title { font-size: 20px; }
+    }
+  </style>
 </head>
 <body>
+  <div class="background-banner"></div>
+  
+  <div id="logoutDialog">
+     <div class="dialog-content">
+        <h3>लॉगआउट?</h3>
+        <p>क्या आप वाकई डैशबोर्ड से बाहर जाना चाहते हैं?</p>
+        <div class="dialog-buttons">
+           <button class="dialog-btn cancel-btn" onclick="closeLogoutDialog()">नहीं</button>
+           <button class="dialog-btn confirm-btn" onclick="confirmLogout()">लॉगआउट</button>
+        </div>
+     </div>
+  </div>
 
-<div class="header">
-    <div><strong><i class="fas fa-water" style="color: #1565c0;"></i> नया जल कनेक्शन</strong></div>
-    <div style="display: flex;">
-        <a href="dashboard.html"><i class="fas fa-home"></i> होम</a>
-        <a href="index.html"><i class="fas fa-sign-out-alt"></i> लॉगआउट</a>
+  <div class="header-container">
+    <div class="header-title" id="welcomeTab">WELCOME TO NPP NAKUR SERVICE</div>
+    <div class="header-right">
+      <button class="logout-header-btn" onclick="showLogoutDialog()">🚪</button>
     </div>
-</div>
-
-<div class="main-container">
-    <form method="POST" class="form-container" id="connectionForm">
-        <!-- PHP कोड हटा दें और सीधे HTML रखें -->
-        <div class="error-message full-width" id="errorMessage" style="display:none;">
-            <i class="fas fa-exclamation-circle"></i>
-            <span id="errorText"></span>
-        </div>
-
-        <div class="success-message full-width" id="successMessage" style="display:none;">
-            <i class="fas fa-check-circle"></i>
-            <span id="successText"></span>
-        </div>
-
-        <!-- फॉर्म फ़ील्ड्स यहाँ रहेंगे (PHP कोड हटाकर) -->
-        <div class="form-group">
-            <label for="con_no" class="required"><i class="fas fa-id-card"></i> कनेक्शन नंबर</label>
-            <input type="text" id="con_no" name="con_no" required
-                   placeholder="जैसे: JL12345" pattern="[A-Za-z0-9]{3,15}"
-                   title="केवल अक्षर और संख्याएं (3-15 अक्षर)"
-                   maxlength="15">
-        </div>
-
-        <!-- बाकी सभी फ़ील्ड्स... -->
-
-        <div class="form-group full-width">
-            <button type="submit" class="submit-btn">
-                <i class="fas fa-save"></i> कनेक्शन सहेजें
-            </button>
-        </div>
-    </form>
-
-    <button onclick="window.location.href='water_manegment.html'" class="bottom-center-btn">
-        <i class="fas fa-arrow-left"></i> सूची पर वापस जाएं
-    </button>
-</div>
+  </div>
+  
+  <div class="card-container">
+    <div class="card bill-card" onclick="window.location.href='https://nppnakur.github.io/water_manegment.html';">
+      <div class="card-content"><h2>WATER</h2><p>MANAGEMENT</p></div>
+      <div class="card-icon">🚰</div>
+    </div>
+    <div class="card payment-card" onclick="window.location.href='https://sunnydhaka.fwh.is/house_tax_dashboard.php';">
+      <div class="card-content"><h2>HOUSE TAX</h2><p>MANAGEMENT</p></div>
+      <div class="card-icon">🏠</div>
+    </div>
+    <div class="card arrears-card" onclick="window.location.href='https://sunnydhaka.fwh.is/establishment.php';">
+      <div class="card-content"><h2>ESTABLISHMENT</h2><p>DEPARTMENT</p></div>
+      <div class="card-icon">⚠️</div>
+    </div>
+    <div class="card total-card" onclick="window.location.href='https://sunnydhaka.fwh.is/other_tax.php';">
+      <div class="card-content"><h2>OTHER</h2><p>TAXES</p></div>
+      <div class="card-icon">💰</div>
+    </div>
+    <div class="card electric-card" onclick="window.location.href='https://sunnydhaka.fwh.is/electricity.php';">
+      <div class="card-content"><h2>ELECTRICITY</h2><p>DEPARTMENT</p></div>
+      <div class="card-icon">💡</div>
+    </div>
+    <div class="card shop-card" onclick="window.location.href='https://sunnydhaka.fwh.is/shop_tax.php';">
+      <div class="card-content"><h2>SHOP</h2><p>TAX</p></div>
+      <div class="card-icon">🏬</div>
+    </div>
+    <div class="card dhaka-ai-card" onclick="window.location.href='https://sunnydhaka.fwh.is/dhaka_ai.php';">
+      <div class="card-content"><h2>DHAKA-AI</h2><p>AI SERVICE</p></div>
+      <div class="card-icon">🤖</div>
+    </div>
+    <div class="card id-card" onclick="window.location.href='https://sunnydhaka.fwh.is/idcard_desbord.php';">
+      <div class="card-content"><h2>ID CARD</h2><p>MANAGEMENT</p></div>
+      <div class="card-icon">🪪</div>
+    </div>
+  </div>
 
 <script>
-    // PHP सेशन के बजाय localStorage का उपयोग करें
-    function checkLogin() {
-        const username = localStorage.getItem('username');
-        if (!username) {
-            window.location.href = 'index.html';
-            return false;
-        }
-        return true;
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    // लॉगिन के समय सेव किया गया नाम दिखाएं
+    const user = localStorage.getItem('username') || "ADMIN";
+    document.getElementById('welcomeTab').innerHTML = `WELCOME ${user.toUpperCase()} TO NPP NAKUR SERVICE`;
+});
 
-    // पेज लोड होने पर लॉगिन चेक करें
-    document.addEventListener('DOMContentLoaded', function() {
-        if (!checkLogin()) return;
-        
-        // वर्तमान तिथि और समय सेट करें
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        
-        document.getElementById("connection_date_time").value = 
-            `${year}-${month}-${day}T${hours}:${minutes}`;
-
-        // URL से error/success मैसेज चेक करें
-        const urlParams = new URLSearchParams(window.location.search);
-        const error = urlParams.get('error');
-        const success = urlParams.get('success');
-        
-        if (error) {
-            document.getElementById('errorText').textContent = error;
-            document.getElementById('errorMessage').style.display = 'flex';
-        }
-        
-        if (success) {
-            document.getElementById('successText').textContent = success;
-            document.getElementById('successMessage').style.display = 'flex';
-        }
-    });
-
-    // फॉर्म सबमिशन हैंडलर
-    document.getElementById('connectionForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        if (!validateForm()) {
-            return false;
-        }
-        
-        // फॉर्म डेटा एकत्र करें
-        const formData = {
-            con_no: document.getElementById('con_no').value,
-            owner: document.getElementById('owner').value,
-            mobile: document.getElementById('mobile').value,
-            ward_no: document.getElementById('ward_no').value,
-            connection_type: document.getElementById('connection_type').value,
-            current_amount: document.getElementById('current_amount').value,
-            arrear_balance: document.getElementById('arrear_balance').value,
-            connection_date_time: document.getElementById('connection_date_time').value,
-            total_amount: document.getElementById('totalAmount').textContent
-        };
-        
-        // localStorage में डेटा सहेजें
-        saveToLocalStorage(formData);
-        
-        // सफलता संदेश दिखाएं
-        document.getElementById('successText').textContent = 'कनेक्शन सफलतापूर्वक सहेजा गया!';
-        document.getElementById('successMessage').style.display = 'flex';
-        document.getElementById('errorMessage').style.display = 'none';
-        
-        // फॉर्म रीसेट करें
-        setTimeout(() => {
-            window.location.href = 'jal.html?success=कनेक्शन सफलतापूर्वक सहेजा गया';
-        }, 1500);
-    });
-
-    function saveToLocalStorage(data) {
-        // मौजूदा कनेक्शन प्राप्त करें
-        let connections = JSON.parse(localStorage.getItem('water_connections') || '[]');
-        
-        // नया कनेक्शन जोड़ें
-        data.id = Date.now(); // यूनिक ID
-        data.created_at = new Date().toISOString();
-        connections.push(data);
-        
-        // localStorage में सहेजें
-        localStorage.setItem('water_connections', JSON.stringify(connections));
-        
-        // कॉन्सोल में डीबग के लिए
-        console.log('कनेक्शन सहेजा गया:', data);
-    }
-
-    // बाकी JavaScript फंक्शन (calculateTotal, validateForm, etc.) वही रहेंगे
-    function calculateTotal() {
-        const curr = parseFloat(document.getElementById("current_amount").value) || 0;
-        const arrear = parseFloat(document.getElementById("arrear_balance").value) || 0;
-        const total = curr + arrear;
-        document.getElementById("totalAmount").textContent = total.toFixed(2);
-    }
-
-    function validateForm() {
-        const mobile = document.getElementById('mobile').value;
-        const conNo = document.getElementById('con_no').value;
-        const owner = document.getElementById('owner').value;
-        
-        // मोबाइल नंबर validation
-        if (!/^[6-9][0-9]{9}$/.test(mobile)) {
-            showError('कृपया वैध 10 अंकों का भारतीय मोबाइल नंबर दर्ज करें (6, 7, 8 या 9 से शुरू)');
-            return false;
-        }
-        
-        // कनेक्शन नंबर validation
-        if (!/^[A-Za-z0-9]{3,15}$/.test(conNo)) {
-            showError('कनेक्शन नंबर 3-15 अक्षरों का होना चाहिए और केवल अक्षर एवं संख्याएं हो सकती हैं');
-            return false;
-        }
-        
-        // नाम validation
-        if (!/^[a-zA-Z\u0900-\u097F\s]{3,50}$/.test(owner)) {
-            showError('नाम 3-50 अक्षरों का होना चाहिए और केवल अक्षर हो सकते हैं');
-            return false;
-        }
-        
-        // तिथि validation
-        const dateInput = document.getElementById('connection_date_time');
-        const selectedDate = new Date(dateInput.value);
-        const currentDate = new Date();
-        
-        if (selectedDate > currentDate) {
-            showError('कनेक्शन की तिथि भविष्य में नहीं हो सकती');
-            return false;
-        }
-        
-        return true;
-    }
-
-    function showError(message) {
-        document.getElementById('errorText').textContent = message;
-        document.getElementById('errorMessage').style.display = 'flex';
-        document.getElementById('successMessage').style.display = 'none';
-    }
+function showLogoutDialog() { document.getElementById('logoutDialog').style.display = 'flex'; }
+function closeLogoutDialog() { document.getElementById('logoutDialog').style.display = 'none'; }
+function confirmLogout() {
+    localStorage.clear(); // सब साफ़ करें
+    window.location.replace('index.html');
+}
 </script>
-
 </body>
 </html>
-
