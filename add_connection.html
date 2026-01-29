@@ -1,0 +1,99 @@
+<?php
+include "config.php"; // DB connection
+
+// 1. Logic handling
+$where = [];
+if (!empty($_GET['con'])) {
+    $c = $conn->quote("%" . $_GET['con'] . "%");
+    $where[] = "con_no LIKE $c";
+}
+if (!empty($_GET['name'])) {
+    $n = $conn->quote("%" . $_GET['name'] . "%");
+    $where[] = "owner_name LIKE $n";
+}
+
+$sql = "SELECT * FROM bills";
+if ($where) {
+    $sql .= " WHERE " . implode(" AND ", $where);
+}
+$sql .= " ORDER BY con_no";
+$stmt = $conn->query($sql);
+?>
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Management System</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 20px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        
+        /* Search Form Styling */
+        .search-box { margin-bottom: 25px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .search-box input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; flex: 1; min-width: 200px; }
+        .search-box button { padding: 8px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background: #007bff; color: white; padding: 12px; }
+        td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; font-size: 14px; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        tr:hover { background-color: #f1f1f1; }
+        
+        .id-badge { background: #e9ecef; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="color: #333; text-align: center;">Nagar Palika Bill Records</h2>
+
+    <form class="search-box" method="GET">
+        <input type="text" name="con" placeholder="Connection No. se khoje..." value="<?php echo $_GET['con'] ?? ''; ?>">
+        <input type="text" name="name" placeholder="Naam se khoje..." value="<?php echo $_GET['name'] ?? ''; ?>">
+        <button type="submit">Search</button>
+        <a href="?" style="text-decoration:none; padding: 8px 15px; background:#6c757d; color:white; border-radius:4px;">Reset</a>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>आईडी</th>
+                <th>Connection No</th>
+                <th>Owner</th>
+                <th>Mobile</th>
+                <th>Year (2025-26)</th>
+                <th>Arrear (24-25)</th>
+                <th>Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+            $i = 1;
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)): 
+            ?>
+            <tr>
+                <td><span class="id-badge">NPPNCO<?php echo str_pad($i, 3, '0', STR_PAD_LEFT); ?></span></td>
+                <td><strong><?php echo htmlspecialchars($row['con_no']); ?></strong></td>
+                <td style="max-width:150px"><?php echo htmlspecialchars($row['owner_name']); ?></td>
+                <td><?php echo htmlspecialchars($row['mobile']); ?></td>
+                <td>₹<?php echo number_format($row['current_amount_2025_26'], 2); ?></td>
+                <td>₹<?php echo number_format($row['arrear_balance'], 2); ?></td>
+                <td style="color: red; font-weight: bold;">₹<?php echo number_format($row['remaining_balance'], 2); ?></td>
+            </tr>
+            <?php 
+            $i++; 
+            endwhile; 
+            
+            if ($i == 1) {
+                echo "<tr><td colspan='7'>Koi record nahi mila.</td></tr>";
+            }
+            ?>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
