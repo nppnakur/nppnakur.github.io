@@ -7,24 +7,15 @@
   <meta http-equiv="Expires" content="0">
   
   <title>NAGAR PALIKA NAKUR</title>
-  
   <link rel="icon" href="img1.png" type="image/png">
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#ffcc00">
   
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   
   <style>
-    /* आपका सारा CSS वही रहेगा, इसे छेड़ने की ज़रूरत नहीं है */
-    body {
-      margin: 0; padding: 0; font-family: Arial, sans-serif;
-      background-image: url('https://ptaxsnn.com/Login/images/banner.jpg');
-      background-size: cover; background-position: center;
-      background-repeat: no-repeat; background-attachment: fixed;
-      min-height: 100vh; display: flex; flex-direction: column;
-      justify-content: center; align-items: center; color: #fff;
-    }
+    /* आपका स्टाइल यहाँ रहेगा */
+    body { margin: 0; padding: 0; font-family: Arial, sans-serif; background-image: url('https://ptaxsnn.com/Login/images/banner.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; }
     h2 { position: absolute; top: 8px; width: 100%; text-align: center; font-size: 40px; color: #fff; animation: glowing 1.5s infinite alternate; z-index: 1; }
     @keyframes glowing { 0% { text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00; } 50% { text-shadow: 0 0 15px #ffcc00, 0 0 25px #ffcc00, 0 0 35px #ffcc00; } 100% { text-shadow: 0 0 20px #ffcc00, 0 0 30px #ffcc00, 0 0 40px #ffcc00; } }
     .container { background-color: rgba(0, 0, 0, 0.19); border-radius: 35px; padding: 10px; display: flex; flex-direction: row; width: 90%; max-width: 1000px; box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2); position: relative; }
@@ -55,11 +46,9 @@
   <div class="logo-section">
     <img src="img1.png" alt="Logo" class="rotating-logo" id="mainLogo">
   </div>
-
   <div class="form-section">
     <h3>ADMIN LOGIN</h3>
     <div class="error-message" id="errorMsg"></div>
-    
     <div id="login-section">
       <form id="loginForm">
         <div class="form-group">
@@ -75,7 +64,6 @@
         </div>
       </form>
     </div>
-    
     <div id="otp-section">
       <div class="success-msg" id="successMsg"></div>
       <div class="otp-timer" id="otpTimer">OTP valid for: <span id="timer">05:00</span></div>
@@ -90,17 +78,16 @@
       </form>
     </div>
   </div>
-
   <div class="powered-by">POWERED-BY ➤ SUNNY DHAKA</div>
 </div>
 
 <script>
-// --- पुराने सर्विस वर्कर को हटाने का कोड ---
+// --- यहाँ पुरानी 'बीमारी' (Service Worker) को मारने का कोड है ---
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then(function(registrations) {
         for(let registration of registrations) {
             registration.unregister();
-            console.log("Old Service Worker Unregistered");
+            console.log("Old Service Worker Removed");
         }
     });
 }
@@ -117,10 +104,8 @@ let timeLeft = 300;
 
 document.addEventListener('DOMContentLoaded', function() {
     emailjs.init(PUBLIC_KEY);
-    
-    // इमेज कैशिंग रोकने के लिए टाइमस्टैम्प
+    // इमेज का नया वर्जन लोड करने के लिए
     document.getElementById('mainLogo').src = 'img1.png?v=' + new Date().getTime();
-    
     document.getElementById('loginBtn').addEventListener('click', sendOTP);
     document.getElementById('verifyBtn').addEventListener('click', verifyOTP);
 });
@@ -130,7 +115,7 @@ function sendOTP() {
     const password = document.getElementById('password').value.trim();
     if (username === "Sunnydhaka" && password === "Sunny1990") {
         generatedOTP = Math.floor(100000 + Math.random() * 900000);
-        document.getElementById('successMsg').textContent = '📧 OTP भेज दिया गया...';
+        document.getElementById('successMsg').textContent = '📧 OTP भेजा जा रहा है...';
         
         emailjs.send(SERVICE_ID, TEMPLATE_ID, {
             to_email: ADMIN_EMAIL,
