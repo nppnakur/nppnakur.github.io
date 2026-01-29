@@ -7,9 +7,7 @@
   <meta http-equiv="Expires" content="0">
   
   <title>NAGAR PALIKA NAKUR</title>
-  
   <link rel="icon" href="img1.png" type="image/png">
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#ffcc00">
   
@@ -23,34 +21,42 @@
       background-repeat: no-repeat; background-attachment: fixed;
       min-height: 100vh; display: flex; flex-direction: column;
       justify-content: center; align-items: center; color: #fff;
+      overflow-x: hidden;
     }
     
+    /* Glowing Title Animation */
     h2 {
       position: absolute; top: 8px; width: 100%; text-align: center;
-      font-size: 40px; color: #fff; animation: glowing 1.5s infinite alternate;
-      z-index: 1;
+      font-size: 38px; color: #fff; animation: glowing 1.5s infinite alternate;
+      z-index: 1; text-shadow: 2px 2px 4px #000;
     }
     
     @keyframes glowing {
       0% { text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00; }
+      50% { text-shadow: 0 0 15px #ffcc00, 0 0 25px #ffcc00; }
       100% { text-shadow: 0 0 20px #ffcc00, 0 0 40px #ffcc00; }
     }
     
     .container {
-      background-color: rgba(0, 0, 0, 0.6); /* थोडा डार्क ताकि साफ़ दिखे */
+      background-color: rgba(0, 0, 0, 0.4);
       border-radius: 35px; padding: 20px;
       display: flex; flex-direction: row;
       width: 90%; max-width: 1000px;
-      box-shadow: 0 8px 10px rgba(0, 0, 0, 0.5);
-      position: relative;
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+      position: relative; backdrop-filter: blur(5px);
     }
     
+    /* Logo Flip Animation */
     .logo-section { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
-    .rotating-logo { width: 250px; animation: flipUpright 5s ease infinite; }
+    .rotating-logo { 
+      width: 280px; 
+      animation: flipUpright 5s ease infinite; 
+      transform-style: preserve-3d;
+    }
     
     @keyframes flipUpright {
-      0% { transform: rotateY(0deg); }
-      100% { transform: rotateY(360deg); }
+      0% { transform: rotateY(0deg) scaleX(1); }
+      100% { transform: rotateY(180deg) scaleX(-1); }
     }
     
     .form-section { flex: 1; padding: 20px; }
@@ -59,126 +65,28 @@
     .form-group { margin-bottom: 20px; }
     .form-group label { font-size: 16px; margin-bottom: 10px; display: block; }
     .form-group input {
-      width: 90%; padding: 12px; font-size: 15px;
-      background-color: rgba(255, 255, 255, 0.1);
+      width: 94%; padding: 12px; font-size: 15px;
+      background-color: rgba(0, 0, 0, 0.4);
       color: white; border: 1px solid #ffcc00; border-radius: 23px;
     }
     
+    /* Wave Button Animation */
     .form-group button {
       width: 100%; padding: 12px; font-size: 16px; font-weight: bold;
-      background-color: #ffcc00; color: #000;
+      background-color: #fbf2f2cf; color: #1a1818;
       border: none; border-radius: 23px; cursor: pointer;
+      animation: waveButton 2s infinite alternate ease-in-out;
     }
-
-    #otp-section { display: none; }
-    .powered-by { position: absolute; bottom: 10px; right: 20px; font-size: 14px; color: #ffcc00; }
-
-    @media screen and (max-width: 768px) {
-      .container { flex-direction: column; }
-      h2 { font-size: 24px; }
-    }
-  </style>
-</head>
-<body>
-
-<h2>WELCOME TO NAGAR PALIKA NAKUR</h2>
-
-<div class="container">
-  <div class="logo-section">
-    <img src="img1.png" alt="Logo" class="rotating-logo" id="mainLogo">
-  </div>
-
-  <div class="form-section">
-    <h3>ADMIN LOGIN</h3>
     
-    <div id="login-section">
-      <div class="form-group">
-        <label>USER NAME</label>
-        <input type="text" id="username" placeholder="ENTER USER ID">
-      </div>
-      <div class="form-group">
-        <label>PASSWORD</label>
-        <input type="password" id="password" placeholder="ENTER PASSWORD">
-      </div>
-      <div class="form-group">
-        <button type="button" id="loginBtn">LOG IN →</button>
-      </div>
-    </div>
+    @keyframes waveButton {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+      100% { transform: translateY(0); }
+    }
     
-    <div id="otp-section">
-      <p style="color: #00ff00; text-align: center;">Email पर OTP भेज दिया गया है!</p>
-      <div class="form-group">
-        <label>ENTER 6-DIGIT OTP</label>
-        <input type="text" id="user-otp" placeholder="123456">
-      </div>
-      <div class="form-group">
-        <button type="button" id="verifyBtn">VERIFY & LOGIN</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="powered-by">POWERED BY: SUNNY DHAKA</div>
-</div>
-
-<script>
-// --- 1. पुरानी कैशिंग (Service Worker) को साफ़ करना ---
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for(let registration of registrations) {
-            registration.unregister();
-            console.log("Old SW Removed");
-        }
-    });
-}
-
-// --- 2. EmailJS Setup ---
-const SERVICE_ID = "service_25eenak";
-const TEMPLATE_ID = "template_hdj6nfo";
-const PUBLIC_KEY = "M-JV2m_vTtrU3W_EB";
-
-emailjs.init(PUBLIC_KEY);
-
-let generatedOTP = null;
-
-// --- 3. लॉगिन बटन का काम ---
-document.getElementById('loginBtn').onclick = function() {
-    const user = document.getElementById('username').value.trim();
-    const pass = document.getElementById('password').value.trim();
-
-    if (user === "Sunnydhaka" && pass === "Sunny1990") {
-        generatedOTP = Math.floor(100000 + Math.random() * 900000);
-        
-        // बटन को थोड़ी देर के लिए डिसेबल करें
-        this.innerText = "Sanding OTP...";
-        this.disabled = true;
-
-        emailjs.send(SERVICE_ID, TEMPLATE_ID, {
-            to_email: "sunnydhaka91@gmail.com",
-            otp: generatedOTP,
-            user_name: user
-        }).then(function() {
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('otp-section').style.display = 'block';
-        }, function(err) {
-            alert("Email Error: " + JSON.stringify(err));
-            document.getElementById('loginBtn').disabled = false;
-            document.getElementById('loginBtn').innerText = "LOG IN →";
-        });
-    } else {
-        alert("गलत ID या Password!");
-    }
-};
-
-// --- 4. OTP वेरीफाई करना ---
-document.getElementById('verifyBtn').onclick = function() {
-    const enteredOTP = document.getElementById('user-otp').value.trim();
-    if (parseInt(enteredOTP) === generatedOTP) {
-        alert("Login Successful!");
-        window.location.href = 'dashboard.html';
-    } else {
-        alert("गलत OTP! फिर से चेक करें।");
-    }
-};
-</script>
-</body>
-</html>
+    /* Typing & Floating Effect */
+    .powered-by {
+      position: absolute; bottom: 5px; right: 20px;
+      font-size: 16px; color: #f2f2f1;
+      white-space: nowrap; overflow: hidden; width: 0;
+      animation: typing 3s steps(28, end)
