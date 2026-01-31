@@ -10,7 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     
     <style>
         :root {
@@ -18,7 +19,7 @@
             --gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
         }
 
-        body { background: #f0fdf4; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; }
+        body { background: #f0fdf4; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; }
 
         .topbar {
             background: var(--gradient); height: 75px; padding: 0 20px;
@@ -30,13 +31,12 @@
         .logo-area { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; }
         .logo-img { height: 60px; width: auto; }
 
-        .action-bar { max-width: 1000px; margin: 30px auto; display: flex; gap: 15px; justify-content: center; align-items: center; padding: 0 15px; }
+        .action-bar { max-width: 1000px; margin: 30px auto; display: flex; gap: 15px; justify-content: center; padding: 0 15px; }
         .search-box { position: relative; flex: 1; }
         
         #searchInput {
             width: 100%; padding: 12px 20px 12px 45px; border-radius: 50px;
             border: 2px solid var(--primary); outline: none; font-size: 16px;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.1);
         }
         .search-box i { position: absolute; left: 18px; top: 15px; color: var(--primary); }
 
@@ -47,34 +47,24 @@
         }
         .excel-btn { background: #217346; }
         .pdf-btn { background: #e11d48; }
-        .export-btn:hover { transform: scale(1.1); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 
         .dashboard-header { display: flex; gap: 15px; margin: 0 auto 30px; max-width: 1350px; justify-content: center; flex-wrap: wrap; padding: 0 15px; }
         .stat-card {
             background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            text-align: center; flex: 1; min-width: 200px; border-bottom: 5px solid var(--primary);
+            text-align: center; flex: 1; min-width: 180px; border-bottom: 5px solid var(--primary);
         }
-        .stat-card h3 { font-size: 13px; color: #64748b; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; }
-        .stat-card .val { font-size: 24px; font-weight: 900; color: #1e293b; }
+        .stat-card h3 { font-size: 12px; color: #64748b; font-weight: 800; margin-bottom: 8px; }
+        .stat-card .val { font-size: 22px; font-weight: 900; color: #1e293b; }
 
-        /* Table Styling */
         .table-wrapper { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08); margin: 0 auto 50px; max-width: 1350px; }
-        .data-table { width: 100%; border-collapse: collapse; background: white; }
+        .data-table { width: 100%; border-collapse: collapse; }
         .data-table thead { background: var(--gradient); color: white; }
-        .data-table th { padding: 15px; text-align: center; font-size: 14px; text-transform: uppercase; }
-        .data-table td { padding: 14px; text-align: center; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; }
-        
-        /* Table Colors */
+        .data-table th, .data-table td { padding: 14px; text-align: center; border-bottom: 1px solid #f1f5f9; }
         .data-table tbody tr:nth-child(even) { background-color: #f8fafc; }
-        .data-table tbody tr:hover { background-color: #f0fdf4; }
-
-        .unpaid { color: #e11d48 !important; font-weight: 800; }
-        .paid { color: #10b981 !important; font-weight: 800; }
         
-        .view-btn { background: #3b82f6; color: white; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; }
-
-        /* Hidden element for PDF Header */
-        #pdf-header { display: none; text-align: center; padding: 20px; color: #059669; }
+        .unpaid { color: #e11d48; font-weight: 800; }
+        .paid { color: #10b981; font-weight: 800; }
+        .view-btn { background: #3b82f6; color: white; border: none; padding: 6px 10px; border-radius: 6px; }
     </style>
 </head>
 <body>
@@ -82,59 +72,44 @@
 <div class="topbar">
     <a href="dashboard.html" class="logo-area">
         <img src="img1.png" alt="Logo" class="logo-img">
-        <span style="font-weight: 900; font-size: 22px;">नगर पालिका परिषद नकुड</span>
+        <span style="font-weight: 900; font-size: 20px;">नगर पालिका परिषद नकुड</span>
     </a>
-    <a href="dashboard.html" style="color:white; font-size: 24px;"><i class="fas fa-home"></i></a>
+    <a href="dashboard.html" style="color:white; font-size: 22px;"><i class="fas fa-home"></i></a>
 </div>
 
 <div class="container-fluid py-4">
-    
     <div class="action-bar">
         <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="नाम, कनेक्शन नं, वार्ड या मोबाइल से खोजें..." onkeyup="fastSearch()">
+            <input type="text" id="searchInput" placeholder="Search by Name, Conn No, Ward..." onkeyup="fastSearch()">
         </div>
-        <button class="export-btn excel-btn" onclick="exportToExcel()" title="Excel डाउनलोड">
-            <i class="fas fa-file-excel"></i>
-        </button>
-        <button class="export-btn pdf-btn" onclick="exportToPDF()" title="PDF डाउनलोड">
-            <i class="fas fa-file-pdf"></i>
-        </button>
+        <button class="export-btn excel-btn" onclick="exportToExcel()"><i class="fas fa-file-excel"></i></button>
+        <button class="export-btn pdf-btn" onclick="exportToPDF()"><i class="fas fa-file-pdf"></i></button>
     </div>
 
-    <div id="printArea">
-        <div id="pdf-title" style="display:none; text-align:center; margin-bottom:20px;">
-            <h2 style="color:#059669; margin:0;">नगर पालिका परिषद नकुड</h2>
-            <p style="margin:5px 0;">जल कल विभाग - उपभोक्ता सूची रिपोर्ट</p>
-            <hr>
-        </div>
+    <div class="dashboard-header">
+        <div class="stat-card"><h3>कुल कनेक्शन</h3><div class="val" id="statTotal">0</div></div>
+        <div class="stat-card"><h3>चालू मांग</h3><div class="val" id="statCurrent">₹0</div></div>
+        <div class="stat-card"><h3>बकाया</h3><div class="val" id="statArrear">₹0</div></div>
+        <div class="stat-card"><h3>कुल शेष</h3><div class="val" id="statTotalRem">₹0</div></div>
+    </div>
 
-        <div class="dashboard-header">
-            <div class="stat-card"><h3>कुल कनेक्शन</h3><div class="val" id="statTotal">0</div></div>
-            <div class="stat-card"><h3>चालू मांग</h3><div class="val" id="statCurrent">₹0</div></div>
-            <div class="stat-card"><h3>बकाया</h3><div class="val" id="statArrear">₹0</div></div>
-            <div class="stat-card"><h3>कुल शेष</h3><div class="val" id="statTotalRem">₹0</div></div>
-        </div>
-
-        <div class="table-wrapper">
-            <table class="data-table" id="dataTable">
-                <thead>
-                    <tr>
-                        <th>कन. नं.</th>
-                        <th>वार्ड</th>
-                        <th>उपभोक्ता का नाम</th>
-                        <th>मोबाइल</th>
-                        <th>चालू मांग</th>
-                        <th>बकाया</th>
-                        <th>कुल शेष</th>
-                        <th class="no-pdf">एक्शन</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <tr><td colspan="8" class="p-5">डेटा लोड हो रहा है...</td></tr>
-                </tbody>
-            </table>
-        </div>
+    <div class="table-wrapper">
+        <table class="data-table" id="dataTable">
+            <thead>
+                <tr>
+                    <th>कन. नं.</th>
+                    <th>वार्ड</th>
+                    <th>उपभोक्ता का नाम</th>
+                    <th>मोबाइल</th>
+                    <th>चालू मांग</th>
+                    <th>बकाया</th>
+                    <th>कुल शेष</th>
+                    <th>एक्शन</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
     </div>
 </div>
 
@@ -144,11 +119,10 @@
 
     async function fetchData() {
         try {
-            let csvData = "";
             const response = await fetch('Connection_data.csv');
-            if(response.ok) csvData = await response.text();
-
+            const csvData = response.ok ? await response.text() : "";
             const lines = csvData.split(/\r?\n/).filter(line => line.trim() !== "").slice(1);
+            
             stats = { total: 0, current: 0, arrear: 0, balance: 0 };
 
             let csvRows = lines.map(line => {
@@ -163,98 +137,67 @@
                 return null;
             }).filter(x => x);
 
-            const localData = JSON.parse(localStorage.getItem('water_connections') || '[]');
-            let localRows = localData.map(item => {
-                const amount = parseFloat(item.amount) || 0;
-                stats.total++; stats.balance += amount; stats.current += amount;
-                return { id: item.con_no, ward: item.ward, name: item.owner, mobile: item.mobile, curr: amount, arr: 0, total: amount };
-            });
-
-            const combinedData = [...localRows.reverse(), ...csvRows];
-
-            masterRows = combinedData.map(item => ({
+            masterRows = csvRows.map(item => ({
                 data: item,
-                html: `
-                    <tr>
-                        <td>${item.id}</td>
-                        <td>${item.ward}</td>
-                        <td style="text-align:left;">${item.name}</td>
-                        <td>${item.mobile}</td>
-                        <td>₹${item.curr}</td>
-                        <td>₹${item.arr}</td>
-                        <td class="${item.total > 0 ? 'unpaid' : 'paid'}">₹${item.total}</td>
-                        <td class="no-pdf"><button class="view-btn" onclick="goToView('${item.id}')"><i class="fas fa-eye"></i></button></td>
-                    </tr>`,
+                html: `<tr><td>${item.id}</td><td>${item.ward}</td><td style="text-align:left;">${item.name}</td><td>${item.mobile}</td><td>₹${item.curr}</td><td>₹${item.arr}</td><td class="${item.total > 0 ? 'unpaid' : 'paid'}">₹${item.total}</td><td><button class="view-btn" onclick="goToView('${item.id}')"><i class="fas fa-eye"></i></button></td></tr>`,
                 text: `${item.id} ${item.ward} ${item.name} ${item.mobile}`.toUpperCase()
             }));
 
             renderTable(masterRows);
             updateStatsUI();
-        } catch (e) {
-            document.getElementById('tableBody').innerHTML = '<tr><td colspan="8">डेटा फाइल नहीं मिली।</td></tr>';
-        }
+        } catch (e) { console.error("Error fetching data"); }
     }
 
+    function renderTable(list) { document.getElementById('tableBody').innerHTML = list.map(r => r.html).join(''); }
+    function fastSearch() {
+        const query = document.getElementById("searchInput").value.toUpperCase();
+        renderTable(masterRows.filter(r => r.text.includes(query)));
+    }
     function updateStatsUI() {
         document.getElementById('statTotal').innerText = stats.total;
         document.getElementById('statCurrent').innerText = '₹' + stats.current.toLocaleString('en-IN');
         document.getElementById('statArrear').innerText = '₹' + stats.arrear.toLocaleString('en-IN');
         document.getElementById('statTotalRem').innerText = '₹' + stats.balance.toLocaleString('en-IN');
     }
+    function goToView(id) { window.location.href = `connection_view.html?id=${id}`; }
 
-    function renderTable(list) {
-        document.getElementById('tableBody').innerHTML = list.length === 0 ? '<tr><td colspan="8">कोई रिकॉर्ड नहीं मिला।</td></tr>' : list.map(r => r.html).join('');
-    }
-
-    function fastSearch() {
-        const query = document.getElementById("searchInput").value.toUpperCase();
-        renderTable(masterRows.filter(r => r.text.includes(query)));
-    }
-
-    function goToView(connId) { window.location.href = `connection_view.html?id=${connId}`; }
-
-    // --- Excel Export (Center Aligned) ---
+    // EXCEL: Clean & Centered
     function exportToExcel() {
-        let excelRows = masterRows.map(r => ({
-            "कनेक्शन नं": r.data.id,
-            "वार्ड": r.data.ward,
-            "उपभोक्ता": r.data.name,
-            "मोबाइल": r.data.mobile,
-            "चालू मांग": r.data.curr,
-            "बकाया": r.data.arr,
-            "कुल शेष": r.data.total
+        const data = masterRows.map(r => ({
+            "Conn No": r.data.id, "Ward": r.data.ward, "Name": r.data.name, "Mobile": r.data.mobile,
+            "Current": r.data.curr, "Arrear": r.data.arr, "Total": r.data.total
         }));
-        excelRows.push({ "कनेक्शन नं": "कुल योग", "वार्ड": "", "उपभोक्ता": "", "मोबाइल": "", "चालू मांग": stats.current, "बकाया": stats.arrear, "कुल शेष": stats.balance });
-        
-        const ws = XLSX.utils.json_to_sheet(excelRows);
+        data.push({ "Conn No": "TOTAL", "Current": stats.current, "Arrear": stats.arrear, "Total": stats.balance });
+        const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Report");
-        XLSX.writeFile(wb, "NPP_Nakur_Water_Report.xlsx");
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, "Water_Report.xlsx");
     }
 
-    // --- PDF Export (Hindi Support & High Quality) ---
+    // PDF: Fast & Clean (Using jsPDF AutoTable)
     function exportToPDF() {
-        const element = document.getElementById('printArea');
-        const pdfTitle = document.getElementById('pdf-title');
-        
-        // PDF जनरेट करने से पहले टाइटल दिखाएं और 'Action' कॉलम छुपाएं
-        pdfTitle.style.display = "block";
-        const noPdfElements = document.querySelectorAll('.no-pdf');
-        noPdfElements.forEach(el => el.style.display = 'none');
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('l', 'mm', 'a4');
 
-        const opt = {
-            margin:       10,
-            filename:     'NPP_Nakur_Water_Report.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
-        };
+        // PDF Header Inside
+        doc.setFontSize(16);
+        doc.setTextColor(5, 150, 105);
+        doc.text("NAGAR PALIKA PARISHAD NAKUR - WATER TAX REPORT", 105, 15, { align: 'center' });
 
-        html2pdf().set(opt).from(element).save().then(() => {
-            // डाउनलोड के बाद वापस सब ठीक करें
-            pdfTitle.style.display = "none";
-            noPdfElements.forEach(el => el.style.display = '');
+        const body = masterRows.map(r => [r.data.id, r.data.ward, r.data.name, r.data.mobile, r.data.curr, r.data.arr, r.data.total]);
+        body.push([{ content: 'TOTAL SUM', colSpan: 4, styles: { halign: 'right', fontStyle: 'bold' } }, stats.current, stats.arrear, stats.balance]);
+
+        doc.autoTable({
+            startY: 25,
+            head: [['No.', 'Ward', 'Owner Name', 'Mobile', 'Current', 'Arrear', 'Total']],
+            body: body,
+            theme: 'striped',
+            headStyles: { fillColor: [16, 185, 129], halign: 'center' },
+            styles: { fontSize: 9, halign: 'center' },
+            columnStyles: { 2: { halign: 'left' } } // Name left aligned
         });
+
+        doc.save("NPP_Nakur_Water_Report.pdf");
     }
 
     window.onload = fetchData;
