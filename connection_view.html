@@ -51,7 +51,7 @@
         .action-btn {
             display: flex; flex-direction: column; align-items: center;
             text-decoration: none; font-size: 14px; font-weight: 700; transition: 0.3s;
-            border: none; background: none;
+            border: none; background: none; width: 30%;
         }
         .icon-circle {
             width: 55px; height: 55px; border-radius: 50%; display: flex;
@@ -65,6 +65,13 @@
 
         .action-btn:hover { transform: translateY(-5px); }
         .amount-big { font-size: 28px; color: #dc2626; font-weight: 900; }
+
+        @media print {
+            .topbar, .action-bar, .back-btn { display: none !important; }
+            body { background: white; padding: 0; }
+            .detail-container { margin: 0; max-width: 100%; }
+            .info-card { box-shadow: none; border: 1px solid #eee; }
+        }
     </style>
 </head>
 <body>
@@ -76,7 +83,7 @@
 </div>
 
 <div class="detail-container">
-    <div class="info-card">
+    <div class="info-card" id="printableArea">
         <div class="card-header">
             <h2 id="dispName">खोज जारी है...</h2>
             <span id="dispConn" style="opacity: 0.9;">कनेक्शन नंबर: --</span>
@@ -100,7 +107,7 @@
                 <span class="info-value">₹<span id="dispCur">0</span></span>
             </div>
             <div class="info-row">
-                <span class="info-label">बकाया (2024-25)</span>
+                <span class="info-label">बकाया राशि</span>
                 <span class="info-value">₹<span id="dispArr">0</span></span>
             </div>
             <div class="info-row" style="border: none; margin-top: 15px;">
@@ -110,109 +117,103 @@
         </div>
 
         <div class="action-bar">
-            <button class="action-btn btn-edit" onclick="handleEdit()">
-                <div class="icon-circle"><i class="fas fa-edit"></i></div>
-                <span style="color: #3b82f6;">प्रिंट रसीद</span>
+            <button class="action-btn btn-edit" onclick="handlePrint()">
+                <div class="icon-circle"><i class="fas fa-print"></i></div>
+                <span style="color: #3b82f6;">रसीद प्रिंट</span>
             </button>
             <button class="action-btn btn-pay" onclick="handlePay()">
-                <div class="icon-circle"><i class="fas fa-hand-holding-usd"></i></div>
-                <span style="color: #10b981;">भुगतान</span>
+                <div class="icon-circle"><i class="fas fa-check-circle"></i></div>
+                <span style="color: #10b981;">पेमेंट अपडेट</span>
             </button>
-            <button class="action-btn btn-delete" onclick="handleDelete()">
+            <button class="action-btn btn-delete" onclick="handleDeleteWithPassword()">
                 <div class="icon-circle"><i class="fas fa-trash-alt"></i></div>
-                <span style="color: #ef4444;">डिलीट</span>
+                <span style="color: #ef4444;">डिलीट करें</span>
             </button>
         </div>
     </div>
 </div>
 
 <script>
+    // --- पासवर्ड यहाँ बदलें ---
+    const ADMIN_PASSWORD = "123"; 
+
     const urlParams = new URLSearchParams(window.location.search);
     const connectionId = urlParams.get('id');
 
     async function loadConsumerDetail() {
         if (!connectionId) {
-            alert("कोई कनेक्शन आईडी नहीं मिली!");
+            document.getElementById('dispName').innerText = "त्रुटि: आईडी नहीं मिली";
             return;
         }
 
-        // 1. पहले LocalStorage (New Data) चेक करें
-        let connections = JSON.parse(localStorage.getItem('water_connections') || '[]');
-        let localMatch = connections.find(item => item.con_no === connectionId);
+        // 1. LocalStorage चेक करें
+        let localData = JSON.parse(localStorage.getItem('water_connections') || '[]');
+        let found = localData.find(item => item.con_no === connectionId);
 
-        if (localMatch) {
-            renderData({
-                name: localMatch.owner,
-                conn: localMatch.con_no,
-                ward: localMatch.ward,
-                mob: localMatch.mobile,
-                type: localMatch.type === 'Domestic' ? 'घरेलू' : 'व्यावसायिक',
-                cur: localMatch.amount,
-                arr: "0",
-                total: localMatch.amount
-            });
+        if (found) {
+            updateUI(found.owner, found.con_no, found.ward, found.mobile, "नया कनेक्शन", found.amount, "0", found.amount);
             return;
         }
 
-        // 2. अगर लोकल में नहीं मिला, तो CSV (Old Data) चेक करें
+        // 2. CSV चेक करें
         try {
             const response = await fetch('Connection_data.csv');
-            const data = await response.text();
-            const rows = data.split(/\r?\n/).slice(1);
+            const csvText = await response.text();
+            const rows = csvText.split(/\r?\n/).slice(1);
 
             for (let row of rows) {
                 const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 if (cols[0] === connectionId) {
-                    renderData({
-                        name: cols[2].replace(/"/g, ''),
-                        conn: cols[0],
-                        ward: cols[1],
-                        mob: cols[5] || 'उपलब्ध नहीं',
-                        type: 'CSV रिकॉर्ड',
-                        cur: cols[6],
-                        arr: cols[7],
-                        total: cols[8]
-                    });
+                    updateUI(cols[2].replace(/"/g, ''), cols[0], cols[1], cols[5] || '-', "CSV रिकॉर्ड", cols[6], cols[7], cols[8]);
                     return;
                 }
             }
-            alert("डाटा उपलब्ध नहीं है!");
-        } catch (error) {
-            console.error("Error loading CSV:", error);
+            document.getElementById('dispName').innerText = "डेटा नहीं मिला!";
+        } catch (err) {
+            console.error(err);
         }
     }
 
-    function renderData(data) {
-        document.getElementById('dispName').innerText = data.name;
-        document.getElementById('dispConn').innerText = "कनेक्शन नंबर: " + data.conn;
-        document.getElementById('dispWard').innerText = data.ward;
-        document.getElementById('dispMob').innerText = data.mob;
-        document.getElementById('dispType').innerText = data.type;
-        document.getElementById('dispCur').innerText = data.cur;
-        document.getElementById('dispArr').innerText = data.arr;
-        document.getElementById('dispTotal').innerText = data.total;
+    function updateUI(name, conn, ward, mob, type, cur, arr, total) {
+        document.getElementById('dispName').innerText = name;
+        document.getElementById('dispConn').innerText = "कनेक्शन नंबर: " + conn;
+        document.getElementById('dispWard').innerText = ward;
+        document.getElementById('dispMob').innerText = mob;
+        document.getElementById('dispType').innerText = type;
+        document.getElementById('dispCur').innerText = cur;
+        document.getElementById('dispArr').innerText = arr;
+        document.getElementById('dispTotal').innerText = total;
     }
 
-    function handleEdit() {
-        window.print(); // रसीद प्रिंट करने के लिए
+    function handlePrint() {
+        window.print();
     }
 
     function handlePay() {
-        alert("भुगतान सुविधा जल्द ही शुरू होगी। कुल राशि: ₹" + document.getElementById('dispTotal').innerText);
+        alert("पेमेंट अपडेट करने की सुविधा अभी प्रक्रिया में है।");
     }
 
-    function handleDelete() {
-        if(confirm("क्या आप वाकई इस कनेक्शन को हटाना चाहते हैं? यह केवल लोकल डाटा से हटेगा।")) {
-            let connections = JSON.parse(localStorage.getItem('water_connections') || '[]');
-            let filtered = connections.filter(item => item.con_no !== connectionId);
-            
-            if (connections.length === filtered.length) {
-                alert("यह एक सुरक्षित CSV फाइल का डाटा है और इसे यहाँ से डिलीट नहीं किया जा सकता।");
-            } else {
-                localStorage.setItem('water_connections', JSON.stringify(filtered));
-                alert("सफलतापूर्वक हटा दिया गया।");
-                window.location.href = 'connection_detail.html';
+    function handleDeleteWithPassword() {
+        // पासवर्ड सुरक्षा
+        let pass = prompt("सुरक्षा जांच: एडमिन पासवर्ड दर्ज करें (डिलीट करने के लिए):");
+        
+        if (pass === null) return; // Cancel करने पर
+
+        if (pass === ADMIN_PASSWORD) {
+            if (confirm("क्या आप वाकई इस उपभोक्ता का डेटा पूरी तरह हटाना चाहते हैं?")) {
+                let connections = JSON.parse(localStorage.getItem('water_connections') || '[]');
+                let filtered = connections.filter(item => item.con_no !== connectionId);
+                
+                if (connections.length === filtered.length) {
+                    alert("सावधान: यह डेटा CSV फाइल में है। इसे केवल एडमिन सर्वर से हटा सकता है।");
+                } else {
+                    localStorage.setItem('water_connections', JSON.stringify(filtered));
+                    alert("सफलतापूर्वक हटा दिया गया।");
+                    window.location.href = 'connection_detail.html';
+                }
             }
+        } else {
+            alert("गलत पासवर्ड! डेटा सुरक्षित है।");
         }
     }
 
