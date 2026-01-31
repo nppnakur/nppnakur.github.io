@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WATER CONNECTION DETAIL - NPP NAKUR</title>
+    <title>WATER CONNECTION LIST - NPP NAKUR</title>
     
     <link rel="icon" type="image/png" href="img1.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
         :root {
@@ -19,7 +18,7 @@
             --gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
         }
 
-        body { background: #f0fdf4; font-family: 'Segoe UI', sans-serif; margin: 0; }
+        body { background: #f0fdf4; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; }
 
         .topbar {
             background: var(--gradient); height: 75px; padding: 0 20px;
@@ -28,11 +27,12 @@
             position: sticky; top: 0; z-index: 1000;
         }
 
-        .logo-area { display: flex; align-items: center; gap: 12px; cursor: pointer; text-decoration: none; color: white; }
+        .logo-area { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; }
         .logo-img { height: 60px; width: auto; }
 
-        .action-bar { max-width: 1100px; margin: 30px auto; display: flex; gap: 15px; justify-content: center; align-items: center; padding: 0 15px; flex-wrap: wrap; }
-        .search-box { position: relative; flex: 1; min-width: 300px; }
+        .action-bar { max-width: 1000px; margin: 30px auto; display: flex; gap: 15px; justify-content: center; align-items: center; padding: 0 15px; }
+        .search-box { position: relative; flex: 1; }
+        
         #searchInput {
             width: 100%; padding: 12px 20px 12px 45px; border-radius: 50px;
             border: 2px solid var(--primary); outline: none; font-size: 16px;
@@ -40,37 +40,41 @@
         }
         .search-box i { position: absolute; left: 18px; top: 15px; color: var(--primary); }
 
-        .btn-add-new { background: #10b981; color: white; border: none; padding: 12px 20px; border-radius: 50px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .btn-add-new:hover { background: #059669; color: white; transform: translateY(-2px); }
-
         .export-btn {
             border: none; width: 48px; height: 48px;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             font-size: 20px; cursor: pointer; transition: 0.3s; color: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         .excel-btn { background: #217346; }
         .pdf-btn { background: #e11d48; }
-        .export-btn:hover { transform: scale(1.1); opacity: 0.9; }
+        .export-btn:hover { transform: scale(1.1); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 
-        .dashboard-header { display: flex; gap: 20px; margin: 0 auto 35px; max-width: 1400px; justify-content: center; flex-wrap: wrap; padding: 0 15px; }
+        .dashboard-header { display: flex; gap: 15px; margin: 0 auto 30px; max-width: 1350px; justify-content: center; flex-wrap: wrap; padding: 0 15px; }
         .stat-card {
-            background: white; padding: 30px 20px; border-radius: 18px; box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-            text-align: center; flex: 1; min-width: 250px; border-bottom: 8px solid var(--primary);
-            transition: 0.3s;
+            background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center; flex: 1; min-width: 200px; border-bottom: 5px solid var(--primary);
         }
-        .stat-card h3 { font-size: 15px; color: #475569; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; }
-        .stat-card .val { font-size: 32px; font-weight: 900; color: #1e293b; }
+        .stat-card h3 { font-size: 13px; color: #64748b; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; }
+        .stat-card .val { font-size: 24px; font-weight: 900; color: #1e293b; }
 
-        .table-wrapper { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08); margin: 0 auto 50px; max-width: 1350px; }
-        .data-table { width: 100%; border-collapse: collapse; }
+        /* Table Styling */
+        .table-wrapper { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08); margin: 0 auto 50px; max-width: 1350px; }
+        .data-table { width: 100%; border-collapse: collapse; background: white; }
         .data-table thead { background: var(--gradient); color: white; }
-        .data-table th, .data-table td { padding: 18px; text-align: center; font-weight: 600; border-bottom: 1px solid #f1f5f9; }
+        .data-table th { padding: 15px; text-align: center; font-size: 14px; text-transform: uppercase; }
+        .data-table td { padding: 14px; text-align: center; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; }
+        
+        /* Table Colors */
+        .data-table tbody tr:nth-child(even) { background-color: #f8fafc; }
+        .data-table tbody tr:hover { background-color: #f0fdf4; }
 
-        .view-btn { background: #3b82f6; color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; }
-        .paid { color: #059669; font-weight: 800; }
-        .unpaid { color: #dc2626; font-weight: 800; }
-        .new-badge { background: #f59e0b; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; margin-left: 5px; vertical-align: middle; }
+        .unpaid { color: #e11d48 !important; font-weight: 800; }
+        .paid { color: #10b981 !important; font-weight: 800; }
+        
+        .view-btn { background: #3b82f6; color: white; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; }
+
+        /* Hidden element for PDF Header */
+        #pdf-header { display: none; text-align: center; padding: 20px; color: #059669; }
     </style>
 </head>
 <body>
@@ -78,9 +82,9 @@
 <div class="topbar">
     <a href="dashboard.html" class="logo-area">
         <img src="img1.png" alt="Logo" class="logo-img">
-        <span style="font-weight: 900; font-size: 24px;">नगर पालिका परिषद</span>
+        <span style="font-weight: 900; font-size: 22px;">नगर पालिका परिषद नकुड</span>
     </a>
-    <a href="dashboard.html" style="color:white; font-size: 26px;"><i class="fas fa-home"></i></a>
+    <a href="dashboard.html" style="color:white; font-size: 24px;"><i class="fas fa-home"></i></a>
 </div>
 
 <div class="container-fluid py-4">
@@ -88,28 +92,31 @@
     <div class="action-bar">
         <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="नाम, कनेक्शन, वार्ड या मोबाइल से खोजें..." onkeyup="fastSearch()">
+            <input type="text" id="searchInput" placeholder="नाम, कनेक्शन नं, वार्ड या मोबाइल से खोजें..." onkeyup="fastSearch()">
         </div>
-        <a href="jal.html" class="btn-add-new">
-            <i class="fas fa-plus-circle"></i> नया कनेक्शन
-        </a>
-        <button class="export-btn excel-btn" onclick="exportToExcel()" title="Excel Download">
+        <button class="export-btn excel-btn" onclick="exportToExcel()" title="Excel डाउनलोड">
             <i class="fas fa-file-excel"></i>
         </button>
-        <button class="export-btn pdf-btn" onclick="exportToPDF()" title="PDF Download">
+        <button class="export-btn pdf-btn" onclick="exportToPDF()" title="PDF डाउनलोड">
             <i class="fas fa-file-pdf"></i>
         </button>
     </div>
 
-    <div class="dashboard-header">
-        <div class="stat-card"><h3>कुल कनेक्शन</h3><div class="val" id="statTotal">0</div></div>
-        <div class="stat-card"><h3>चालू मांग (2025-26)</h3><div class="val" id="statCurrent">₹0</div></div>
-        <div class="stat-card"><h3>बकाया राशि</h3><div class="val" id="statArrear">₹0</div></div>
-        <div class="stat-card"><h3>सम्पूर्ण शेष राशि</h3><div class="val" id="statTotalRem">₹0</div></div>
-    </div>
+    <div id="printArea">
+        <div id="pdf-title" style="display:none; text-align:center; margin-bottom:20px;">
+            <h2 style="color:#059669; margin:0;">नगर पालिका परिषद नकुड</h2>
+            <p style="margin:5px 0;">जल कल विभाग - उपभोक्ता सूची रिपोर्ट</p>
+            <hr>
+        </div>
 
-    <div class="table-wrapper">
-        <div class="table-responsive">
+        <div class="dashboard-header">
+            <div class="stat-card"><h3>कुल कनेक्शन</h3><div class="val" id="statTotal">0</div></div>
+            <div class="stat-card"><h3>चालू मांग</h3><div class="val" id="statCurrent">₹0</div></div>
+            <div class="stat-card"><h3>बकाया</h3><div class="val" id="statArrear">₹0</div></div>
+            <div class="stat-card"><h3>कुल शेष</h3><div class="val" id="statTotalRem">₹0</div></div>
+        </div>
+
+        <div class="table-wrapper">
             <table class="data-table" id="dataTable">
                 <thead>
                     <tr>
@@ -119,12 +126,12 @@
                         <th>मोबाइल</th>
                         <th>चालू मांग</th>
                         <th>बकाया</th>
-                        <th>सम्पूर्ण शेष</th>
-                        <th>विवरण</th>
+                        <th>कुल शेष</th>
+                        <th class="no-pdf">एक्शन</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <tr><td colspan="8" class="p-5">डेटा तैयार किया जा रहा है...</td></tr>
+                    <tr><td colspan="8" class="p-5">डेटा लोड हो रहा है...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -138,13 +145,10 @@
     async function fetchData() {
         try {
             let csvData = "";
-            try {
-                const response = await fetch('Connection_data.csv');
-                csvData = await response.text();
-            } catch (err) { console.log("CSV check failed."); }
+            const response = await fetch('Connection_data.csv');
+            if(response.ok) csvData = await response.text();
 
             const lines = csvData.split(/\r?\n/).filter(line => line.trim() !== "").slice(1);
-            
             stats = { total: 0, current: 0, arrear: 0, balance: 0 };
 
             let csvRows = lines.map(line => {
@@ -153,9 +157,8 @@
                     const cVal = parseFloat(cols[6]) || 0;
                     const aVal = parseFloat(cols[7]) || 0;
                     const rVal = parseFloat(cols[8]) || 0;
-                    
                     stats.total++; stats.current += cVal; stats.arrear += aVal; stats.balance += rVal;
-                    return { id: cols[0], ward: cols[1], name: cols[2].replace(/"/g, ''), mobile: cols[5] || '-', curr: cVal, arr: aVal, total: rVal, isNew: false };
+                    return { id: cols[0], ward: cols[1], name: cols[2].replace(/"/g, ''), mobile: cols[5] || '-', curr: cVal, arr: aVal, total: rVal };
                 }
                 return null;
             }).filter(x => x);
@@ -164,7 +167,7 @@
             let localRows = localData.map(item => {
                 const amount = parseFloat(item.amount) || 0;
                 stats.total++; stats.balance += amount; stats.current += amount;
-                return { id: item.con_no, ward: item.ward, name: item.owner, mobile: item.mobile, curr: amount, arr: 0, total: amount, isNew: true };
+                return { id: item.con_no, ward: item.ward, name: item.owner, mobile: item.mobile, curr: amount, arr: 0, total: amount };
             });
 
             const combinedData = [...localRows.reverse(), ...csvRows];
@@ -173,24 +176,22 @@
                 data: item,
                 html: `
                     <tr>
-                        <td>${item.id}${item.isNew ? '<span class="new-badge">NEW</span>' : ''}</td>
+                        <td>${item.id}</td>
                         <td>${item.ward}</td>
-                        <td style="text-align:left; padding-left:20px;">${item.name}</td>
+                        <td style="text-align:left;">${item.name}</td>
                         <td>${item.mobile}</td>
                         <td>₹${item.curr}</td>
                         <td>₹${item.arr}</td>
                         <td class="${item.total > 0 ? 'unpaid' : 'paid'}">₹${item.total}</td>
-                        <td><button class="view-btn" onclick="goToView('${item.id}')"><i class="fas fa-eye"></i></button></td>
+                        <td class="no-pdf"><button class="view-btn" onclick="goToView('${item.id}')"><i class="fas fa-eye"></i></button></td>
                     </tr>`,
                 text: `${item.id} ${item.ward} ${item.name} ${item.mobile}`.toUpperCase()
             }));
 
             renderTable(masterRows);
             updateStatsUI();
-
         } catch (e) {
-            console.error(e);
-            document.getElementById('tableBody').innerHTML = '<tr><td colspan="8">Error Loading Data!</td></tr>';
+            document.getElementById('tableBody').innerHTML = '<tr><td colspan="8">डेटा फाइल नहीं मिली।</td></tr>';
         }
     }
 
@@ -202,8 +203,7 @@
     }
 
     function renderTable(list) {
-        const body = document.getElementById('tableBody');
-        body.innerHTML = list.length === 0 ? '<tr><td colspan="8" class="p-5">No Records Found.</td></tr>' : list.map(r => r.html).join('');
+        document.getElementById('tableBody').innerHTML = list.length === 0 ? '<tr><td colspan="8">कोई रिकॉर्ड नहीं मिला।</td></tr>' : list.map(r => r.html).join('');
     }
 
     function fastSearch() {
@@ -213,67 +213,48 @@
 
     function goToView(connId) { window.location.href = `connection_view.html?id=${connId}`; }
 
-    // --- Excel Export with Colors & Total ---
+    // --- Excel Export (Center Aligned) ---
     function exportToExcel() {
-        let excelData = masterRows.map(r => ({
-            "कनेक्शन नं.": r.data.id,
+        let excelRows = masterRows.map(r => ({
+            "कनेक्शन नं": r.data.id,
             "वार्ड": r.data.ward,
             "उपभोक्ता": r.data.name,
             "मोबाइल": r.data.mobile,
             "चालू मांग": r.data.curr,
             "बकाया": r.data.arr,
-            "सम्पूर्ण शेष": r.data.total
+            "कुल शेष": r.data.total
         }));
-
-        // Total Row जोड़ें
-        excelData.push({
-            "कनेक्शन नं.": "कुल योग",
-            "वार्ड": "", "उपभोक्ता": "", "मोबाइल": "",
-            "चालू मांग": stats.current,
-            "बकाया": stats.arrear,
-            "सम्पूर्ण शेष": stats.balance
-        });
-
-        const ws = XLSX.utils.json_to_sheet(excelData);
+        excelRows.push({ "कनेक्शन नं": "कुल योग", "वार्ड": "", "उपभोक्ता": "", "मोबाइल": "", "चालू मांग": stats.current, "बकाया": stats.arrear, "कुल शेष": stats.balance });
+        
+        const ws = XLSX.utils.json_to_sheet(excelRows);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "NPP_Water_Report");
-
-        // फाइल डाउनलोड
-        XLSX.writeFile(wb, "NPP_Water_Report.xlsx");
+        XLSX.utils.book_append_sheet(wb, ws, "Report");
+        XLSX.writeFile(wb, "NPP_Nakur_Water_Report.xlsx");
     }
 
-    // --- PDF Export with Colors & Table ---
+    // --- PDF Export (Hindi Support & High Quality) ---
     function exportToPDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('l', 'mm', 'a4');
+        const element = document.getElementById('printArea');
+        const pdfTitle = document.getElementById('pdf-title');
+        
+        // PDF जनरेट करने से पहले टाइटल दिखाएं और 'Action' कॉलम छुपाएं
+        pdfTitle.style.display = "block";
+        const noPdfElements = document.querySelectorAll('.no-pdf');
+        noPdfElements.forEach(el => el.style.display = 'none');
 
-        doc.setFontSize(18);
-        doc.setTextColor(16, 185, 129);
-        doc.text("Municipal Council Nakur - Water Tax Report", 14, 15);
+        const opt = {
+            margin:       10,
+            filename:     'NPP_Nakur_Water_Report.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+        };
 
-        const pdfData = masterRows.map(r => [
-            r.data.id, r.data.ward, r.data.name, r.data.mobile, r.data.curr, r.data.arr, r.data.total
-        ]);
-
-        // Total Row for PDF
-        pdfData.push(["TOTAL", "", "", "", stats.current, stats.arrear, stats.balance]);
-
-        doc.autoTable({
-            head: [['Conn No', 'Ward', 'Owner Name', 'Mobile', 'Current', 'Arrear', 'Total Rem']],
-            body: pdfData,
-            startY: 25,
-            theme: 'grid',
-            headStyles: { fillColor: [16, 185, 129], halign: 'center' },
-            styles: { halign: 'center', font: 'helvetica' },
-            didParseCell: function (data) {
-                if (data.section === 'body' && data.row.index === pdfData.length - 1) {
-                    data.cell.styles.fontStyle = 'bold';
-                    data.cell.styles.fillColor = [240, 253, 244];
-                }
-            }
+        html2pdf().set(opt).from(element).save().then(() => {
+            // डाउनलोड के बाद वापस सब ठीक करें
+            pdfTitle.style.display = "none";
+            noPdfElements.forEach(el => el.style.display = '');
         });
-
-        doc.save("NPP_Water_Report.pdf");
     }
 
     window.onload = fetchData;
