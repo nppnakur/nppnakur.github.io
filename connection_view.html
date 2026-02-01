@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consumer Detail - NPP NAKUR</title>
+    
+    <link rel="icon" type="image/png" href="img1.png">
+    <link rel="apple-touch-icon" href="img1.png">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root { 
@@ -15,10 +19,10 @@
             --border: #e2e8f0;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
 
         body { 
-            background-color: #ffffff; /* शुद्ध सफेद बैकग्राउंड */
+            background-color: #ffffff; 
             color: #1e293b;
             min-height: 100vh;
             display: flex;
@@ -40,7 +44,6 @@
             border: 1px solid var(--border);
         }
 
-        /* Header */
         .header-panel {
             grid-column: 1 / -1;
             display: flex;
@@ -51,121 +54,51 @@
             margin-bottom: 10px;
         }
 
-        .header-panel h2 { 
-            color: var(--primary);
-            font-size: 26px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
+        .header-panel h2 { color: var(--primary); font-size: 26px; font-weight: 800; }
+        
+        .logo-container { display: flex; align-items: center; gap: 15px; }
+        .logo-container img { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
 
-        .status-pill {
-            background: #dcfce7;
-            color: #15803d;
-            padding: 6px 16px;
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        /* Info Grid */
-        .info-panel {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
+        .info-panel { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
 
         .input-group {
             background: var(--gray-bg);
             padding: 15px 20px;
             border-radius: 12px;
             border: 1px solid var(--border);
-            transition: 0.3s;
         }
 
-        .input-group label {
-            display: block;
-            font-size: 11px;
-            color: #64748b;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
+        .input-group label { display: block; font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
+        .input-group input { background: transparent; border: none; color: #0f172a; font-size: 17px; font-weight: 600; width: 100%; outline: none; }
+        
+        .input-group.editing { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
 
-        .input-group input {
-            background: transparent;
-            border: none;
-            color: #0f172a;
-            font-size: 17px;
-            font-weight: 600;
-            width: 100%;
-            outline: none;
-        }
-
-        .input-group.editing {
-            border-color: var(--accent);
-            background: #fff;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-        }
-
-        /* Money Section */
-        .money-strip {
-            grid-column: 1 / -1;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1.5fr;
-            gap: 20px;
-            margin-top: 10px;
-        }
-
-        .total-box {
-            background: #fef2f2;
-            border: 1px solid #fee2e2;
-        }
+        .money-strip { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 20px; margin-top: 10px; }
+        .total-box { background: #fef2f2; border: 1px solid #fee2e2; }
         .total-box label { color: #b91c1c; }
         .total-box input { color: #b91c1c; font-size: 24px; font-weight: 800; }
 
-        /* Actions */
-        .action-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+        .action-panel { display: flex; flex-direction: column; gap: 15px; }
 
         .btn {
-            padding: 16px;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            font-size: 14px;
-            transition: all 0.2s;
+            padding: 16px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700;
+            display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 14px; transition: 0.2s;
         }
 
         .btn-pay { background: var(--primary); color: white; }
         .btn-edit { background: white; color: var(--primary); border: 2px solid var(--primary); }
         .btn-print { background: #f1f5f9; color: #475569; }
         .btn-delete { background: #fff1f2; color: var(--danger); }
-
         .btn:hover { transform: translateY(-2px); opacity: 0.9; }
 
-        #saveBtn { display: none; background: var(--success); color: white; margin-top: 15px; }
+        #saveBtn { display: none; background: var(--success); color: white; width: 100%; margin-top: 15px; }
 
-        .back-link {
-            margin-top: 30px;
-            color: #64748b;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-        }
+        .back-link { margin-top: 30px; color: #64748b; text-decoration: none; font-size: 14px; font-weight: 600; }
 
-        @media print {
-            .action-panel, .back-link, #saveBtn { display: none; }
-            .dashboard { border: none; box-shadow: none; width: 100%; }
-            body { padding: 0; }
+        @media (max-width: 900px) {
+            .dashboard { grid-template-columns: 1fr; padding: 20px; }
+            .info-panel { grid-template-columns: 1fr; }
+            .money-strip { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -174,11 +107,14 @@
 <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
     <div class="dashboard">
         <div class="header-panel">
-            <div>
-                <h2>Consumer Details</h2>
-                <p style="color: #94a3b8; font-size: 13px;">Nagar Palika Parishad Nakur (Saharanpur)</p>
+            <div class="logo-container">
+                <img src="img1.png" alt="Logo" onerror="this.style.display='none'">
+                <div>
+                    <h2>Consumer Details</h2>
+                    <p style="color: #94a3b8; font-size: 13px;">NPP NAKUR (Saharanpur)</p>
+                </div>
             </div>
-            <span class="status-pill" id="dataTag">Verified Record</span>
+            <span style="background:#dcfce7; color:#15803d; padding:6px 16px; border-radius:100px; font-size:12px; font-weight:700;">OFFICIAL DATA</span>
         </div>
 
         <div class="info-panel">
@@ -198,35 +134,30 @@
         <div class="action-panel">
             <button class="btn btn-pay" onclick="alert('Proceeding to Payment...')"><i class="fas fa-credit-card"></i> PAY BILL</button>
             <button class="btn btn-edit" id="editBtn" onclick="enableEditing()"><i class="fas fa-edit"></i> EDIT INFO</button>
-            <button class="btn btn-print" onclick="window.print()"><i class="fas fa-print"></i> PRINT RECEIPT</button>
-            <button class="btn btn-delete" onclick="handleDelete()"><i class="fas fa-trash-alt"></i> DELETE</button>
+            <button class="btn btn-print" onclick="window.print()"><i class="fas fa-print"></i> PRINT DATA</button>
+            <button class="btn btn-delete" onclick="handleDelete()"><i class="fas fa-trash-alt"></i> DELETE RECORD</button>
         </div>
     </div>
 
-    <a href="connection_detail.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Connection List</a>
+    <a href="connection_detail.html" class="back-link"><i class="fas fa-arrow-left"></i> वापस सूची पर जाएं</a>
 </div>
 
 <script>
     let searchId = "";
-    let isLocalData = false;
 
     async function loadRecord() {
         const params = new URLSearchParams(window.location.search);
         searchId = params.get('id');
         if(!searchId) return;
 
-        // Clean ID (Remove NPPNCN-, quotes and commas)
         let cleanSearchId = searchId.replace("NPPNCN-", "").replace(/[",]/g, "").trim();
 
         // 1. Check LocalStorage
         const local = JSON.parse(localStorage.getItem('newConnections') || '[]');
         let data = local.find(i => i.id.toString().replace(/[",]/g, "") === cleanSearchId);
 
-        if(data) {
-            isLocalData = true;
-            display(data);
-            document.getElementById('dataTag').innerText = "NEW ENTRY";
-        } else {
+        if(data) { display(data); } 
+        else {
             // 2. Check CSV
             try {
                 const res = await fetch('Connection_data.csv');
@@ -236,23 +167,22 @@
                 for(let row of rows) {
                     const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if(!cols[0]) continue;
-
                     let cleanCsvId = cols[0].replace(/[",]/g, "").trim();
 
                     if(cleanCsvId === cleanSearchId) {
                         display({
                             id: `NPPNCN-${cols[0].replace(/"/g, '')}`,
-                            ward: cols[1] ? cols[1].trim() : "N/A",
+                            ward: cols[1] || "N/A",
                             name: (cols[2] + (cols[3] || '') + (cols[4] || '')).replace(/"/g, '').trim(),
-                            mobile: cols[5] ? cols[5].trim() : "N/A",
-                            curr: cols[6] ? cols[6].trim() : "0",
-                            arr: cols[7] ? cols[7].trim() : "0",
-                            total: cols[8] ? cols[8].trim() : "0"
+                            mobile: cols[5] || "N/A",
+                            curr: cols[6] || "0",
+                            arr: cols[7] || "0",
+                            total: cols[8] || "0"
                         });
                         break;
                     }
                 }
-            } catch(e) { console.error("Data Load Error", e); }
+            } catch(e) { console.error(e); }
         }
     }
 
@@ -261,44 +191,33 @@
         document.getElementById('disp_name').value = d.name;
         document.getElementById('disp_ward').value = d.ward;
         document.getElementById('disp_mobile').value = d.mobile;
-        document.getElementById('disp_curr').value = "₹" + d.curr.replace("₹","");
-        document.getElementById('disp_arr').value = "₹" + d.arr.replace("₹","");
-        document.getElementById('disp_total').value = "₹" + d.total.replace("₹","");
+        document.getElementById('disp_curr').value = "₹" + d.curr.toString().replace("₹","");
+        document.getElementById('disp_arr').value = "₹" + d.arr.toString().replace("₹","");
+        document.getElementById('disp_total').value = "₹" + d.total.toString().replace("₹","");
     }
 
     function enableEditing() {
-        const p = prompt("Enter Admin Password:");
+        const p = prompt("Admin Password:");
         if(p === "admin123") {
             document.querySelectorAll('.input-group').forEach(group => {
                 const input = group.querySelector('input');
-                if(input.id !== 'disp_id') {
-                    input.disabled = false;
-                    group.classList.add('editing');
-                }
+                if(input.id !== 'disp_id') { input.disabled = false; group.classList.add('editing'); }
             });
             document.getElementById('saveBtn').style.display = 'flex';
             document.getElementById('editBtn').style.display = 'none';
-        } else if (p !== null) { alert("Invalid Password!"); }
+        }
     }
 
-    function saveData() {
-        alert("Record Updated Successfully (Local View)!");
-        location.reload();
-    }
+    function saveData() { alert("Data Updated!"); location.reload(); }
 
     function handleDelete() {
-        const p = prompt("Enter Admin Password to Delete:");
-        if(p === "admin123") {
-            if(confirm("Confirm Delete? This cannot be undone.")) {
-                if(isLocalData) {
-                    let local = JSON.parse(localStorage.getItem('newConnections') || '[]');
-                    let cleanId = searchId.replace("NPPNCN-", "").replace(/[",]/g, "").trim();
-                    let filtered = local.filter(i => i.id.toString().replace(/[",]/g, "") !== cleanId);
-                    localStorage.setItem('newConnections', JSON.stringify(filtered));
-                    window.location.href = "connection_detail.html";
-                } else {
-                    alert("Note: CSV records are read-only and cannot be deleted from here.");
-                }
+        if(prompt("Admin Password:") === "admin123") {
+            if(confirm("Confirm Delete?")) {
+                let local = JSON.parse(localStorage.getItem('newConnections') || '[]');
+                let cleanId = searchId.replace("NPPNCN-", "").replace(/[",]/g, "").trim();
+                let filtered = local.filter(i => i.id.toString().replace(/[",]/g, "") !== cleanId);
+                localStorage.setItem('newConnections', JSON.stringify(filtered));
+                window.location.href = "connection_detail.html";
             }
         }
     }
