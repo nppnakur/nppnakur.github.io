@@ -7,13 +7,12 @@
     <link rel="icon" type="image/png" href="img1.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        :root { --navy: #1e3a8a; --emerald: #10b981; }
+        :root { --navy: #1e3a8a; --emerald: #10b981; --red: #ef4444; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background: #f0f4f8; padding: 20px; }
 
         .container { max-width: 700px; margin: 30px auto; }
         
-        /* Card Design */
         .detail-card { 
             background: white; border-radius: 20px; overflow: hidden;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;
@@ -52,22 +51,41 @@
         .total-label { color: #be123b; font-weight: 800; font-size: 18px; }
         .total-value { color: #be123b; font-weight: 900; font-size: 24px; }
 
-        /* Buttons */
-        .actions { display: flex; gap: 15px; margin-top: 30px; }
-        .btn { 
-            flex: 1; padding: 14px; border-radius: 12px; border: none;
-            font-weight: 700; cursor: pointer; display: flex; 
-            align-items: center; justify-content: center; gap: 10px;
-            transition: 0.3s; text-decoration: none; font-size: 15px;
+        /* Actions Section */
+        .actions-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
-        .btn-back { background: #64748b; color: white; }
-        .btn-print { background: var(--emerald); color: white; }
-        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        .btn { 
+            padding: 12px; border-radius: 10px; border: none;
+            font-weight: 700; cursor: pointer; display: flex; 
+            flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+            transition: 0.3s; text-decoration: none; font-size: 13px;
+        }
+        .btn i { font-size: 18px; }
+
+        .btn-pay { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+        .btn-print { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
+        .btn-delete { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+        
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+        .btn-back { 
+            display: block; text-align: center; margin-top: 20px; 
+            color: #64748b; text-decoration: none; font-weight: 600;
+        }
 
         @media print {
-            .actions, .btn-back { display: none; }
+            .actions-bar, .btn-back { display: none; }
             body { background: white; padding: 0; }
-            .detail-card { box-shadow: none; border: 1px solid #ccc; }
+            .detail-card { box-shadow: none; border: 1px solid #ccc; width: 100%; }
         }
 
         .error-state { text-align: center; padding: 40px; color: #ef4444; }
@@ -103,7 +121,7 @@
                 
                 <div class="amount-section">
                     <div class="info-item" style="margin-bottom: 10px; border-left-color: #10b981;">
-                        <span class="label">चालू मांग (2025-26)</span>
+                        <span class="label">चालू मांग</span>
                         <span class="value" id="disp_curr">₹0.00</span>
                     </div>
                     <div class="info-item" style="margin-bottom: 15px; border-left-color: #f59e0b;">
@@ -120,37 +138,47 @@
         </div>
     </div>
 
-    <div class="actions">
-        <a href="connection_detail.html" class="btn btn-back">
-            <i class="fas fa-arrow-left"></i> वापस सूची पर
-        </a>
+    <div class="actions-bar" id="actionArea">
+        <button class="btn btn-pay" onclick="handlePay()">
+            <i class="fas fa-hand-holding-usd"></i> PAY
+        </button>
         <button class="btn btn-print" onclick="window.print()">
-            <i class="fas fa-print"></i> प्रिंट विवरण
+            <i class="fas fa-print"></i> PRINT
+        </button>
+        <button class="btn btn-delete" onclick="handleDelete()">
+            <i class="fas fa-trash-alt"></i> DELETE
         </button>
     </div>
+
+    <a href="connection_detail.html" class="btn-back">
+        <i class="fas fa-arrow-left"></i> वापस सूची पर जाएं
+    </a>
 </div>
 
 <script>
+    let currentId = "";
+    let isLocalStorageData = false;
+
     async function loadConnectionDetails() {
         const params = new URLSearchParams(window.location.search);
-        const idToFind = params.get('id');
+        currentId = params.get('id');
         
-        if (!idToFind) {
+        if (!currentId) {
             document.getElementById('cardBody').innerHTML = "<div class='error-state'>आईडी (ID) नहीं मिली!</div>";
+            document.getElementById('actionArea').style.display = "none";
             return;
         }
 
         let finalData = null;
-        let isNew = false;
 
-        // 1. पहले LocalStorage में खोजें (नया डेटा)
+        // 1. Check LocalStorage
         const localList = JSON.parse(localStorage.getItem('newConnections') || '[]');
-        finalData = localList.find(item => item.id == idToFind || `NPPNCN-${item.id}` == idToFind);
+        finalData = localList.find(item => item.id == currentId || `NPPNCN-${item.id}` == currentId);
 
         if (finalData) {
-            isNew = true;
+            isLocalStorageData = true;
         } else {
-            // 2. अगर लोकल में नहीं मिला, तो CSV में खोजें
+            // 2. Check CSV
             try {
                 const response = await fetch('Connection_data.csv');
                 const csvText = await response.text();
@@ -158,7 +186,7 @@
 
                 for (let row of rows) {
                     const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    if (cols[0] && cols[0].trim() == idToFind.replace("NPPNCN-", "")) {
+                    if (cols[0] && cols[0].trim() == currentId.replace("NPPNCN-", "")) {
                         finalData = {
                             id: `NPPNCN-${cols[0].trim()}`,
                             ward: cols[1].trim(),
@@ -171,14 +199,11 @@
                         break;
                     }
                 }
-            } catch (err) {
-                console.error("CSV Load Error");
-            }
+            } catch (err) { console.error(err); }
         }
 
-        // 3. डेटा को पेज पर दिखाएं
         if (finalData) {
-            document.getElementById('disp_id').innerText = finalData.id.toString().includes("NPPNCN") ? finalData.id : `NPPNCN-${finalData.id}`;
+            document.getElementById('disp_id').innerText = finalData.id;
             document.getElementById('disp_name').innerText = finalData.name;
             document.getElementById('disp_ward').innerText = finalData.ward;
             document.getElementById('disp_mobile').innerText = finalData.mobile;
@@ -186,13 +211,39 @@
             document.getElementById('disp_arr').innerText = `₹${finalData.arr}`;
             document.getElementById('disp_total').innerText = `₹${finalData.total}`;
             
-            if (isNew) {
+            if (isLocalStorageData) {
                 document.getElementById('dataTag').innerText = "NEWLY ADDED";
                 document.getElementById('dataTag').style.background = "#10b981";
                 document.getElementById('dataTag').style.color = "white";
             }
         } else {
-            document.getElementById('cardBody').innerHTML = "<div class='error-state'>विवरण नहीं मिला! कृपया जांचें कि आईडी सही है।</div>";
+            document.getElementById('cardBody').innerHTML = "<div class='error-state'>डेटा नहीं मिला!</div>";
+            document.getElementById('actionArea').style.display = "none";
+        }
+    }
+
+    function handlePay() {
+        alert("भुगतान सुविधा जल्द ही शुरू की जाएगी (Payment Gateway Integration Pending).");
+    }
+
+    function handleDelete() {
+        const pass = prompt("डेटा डिलीट करने के लिए पासवर्ड दर्ज करें:");
+        
+        if (pass === "admin123") { // सुरक्षा पासवर्ड
+            if (confirm("क्या आप वाकई इस कनेक्शन को डिलीट करना चाहते हैं?")) {
+                if (isLocalStorageData) {
+                    let localList = JSON.parse(localStorage.getItem('newConnections') || '[]');
+                    // Remove item from list
+                    const updatedList = localList.filter(item => item.id != currentId && `NPPNCN-${item.id}` != currentId);
+                    localStorage.setItem('newConnections', JSON.stringify(updatedList));
+                    alert("सफलतापूर्वक डिलीट कर दिया गया!");
+                    window.location.href = "connection_detail.html";
+                } else {
+                    alert("सूचना: CSV फाइल से डेटा डिलीट नहीं किया जा सकता। केवल नए जोड़े गए कनेक्शन ही यहाँ से हट सकते हैं।");
+                }
+            }
+        } else if (pass !== null) {
+            alert("गलत पासवर्ड! डिलीट करने की अनुमति नहीं है।");
         }
     }
 
