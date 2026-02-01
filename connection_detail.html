@@ -8,39 +8,27 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&display=swap');
 
-        body { 
-            background: #f4f7f6; 
-            font-family: 'Hind', sans-serif; 
-            margin: 0; 
-        }
+        body { background: #f4f7f6; font-family: 'Hind', sans-serif; margin: 0; }
 
-        /* 1. Colored Header */
         .topbar {
             background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); 
-            height: 85px; 
-            padding: 0 30px;
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            position: sticky; 
-            top: 0; 
-            z-index: 1000;
-            color: white;
+            height: 85px; padding: 0 30px; display: flex; 
+            align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 1000; color: white;
         }
         .header-left { display: flex; align-items: center; gap: 15px; }
         .header-logo { height: 65px; width: auto; }
         .header-left h1 { font-weight: 700; font-size: 24px; margin: 0; letter-spacing: 0.5px; }
         .header-right { display: flex; gap: 20px; }
         .nav-icon { color: white; font-size: 22px; text-decoration: none; transition: 0.3s; cursor: pointer; }
-        .nav-icon:hover { color: #facc15; transform: scale(1.1); }
 
-        /* 2. Search Bar */
         .search-area { max-width: 550px; margin: 30px auto; display: flex; gap: 12px; padding: 0 15px; }
         .search-wrapper { position: relative; flex: 1; }
         .search-wrapper i { position: absolute; left: 18px; top: 14px; color: #1e40af; }
@@ -49,7 +37,6 @@
             border: 2px solid #cbd5e1; outline: none; transition: 0.3s;
             font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
-        #searchInput:focus { border-color: #1e40af; box-shadow: 0 0 15px rgba(30,58,138,0.1); }
 
         .excel-btn {
             background: #107c41; color: white; border: none; width: 50px;
@@ -57,7 +44,6 @@
             font-size: 20px; transition: 0.3s;
         }
 
-        /* 3. Dashboard */
         .stats-row { 
             display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
             gap: 20px; max-width: 1300px; margin: 0 auto 30px; padding: 0 20px;
@@ -67,10 +53,8 @@
             text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.04);
             border-left: 6px solid #1e40af;
         }
-        .stat-card p { font-size: 14px; color: #64748b; font-weight: 700; margin-bottom: 5px; }
         .stat-card h2 { font-size: 24px; font-weight: 800; color: #1e293b; margin: 0; }
 
-        /* 4. Table Design */
         .table-section { max-width: 1480px; margin: 0 auto 50px; padding: 0 15px; }
         .table-container { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .data-table { width: 100%; border-collapse: collapse; }
@@ -78,15 +62,10 @@
         .data-table th { padding: 18px 10px; font-size: 15px; text-align: center; }
         .data-table td { padding: 16px 10px; border-bottom: 1px solid #e2e8f0; text-align: center; vertical-align: middle; }
         
-        .name-cell { font-weight: 600; color: #0f172a; max-width: 350px; word-wrap: break-word; line-height: 1.4; text-align: center !important; }
+        .name-cell { font-weight: 600; color: #0f172a; max-width: 350px; word-wrap: break-word; text-align: center !important; }
         .id-cell { font-family: monospace; font-weight: 700; color: #1e40af; }
-        .amt-curr { color: #10b981; font-weight: 700; }
-        .amt-arr { color: #f59e0b; font-weight: 700; }
         .amt-total { font-weight: 800; color: #ef4444; }
-
-        .view-btn { color: #1e40af; font-size: 22px; text-decoration: none; transition: 0.2s; }
-        .view-btn:hover { color: #3b82f6; transform: scale(1.2); }
-
+        .view-btn { color: #1e40af; font-size: 22px; transition: 0.2s; }
     </style>
 </head>
 <body>
@@ -97,8 +76,8 @@
         <h1>JAL CONNECTION VIVRAN DETAIL</h1>
     </div>
     <div class="header-right">
-        <a href="dashboard.html" class="nav-icon" title="Home"><i class="fas fa-home"></i></a>
-        <a href="login.html" class="nav-icon" title="Logout"><i class="fas fa-sign-out-alt"></i></a>
+        <a href="dashboard.html" class="nav-icon"><i class="fas fa-home"></i></a>
+        <a href="login.html" class="nav-icon"><i class="fas fa-sign-out-alt"></i></a>
     </div>
 </div>
 
@@ -107,26 +86,14 @@
         <i class="fas fa-search"></i>
         <input type="text" id="searchInput" placeholder="खोजें..." onkeyup="fastSearch()">
     </div>
-    <button class="excel-btn" onclick="exportToExcel()" title="Excel Download"><i class="fas fa-file-excel"></i></button>
+    <button class="excel-btn" onclick="exportColorfulExcel()"><i class="fas fa-file-excel"></i></button>
 </div>
 
 <div class="stats-row">
-    <div class="stat-card">
-        <p>कुल कनेक्शन</p>
-        <h2 id="statTotal">0</h2>
-    </div>
-    <div class="stat-card" style="border-left-color: #10b981;">
-        <p>चालू मांग (2025-26)</p>
-        <h2 id="statCurrent">₹0</h2>
-    </div>
-    <div class="stat-card" style="border-left-color: #f59e0b;">
-        <p>बकाया (2024-25)</p>
-        <h2 id="statArrear">₹0</h2>
-    </div>
-    <div class="stat-card" style="border-left-color: #ef4444;">
-        <p>कुल अवशेष</p>
-        <h2 id="statTotalRem">₹0</h2>
-    </div>
+    <div class="stat-card"><p>कुल कनेक्शन</p><h2 id="statTotal">0</h2></div>
+    <div class="stat-card" style="border-left-color: #10b981;"><p>चालू मांग (25-26)</p><h2 id="statCurrent">₹0</h2></div>
+    <div class="stat-card" style="border-left-color: #f59e0b;"><p>बकाया (24-25)</p><h2 id="statArrear">₹0</h2></div>
+    <div class="stat-card" style="border-left-color: #ef4444;"><p>कुल अवशेष</p><h2 id="statTotalRem">₹0</h2></div>
 </div>
 
 <div class="table-section">
@@ -158,7 +125,6 @@
             const response = await fetch('Connection_data.csv');
             const csvData = await response.text();
             const lines = csvData.split(/\r?\n/).filter(line => line.trim() !== "").slice(1);
-            
             stats = { total: 0, current: 0, arrear: 0, balance: 0 };
 
             masterRows = lines.map(line => {
@@ -168,22 +134,19 @@
                     const aVal = parseFloat(cols[7]) || 0;
                     const rVal = parseFloat(cols[8]) || 0;
                     stats.total++; stats.current += cVal; stats.arrear += aVal; stats.balance += rVal;
-
                     const item = { 
                         id: `NPPNCN-${cols[0].trim()}`, ward: cols[1].trim(), 
                         name: cols[2].replace(/"/g, '').trim(), mobile: cols[5].trim() || 'N/A',
                         curr: cVal, arr: aVal, total: rVal, rawId: cols[0].trim()
                     };
-
                     return {
                         data: item,
-                        html: `<tr><td class="id-cell">${item.id}</td><td>${item.ward}</td><td class="name-cell">${item.name}</td><td>${item.mobile}</td><td class="amt-curr">₹${item.curr}</td><td class="amt-arr">₹${item.arr}</td><td class="amt-total">₹${item.total}</td><td><a href="connection_view.html?id=${item.rawId}" class="view-btn"><i class="fas fa-eye"></i></a></td></tr>`,
+                        html: `<tr><td class="id-cell">${item.id}</td><td>${item.ward}</td><td class="name-cell">${item.name}</td><td>${item.mobile}</td><td>₹${item.curr}</td><td>₹${item.arr}</td><td class="amt-total">₹${item.total}</td><td><a href="connection_view.html?id=${item.rawId}" class="view-btn"><i class="fas fa-eye"></i></a></td></tr>`,
                         text: `${item.id} ${item.ward} ${item.name} ${item.mobile}`.toUpperCase()
                     };
                 }
                 return null;
             }).filter(x => x);
-
             renderTable(masterRows);
             updateStatsUI();
         } catch (e) { console.error(e); }
@@ -202,35 +165,56 @@
         document.getElementById('statTotalRem').innerText = '₹' + stats.balance.toLocaleString('en-IN');
     }
 
-    // --- Updated Excel Export Function with Styling and Total ---
-    function exportToExcel() {
-        let exportData = masterRows.map(r => ({
-            "Connection ID": r.data.id,
-            "Ward": r.data.ward,
-            "Consumer Name": r.data.name,
-            "Mobile": r.data.mobile,
-            "Current 25-26": r.data.curr,
-            "Arrear 24-25": r.data.arr,
-            "Total Balance": r.data.total
-        }));
+    async function exportColorfulExcel() {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Water Report');
 
-        // Adding Total Row at the end
-        exportData.push({
-            "Connection ID": "TOTAL SUM",
-            "Ward": "", "Consumer Name": "", "Mobile": "",
-            "Current 25-26": stats.current,
-            "Arrear 24-25": stats.arrear,
-            "Total Balance": stats.balance
+        // Header Structure
+        worksheet.columns = [
+            { header: 'ID', key: 'id', width: 20 },
+            { header: 'वार्ड विवरण', key: 'ward', width: 25 },
+            { header: 'उपभोक्ता का नाम', key: 'name', width: 45 },
+            { header: 'मोबाइल', key: 'mobile', width: 15 },
+            { header: 'चालू मांग 25-26', key: 'curr', width: 18 },
+            { header: 'बकाया 24-25', key: 'arr', width: 18 },
+            { header: 'कुल अवशेष', key: 'total', width: 18 }
+        ];
+
+        // Styling the Header Row
+        const headerRow = worksheet.getRow(1);
+        headerRow.eachCell((cell) => {
+            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E3A8A' } };
+            cell.font = { color: { argb: 'FFFFFFFF' }, bold: true, size: 12 };
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
         });
 
-        const ws = XLSX.utils.json_to_sheet(exportData);
-        
-        // Setting Column Widths
-        ws['!cols'] = [{wch:20}, {wch:15}, {wch:40}, {wch:15}, {wch:15}, {wch:15}, {wch:15}];
+        // Adding Data Rows
+        masterRows.forEach((r, index) => {
+            const row = worksheet.addRow({
+                id: r.data.id, ward: r.data.ward, name: r.data.name, mobile: r.data.mobile,
+                curr: r.data.curr, arr: r.data.arr, total: r.data.total
+            });
+            // Alignment and Row Striping
+            row.eachCell((cell) => {
+                cell.alignment = { vertical: 'middle', horizontal: 'center' };
+                if (index % 2 === 0) {
+                    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF9FAFB' } };
+                }
+            });
+        });
 
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "JalVibhag_Report");
-        XLSX.writeFile(wb, "NPP_Nakur_Water_Report.xlsx");
+        // Adding Total Row at bottom
+        const totalRow = worksheet.addRow(['TOTAL SUM', '', '', '', stats.current, stats.arrear, stats.balance]);
+        totalRow.font = { bold: true, size: 13 };
+        totalRow.getCell(1).alignment = { horizontal: 'center' };
+        totalRow.eachCell((cell) => {
+            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFACC15' } };
+            cell.border = { top: { style: 'medium' } };
+        });
+
+        // Exporting the file
+        const buffer = await workbook.xlsx.writeBuffer();
+        saveAs(new Blob([buffer]), 'NPP_Nakur_Water_Report.xlsx');
     }
 
     window.onload = fetchData;
