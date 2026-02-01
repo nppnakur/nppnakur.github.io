@@ -11,7 +11,7 @@
     <style>
         :root { --primary: #10b981; --gradient: linear-gradient(135deg, #10b981 0%, #059669 100%); }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background: #f0fdf4; min-height: 100vh; }
+        body { background: #f4f7f6; min-height: 100vh; }
 
         .header {
             background: var(--gradient); color: white; padding: 15px 30px; display: flex;
@@ -29,7 +29,9 @@
         label { font-weight: 700; display: block; margin-bottom: 5px; color: #1e293b; font-size: 14px; }
         input, select {
             width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; outline: none;
+            font-size: 15px;
         }
+        input:focus, select:focus { border-color: var(--primary); }
         input[readonly] { background: #f1f5f9; color: #059669; font-weight: 800; }
 
         .total-box {
@@ -40,7 +42,9 @@
         .btn-save {
             background: var(--gradient); color: white; border: none; padding: 15px;
             border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%;
+            font-size: 16px; transition: 0.3s;
         }
+        .btn-save:hover { opacity: 0.9; transform: translateY(-2px); }
 
         .back-link { text-align: center; display: block; margin-top: 20px; color: #f59e0b; text-decoration: none; font-weight: 700; }
     </style>
@@ -52,26 +56,26 @@
         <img src="img1.png" alt="logo">
         <span style="font-weight:900; font-size:20px;">नगर पालिका परिषद नकुड़</span>
     </div>
-    <a href="dashboard.html" style="color:white; font-size:20px;"><i class="fas fa-home"></i></a>
+    <a href="https://nppnakur.github.io/water_manegment.html" style="color:white; font-size:22px;"><i class="fas fa-home"></i></a>
 </div>
 
 <div class="form-container">
     <div class="form-group">
         <label>कनेक्शन नंबर*</label>
-        <input type="text" id="con_no" required>
+        <input type="text" id="con_no" placeholder="उदाहरण: 1613" required>
     </div>
     <div class="form-group">
         <label>उपभोक्ता का नाम*</label>
-        <input type="text" id="owner" required>
+        <input type="text" id="owner" placeholder="पूरा नाम दर्ज करें" required>
     </div>
     <div class="form-group">
         <label>मोबाइल नंबर*</label>
-        <input type="tel" id="mobile" maxlength="10">
+        <input type="tel" id="mobile" maxlength="10" placeholder="10 अंकों का नंबर">
     </div>
     <div class="form-group">
-        <label>वार्ड (CSV से लोड हो रहा है...)*</label>
+        <label>वार्ड*</label>
         <select id="ward_no" required>
-            <option value="">लोडिंग...</option>
+            <option value="">लोड हो रहा है...</option>
         </select>
     </div>
     <div class="form-group">
@@ -89,22 +93,23 @@
         <button class="btn-save" onclick="saveData()">सुरक्षित करें</button>
     </div>
     <div class="full">
-        <a href="connection_detail.html" class="back-link">वापस सूची पर जाएं</a>
+        <a href="connection_detail.html" class="back-link"><i class="fas fa-list"></i> वापस सूची पर जाएं</a>
     </div>
 </div>
 
 <script>
-    // 1. CSV फ़ाइल से वार्ड लोड करना
+    // 1. CSV से वार्ड लोड करना
     async function loadWardsFromCSV() {
         try {
             const response = await fetch('Connection_data.csv');
+            if (!response.ok) throw new Error();
             const data = await response.text();
-            const lines = data.split('\n').slice(1); // हेडर छोड़कर
+            const lines = data.split(/\r?\n/).slice(1); 
             let wards = new Set();
 
             lines.forEach(line => {
-                const cols = line.split(',');
-                if (cols[1]) { // कॉलम 1 में वार्ड है
+                const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                if (cols[1]) { 
                     let wardName = cols[1].trim().replace(/"/g, '');
                     if (wardName) wards.add(wardName);
                 }
@@ -113,14 +118,16 @@
             const select = document.getElementById('ward_no');
             select.innerHTML = '<option value="">-- वार्ड चुनें --</option>';
             
-            // वार्डों को सॉर्ट करके ड्रॉपडाउन में डालना
             Array.from(wards).sort().forEach(w => {
-                select.innerHTML += `<option value="${w}">${w}</option>`;
+                const option = document.createElement('option');
+                option.value = w;
+                option.textContent = w;
+                select.appendChild(option);
             });
 
         } catch (e) {
-            console.error("CSV लोड करने में समस्या:", e);
-            document.getElementById('ward_no').innerHTML = '<option>एरर: CSV नहीं मिली</option>';
+            console.error("CSV Load Error");
+            document.getElementById('ward_no').innerHTML = '<option value="">वार्ड लोड नहीं हुए</option>';
         }
     }
 
@@ -131,27 +138,34 @@
     }
 
     function saveData() {
-        const formData = {
-            id: document.getElementById('con_no').value,
-            ward: document.getElementById('ward_no').value,
-            name: document.getElementById('owner').value,
-            mobile: document.getElementById('mobile').value,
-            curr: 600,
-            arr: document.getElementById('arr_amt').value,
-            total: document.getElementById('totalDisplay').innerText
-        };
+        const con_id = document.getElementById('con_no').value.trim();
+        const ward = document.getElementById('ward_no').value;
+        const name = document.getElementById('owner').value.trim();
+        const mob = document.getElementById('mobile').value.trim();
+        const arrVal = parseFloat(document.getElementById('arr_amt').value) || 0;
+        const totVal = 600 + arrVal;
 
-        if(!formData.id || !formData.ward || !formData.name) {
-            alert("कृपया सभी जरूरी जानकारी भरें!");
+        if(!con_id || !ward || !name) {
+            alert("कृपया सभी जरूरी जानकारी (कनेक्शन नंबर, वार्ड और नाम) भरें!");
             return;
         }
 
-        // LocalStorage में सेव करना
-        let list = JSON.parse(localStorage.getItem('water_connections') || '[]');
-        list.push(formData);
-        localStorage.setItem('water_connections', JSON.stringify(list));
+        const formData = {
+            id: con_id,
+            ward: ward,
+            name: name,
+            mobile: mob,
+            curr: 600,
+            arr: arrVal,
+            total: totVal
+        };
 
-        alert("सफलतापूर्वक सुरक्षित किया गया!");
+        // LocalStorage (Key matched with connection_detail.html)
+        let list = JSON.parse(localStorage.getItem('newConnections') || '[]');
+        list.push(formData);
+        localStorage.setItem('newConnections', JSON.stringify(list));
+
+        alert("✅ सफलता- पूर्वक दर्ज हो गया है!");
         window.location.href = 'connection_detail.html';
     }
 
