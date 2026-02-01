@@ -3,264 +3,328 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>उपभोक्ता विवरण - NPP NAKUR</title>
-    <link rel="icon" type="image/png" href="img1.png">
+    <title>Dashboard - NPP NAKUR</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        :root { --navy: #1e3a8a; --emerald: #10b981; --amber: #f59e0b; --red: #ef4444; }
+        :root { 
+            --glass: rgba(255, 255, 255, 0.1);
+            --neon-blue: #00d2ff;
+            --neon-green: #39ff14;
+            --neon-red: #ff3131;
+            --dark-bg: #0f172a;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background: #f0f4f8; padding: 20px; }
 
-        .container { max-width: 700px; margin: 30px auto; }
-        
-        .detail-card { 
-            background: white; border-radius: 20px; overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;
+        body { 
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
-        .card-header { 
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); 
-            color: white; padding: 25px; text-align: center; position: relative;
-        }
-        .card-header h2 { font-size: 20px; letter-spacing: 1px; margin-bottom: 5px; }
-        .badge { 
-            background: #facc15; color: #1e3a8a; font-size: 11px; 
-            padding: 4px 12px; border-radius: 20px; font-weight: 800; 
-        }
-
-        .card-body { padding: 25px; }
-        .info-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-
-        .info-item { 
-            display: flex; justify-content: space-between; align-items: flex-start;
-            padding: 12px 15px; background: #f8fafc; border-radius: 12px;
-            border-left: 4px solid #cbd5e1;
-        }
-        .info-item.highlight { border-left-color: var(--navy); background: #eff6ff; }
-        
-        .label { color: #64748b; font-weight: 700; font-size: 13px; text-transform: uppercase; min-width: 120px; }
-        .value { color: #1e293b; font-weight: 700; font-size: 15px; text-align: right; line-height: 1.4; }
-
-        .amount-section { 
-            margin-top: 20px; padding-top: 20px; border-top: 2px dashed #e2e8f0;
-        }
-        .total-row { 
-            background: #fff1f2; border: 2px solid #fecaca; padding: 15px;
-            border-radius: 15px; display: flex; justify-content: space-between; align-items: center;
-        }
-        .total-label { color: #be123b; font-weight: 800; font-size: 18px; }
-        .total-value { color: #be123b; font-weight: 900; font-size: 22px; }
-
-        /* Actions Bar */
-        .actions-bar {
+        /* Landscape Container */
+        .dashboard {
+            width: 100%;
+            max-width: 1100px;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-top: 20px;
-            padding: 15px;
-            background: white;
+            grid-template-columns: 1fr 300px; /* Left: Info, Right: Actions */
+            gap: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        /* Header Section */
+        .header-panel {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+            margin-bottom: 10px;
+        }
+
+        .header-panel h2 { 
+            font-size: 24px; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        /* Information Grid */
+        .info-panel {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            padding: 15px 20px;
             border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
         }
 
-        .btn { 
-            padding: 10px 5px; border-radius: 10px; border: none;
-            font-weight: 700; cursor: pointer; display: flex; 
-            flex-direction: column; align-items: center; justify-content: center; gap: 5px;
-            transition: 0.3s; text-decoration: none; font-size: 11px;
+        .card label {
+            display: block;
+            font-size: 11px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin-bottom: 5px;
         }
-        .btn i { font-size: 16px; }
 
-        .btn-pay { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
-        .btn-edit { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
-        .btn-print { background: #e0f2fe; color: #075985; border: 1px solid #bae6fd; }
-        .btn-delete { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+        .card input {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            width: 100%;
+            outline: none;
+        }
+
+        .card input:disabled { color: white; cursor: default; }
+        .card.editing { border: 1px solid var(--neon-green); background: rgba(57, 255, 20, 0.05); }
+
+        /* Amount Section */
+        .amount-box {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .total-card {
+            flex: 1;
+            background: linear-gradient(45deg, rgba(255, 49, 49, 0.1), rgba(0, 0, 0, 0));
+            border-left: 5px solid var(--neon-red);
+        }
+
+        /* Right Side Actions */
+        .action-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 15px;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+            transition: all 0.3s;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .btn-pay { background: rgba(57, 255, 20, 0.2); border: 1px solid var(--neon-green); color: var(--neon-green); }
+        .btn-edit { background: rgba(0, 210, 255, 0.2); border: 1px solid var(--neon-blue); color: var(--neon-blue); }
+        .btn-print { background: rgba(255, 255, 255, 0.1); border: 1px solid white; }
+        .btn-delete { background: rgba(255, 49, 49, 0.2); border: 1px solid var(--neon-red); color: var(--neon-red); }
+
+        .btn:hover { transform: scale(1.05); box-shadow: 0 0 15px currentColor; }
         
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .save-btn { display: none; background: var(--neon-green); color: black; margin-top: 10px; }
 
-        .btn-back { 
-            display: block; text-align: center; margin-top: 20px; 
-            color: #64748b; text-decoration: none; font-weight: 600; font-size: 14px;
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 13px;
         }
 
-        @media print {
-            .actions-bar, .btn-back { display: none; }
-            body { background: white; padding: 0; }
-            .detail-card { box-shadow: none; border: 1px solid #ccc; }
+        /* Mobile View (Portrait fallback) */
+        @media (max-width: 850px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .info-panel { grid-template-columns: 1fr; }
+            body { padding: 10px; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="detail-card" id="mainCard">
-        <div class="card-header">
-            <h2 id="headTitle">JAL CONNECTION DETAIL</h2>
-            <span id="dataTag" class="badge">NPP NAKUR OFFICIAL</span>
+<div style="display: flex; flex-direction: column; width: 100%; align-items: center;">
+    <div class="dashboard">
+        <div class="header-panel">
+            <div>
+                <p style="font-size: 12px; color: #94a3b8;">NPP NAKUR - WATER DEPT.</p>
+                <h2>Consumer Dashboard</h2>
+            </div>
+            <div id="statusBadge" style="background: var(--neon-blue); color: black; padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 12px;">OFFICIAL RECORD</div>
         </div>
-        
-        <div class="card-body" id="cardBody">
-            <div class="info-grid">
-                <div class="info-item highlight">
-                    <span class="label">ID</span>
-                    <span class="value" id="disp_id">लोड हो रहा है...</span>
+
+        <div class="info-panel">
+            <div class="card">
+                <label>Connection ID</label>
+                <input type="text" id="disp_id" disabled>
+            </div>
+            <div class="card">
+                <label>Consumer Name</label>
+                <input type="text" id="disp_name" disabled>
+            </div>
+            <div class="card">
+                <label>Ward Detail</label>
+                <input type="text" id="disp_ward" disabled>
+            </div>
+            <div class="card">
+                <label>Mobile Number</label>
+                <input type="text" id="disp_mobile" disabled>
+            </div>
+
+            <div class="amount-box">
+                <div class="card" style="flex:1">
+                    <label>Current Demand</label>
+                    <input type="text" id="disp_curr" disabled>
                 </div>
-                <div class="info-item">
-                    <span class="label">नाम</span>
-                    <span class="value" id="disp_name">---</span>
+                <div class="card" style="flex:1">
+                    <label>Arrears</label>
+                    <input type="text" id="disp_arr" disabled>
                 </div>
-                <div class="info-item">
-                    <span class="label">वार्ड</span>
-                    <span class="value" id="disp_ward">---</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">मोबाइल</span>
-                    <span class="value" id="disp_mobile">---</span>
-                </div>
-                
-                <div class="amount-section">
-                    <div class="info-item" style="margin-bottom: 10px; border-left-color: var(--emerald);">
-                        <span class="label">चालू मांग</span>
-                        <span class="value" id="disp_curr">₹0.00</span>
-                    </div>
-                    <div class="info-item" style="margin-bottom: 15px; border-left-color: var(--amber);">
-                        <span class="label">बकाया</span>
-                        <span class="value" id="disp_arr">₹0.00</span>
-                    </div>
-                    
-                    <div class="total-row">
-                        <span class="total-label">कुल देय</span>
-                        <span class="total-value" id="disp_total">₹0.00</span>
-                    </div>
+                <div class="card total-card" style="flex:1">
+                    <label style="color: var(--neon-red);">Net Payable Amount</label>
+                    <input type="text" id="disp_total" style="color: var(--neon-red); font-size: 24px;" disabled>
                 </div>
             </div>
+            
+            <button id="saveBtn" class="btn save-btn" onclick="saveChanges()">
+                <i class="fas fa-check"></i> Save New Details
+            </button>
+        </div>
+
+        <div class="action-panel">
+            <button class="btn btn-pay" onclick="alert('Payment Gateway Loading...')">
+                <i class="fas fa-credit-card"></i> Pay Bill
+            </button>
+            <button class="btn btn-edit" id="editBtn" onclick="enableEdit()">
+                <i class="fas fa-user-edit"></i> Edit Info
+            </button>
+            <button class="btn btn-print" onclick="window.print()">
+                <i class="fas fa-print"></i> Print Receipt
+            </button>
+            <button class="btn btn-delete" onclick="handleDelete()">
+                <i class="fas fa-trash-alt"></i> Delete Entry
+            </button>
         </div>
     </div>
 
-    <div class="actions-bar" id="actionArea">
-        <button class="btn btn-pay" onclick="handlePay()">
-            <i class="fas fa-hand-holding-usd"></i> PAY
-        </button>
-        <button class="btn btn-edit" onclick="handleEdit()">
-            <i class="fas fa-edit"></i> EDIT
-        </button>
-        <button class="btn btn-print" onclick="window.print()">
-            <i class="fas fa-print"></i> PRINT
-        </button>
-        <button class="btn btn-delete" onclick="handleDelete()">
-            <i class="fas fa-trash-alt"></i> DELETE
-        </button>
-    </div>
-
-    <a href="connection_detail.html" class="btn-back">
-        <i class="fas fa-arrow-left"></i> वापस सूची पर जाएं
+    <a href="connection_detail.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Connection List
     </a>
 </div>
 
 <script>
     let currentId = "";
-    let isLocalStorageData = false;
-    let foundDataGlobal = null;
+    let isLocal = false;
 
-    async function loadConnectionDetails() {
+    async function loadData() {
         const params = new URLSearchParams(window.location.search);
         currentId = params.get('id');
         
-        if (!currentId) {
-            document.getElementById('cardBody').innerHTML = "<p style='text-align:center; color:red;'>आईडी नहीं मिली!</p>";
-            return;
-        }
+        if(!currentId) return;
 
-        // 1. LocalStorage Check
+        // Try LocalStorage first
         const localList = JSON.parse(localStorage.getItem('newConnections') || '[]');
-        let finalData = localList.find(item => item.id == currentId || `NPPNCN-${item.id}` == currentId);
+        let data = localList.find(i => i.id == currentId || `NPPNCN-${i.id}` == currentId);
 
-        if (finalData) {
-            isLocalStorageData = true;
+        if(data) {
+            isLocal = true;
+            fillForm(data);
+            document.getElementById('statusBadge').innerText = "NEW ENTRY";
         } else {
-            // 2. CSV Check (Special handling for 1,406 IDs)
+            // Try CSV
             try {
-                const response = await fetch('Connection_data.csv');
-                const csvText = await response.text();
-                const rows = csvText.split(/\r?\n/).slice(1);
-
-                for (let row of rows) {
-                    // Complex split to handle commas inside quotes
+                const res = await fetch('Connection_data.csv');
+                const text = await res.text();
+                const rows = text.split('\n').slice(1);
+                
+                for(let row of rows) {
                     const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    if (!cols[0]) continue;
-
-                    // Clean ID (Remove quotes and commas for matching)
+                    if(!cols[0]) continue;
+                    
                     let cleanCsvId = cols[0].replace(/"/g, '').replace(/,/g, '').trim();
                     let cleanSearchId = currentId.replace("NPPNCN-", "").replace(/"/g, '').replace(/,/g, '').trim();
 
-                    if (cleanCsvId === cleanSearchId) {
-                        finalData = {
-                            id: `NPPNCN-${cols[0].replace(/"/g, '').trim()}`,
-                            ward: cols[1] ? cols[1].trim() : "N/A",
-                            name: cols[2] ? cols[2].replace(/"/g, '').trim() : "N/A",
-                            mobile: cols[5] ? cols[5].trim() : 'N/A',
-                            curr: cols[6] ? cols[6].trim() : '0',
-                            arr: cols[7] ? cols[7].trim() : '0',
-                            total: cols[8] ? cols[8].trim() : '0'
-                        };
+                    if(cleanCsvId === cleanSearchId) {
+                        fillForm({
+                            id: `NPPNCN-${cols[0].replace(/"/g, '')}`,
+                            name: cols[2].replace(/"/g, ''),
+                            ward: cols[1],
+                            mobile: cols[5],
+                            curr: cols[6],
+                            arr: cols[7],
+                            total: cols[8]
+                        });
                         break;
                     }
                 }
-            } catch (err) { console.error("CSV error", err); }
+            } catch(e) {}
         }
+    }
 
-        if (finalData) {
-            foundDataGlobal = finalData;
-            document.getElementById('disp_id').innerText = finalData.id;
-            document.getElementById('disp_name').innerText = finalData.name;
-            document.getElementById('disp_ward').innerText = finalData.ward;
-            document.getElementById('disp_mobile').innerText = finalData.mobile;
-            document.getElementById('disp_curr').innerText = `₹${finalData.curr}`;
-            document.getElementById('disp_arr').innerText = `₹${finalData.arr}`;
-            document.getElementById('disp_total').innerText = `₹${finalData.total}`;
-            
-            if (isLocalStorageData) {
-                document.getElementById('dataTag').innerText = "NEW ENTRY";
-                document.getElementById('dataTag').style.background = "#10b981";
-            }
+    function fillForm(d) {
+        document.getElementById('disp_id').value = d.id;
+        document.getElementById('disp_name').value = d.name;
+        document.getElementById('disp_ward').value = d.ward;
+        document.getElementById('disp_mobile').value = d.mobile;
+        document.getElementById('disp_curr').value = "₹" + d.curr;
+        document.getElementById('disp_arr').value = "₹" + d.arr;
+        document.getElementById('disp_total').value = "₹" + d.total;
+    }
+
+    function enableEdit() {
+        const pass = prompt("Enter Admin Password to Edit:");
+        if(pass === "admin123") {
+            document.querySelectorAll('.card input').forEach(input => {
+                if(input.id !== 'disp_id') { // ID should not change
+                    input.disabled = false;
+                    input.parentElement.classList.add('editing');
+                }
+            });
+            document.getElementById('saveBtn').style.display = 'flex';
+            document.getElementById('editBtn').style.display = 'none';
         } else {
-            document.getElementById('cardBody').innerHTML = "<p style='text-align:center; color:red; padding:20px;'>आईडी ("+currentId+") का विवरण डेटाबेस में नहीं मिला!</p>";
-            document.getElementById('actionArea').style.display = "none";
+            alert("Wrong Password!");
         }
     }
 
-    function handleEdit() {
-        const pass = prompt("संशोधन (Edit) करने के लिए पासवर्ड डालें:");
-        if (pass === "admin123") {
-            alert("Edit सुविधा लोड हो रही है... (यहाँ आप संशोधन का फॉर्म खोल सकते हैं)");
-            // यहाँ आप edit_connection.html?id=... पर भेज सकते हैं
-        } else if (pass !== null) {
-            alert("गलत पासवर्ड!");
-        }
-    }
-
-    function handlePay() {
-        alert("भुगतान खिड़की (Payment Window) जल्द ही चालू होगी।");
+    function saveChanges() {
+        alert("Changes Saved Locally! (Note: CSV data cannot be permanently changed in browser)");
+        location.reload();
     }
 
     function handleDelete() {
-        const pass = prompt("डिलीट करने के लिए पासवर्ड डालें:");
-        if (pass === "admin123") {
-            if (confirm("क्या आप वाकई इस रिकॉर्ड को हटाना चाहते हैं?")) {
-                if (isLocalStorageData) {
-                    let localList = JSON.parse(localStorage.getItem('newConnections') || '[]');
-                    const updated = localList.filter(item => item.id != currentId && `NPPNCN-${item.id}` != currentId);
-                    localStorage.setItem('newConnections', JSON.stringify(updated));
-                    alert("डिलीट हो गया!");
+        const pass = prompt("Enter Admin Password to DELETE:");
+        if(pass === "admin123") {
+            if(confirm("Are you sure? This cannot be undone.")) {
+                if(isLocal) {
+                    let list = JSON.parse(localStorage.getItem('newConnections') || '[]');
+                    const filtered = list.filter(i => i.id != currentId && `NPPNCN-${i.id}` != currentId);
+                    localStorage.setItem('newConnections', JSON.stringify(filtered));
                     window.location.href = "connection_detail.html";
                 } else {
-                    alert("CSV फाइल वाला डेटा सीधे डिलीट नहीं हो सकता।");
+                    alert("Cannot delete CSV data from client side.");
                 }
             }
         }
     }
 
-    window.onload = loadConnectionDetails;
+    window.onload = loadData;
 </script>
 
 </body>
