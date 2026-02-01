@@ -17,6 +17,7 @@
 
         body { background: #f4f7f6; font-family: 'Hind', sans-serif; margin: 0; }
 
+        /* 1. Header with Link Update */
         .topbar {
             background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); 
             height: 85px; padding: 0 30px; display: flex; 
@@ -26,9 +27,12 @@
         .header-left { display: flex; align-items: center; gap: 15px; }
         .header-logo { height: 65px; width: auto; }
         .header-left h1 { font-weight: 700; font-size: 24px; margin: 0; letter-spacing: 0.5px; }
+        
         .header-right { display: flex; gap: 20px; }
         .nav-icon { color: white; font-size: 22px; text-decoration: none; transition: 0.3s; cursor: pointer; }
+        .nav-icon:hover { color: #facc15; transform: scale(1.1); }
 
+        /* 2. Search Area */
         .search-area { max-width: 550px; margin: 30px auto; display: flex; gap: 12px; padding: 0 15px; }
         .search-wrapper { position: relative; flex: 1; }
         .search-wrapper i { position: absolute; left: 18px; top: 14px; color: #1e40af; }
@@ -44,6 +48,7 @@
             font-size: 20px; transition: 0.3s;
         }
 
+        /* 3. Stats Dashboard */
         .stats-row { 
             display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
             gap: 20px; max-width: 1300px; margin: 0 auto 30px; padding: 0 20px;
@@ -55,6 +60,7 @@
         }
         .stat-card h2 { font-size: 24px; font-weight: 800; color: #1e293b; margin: 0; }
 
+        /* 4. Table Design */
         .table-section { max-width: 1480px; margin: 0 auto 50px; padding: 0 15px; }
         .table-container { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .data-table { width: 100%; border-collapse: collapse; }
@@ -67,6 +73,7 @@
         .amt-total { font-weight: 800; color: #ef4444; }
         .new-badge { background: #10b981; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 5px; }
         .view-btn { color: #1e40af; font-size: 22px; transition: 0.2s; }
+        .view-btn:hover { transform: scale(1.2); color: #3b82f6; }
     </style>
 </head>
 <body>
@@ -77,17 +84,17 @@
         <h1>JAL CONNECTION VIVRAN DETAIL</h1>
     </div>
     <div class="header-right">
-        <a href="dashboard.html" class="nav-icon"><i class="fas fa-home"></i></a>
-        <a href="login.html" class="nav-icon"><i class="fas fa-sign-out-alt"></i></a>
+        <a href="https://nppnakur.github.io/water_manegment.html" class="nav-icon" title="Home"><i class="fas fa-home"></i></a>
+        <a href="login.html" class="nav-icon" title="Logout"><i class="fas fa-sign-out-alt"></i></a>
     </div>
 </div>
 
 <div class="search-area">
     <div class="search-wrapper">
         <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="खोजें..." onkeyup="fastSearch()">
+        <input type="text" id="searchInput" placeholder="नाम, आईडी या मोबाइल से खोजें..." onkeyup="fastSearch()">
     </div>
-    <button class="excel-btn" onclick="exportColorfulExcel()"><i class="fas fa-file-excel"></i></button>
+    <button class="excel-btn" onclick="exportColorfulExcel()" title="Excel Download"><i class="fas fa-file-excel"></i></button>
 </div>
 
 <div class="stats-row">
@@ -123,17 +130,16 @@
 
     async function fetchData() {
         try {
-            // 1. Fetch CSV Data
+            // CSV Fetching
             const response = await fetch('Connection_data.csv');
             const csvData = await response.text();
             const lines = csvData.split(/\r?\n/).filter(line => line.trim() !== "").slice(1);
             
             stats = { total: 0, current: 0, arrear: 0, balance: 0 };
 
-            // 2. Load New Added Connections (from LocalStorage)
+            // Load Local Data (for new additions)
             let localData = JSON.parse(localStorage.getItem("newConnections")) || [];
 
-            // 3. Process CSV Rows
             let csvRows = lines.map(line => {
                 const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 if (cols.length >= 9) {
@@ -145,12 +151,12 @@
                 return null;
             }).filter(x => x);
 
-            // 4. Combine Both (Local Data First)
+            // Merge Local and CSV
             masterRows = [...localData.map(d => createRowObject(d.id, d.ward, d.name, d.mobile, d.curr, d.arr, d.total, true)), ...csvRows];
 
             calculateStats();
             renderTable(masterRows);
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Error loading data:", e); }
     }
 
     function createRowObject(id, ward, name, mobile, curr, arr, total, isNew) {
@@ -169,8 +175,8 @@
                     <td>${item.ward}</td>
                     <td class="name-cell">${item.name}</td>
                     <td>${item.mobile}</td>
-                    <td>₹${item.curr}</td>
-                    <td>₹${item.arr}</td>
+                    <td style="color:#10b981; font-weight:700;">₹${item.curr}</td>
+                    <td style="color:#f59e0b; font-weight:700;">₹${item.arr}</td>
                     <td class="amt-total">₹${item.total}</td>
                     <td><a href="connection_view.html?id=${item.rawId}" class="view-btn"><i class="fas fa-eye"></i></a></td>
                 </tr>`,
@@ -205,8 +211,9 @@
     async function exportColorfulExcel() {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Water Report');
+
         worksheet.columns = [
-            { header: 'ID', key: 'id', width: 20 },
+            { header: 'ID', key: 'id', width: 22 },
             { header: 'वार्ड विवरण', key: 'ward', width: 25 },
             { header: 'उपभोक्ता का नाम', key: 'name', width: 45 },
             { header: 'मोबाइल', key: 'mobile', width: 15 },
@@ -214,18 +221,36 @@
             { header: 'बकाया 24-25', key: 'arr', width: 18 },
             { header: 'कुल अवशेष', key: 'total', width: 18 }
         ];
+
         const headerRow = worksheet.getRow(1);
         headerRow.eachCell((cell) => {
             cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E3A8A' } };
-            cell.font = { color: { argb: 'FFFFFFFF' }, bold: true };
+            cell.font = { color: { argb: 'FFFFFFFF' }, bold: true, size: 12 };
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+        });
+
+        masterRows.forEach((r, index) => {
+            const row = worksheet.addRow({
+                id: r.data.id, ward: r.data.ward, name: r.data.name, mobile: r.data.mobile,
+                curr: r.data.curr, arr: r.data.arr, total: r.data.total
+            });
+            row.eachCell((cell) => {
+                cell.alignment = { vertical: 'middle', horizontal: 'center' };
+                if (index % 2 === 0) {
+                    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF9FAFB' } };
+                }
+            });
+        });
+
+        const totalRow = worksheet.addRow(['TOTAL SUM', '', '', '', stats.current, stats.arrear, stats.balance]);
+        totalRow.font = { bold: true, size: 13 };
+        totalRow.eachCell((cell) => {
+            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFACC15' } };
             cell.alignment = { horizontal: 'center' };
         });
-        masterRows.forEach((r, index) => {
-            const row = worksheet.addRow({ ...r.data });
-            row.eachCell(cell => cell.alignment = { horizontal: 'center' });
-        });
+
         const buffer = await workbook.xlsx.writeBuffer();
-        saveAs(new Blob([buffer]), 'NPP_Nakur_Water_Report.xlsx');
+        saveAs(new Blob([buffer]), 'NPP_Nakur_Report.xlsx');
     }
 
     window.onload = fetchData;
