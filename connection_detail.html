@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>जल कनेक्शन सूची - NPP NAKUR</title>
+    <title>जल कनेक्शन विवरण | NPP NAKUR</title>
     
     <link rel="icon" type="image/png" href="img1.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -13,149 +13,166 @@
     
     <style>
         :root { 
-            --primary: #00b894; 
-            --secondary: #0984e3;
-            --bg: #f8f9fa;
-            --glass: rgba(255, 255, 255, 0.95);
+            --primary: #10b981; 
+            --accent: #3b82f6;
+            --dark: #1e293b;
+            --bg: #f1f5f9;
         }
         
-        body { background: var(--bg); font-family: 'Inter', 'Segoe UI', sans-serif; }
+        body { background: var(--bg); font-family: 'Segoe UI', Roboto, sans-serif; color: var(--dark); }
 
-        /* Modern Top Navbar */
-        .topbar {
-            background: #ffffff; padding: 12px 25px;
+        /* Navbar Design */
+        .navbar-custom {
+            background: #ffffff; padding: 15px 30px;
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
             position: sticky; top: 0; z-index: 1000;
         }
 
-        /* 1. Search Bar Area (Top) */
-        .search-container {
-            max-width: 1300px; margin: 25px auto 0; padding: 0 20px;
-        }
-        .search-box {
-            position: relative; background: white; border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden;
-            display: flex; align-items: center; border: 1px solid #e0e0e0;
-        }
-        .search-box i { padding: 0 20px; color: var(--primary); font-size: 20px; }
-        #searchInput {
-            flex: 1; border: none; padding: 18px 10px; outline: none; font-size: 16px;
-        }
-        .excel-btn {
-            background: #27ae60; color: white; border: none; padding: 0 25px;
-            height: 100%; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;
+        .brand-box { display: flex; align-items: center; gap: 12px; }
+        .brand-box img { height: 45px; }
+        .brand-text { font-weight: 800; font-size: 20px; color: var(--dark); letter-spacing: -0.5px; }
+
+        /* 1. Top Search & Action Bar */
+        .top-action-bar {
+            max-width: 1400px; margin: 25px auto; padding: 0 20px;
+            display: grid; grid-template-columns: 1fr auto; gap: 15px;
         }
 
-        /* 2. Dashboard Stats Area (Below Search) */
-        .stats-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
-            gap: 20px; max-width: 1300px; margin: 25px auto; padding: 0 20px; 
+        .search-wrapper {
+            position: relative; background: white; border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03); overflow: hidden;
+            border: 1px solid #e2e8f0; display: flex; align-items: center;
+        }
+        .search-wrapper i { margin-left: 20px; color: #94a3b8; font-size: 18px; }
+        #searchInput {
+            width: 100%; border: none; padding: 15px; outline: none; font-size: 16px; color: var(--dark);
+        }
+
+        .btn-excel {
+            background: #15803d; color: white; border: none; padding: 0 25px;
+            border-radius: 12px; font-weight: 600; display: flex; align-items: center; 
+            gap: 10px; transition: 0.3s;
+        }
+        .btn-excel:hover { background: #166534; transform: translateY(-2px); }
+
+        /* 2. Dashboard Cards */
+        .dashboard-container {
+            max-width: 1400px; margin: 0 auto 25px; padding: 0 20px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;
         }
         .stat-card {
-            background: white; padding: 25px; border-radius: 20px;
-            display: flex; align-items: center; gap: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
-            border: 1px solid rgba(0,0,0,0.02);
-            transition: transform 0.3s ease;
+            background: white; padding: 20px; border-radius: 16px;
+            display: flex; align-items: center; gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            border: 1px solid #edf2f7;
         }
-        .stat-card:hover { transform: translateY(-5px); }
         .stat-icon {
-            width: 60px; height: 60px; border-radius: 15px;
-            display: flex; align-items: center; justify-content: center; font-size: 24px;
+            width: 55px; height: 55px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; font-size: 22px;
         }
-        .icon-1 { background: #e3fcef; color: #00b894; }
-        .icon-2 { background: #e1f5fe; color: #03a9f4; }
-        .icon-3 { background: #fff4e5; color: #ff9800; }
-        .icon-4 { background: #fce4ec; color: #e91e63; }
-        
-        .stat-content h3 { font-size: 13px; color: #636e72; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
-        .stat-content .value { font-size: 22px; font-weight: 800; color: #2d3436; }
+        .ic-total { background: #eff6ff; color: #3b82f6; }
+        .ic-curr { background: #ecfdf5; color: #10b981; }
+        .ic-arr { background: #fff7ed; color: #f59e0b; }
+        .ic-net { background: #fef2f2; color: #ef4444; }
 
-        /* Table Area */
-        .table-section { max-width: 1300px; margin: 0 auto 50px; padding: 0 20px; }
+        .stat-info h3 { font-size: 12px; color: #64748b; text-transform: uppercase; margin: 0; font-weight: 700; }
+        .stat-info .value { font-size: 20px; font-weight: 800; color: var(--dark); margin-top: 4px; }
+
+        /* 3. Table Modern Look */
+        .table-container { max-width: 1400px; margin: 0 auto 50px; padding: 0 20px; }
         .table-card {
-            background: white; border-radius: 20px; overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            background: white; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
         }
         .data-table { width: 100%; border-collapse: collapse; }
-        .data-table thead { background: #f8fafb; border-bottom: 2px solid #edf2f7; }
-        .data-table th { padding: 18px; color: #4a5568; font-weight: 700; text-align: center; }
-        .data-table td { padding: 16px; text-align: center; border-bottom: 1px solid #f1f4f8; vertical-align: middle; }
-        
-        .unpaid { background: #fff5f5; color: #e53e3e; padding: 4px 10px; border-radius: 8px; font-weight: 700; }
-        .paid { background: #f0fff4; color: #38a169; padding: 4px 10px; border-radius: 8px; font-weight: 700; }
-        
-        .view-btn { 
-            background: #edf2f7; color: #2d3748; border: none; padding: 8px 15px; 
-            border-radius: 10px; transition: 0.2s; font-weight: 600;
+        .data-table thead { background: #f8fafc; border-bottom: 2px solid #f1f5f9; }
+        .data-table th { padding: 18px; color: #475569; font-size: 14px; text-align: center; font-weight: 700; }
+        .data-table td { padding: 15px; text-align: center; border-bottom: 1px solid #f1f5f9; font-size: 15px; }
+
+        .badge-ward { background: #f1f5f9; color: #475569; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 13px; }
+        .amount-due { color: #dc2626; font-weight: 700; }
+        .amount-paid { color: #16a34a; font-weight: 700; }
+
+        .btn-view {
+            background: #f1f5f9; border: none; padding: 8px 12px; border-radius: 8px;
+            color: var(--accent); transition: 0.3s;
         }
-        .view-btn:hover { background: var(--secondary); color: white; }
+        .btn-view:hover { background: var(--accent); color: white; }
+
+        /* Icons Styles */
+        .home-icon { font-size: 24px; color: var(--dark); transition: 0.3s; }
+        .home-icon:hover { color: var(--primary); }
 
         @media (max-width: 768px) {
-            .search-box { flex-direction: column; height: auto; }
-            .excel-btn { width: 100%; padding: 12px; }
+            .top-action-bar { grid-template-columns: 1fr; }
+            .btn-excel { padding: 12px; justify-content: center; }
         }
     </style>
 </head>
 <body>
 
-<div class="topbar">
-    <div style="display:flex; align-items:center; gap:12px;">
-        <img src="img1.png" height="45">
-        <span style="font-weight: 800; font-size: 18px; color: #2d3436;">NPP NAKUR <small style="font-weight:400; color:#636e72;">| Water Tax</small></span>
+<nav class="navbar-custom">
+    <div class="brand-box">
+        <img src="img1.png" alt="Logo">
+        <div class="brand-text">NPP NAKUR</div>
     </div>
-    <div style="display:flex; gap:15px; align-items:center;">
-        <a href="add_connection.html" class="btn btn-primary btn-sm rounded-pill px-3 fw-bold"><i class="fas fa-plus me-1"></i> Add New</a>
-        <a href="dashboard.html" class="text-dark fs-4"><i class="fas fa-th-large"></i></a>
+    <div class="d-flex align-items:center; gap:20px;">
+        <a href="add_connection.html" class="btn btn-primary fw-bold rounded-pill px-4">
+            <i class="fas fa-plus-circle me-1"></i> नया कनेक्शन
+        </a>
+        <a href="dashboard.html" class="home-icon" title="Home">
+            <i class="fas fa-house-user"></i>
+        </a>
     </div>
-</div>
+</nav>
 
-<div class="search-container">
-    <div class="search-box">
+<div class="top-action-bar">
+    <div class="search-wrapper">
         <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="Search by name, connection number or ward..." onkeyup="fastSearch()">
-        <button class="excel-btn" onclick="exportToExcel()">
-            <i class="fas fa-file-excel"></i> Export Excel
-        </button>
+        <input type="text" id="searchInput" placeholder="उपभोक्ता का नाम, वार्ड या कनेक्शन नंबर खोजें..." onkeyup="fastSearch()">
+    </div>
+    <button class="btn-excel" onclick="exportToExcel()">
+        <i class="fas fa-file-excel"></i> Excel डाउनलोड
+    </button>
+</div>
+
+<div class="dashboard-container">
+    <div class="stat-card">
+        <div class="stat-icon ic-total"><i class="fas fa-file-invoice"></i></div>
+        <div class="stat-info"><h3>कुल कनेक्शन</h3><div class="value" id="totalConn">0</div></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon ic-curr"><i class="fas fa-faucet-drip"></i></div>
+        <div class="stat-info"><h3>चालू मांग</h3><div class="value" id="totalCurr">₹0</div></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon ic-arr"><i class="fas fa-history"></i></div>
+        <div class="stat-info"><h3>बकाया राशि</h3><div class="value" id="totalArr">₹0</div></div>
+    </div>
+    <div class="stat-card" style="border-right: 5px solid #ef4444;">
+        <div class="stat-icon ic-net"><i class="fas fa-coins"></i></div>
+        <div class="stat-info"><h3>कुल देय</h3><div class="value" id="totalAll">₹0</div></div>
     </div>
 </div>
 
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-icon icon-1"><i class="fas fa-users"></i></div>
-        <div class="stat-content"><h3>Total Conn.</h3><div class="value" id="totalConn">0</div></div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon icon-2"><i class="fas fa-tint"></i></div>
-        <div class="stat-content"><h3>Current Demand</h3><div class="value" id="totalCurr">₹0</div></div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon icon-3"><i class="fas fa-clock"></i></div>
-        <div class="stat-content"><h3>Arrear</h3><div class="value" id="totalArr">₹0</div></div>
-    </div>
-    <div class="stat-card" style="border-bottom: 4px solid #e91e63;">
-        <div class="stat-icon icon-4"><i class="fas fa-wallet"></i></div>
-        <div class="stat-content"><h3>Net Payable</h3><div class="value" id="totalAll">₹0</div></div>
-    </div>
-</div>
-
-<div class="table-section">
+<div class="table-container">
     <div class="table-card">
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>Conn. No</th>
-                    <th>Ward</th>
-                    <th>Owner Name</th>
-                    <th>Mobile</th>
-                    <th>Current</th>
-                    <th>Arrear</th>
-                    <th>Total Balance</th>
-                    <th>Action</th>
+                    <th>कन. नं.</th>
+                    <th>वार्ड</th>
+                    <th style="text-align:left;">उपभोक्ता का नाम</th>
+                    <th>मोबाइल</th>
+                    <th>चालू मांग</th>
+                    <th>बकाया</th>
+                    <th>कुल शेष</th>
+                    <th>विवरण</th>
                 </tr>
             </thead>
-            <tbody id="tableBody"></tbody>
+            <tbody id="tableBody">
+                </tbody>
         </table>
     </div>
 </div>
@@ -172,7 +189,7 @@
             let csvRows = lines.map(line => {
                 const c = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 return {
-                    id: c[0] || '', 
+                    id: (c[0] || '').trim(), 
                     ward: (c[1] || '').replace(/"/g, '').trim(), 
                     name: (c[2] || '').replace(/"/g, '').trim(),
                     mobile: c[5] || '-', 
@@ -185,40 +202,37 @@
             const localData = JSON.parse(localStorage.getItem('water_connections') || '[]');
             masterData = [...localData, ...csvRows];
 
-            calculateStats();
+            updateStats();
             renderTable(masterData);
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Loading Error:", e); }
     }
 
-    function calculateStats() {
-        let stats = { count: 0, curr: 0, arr: 0, total: 0 };
-        masterData.forEach(item => {
-            stats.count++;
-            stats.curr += item.curr;
-            stats.arr += item.arr;
-            stats.total += item.total;
-        });
+    function updateStats() {
+        let count = masterData.length;
+        let curr = masterData.reduce((s, i) => s + i.curr, 0);
+        let arr = masterData.reduce((s, i) => s + i.arr, 0);
+        let total = masterData.reduce((s, i) => s + i.total, 0);
 
-        document.getElementById('totalConn').innerText = stats.count;
-        document.getElementById('totalCurr').innerText = '₹' + stats.curr.toLocaleString('en-IN');
-        document.getElementById('totalArr').innerText = '₹' + stats.arr.toLocaleString('en-IN');
-        document.getElementById('totalAll').innerText = '₹' + stats.total.toLocaleString('en-IN');
+        document.getElementById('totalConn').innerText = count.toLocaleString('en-IN');
+        document.getElementById('totalCurr').innerText = '₹' + curr.toLocaleString('en-IN');
+        document.getElementById('totalArr').innerText = '₹' + arr.toLocaleString('en-IN');
+        document.getElementById('totalAll').innerText = '₹' + total.toLocaleString('en-IN');
     }
 
     function renderTable(data) {
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = data.map(item => `
             <tr>
-                <td style="font-weight:700; color:#2d3436;">${item.id}</td>
-                <td><span class="badge bg-light text-dark border">${item.ward}</span></td>
+                <td class="fw-bold">${item.id}</td>
+                <td><span class="badge-ward">${item.ward}</span></td>
                 <td style="text-align:left; font-weight:600;">${item.name}</td>
                 <td>${item.mobile}</td>
                 <td>₹${item.curr}</td>
                 <td>₹${item.arr}</td>
-                <td><span class="${item.total > 0 ? 'unpaid' : 'paid'}">₹${item.total.toFixed(2)}</span></td>
+                <td><span class="${item.total > 0 ? 'amount-due' : 'amount-paid'}">₹${item.total.toLocaleString('en-IN', {minimumFractionDigits: 2})}</span></td>
                 <td>
-                    <button class="view-btn" onclick="location.href='connection_view.html?id=${item.id}'">
-                        <i class="fas fa-arrow-right"></i>
+                    <button class="btn-view" onclick="location.href='connection_view.html?id=${item.id}'">
+                        <i class="fas fa-eye"></i>
                     </button>
                 </td>
             </tr>
@@ -234,16 +248,18 @@
     }
 
     function exportToExcel() {
-        const ws = XLSX.utils.json_to_sheet(masterData.map(item => ({
+        const wsData = masterData.map(item => ({
             "Connection No": item.id, "Ward": item.ward, "Name": item.name, 
             "Mobile": item.mobile, "Current": item.curr, "Arrear": item.arr, "Total": item.total
-        })));
+        }));
+        const ws = XLSX.utils.json_to_sheet(wsData);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Connections");
-        XLSX.writeFile(wb, "NPP_Nakur_Water_Data.xlsx");
+        XLSX.writeFile(wb, "NPP_Nakur_Water_Tax.xlsx");
     }
 
     window.onload = init;
 </script>
+
 </body>
 </html>
