@@ -45,12 +45,12 @@
         }
         input:focus, select:focus { outline: none; border-color: #1565c0; background: white; }
         
-        /* 600 रुपये वाले इनपुट के लिए स्टाइल जो बदला न जा सके */
-        input[readonly] { background: #eeeeee; cursor: not-allowed; color: #666; font-weight: bold; }
+        /* 600 रुपये वाले इनपुट के लिए स्टाइल */
+        input[readonly] { background: #e9ecef; cursor: not-allowed; color: #1565c0; font-weight: bold; border-left: 4px solid #1565c0; }
 
         .total-balance {
             margin-top: 15px; font-weight: bold; color: #2e7d32; background: #f1f8e9;
-            padding: 15px; border-radius: 6px; text-align: center; font-size: 20px; border: 1px solid #c5e1a5;
+            padding: 15px; border-radius: 6px; text-align: center; font-size: 22px; border: 1px solid #c5e1a5;
         }
 
         .submit-btn {
@@ -80,7 +80,7 @@
 <div class="header">
     <div>
         <i class="fas fa-water" style="color: #1565c0; font-size: 24px;"></i> 
-        <strong style="font-size: 20px; margin-left: 10px;">NPP NAKUR</strong>
+        <strong style="font-size: 20px; margin-left: 10px;">नगर पालिका परिषद नकुड़</strong>
     </div>
     <div style="display: flex;">
         <a href="dashboard.html"><i class="fas fa-home"></i> होम</a>
@@ -112,32 +112,53 @@
             </div>
 
             <div class="form-group">
-                <label for="ward_no"><i class="fas fa-map-marker-alt"></i> वार्ड नंबर और नाम*</label>
+                <label for="ward_no"><i class="fas fa-map-marker-alt"></i> वार्ड का चयन करें*</label>
                 <select id="ward_no" required>
                     <option value="" disabled selected>वार्ड चुनें...</option>
-                    <option value="18-बन्जारान">18-बन्जारान</option>
                     <option value="01-आजाद नगर">01-आजाद नगर</option>
                     <option value="02-गांधी नगर">02-गांधी नगर</option>
                     <option value="03-सुभाष नगर">03-सुभाष नगर</option>
-                    </select>
+                    <option value="04-नेहरू नगर">04-नेहरू नगर</option>
+                    <option value="05-पटेल नगर">05-पटेल नगर</option>
+                    <option value="06-शास्त्री नगर">06-शास्त्री नगर</option>
+                    <option value="07-इंदिरा नगर">07-इंदिरा नगर</option>
+                    <option value="08-अम्बेडकर नगर">08-अम्बेडकर नगर</option>
+                    <option value="09-शिवपुरी">09-शिवपुरी</option>
+                    <option value="10-आदर्श नगर">10-आदर्श नगर</option>
+                    <option value="11-कल्याण सिंह नगर">11-कल्याण सिंह नगर</option>
+                    <option value="12-गुरु नानक नगर">12-गुरु नानक नगर</option>
+                    <option value="13-भगत सिंह नगर">13-भगत सिंह नगर</option>
+                    <option value="14-राजेन्द्र नगर">14-राजेन्द्र नगर</option>
+                    <option value="15-लोहिया नगर">15-लोहिया नगर</option>
+                    <option value="16-खटीकान">16-खटीकान</option>
+                    <option value="17-मुगलपुरा">17-मुगलपुरा</option>
+                    <option value="18-बन्जारान">18-बन्जारान</option>
+                    <option value="19-किला">19-किला</option>
+                    <option value="20-पीरजादगान">20-पीरजादगान</option>
+                    <option value="21-बाजार">21-बाजार</option>
+                    <option value="22-नई बस्ती">22-नई बस्ती</option>
+                    <option value="23-कायस्थवाड़ा">23-कायस्थवाड़ा</option>
+                    <option value="24-बामनवाड़ा">24-बामनवाड़ा</option>
+                    <option value="25-मिर्च गंज">25-मिर्च गंज</option>
+                </select>
             </div>
 
             <div class="form-group">
                 <label for="connection_type"><i class="fas fa-faucet"></i> कनेक्शन प्रकार*</label>
                 <select id="connection_type" required>
                     <option value="" disabled selected>चुनें...</option>
-                    <option value="Domestic">घरेलू</option>
-                    <option value="Commercial">व्यावसायिक</option>
+                    <option value="Domestic">घरेलू (Domestic)</option>
+                    <option value="Commercial">व्यावसायिक (Commercial)</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="current_amount"><i class="fas fa-rupee-sign"></i> वर्तमान राशि (Fixed)*</label>
-                <input type="number" id="current_amount" value="600.00" readonly>
+                <input type="text" id="current_amount" value="600.00" readonly>
             </div>
 
             <div class="form-group">
-                <label for="arrear_balance"><i class="fas fa-hand-holding-usd"></i> बकाया राशि (पिछला)*</label>
+                <label for="arrear_balance"><i class="fas fa-hand-holding-usd"></i> बकाया राशि (Arrear)*</label>
                 <input type="number" id="arrear_balance" step="0.01" value="0.00" oninput="calculateTotal()">
             </div>
 
@@ -148,7 +169,7 @@
 
             <div class="form-group full-width">
                 <div class="total-balance">
-                    <strong><i class="fas fa-coins"></i> कुल देय राशि: ₹<span id="totalAmount">600.00</span></strong>
+                    <strong>कुल देय राशि: ₹<span id="totalAmount">600.00</span></strong>
                 </div>
             </div>
 
@@ -171,21 +192,19 @@
         window.location.replace('index.html');
     }
 
-    // कुल राशि की गणना (600 + बकाया)
+    // कुल राशि की गणना
     function calculateTotal() {
-        const fixedAmt = 600.00;
-        const arrear = parseFloat(document.getElementById("arrear_balance").value) || 0;
-        const total = fixedAmt + arrear;
+        const fixedVal = 600.00;
+        const arrearVal = parseFloat(document.getElementById("arrear_balance").value) || 0;
+        const total = fixedVal + arrearVal;
         document.getElementById("totalAmount").textContent = total.toFixed(2);
     }
 
     window.onload = function() {
-        // वर्तमान समय सेट करें
+        // डेट टाइम सेट करें
         const now = new Date();
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
         document.getElementById("connection_date_time").value = now.toISOString().slice(0, 16);
-        
-        // पेज खुलते ही गणना करें
         calculateTotal();
     };
 
@@ -198,13 +217,12 @@
             return;
         }
 
-        // वह डेटा जो connection_detail.html में भेजा जाएगा
         const formData = {
             id: Date.now(),
             con_no: document.getElementById('con_no').value,
             owner: document.getElementById('owner').value,
             mobile: mobile,
-            ward: document.getElementById('ward_no').value, // इसमें "18-बन्जारान" जैसा पूरा नाम जाएगा
+            ward: document.getElementById('ward_no').value, // इसमें "18-बन्जारान" जैसा पूरा डेटा जाएगा
             type: document.getElementById('connection_type').value,
             current_amt: "600.00",
             arrear_amt: document.getElementById('arrear_balance').value,
@@ -212,16 +230,19 @@
             date: document.getElementById('connection_date_time').value
         };
 
-        // LocalStorage में डेटा अपडेट करना
-        let connections = JSON.parse(localStorage.getItem('water_connections') || '[]');
-        connections.push(formData);
-        localStorage.setItem('water_connections', JSON.stringify(connections));
+        try {
+            let connections = JSON.parse(localStorage.getItem('water_connections') || '[]');
+            connections.push(formData);
+            localStorage.setItem('water_connections', JSON.stringify(connections));
 
-        showMsg('success', 'नया कनेक्शन सफलतापूर्वक सहेज लिया गया है!');
-        
-        setTimeout(() => {
-            window.location.href = 'connection_detail.html';
-        }, 1500);
+            showMsg('success', 'डेटा सफलतापूर्वक सहेज लिया गया है!');
+            
+            setTimeout(() => {
+                window.location.href = 'connection_detail.html';
+            }, 1500);
+        } catch(e) {
+            showMsg('error', 'डेटा सहेजने में तकनीकी समस्या आई!');
+        }
     };
 
     function showMsg(type, text) {
