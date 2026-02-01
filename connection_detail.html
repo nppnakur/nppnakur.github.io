@@ -65,6 +65,7 @@
         .name-cell { font-weight: 600; color: #0f172a; max-width: 350px; word-wrap: break-word; text-align: center !important; }
         .id-cell { font-family: monospace; font-weight: 700; color: #1e40af; }
         .amt-total { font-weight: 800; color: #ef4444; }
+        .new-badge { background: #10b981; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 5px; }
         .view-btn { color: #1e40af; font-size: 22px; transition: 0.2s; }
     </style>
 </head>
@@ -122,37 +123,73 @@
 
     async function fetchData() {
         try {
+            // 1. Fetch CSV Data
             const response = await fetch('Connection_data.csv');
             const csvData = await response.text();
             const lines = csvData.split(/\r?\n/).filter(line => line.trim() !== "").slice(1);
+            
             stats = { total: 0, current: 0, arrear: 0, balance: 0 };
 
-            masterRows = lines.map(line => {
+            // 2. Load New Added Connections (from LocalStorage)
+            let localData = JSON.parse(localStorage.getItem("newConnections")) || [];
+
+            // 3. Process CSV Rows
+            let csvRows = lines.map(line => {
                 const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 if (cols.length >= 9) {
                     const cVal = parseFloat(cols[6]) || 0;
                     const aVal = parseFloat(cols[7]) || 0;
                     const rVal = parseFloat(cols[8]) || 0;
-                    stats.total++; stats.current += cVal; stats.arrear += aVal; stats.balance += rVal;
-                    const item = { 
-                        id: `NPPNCN-${cols[0].trim()}`, ward: cols[1].trim(), 
-                        name: cols[2].replace(/"/g, '').trim(), mobile: cols[5].trim() || 'N/A',
-                        curr: cVal, arr: aVal, total: rVal, rawId: cols[0].trim()
-                    };
-                    return {
-                        data: item,
-                        html: `<tr><td class="id-cell">${item.id}</td><td>${item.ward}</td><td class="name-cell">${item.name}</td><td>${item.mobile}</td><td>₹${item.curr}</td><td>₹${item.arr}</td><td class="amt-total">₹${item.total}</td><td><a href="connection_view.html?id=${item.rawId}" class="view-btn"><i class="fas fa-eye"></i></a></td></tr>`,
-                        text: `${item.id} ${item.ward} ${item.name} ${item.mobile}`.toUpperCase()
-                    };
+                    return createRowObject(cols[0], cols[1], cols[2], cols[5], cVal, aVal, rVal, false);
                 }
                 return null;
             }).filter(x => x);
+
+            // 4. Combine Both (Local Data First)
+            masterRows = [...localData.map(d => createRowObject(d.id, d.ward, d.name, d.mobile, d.curr, d.arr, d.total, true)), ...csvRows];
+
+            calculateStats();
             renderTable(masterRows);
-            updateStatsUI();
         } catch (e) { console.error(e); }
     }
 
+    function createRowObject(id, ward, name, mobile, curr, arr, total, isNew) {
+        const item = { 
+            id: id.toString().includes("NPPNCN") ? id : `NPPNCN-${id.trim()}`, 
+            ward: ward.trim(), 
+            name: name.replace(/"/g, '').trim(), 
+            mobile: mobile.trim() || 'N/A',
+            curr: curr, arr: arr, total: total, 
+            rawId: id.toString().replace("NPPNCN-", "")
+        };
+        return {
+            data: item,
+            html: `<tr>
+                    <td class="id-cell">${item.id}${isNew ? '<span class="new-badge">NEW</span>' : ''}</td>
+                    <td>${item.ward}</td>
+                    <td class="name-cell">${item.name}</td>
+                    <td>${item.mobile}</td>
+                    <td>₹${item.curr}</td>
+                    <td>₹${item.arr}</td>
+                    <td class="amt-total">₹${item.total}</td>
+                    <td><a href="connection_view.html?id=${item.rawId}" class="view-btn"><i class="fas fa-eye"></i></a></td>
+                </tr>`,
+            text: `${item.id} ${item.ward} ${item.name} ${item.mobile}`.toUpperCase()
+        };
+    }
+
+    function calculateStats() {
+        masterRows.forEach(r => {
+            stats.total++;
+            stats.current += r.data.curr;
+            stats.arrear += r.data.arr;
+            stats.balance += r.data.total;
+        });
+        updateStatsUI();
+    }
+
     function renderTable(list) { document.getElementById('tableBody').innerHTML = list.map(r => r.html).join(''); }
+    
     function fastSearch() {
         const query = document.getElementById("searchInput").value.toUpperCase();
         renderTable(masterRows.filter(r => r.text.includes(query)));
@@ -168,8 +205,6 @@
     async function exportColorfulExcel() {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Water Report');
-
-        // Header Structure
         worksheet.columns = [
             { header: 'ID', key: 'id', width: 20 },
             { header: 'वार्ड विवरण', key: 'ward', width: 25 },
@@ -179,40 +214,16 @@
             { header: 'बकाया 24-25', key: 'arr', width: 18 },
             { header: 'कुल अवशेष', key: 'total', width: 18 }
         ];
-
-        // Styling the Header Row
         const headerRow = worksheet.getRow(1);
         headerRow.eachCell((cell) => {
             cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E3A8A' } };
-            cell.font = { color: { argb: 'FFFFFFFF' }, bold: true, size: 12 };
-            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+            cell.font = { color: { argb: 'FFFFFFFF' }, bold: true };
+            cell.alignment = { horizontal: 'center' };
         });
-
-        // Adding Data Rows
         masterRows.forEach((r, index) => {
-            const row = worksheet.addRow({
-                id: r.data.id, ward: r.data.ward, name: r.data.name, mobile: r.data.mobile,
-                curr: r.data.curr, arr: r.data.arr, total: r.data.total
-            });
-            // Alignment and Row Striping
-            row.eachCell((cell) => {
-                cell.alignment = { vertical: 'middle', horizontal: 'center' };
-                if (index % 2 === 0) {
-                    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF9FAFB' } };
-                }
-            });
+            const row = worksheet.addRow({ ...r.data });
+            row.eachCell(cell => cell.alignment = { horizontal: 'center' });
         });
-
-        // Adding Total Row at bottom
-        const totalRow = worksheet.addRow(['TOTAL SUM', '', '', '', stats.current, stats.arrear, stats.balance]);
-        totalRow.font = { bold: true, size: 13 };
-        totalRow.getCell(1).alignment = { horizontal: 'center' };
-        totalRow.eachCell((cell) => {
-            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFACC15' } };
-            cell.border = { top: { style: 'medium' } };
-        });
-
-        // Exporting the file
         const buffer = await workbook.xlsx.writeBuffer();
         saveAs(new Blob([buffer]), 'NPP_Nakur_Water_Report.xlsx');
     }
