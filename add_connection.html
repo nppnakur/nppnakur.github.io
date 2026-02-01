@@ -5,259 +5,157 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>नया जल कनेक्शन - NPP NAKUR</title>
     
-    <link rel="icon" type="image/x-icon" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/svgs/solid/water.svg">
+    <link rel="icon" type="image/png" href="img1.png">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', 'Nirmala UI', sans-serif; }
-        body { background: #f5f5f5; min-height: 100vh; display: flex; flex-direction: column; }
+        :root { --primary: #10b981; --gradient: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #f0fdf4; min-height: 100vh; }
 
         .header {
-            background: white; color: #333; padding: 15px 30px; display: flex;
-            justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky; top: 0; z-index: 100; border-bottom: 2px solid #e0e0e0;
+            background: var(--gradient); color: white; padding: 15px 30px; display: flex;
+            justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-
-        .header a {
-            color: #1565c0; text-decoration: none; margin-left: 20px; font-weight: 600;
-            display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px;
-            border-radius: 6px; transition: all 0.3s; border: 1px solid #e0e0e0;
-        }
-
-        .header a:hover { background: #f0f7ff; color: #0d47a1; border-color: #1565c0; }
-
-        .main-container { flex: 1; padding: 25px; display: flex; justify-content: center; align-items: flex-start; position: relative; padding-bottom: 100px; }
+        .header img { height: 50px; border-radius: 5px; }
 
         .form-container {
-            width: 100%; max-width: 1000px; background: white; padding: 30px;
-            border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
-            border: 1px solid #e0e0e0;
+            max-width: 800px; margin: 40px auto; background: white; padding: 30px;
+            border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
         }
 
-        .form-group { margin-bottom: 18px; }
-        .full-width { grid-column: span 2; }
-
-        label { font-weight: 600; display: block; margin-bottom: 8px; color: #333; font-size: 14px; }
+        .full { grid-column: span 2; }
+        label { font-weight: 700; display: block; margin-bottom: 5px; color: #1e293b; font-size: 14px; }
         input, select {
-            width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 6px;
-            background: #fafafa; font-size: 15px; transition: all 0.3s;
+            width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; outline: none;
         }
-        input:focus, select:focus { outline: none; border-color: #1565c0; background: white; }
-        
-        /* 600 रुपये वाले इनपुट के लिए स्टाइल */
-        input[readonly] { background: #e9ecef; cursor: not-allowed; color: #1565c0; font-weight: bold; border-left: 4px solid #1565c0; }
+        input[readonly] { background: #f1f5f9; color: #059669; font-weight: 800; }
 
-        .total-balance {
-            margin-top: 15px; font-weight: bold; color: #2e7d32; background: #f1f8e9;
-            padding: 15px; border-radius: 6px; text-align: center; font-size: 22px; border: 1px solid #c5e1a5;
+        .total-box {
+            background: #ecfdf5; padding: 20px; border-radius: 15px; text-align: center;
+            font-size: 24px; font-weight: 800; color: #059669; border: 2px dashed var(--primary);
         }
 
-        .submit-btn {
-            background: #2e7d32; color: white; padding: 15px; border: none; border-radius: 6px;
-            cursor: pointer; font-size: 16px; font-weight: 600; width: 100%;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
+        .btn-save {
+            background: var(--gradient); color: white; border: none; padding: 15px;
+            border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%;
         }
 
-        .bottom-center-btn {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: #ff9800; color: white; padding: 12px 25px; border-radius: 6px;
-            text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; border: none; cursor: pointer;
-        }
-
-        .error-message { color: #d32f2f; background: #ffebee; padding: 12px 15px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #d32f2f; display: none; align-items: center; gap: 10px; }
-        .success-message { color: #388e3c; background: #e8f5e9; padding: 12px 15px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #388e3c; display: none; align-items: center; gap: 10px; }
-
-        @media (max-width: 768px) {
-            .form-container { grid-template-columns: 1fr; }
-            .full-width { grid-column: span 1; }
-            .header { flex-direction: column; padding: 15px; gap: 12px; }
-        }
+        .back-link { text-align: center; display: block; margin-top: 20px; color: #f59e0b; text-decoration: none; font-weight: 700; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div>
-        <i class="fas fa-water" style="color: #1565c0; font-size: 24px;"></i> 
-        <strong style="font-size: 20px; margin-left: 10px;">नगर पालिका परिषद नकुड़</strong>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <img src="img1.png" alt="logo">
+        <span style="font-weight:900; font-size:20px;">नगर पालिका परिषद नकुड़</span>
     </div>
-    <div style="display: flex;">
-        <a href="dashboard.html"><i class="fas fa-home"></i> होम</a>
-        <a href="index.html" onclick="localStorage.clear();"><i class="fas fa-sign-out-alt"></i> लॉगआउट</a>
-    </div>
+    <a href="dashboard.html" style="color:white; font-size:20px;"><i class="fas fa-home"></i></a>
 </div>
 
-<div class="main-container">
-    <div class="form-container">
-        <div id="statusBox" class="full-width">
-            <div id="errorMsg" class="error-message"><i class="fas fa-exclamation-circle"></i> <span id="errorText"></span></div>
-            <div id="successMsg" class="success-message"><i class="fas fa-check-circle"></i> <span id="successText"></span></div>
-        </div>
-
-        <form id="waterForm" style="display: contents;">
-            <div class="form-group">
-                <label for="con_no"><i class="fas fa-id-card"></i> कनेक्शन नंबर*</label>
-                <input type="text" id="con_no" required placeholder="जैसे: JL12345">
-            </div>
-
-            <div class="form-group">
-                <label for="owner"><i class="fas fa-user"></i> स्वामी का नाम*</label>
-                <input type="text" id="owner" required placeholder="पूरा नाम दर्ज करें">
-            </div>
-
-            <div class="form-group">
-                <label for="mobile"><i class="fas fa-mobile-alt"></i> मोबाइल नंबर*</label>
-                <input type="tel" id="mobile" maxlength="10" required placeholder="10 अंकों का मोबाइल नंबर">
-            </div>
-
-            <div class="form-group">
-                <label for="ward_no"><i class="fas fa-map-marker-alt"></i> वार्ड का चयन करें*</label>
-                <select id="ward_no" required>
-                    <option value="" disabled selected>वार्ड चुनें...</option>
-                    <option value="01-आजाद नगर">01-आजाद नगर</option>
-                    <option value="02-गांधी नगर">02-गांधी नगर</option>
-                    <option value="03-सुभाष नगर">03-सुभाष नगर</option>
-                    <option value="04-नेहरू नगर">04-नेहरू नगर</option>
-                    <option value="05-पटेल नगर">05-पटेल नगर</option>
-                    <option value="06-शास्त्री नगर">06-शास्त्री नगर</option>
-                    <option value="07-इंदिरा नगर">07-इंदिरा नगर</option>
-                    <option value="08-अम्बेडकर नगर">08-अम्बेडकर नगर</option>
-                    <option value="09-शिवपुरी">09-शिवपुरी</option>
-                    <option value="10-आदर्श नगर">10-आदर्श नगर</option>
-                    <option value="11-कल्याण सिंह नगर">11-कल्याण सिंह नगर</option>
-                    <option value="12-गुरु नानक नगर">12-गुरु नानक नगर</option>
-                    <option value="13-भगत सिंह नगर">13-भगत सिंह नगर</option>
-                    <option value="14-राजेन्द्र नगर">14-राजेन्द्र नगर</option>
-                    <option value="15-लोहिया नगर">15-लोहिया नगर</option>
-                    <option value="16-खटीकान">16-खटीकान</option>
-                    <option value="17-मुगलपुरा">17-मुगलपुरा</option>
-                    <option value="18-बन्जारान">18-बन्जारान</option>
-                    <option value="19-किला">19-किला</option>
-                    <option value="20-पीरजादगान">20-पीरजादगान</option>
-                    <option value="21-बाजार">21-बाजार</option>
-                    <option value="22-नई बस्ती">22-नई बस्ती</option>
-                    <option value="23-कायस्थवाड़ा">23-कायस्थवाड़ा</option>
-                    <option value="24-बामनवाड़ा">24-बामनवाड़ा</option>
-                    <option value="25-मिर्च गंज">25-मिर्च गंज</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="connection_type"><i class="fas fa-faucet"></i> कनेक्शन प्रकार*</label>
-                <select id="connection_type" required>
-                    <option value="" disabled selected>चुनें...</option>
-                    <option value="Domestic">घरेलू (Domestic)</option>
-                    <option value="Commercial">व्यावसायिक (Commercial)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="current_amount"><i class="fas fa-rupee-sign"></i> वर्तमान राशि (Fixed)*</label>
-                <input type="text" id="current_amount" value="600.00" readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="arrear_balance"><i class="fas fa-hand-holding-usd"></i> बकाया राशि (Arrear)*</label>
-                <input type="number" id="arrear_balance" step="0.01" value="0.00" oninput="calculateTotal()">
-            </div>
-
-            <div class="form-group full-width">
-                <label for="connection_date_time"><i class="fas fa-calendar-alt"></i> कनेक्शन की तिथि एवं समय*</label>
-                <input type="datetime-local" id="connection_date_time" required>
-            </div>
-
-            <div class="form-group full-width">
-                <div class="total-balance">
-                    <strong>कुल देय राशि: ₹<span id="totalAmount">600.00</span></strong>
-                </div>
-            </div>
-
-            <div class="form-group full-width">
-                <button type="submit" class="submit-btn">
-                    <i class="fas fa-save"></i> कनेक्शन सुरक्षित करें
-                </button>
-            </div>
-        </form>
+<div class="form-container">
+    <div class="form-group">
+        <label>कनेक्शन नंबर*</label>
+        <input type="text" id="con_no" required>
     </div>
-
-    <button onclick="window.location.href='connection_detail.html'" class="bottom-center-btn">
-        <i class="fas fa-arrow-left"></i> सूची पर वापस जाएं
-    </button>
+    <div class="form-group">
+        <label>उपभोक्ता का नाम*</label>
+        <input type="text" id="owner" required>
+    </div>
+    <div class="form-group">
+        <label>मोबाइल नंबर*</label>
+        <input type="tel" id="mobile" maxlength="10">
+    </div>
+    <div class="form-group">
+        <label>वार्ड (CSV से लोड हो रहा है...)*</label>
+        <select id="ward_no" required>
+            <option value="">लोडिंग...</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>चालू मांग (Fixed)*</label>
+        <input type="text" id="curr_amt" value="600" readonly>
+    </div>
+    <div class="form-group">
+        <label>बकाया राशि (Arrear)</label>
+        <input type="number" id="arr_amt" value="0" oninput="updateTotal()">
+    </div>
+    <div class="full">
+        <div class="total-box">कुल देय: ₹<span id="totalDisplay">600.00</span></div>
+    </div>
+    <div class="full">
+        <button class="btn-save" onclick="saveData()">सुरक्षित करें</button>
+    </div>
+    <div class="full">
+        <a href="connection_detail.html" class="back-link">वापस सूची पर जाएं</a>
+    </div>
 </div>
 
 <script>
-    // सुरक्षा जांच
-    if (localStorage.getItem('isLoggedIn') !== 'true') {
-        window.location.replace('index.html');
+    // 1. CSV फ़ाइल से वार्ड लोड करना
+    async function loadWardsFromCSV() {
+        try {
+            const response = await fetch('Connection_data.csv');
+            const data = await response.text();
+            const lines = data.split('\n').slice(1); // हेडर छोड़कर
+            let wards = new Set();
+
+            lines.forEach(line => {
+                const cols = line.split(',');
+                if (cols[1]) { // कॉलम 1 में वार्ड है
+                    let wardName = cols[1].trim().replace(/"/g, '');
+                    if (wardName) wards.add(wardName);
+                }
+            });
+
+            const select = document.getElementById('ward_no');
+            select.innerHTML = '<option value="">-- वार्ड चुनें --</option>';
+            
+            // वार्डों को सॉर्ट करके ड्रॉपडाउन में डालना
+            Array.from(wards).sort().forEach(w => {
+                select.innerHTML += `<option value="${w}">${w}</option>`;
+            });
+
+        } catch (e) {
+            console.error("CSV लोड करने में समस्या:", e);
+            document.getElementById('ward_no').innerHTML = '<option>एरर: CSV नहीं मिली</option>';
+        }
     }
 
-    // कुल राशि की गणना
-    function calculateTotal() {
-        const fixedVal = 600.00;
-        const arrearVal = parseFloat(document.getElementById("arrear_balance").value) || 0;
-        const total = fixedVal + arrearVal;
-        document.getElementById("totalAmount").textContent = total.toFixed(2);
+    function updateTotal() {
+        const fixed = 600;
+        const arr = parseFloat(document.getElementById('arr_amt').value) || 0;
+        document.getElementById('totalDisplay').innerText = (fixed + arr).toFixed(2);
     }
 
-    window.onload = function() {
-        // डेट टाइम सेट करें
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        document.getElementById("connection_date_time").value = now.toISOString().slice(0, 16);
-        calculateTotal();
-    };
+    function saveData() {
+        const formData = {
+            id: document.getElementById('con_no').value,
+            ward: document.getElementById('ward_no').value,
+            name: document.getElementById('owner').value,
+            mobile: document.getElementById('mobile').value,
+            curr: 600,
+            arr: document.getElementById('arr_amt').value,
+            total: document.getElementById('totalDisplay').innerText
+        };
 
-    document.getElementById('waterForm').onsubmit = function(e) {
-        e.preventDefault();
-        
-        const mobile = document.getElementById('mobile').value;
-        if (!/^[6-9][0-9]{9}$/.test(mobile)) {
-            showMsg('error', 'कृपया वैध 10 अंकों का मोबाइल नंबर दर्ज करें!');
+        if(!formData.id || !formData.ward || !formData.name) {
+            alert("कृपया सभी जरूरी जानकारी भरें!");
             return;
         }
 
-        const formData = {
-            id: Date.now(),
-            con_no: document.getElementById('con_no').value,
-            owner: document.getElementById('owner').value,
-            mobile: mobile,
-            ward: document.getElementById('ward_no').value, // इसमें "18-बन्जारान" जैसा पूरा डेटा जाएगा
-            type: document.getElementById('connection_type').value,
-            current_amt: "600.00",
-            arrear_amt: document.getElementById('arrear_balance').value,
-            amount: document.getElementById('totalAmount').textContent,
-            date: document.getElementById('connection_date_time').value
-        };
+        // LocalStorage में सेव करना
+        let list = JSON.parse(localStorage.getItem('water_connections') || '[]');
+        list.push(formData);
+        localStorage.setItem('water_connections', JSON.stringify(list));
 
-        try {
-            let connections = JSON.parse(localStorage.getItem('water_connections') || '[]');
-            connections.push(formData);
-            localStorage.setItem('water_connections', JSON.stringify(connections));
-
-            showMsg('success', 'डेटा सफलतापूर्वक सहेज लिया गया है!');
-            
-            setTimeout(() => {
-                window.location.href = 'connection_detail.html';
-            }, 1500);
-        } catch(e) {
-            showMsg('error', 'डेटा सहेजने में तकनीकी समस्या आई!');
-        }
-    };
-
-    function showMsg(type, text) {
-        document.getElementById('errorMsg').style.display = 'none';
-        document.getElementById('successMsg').style.display = 'none';
-        
-        if(type === 'error') {
-            document.getElementById('errorText').innerText = text;
-            document.getElementById('errorMsg').style.display = 'flex';
-        } else {
-            document.getElementById('successText').innerText = text;
-            document.getElementById('successMsg').style.display = 'flex';
-        }
-        window.scrollTo(0,0);
+        alert("सफलतापूर्वक सुरक्षित किया गया!");
+        window.location.href = 'connection_detail.html';
     }
+
+    window.onload = loadWardsFromCSV;
 </script>
 
 </body>
