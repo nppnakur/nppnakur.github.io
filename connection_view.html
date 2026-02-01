@@ -3,190 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>नया जल कनेक्शन - NPP NAKUR</title>
-    
+    <title>उपभोक्ता विवरण - NPP NAKUR</title>
     <link rel="icon" type="image/png" href="img1.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        :root { --primary: #10b981; --gradient: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background: #f4f7f6; min-height: 100vh; }
+        :root { --navy: #1e3a8a; --emerald: #10b981; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background: #f0f4f8; padding: 20px; }
 
-        .header {
-            background: var(--gradient); color: white; padding: 15px 30px; display: flex;
-            justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .header img { height: 50px; border-radius: 5px; }
-
-        .form-container {
-            max-width: 800px; margin: 40px auto; background: white; padding: 30px;
-            border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-        }
-
-        .full { grid-column: span 2; }
-        label { font-weight: 700; display: block; margin-bottom: 5px; color: #1e293b; font-size: 14px; }
-        input, select {
-            width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; outline: none;
-            font-size: 15px;
-        }
-        input:focus { border-color: var(--primary); }
-        input[readonly] { background: #f1f5f9; color: #059669; font-weight: 800; }
-
-        .total-box {
-            background: #ecfdf5; padding: 20px; border-radius: 15px; text-align: center;
-            font-size: 24px; font-weight: 800; color: #059669; border: 2px dashed var(--primary);
-        }
-
-        .btn-save {
-            background: var(--gradient); color: white; border: none; padding: 15px;
-            border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%;
-            font-size: 16px; transition: 0.3s;
-        }
-        .btn-save:hover { opacity: 0.9; transform: translateY(-2px); }
-
-        .back-link { text-align: center; display: block; margin-top: 20px; color: #f59e0b; text-decoration: none; font-weight: 700; }
+        .container { max-width: 700px; margin: 30px auto; }
         
-        /* Error Style */
-        .error-border { border-color: #ef4444 !important; }
+        /* Card Design */
+        .detail-card { 
+            background: white; border-radius: 20px; overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;
+        }
+
+        .card-header { 
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); 
+            color: white; padding: 25px; text-align: center; position: relative;
+        }
+        .card-header h2 { font-size: 22px; letter-spacing: 1px; margin-bottom: 5px; }
+        .badge { 
+            background: #facc15; color: #1e3a8a; font-size: 12px; 
+            padding: 4px 12px; border-radius: 20px; font-weight: 800; 
+        }
+
+        .card-body { padding: 30px; }
+        .info-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+
+        .info-item { 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 15px; background: #f8fafc; border-radius: 12px;
+            border-left: 4px solid #cbd5e1;
+        }
+        .info-item.highlight { border-left-color: var(--navy); background: #eff6ff; }
+        
+        .label { color: #64748b; font-weight: 700; font-size: 14px; text-transform: uppercase; }
+        .value { color: #1e293b; font-weight: 700; font-size: 16px; }
+
+        .amount-section { 
+            margin-top: 20px; padding-top: 20px; border-top: 2px dashed #e2e8f0;
+        }
+        .total-row { 
+            background: #fff1f2; border: 2px solid #fecaca; padding: 15px;
+            border-radius: 15px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .total-label { color: #be123b; font-weight: 800; font-size: 18px; }
+        .total-value { color: #be123b; font-weight: 900; font-size: 24px; }
+
+        /* Buttons */
+        .actions { display: flex; gap: 15px; margin-top: 30px; }
+        .btn { 
+            flex: 1; padding: 14px; border-radius: 12px; border: none;
+            font-weight: 700; cursor: pointer; display: flex; 
+            align-items: center; justify-content: center; gap: 10px;
+            transition: 0.3s; text-decoration: none; font-size: 15px;
+        }
+        .btn-back { background: #64748b; color: white; }
+        .btn-print { background: var(--emerald); color: white; }
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        @media print {
+            .actions, .btn-back { display: none; }
+            body { background: white; padding: 0; }
+            .detail-card { box-shadow: none; border: 1px solid #ccc; }
+        }
+
+        .error-state { text-align: center; padding: 40px; color: #ef4444; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <div style="display:flex; align-items:center; gap:12px;">
-        <img src="img1.png" alt="logo">
-        <span style="font-weight:900; font-size:20px;">नगर पालिका परिषद नकुड़</span>
+<div class="container">
+    <div class="detail-card" id="mainCard">
+        <div class="card-header">
+            <h2 id="headTitle">JAL CONNECTION DETAIL</h2>
+            <span id="dataTag" class="badge">OFFICIAL RECORD</span>
+        </div>
+        
+        <div class="card-body" id="cardBody">
+            <div class="info-grid">
+                <div class="info-item highlight">
+                    <span class="label">कनेक्शन आईडी</span>
+                    <span class="value" id="disp_id">---</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">उपभोक्ता का नाम</span>
+                    <span class="value" id="disp_name">---</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">वार्ड विवरण</span>
+                    <span class="value" id="disp_ward">---</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">मोबाइल नंबर</span>
+                    <span class="value" id="disp_mobile">---</span>
+                </div>
+                
+                <div class="amount-section">
+                    <div class="info-item" style="margin-bottom: 10px; border-left-color: #10b981;">
+                        <span class="label">चालू मांग (2025-26)</span>
+                        <span class="value" id="disp_curr">₹0.00</span>
+                    </div>
+                    <div class="info-item" style="margin-bottom: 15px; border-left-color: #f59e0b;">
+                        <span class="label">बकाया राशि</span>
+                        <span class="value" id="disp_arr">₹0.00</span>
+                    </div>
+                    
+                    <div class="total-row">
+                        <span class="total-label">कुल अवशेष राशि</span>
+                        <span class="total-value" id="disp_total">₹0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <a href="https://nppnakur.github.io/water_manegment.html" style="color:white; font-size:22px;"><i class="fas fa-home"></i></a>
-</div>
 
-<div class="form-container">
-    <div class="form-group">
-        <label>कनेक्शन नंबर (ID)*</label>
-        <input type="text" id="con_no" placeholder="उदाहरण: 1613" required>
-    </div>
-    <div class="form-group">
-        <label>उपभोक्ता का नाम*</label>
-        <input type="text" id="owner" placeholder="पूरा नाम" required>
-    </div>
-    <div class="form-group">
-        <label>मोबाइल नंबर*</label>
-        <input type="tel" id="mobile" maxlength="10" placeholder="10 अंकों का नंबर">
-    </div>
-    <div class="form-group">
-        <label>वार्ड*</label>
-        <select id="ward_no" required>
-            <option value="">लोड हो रहा है...</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label>चालू मांग (Fixed)*</label>
-        <input type="text" id="curr_amt" value="600" readonly>
-    </div>
-    <div class="form-group">
-        <label>बकाया राशि (Arrear)</label>
-        <input type="number" id="arr_amt" value="0" oninput="updateTotal()">
-    </div>
-    <div class="full">
-        <div class="total-box">कुल देय: ₹<span id="totalDisplay">600.00</span></div>
-    </div>
-    <div class="full">
-        <button class="btn-save" id="saveBtn" onclick="saveData()">सुरक्षित करें</button>
-    </div>
-    <div class="full">
-        <a href="connection_detail.html" class="back-link"><i class="fas fa-list"></i> वापस सूची पर जाएं</a>
+    <div class="actions">
+        <a href="connection_detail.html" class="btn btn-back">
+            <i class="fas fa-arrow-left"></i> वापस सूची पर
+        </a>
+        <button class="btn btn-print" onclick="window.print()">
+            <i class="fas fa-print"></i> प्रिंट विवरण
+        </button>
     </div>
 </div>
 
 <script>
-    let existingIDs = new Set(); // सभी मौजूदा IDs यहाँ स्टोर होंगी
+    async function loadConnectionDetails() {
+        const params = new URLSearchParams(window.location.search);
+        const idToFind = params.get('id');
+        
+        if (!idToFind) {
+            document.getElementById('cardBody').innerHTML = "<div class='error-state'>आईडी (ID) नहीं मिली!</div>";
+            return;
+        }
 
-    async function loadInitialData() {
-        try {
-            // 1. CSV से वार्ड और IDs लोड करना
-            const response = await fetch('Connection_data.csv');
-            const data = await response.text();
-            const lines = data.split(/\r?\n/).slice(1); 
-            let wards = new Set();
+        let finalData = null;
+        let isNew = false;
 
-            lines.forEach(line => {
-                const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                if (cols[0]) existingIDs.add(cols[0].trim()); // CSV की ID सेव करें
-                if (cols[1]) { 
-                    let wardName = cols[1].trim().replace(/"/g, '');
-                    if (wardName) wards.add(wardName);
+        // 1. पहले LocalStorage में खोजें (नया डेटा)
+        const localList = JSON.parse(localStorage.getItem('newConnections') || '[]');
+        finalData = localList.find(item => item.id == idToFind || `NPPNCN-${item.id}` == idToFind);
+
+        if (finalData) {
+            isNew = true;
+        } else {
+            // 2. अगर लोकल में नहीं मिला, तो CSV में खोजें
+            try {
+                const response = await fetch('Connection_data.csv');
+                const csvText = await response.text();
+                const rows = csvText.split(/\r?\n/).slice(1);
+
+                for (let row of rows) {
+                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    if (cols[0] && cols[0].trim() == idToFind.replace("NPPNCN-", "")) {
+                        finalData = {
+                            id: `NPPNCN-${cols[0].trim()}`,
+                            ward: cols[1].trim(),
+                            name: cols[2].replace(/"/g, '').trim(),
+                            mobile: cols[5].trim() || 'N/A',
+                            curr: cols[6].trim(),
+                            arr: cols[7].trim(),
+                            total: cols[8].trim()
+                        };
+                        break;
+                    }
                 }
-            });
+            } catch (err) {
+                console.error("CSV Load Error");
+            }
+        }
 
-            // वार्ड ड्रॉपडाउन भरें
-            const select = document.getElementById('ward_no');
-            select.innerHTML = '<option value="">-- वार्ड चुनें --</option>';
-            Array.from(wards).sort().forEach(w => {
-                select.innerHTML += `<option value="${w}">${w}</option>`;
-            });
-
-            // 2. LocalStorage से भी IDs लोड करें
-            let localData = JSON.parse(localStorage.getItem('newConnections') || '[]');
-            localData.forEach(item => {
-                // NPPNCN- हटाकर सिर्फ नंबर स्टोर करें ताकि मैच हो सके
-                let cleanID = item.id.toString().replace("NPPNCN-", "");
-                existingIDs.add(cleanID);
-            });
-
-        } catch (e) {
-            console.error("Data Load Error");
-            document.getElementById('ward_no').innerHTML = '<option value="">त्रुटि: लोड नहीं हुआ</option>';
+        // 3. डेटा को पेज पर दिखाएं
+        if (finalData) {
+            document.getElementById('disp_id').innerText = finalData.id.toString().includes("NPPNCN") ? finalData.id : `NPPNCN-${finalData.id}`;
+            document.getElementById('disp_name').innerText = finalData.name;
+            document.getElementById('disp_ward').innerText = finalData.ward;
+            document.getElementById('disp_mobile').innerText = finalData.mobile;
+            document.getElementById('disp_curr').innerText = `₹${finalData.curr}`;
+            document.getElementById('disp_arr').innerText = `₹${finalData.arr}`;
+            document.getElementById('disp_total').innerText = `₹${finalData.total}`;
+            
+            if (isNew) {
+                document.getElementById('dataTag').innerText = "NEWLY ADDED";
+                document.getElementById('dataTag').style.background = "#10b981";
+                document.getElementById('dataTag').style.color = "white";
+            }
+        } else {
+            document.getElementById('cardBody').innerHTML = "<div class='error-state'>विवरण नहीं मिला! कृपया जांचें कि आईडी सही है।</div>";
         }
     }
 
-    function updateTotal() {
-        const fixed = 600;
-        const arr = parseFloat(document.getElementById('arr_amt').value) || 0;
-        document.getElementById('totalDisplay').innerText = (fixed + arr).toFixed(2);
-    }
-
-    function saveData() {
-        const con_id = document.getElementById('con_no').value.trim();
-        const ward = document.getElementById('ward_no').value;
-        const name = document.getElementById('owner').value.trim();
-        const mob = document.getElementById('mobile').value.trim();
-        const arrVal = parseFloat(document.getElementById('arr_amt').value) || 0;
-        const totVal = 600 + arrVal;
-
-        // 1. खाली फील्ड चेक
-        if(!con_id || !ward || !name) {
-            alert("❌ कृपया सभी जरूरी जानकारी भरें!");
-            return;
-        }
-
-        // 2. DUPLICATE CHECK (आईडी पहले से है या नहीं)
-        if (existingIDs.has(con_id)) {
-            document.getElementById('con_no').classList.add('error-border');
-            alert(`⚠️ अलर्ट: आईडी नंबर ${con_id} पहले से दर्ज है! कृपया दूसरा नंबर डालें।`);
-            return;
-        }
-
-        // अगर डुप्लीकेट नहीं है, तो सेव करें
-        const formData = {
-            id: con_id,
-            ward: ward,
-            name: name,
-            mobile: mob,
-            curr: 600,
-            arr: arrVal,
-            total: totVal
-        };
-
-        let list = JSON.parse(localStorage.getItem('newConnections') || '[]');
-        list.push(formData);
-        localStorage.setItem('newConnections', JSON.stringify(list));
-
-        alert("✅ सफलता- पूर्वक दर्ज हो गया है!");
-        window.location.href = 'connection_detail.html';
-    }
-
-    window.onload = loadInitialData;
+    window.onload = loadConnectionDetails;
 </script>
 
 </body>
