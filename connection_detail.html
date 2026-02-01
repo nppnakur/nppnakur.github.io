@@ -19,7 +19,7 @@
             margin: 0; 
         }
 
-        /* 1. Colored Header (Logo without White BG) */
+        /* 1. Colored Header */
         .topbar {
             background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); 
             height: 85px; 
@@ -34,25 +34,14 @@
             color: white;
         }
         .header-left { display: flex; align-items: center; gap: 15px; }
-        .header-logo { 
-            height: 65px; width: auto; 
-            /* No white background here */
-        }
-        .header-left h1 { 
-            font-weight: 700; font-size: 24px; margin: 0; 
-            letter-spacing: 0.5px;
-        }
+        .header-logo { height: 65px; width: auto; }
+        .header-left h1 { font-weight: 700; font-size: 24px; margin: 0; letter-spacing: 0.5px; }
         .header-right { display: flex; gap: 20px; }
-        .nav-icon { 
-            color: white; font-size: 22px; text-decoration: none; 
-            transition: 0.3s; cursor: pointer;
-        }
+        .nav-icon { color: white; font-size: 22px; text-decoration: none; transition: 0.3s; cursor: pointer; }
         .nav-icon:hover { color: #facc15; transform: scale(1.1); }
 
         /* 2. Search Bar */
-        .search-area { 
-            max-width: 550px; margin: 30px auto; display: flex; gap: 12px; padding: 0 15px; 
-        }
+        .search-area { max-width: 550px; margin: 30px auto; display: flex; gap: 12px; padding: 0 15px; }
         .search-wrapper { position: relative; flex: 1; }
         .search-wrapper i { position: absolute; left: 18px; top: 14px; color: #1e40af; }
         #searchInput {
@@ -83,23 +72,14 @@
 
         /* 4. Table Design */
         .table-section { max-width: 1480px; margin: 0 auto 50px; padding: 0 15px; }
-        .table-container { 
-            background: white; border-radius: 15px; overflow: hidden; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
+        .table-container { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .data-table { width: 100%; border-collapse: collapse; }
         .data-table thead { background: #1e293b; color: white; }
         .data-table th { padding: 18px 10px; font-size: 15px; text-align: center; }
         .data-table td { padding: 16px 10px; border-bottom: 1px solid #e2e8f0; text-align: center; vertical-align: middle; }
         
-        .name-cell { 
-            font-weight: 600; color: #0f172a; 
-            max-width: 350px; word-wrap: break-word; 
-            line-height: 1.4; text-align: center !important; 
-        }
-        
+        .name-cell { font-weight: 600; color: #0f172a; max-width: 350px; word-wrap: break-word; line-height: 1.4; text-align: center !important; }
         .id-cell { font-family: monospace; font-weight: 700; color: #1e40af; }
-        .ward-cell { font-weight: 600; color: #475569; white-space: nowrap; }
         .amt-curr { color: #10b981; font-weight: 700; }
         .amt-arr { color: #f59e0b; font-weight: 700; }
         .amt-total { font-weight: 800; color: #ef4444; }
@@ -125,7 +105,7 @@
 <div class="search-area">
     <div class="search-wrapper">
         <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="उपभोक्ता का नाम, वार्ड या आईडी से खोजें..." onkeyup="fastSearch()">
+        <input type="text" id="searchInput" placeholder="खोजें..." onkeyup="fastSearch()">
     </div>
     <button class="excel-btn" onclick="exportToExcel()" title="Excel Download"><i class="fas fa-file-excel"></i></button>
 </div>
@@ -164,8 +144,7 @@
                     <th>देखें</th>
                 </tr>
             </thead>
-            <tbody id="tableBody">
-                </tbody>
+            <tbody id="tableBody"></tbody>
         </table>
     </div>
 </div>
@@ -177,7 +156,7 @@
     async function fetchData() {
         try {
             const response = await fetch('Connection_data.csv');
-            const csvData = response.ok ? await response.text() : "";
+            const csvData = await response.text();
             const lines = csvData.split(/\r?\n/).filter(line => line.trim() !== "").slice(1);
             
             stats = { total: 0, current: 0, arrear: 0, balance: 0 };
@@ -188,35 +167,17 @@
                     const cVal = parseFloat(cols[6]) || 0;
                     const aVal = parseFloat(cols[7]) || 0;
                     const rVal = parseFloat(cols[8]) || 0;
-                    
-                    stats.total++; 
-                    stats.current += cVal; 
-                    stats.arrear += aVal; 
-                    stats.balance += rVal;
+                    stats.total++; stats.current += cVal; stats.arrear += aVal; stats.balance += rVal;
 
                     const item = { 
-                        id: `NPPNCN-${cols[0].trim()}`, 
-                        ward: cols[1].trim(), 
-                        name: cols[2].replace(/"/g, '').trim(), 
-                        mobile: cols[5].trim() || 'N/A',
-                        curr: cVal, 
-                        arr: aVal, 
-                        total: rVal,
-                        rawId: cols[0].trim()
+                        id: `NPPNCN-${cols[0].trim()}`, ward: cols[1].trim(), 
+                        name: cols[2].replace(/"/g, '').trim(), mobile: cols[5].trim() || 'N/A',
+                        curr: cVal, arr: aVal, total: rVal, rawId: cols[0].trim()
                     };
 
                     return {
                         data: item,
-                        html: `<tr>
-                                <td class="id-cell">${item.id}</td>
-                                <td class="ward-cell">${item.ward}</td>
-                                <td class="name-cell">${item.name}</td>
-                                <td>${item.mobile}</td>
-                                <td class="amt-curr">₹${item.curr}</td>
-                                <td class="amt-arr">₹${item.arr}</td>
-                                <td class="amt-total">₹${item.total}</td>
-                                <td><a href="connection_view.html?id=${item.rawId}" class="view-btn" title="View Detail"><i class="fas fa-eye"></i></a></td>
-                            </tr>`,
+                        html: `<tr><td class="id-cell">${item.id}</td><td>${item.ward}</td><td class="name-cell">${item.name}</td><td>${item.mobile}</td><td class="amt-curr">₹${item.curr}</td><td class="amt-arr">₹${item.arr}</td><td class="amt-total">₹${item.total}</td><td><a href="connection_view.html?id=${item.rawId}" class="view-btn"><i class="fas fa-eye"></i></a></td></tr>`,
                         text: `${item.id} ${item.ward} ${item.name} ${item.mobile}`.toUpperCase()
                     };
                 }
@@ -225,17 +186,13 @@
 
             renderTable(masterRows);
             updateStatsUI();
-        } catch (e) { console.error("Error Fetching Data"); }
+        } catch (e) { console.error(e); }
     }
 
-    function renderTable(list) { 
-        document.getElementById('tableBody').innerHTML = list.map(r => r.html).join(''); 
-    }
-
+    function renderTable(list) { document.getElementById('tableBody').innerHTML = list.map(r => r.html).join(''); }
     function fastSearch() {
         const query = document.getElementById("searchInput").value.toUpperCase();
-        const filtered = masterRows.filter(r => r.text.includes(query));
-        renderTable(filtered);
+        renderTable(masterRows.filter(r => r.text.includes(query)));
     }
 
     function updateStatsUI() {
@@ -245,15 +202,35 @@
         document.getElementById('statTotalRem').innerText = '₹' + stats.balance.toLocaleString('en-IN');
     }
 
+    // --- Updated Excel Export Function with Styling and Total ---
     function exportToExcel() {
-        const data = masterRows.map(r => ({
-            "ID": r.data.id, "Ward": r.data.ward, "Name": r.data.name, "Mobile": r.data.mobile,
-            "Current 25-26": r.data.curr, "Arrear 24-25": r.data.arr, "Total": r.data.total
+        let exportData = masterRows.map(r => ({
+            "Connection ID": r.data.id,
+            "Ward": r.data.ward,
+            "Consumer Name": r.data.name,
+            "Mobile": r.data.mobile,
+            "Current 25-26": r.data.curr,
+            "Arrear 24-25": r.data.arr,
+            "Total Balance": r.data.total
         }));
-        const ws = XLSX.utils.json_to_sheet(data);
+
+        // Adding Total Row at the end
+        exportData.push({
+            "Connection ID": "TOTAL SUM",
+            "Ward": "", "Consumer Name": "", "Mobile": "",
+            "Current 25-26": stats.current,
+            "Arrear 24-25": stats.arrear,
+            "Total Balance": stats.balance
+        });
+
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        
+        // Setting Column Widths
+        ws['!cols'] = [{wch:20}, {wch:15}, {wch:40}, {wch:15}, {wch:15}, {wch:15}, {wch:15}];
+
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "JalData");
-        XLSX.writeFile(wb, "NPP_Nakur_Water_Data.xlsx");
+        XLSX.utils.book_append_sheet(wb, ws, "JalVibhag_Report");
+        XLSX.writeFile(wb, "NPP_Nakur_Water_Report.xlsx");
     }
 
     window.onload = fetchData;
