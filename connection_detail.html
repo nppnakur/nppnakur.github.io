@@ -11,100 +11,94 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;600;700&display=swap');
 
-        :root {
-            --primary: #2563eb;
-            --accent: #f43f5e;
-            --success: #10b981;
-            --bg: #f8fafc;
-        }
+        body { background: #f4f7f6; font-family: 'Hind', sans-serif; margin: 0; }
 
-        body { background: var(--bg); font-family: 'Roboto', sans-serif; margin: 0; }
-
-        /* Modern Top Bar */
+        /* Topbar with Logo */
         .topbar {
-            background: #ffffff; height: 70px; padding: 0 40px;
+            background: #ffffff; height: 80px; padding: 0 30px;
             display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
             position: sticky; top: 0; z-index: 1000;
         }
-        .topbar h1 { 
-            font-weight: 900; font-size: 22px; color: #1e293b; 
-            letter-spacing: 1px; margin: 0; text-transform: uppercase;
+        .header-content { display: flex; align-items: center; gap: 15px; }
+        .header-logo { height: 60px; width: auto; }
+        .header-content h1 { 
+            font-weight: 800; font-size: 24px; color: #1e293b; margin: 0;
+            letter-spacing: 0.5px;
         }
 
-        /* Compact & Stylish Search Bar */
+        /* Search Bar Section */
         .search-area { 
-            max-width: 600px; margin: 30px auto; display: flex; gap: 10px; padding: 0 15px; 
+            max-width: 500px; margin: 25px auto; display: flex; gap: 10px; padding: 0 15px; 
         }
         .search-wrapper { position: relative; flex: 1; }
-        .search-wrapper i { position: absolute; left: 15px; top: 12px; color: var(--primary); }
+        .search-wrapper i { position: absolute; left: 15px; top: 12px; color: #2563eb; }
         #searchInput {
-            width: 100%; padding: 10px 15px 10px 45px; border-radius: 12px;
-            border: 2px solid #e2e8f0; outline: none; transition: 0.3s;
-            font-size: 15px; background: white;
+            width: 100%; padding: 10px 15px 10px 45px; border-radius: 30px;
+            border: 2px solid #cbd5e1; outline: none; transition: 0.3s;
+            font-size: 15px;
         }
-        #searchInput:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(37,99,235,0.1); }
+        #searchInput:focus { border-color: #2563eb; box-shadow: 0 0 10px rgba(37,99,235,0.1); }
 
         .excel-btn {
-            background: #217346; color: white; border: none; padding: 0 20px;
-            border-radius: 12px; font-weight: 700; transition: 0.3s;
+            background: #217346; color: white; border: none; padding: 0 15px;
+            border-radius: 30px; font-weight: 700; transition: 0.3s;
         }
-        .excel-btn:hover { background: #154c2e; transform: translateY(-2px); }
 
-        /* Stats Section */
+        /* Stats Dashboard */
         .stats-row { 
             display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-            gap: 15px; max-width: 1200px; margin: 0 auto 30px; padding: 0 15px; 
+            gap: 15px; max-width: 1200px; margin: 0 auto 25px; padding: 0 15px; 
         }
         .stat-card {
-            background: white; padding: 15px; border-radius: 16px;
+            background: white; padding: 15px; border-radius: 12px;
             text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            border: 1px solid #f1f5f9;
+            border-top: 4px solid #2563eb;
         }
-        .stat-card p { font-size: 12px; color: #64748b; font-weight: 700; margin-bottom: 5px; text-transform: uppercase; }
-        .stat-card h2 { font-size: 20px; font-weight: 900; color: #0f172a; margin: 0; }
+        .stat-card p { font-size: 12px; color: #64748b; font-weight: 700; margin-bottom: 5px; }
+        .stat-card h2 { font-size: 22px; font-weight: 800; color: #0f172a; margin: 0; }
 
         /* Table Design */
-        .table-section { max-width: 1350px; margin: 0 auto 50px; padding: 0 15px; }
+        .table-section { max-width: 1400px; margin: 0 auto 50px; padding: 0 15px; }
         .table-container { 
-            background: white; border-radius: 16px; overflow: hidden; 
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); 
+            background: white; border-radius: 12px; overflow: hidden; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
         }
-        .data-table { width: 100%; border-collapse: collapse; margin: 0 auto; }
-        .data-table thead { background: #0f172a; color: white; }
-        .data-table th { padding: 15px; font-size: 13px; text-align: center; font-weight: 600; }
-        .data-table td { padding: 14px; border-bottom: 1px solid #f1f5f9; text-align: center; vertical-align: middle; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table thead { background: #1e293b; color: white; }
+        .data-table th { padding: 15px; font-size: 14px; text-align: center; }
+        .data-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-size: 15px; }
         
-        /* Specific Column Styles */
-        .id-cell { font-family: monospace; font-weight: 700; color: var(--primary); font-size: 14px; }
-        .name-cell { text-align: left !important; font-weight: 600; color: #1e293b; white-space: nowrap; }
-        .ward-cell { color: #475569; font-weight: 600; white-space: nowrap; }
+        .id-text { font-family: monospace; font-weight: 700; color: #2563eb; }
+        .name-text { text-align: left !important; font-weight: 600; padding-left: 20px !important; }
+        .ward-text { font-weight: 600; color: #475569; }
         
-        .amt-curr { color: var(--success); font-weight: 700; }
+        .amt-curr { color: #10b981; font-weight: 700; }
         .amt-arr { color: #f59e0b; font-weight: 700; }
-        .amt-total { font-weight: 800; color: var(--accent); }
+        .amt-total { font-weight: 800; color: #ef4444; }
 
-        .data-table tbody tr:nth-child(even) { background-color: #f8fafc; }
-        .data-table tbody tr:hover { background-color: #f1f5f9; }
-
-        .view-link { color: var(--primary); text-decoration: none; font-size: 18px; }
+        .data-table tbody tr:hover { background-color: #f8fafc; }
+        .view-btn { color: #2563eb; font-size: 18px; text-decoration: none; }
 
     </style>
 </head>
 <body>
 
 <div class="topbar">
-    <h1>JAL CONNECTION VIVRAN DETAIL</h1>
+    <div class="header-content">
+        <img src="img1.png" alt="Logo" class="header-logo">
+        <h1>JAL CONNECTION VIVRAN DETAIL</h1>
+    </div>
 </div>
 
 <div class="search-area">
     <div class="search-wrapper">
         <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="Search consumer, ward or id..." onkeyup="fastSearch()">
+        <input type="text" id="searchInput" placeholder="उपभोक्ता का नाम, वार्ड या आईडी लिखें..." onkeyup="fastSearch()">
     </div>
-    <button class="excel-btn" onclick="exportToExcel()"><i class="fas fa-file-excel me-2"></i>EXCEL</button>
+    <button class="excel-btn" onclick="exportToExcel()"><i class="fas fa-file-excel me-1"></i> EXCEL</button>
 </div>
 
 <div class="stats-row">
@@ -112,36 +106,37 @@
         <p>कुल कनेक्शन</p>
         <h2 id="statTotal">0</h2>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" style="border-top-color: #10b981;">
         <p>चालू मांग 25-26</p>
         <h2 id="statCurrent">₹0</h2>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" style="border-top-color: #f59e0b;">
         <p>बकाया 24-25</p>
         <h2 id="statArrear">₹0</h2>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" style="border-top-color: #ef4444;">
         <p>कुल अवशेष</p>
-        <h2 id="statTotalRem" style="color: var(--accent);">₹0</h2>
+        <h2 id="statTotalRem">₹0</h2>
     </div>
 </div>
 
 <div class="table-section">
     <div class="table-container">
-        <table class="data-table" id="dataTable">
+        <table class="data-table">
             <thead>
                 <tr>
-                    <th>कन. नं.</th>
+                    <th>कन. आईडी</th>
                     <th>वार्ड विवरण</th>
-                    <th style="text-align: left;">उपभोक्ता का नाम</th>
+                    <th style="text-align: left; padding-left: 20px;">उपभोक्ता का नाम</th>
                     <th>मोबाइल</th>
-                    <th>चालू मांग 2025-2026</th>
-                    <th>बकाया 2024-2025</th>
+                    <th>चालू मांग 25-26</th>
+                    <th>बकाया 24-25</th>
                     <th>कुल अवशेष</th>
-                    <th>देखें</th>
+                    <th>विवरण</th>
                 </tr>
             </thead>
-            <tbody id="tableBody"></tbody>
+            <tbody id="tableBody">
+                </tbody>
         </table>
     </div>
 </div>
@@ -154,12 +149,16 @@
         try {
             const response = await fetch('Connection_data.csv');
             const csvData = response.ok ? await response.text() : "";
+            
+            // CSV को लाइन्स में तोड़ना
             const lines = csvData.split(/\r?\n/).filter(line => line.trim() !== "").slice(1);
             
             stats = { total: 0, current: 0, arrear: 0, balance: 0 };
 
             masterRows = lines.map(line => {
+                // CSV के कॉलम को सही से पकड़ना (कोमा का ध्यान रखते हुए)
                 const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                
                 if (cols.length >= 9) {
                     const cVal = parseFloat(cols[6]) || 0;
                     const aVal = parseFloat(cols[7]) || 0;
@@ -171,29 +170,29 @@
                     stats.balance += rVal;
 
                     const item = { 
-                        id: `NPPNCN-${cols[0]}`, 
-                        ward: cols[1].includes("वार्ड") ? cols[1] : `वार्ड ${cols[1]}`, 
-                        name: cols[2].replace(/"/g, ''), 
-                        mobile: cols[5] || '-', 
+                        id: `NPPNCN-${cols[0].trim()}`, 
+                        ward: cols[1].trim(), 
+                        name: cols[2].replace(/"/g, '').trim(), 
+                        mobile: cols[5].trim() || 'N/A', 
                         curr: cVal, 
                         arr: aVal, 
                         total: rVal,
-                        rawId: cols[0]
+                        rawId: cols[0].trim()
                     };
 
                     return {
                         data: item,
                         html: `<tr>
-                                <td class="id-cell">${item.id}</td>
-                                <td class="ward-cell">${item.ward}</td>
-                                <td class="name-cell">${item.name}</td>
+                                <td class="id-text">${item.id}</td>
+                                <td class="ward-text">${item.ward}</td>
+                                <td class="name-text">${item.name}</td>
                                 <td>${item.mobile}</td>
                                 <td class="amt-curr">₹${item.curr}</td>
                                 <td class="amt-arr">₹${item.arr}</td>
                                 <td class="amt-total">₹${item.total}</td>
-                                <td><a href="connection_view.html?id=${item.rawId}" class="view-link"><i class="fas fa-arrow-circle-right"></i></a></td>
+                                <td><a href="connection_view.html?id=${item.rawId}" class="view-btn"><i class="fas fa-external-link-alt"></i></a></td>
                             </tr>`,
-                        text: `${item.id} ${item.ward} ${item.name}`.toUpperCase()
+                        text: `${item.id} ${item.ward} ${item.name} ${item.mobile}`.toUpperCase()
                     };
                 }
                 return null;
@@ -201,7 +200,9 @@
 
             renderTable(masterRows);
             updateStatsUI();
-        } catch (e) { console.error("Error loading CSV"); }
+        } catch (e) {
+            console.error("CSV loading error:", e);
+        }
     }
 
     function renderTable(list) { 
@@ -215,26 +216,26 @@
     }
 
     function updateStatsUI() {
-        document.getElementById('statTotal').innerText = stats.total;
+        document.getElementById('statTotal').innerText = stats.total.toLocaleString('en-IN');
         document.getElementById('statCurrent').innerText = '₹' + stats.current.toLocaleString('en-IN');
         document.getElementById('statArrear').innerText = '₹' + stats.arrear.toLocaleString('en-IN');
         document.getElementById('statTotalRem').innerText = '₹' + stats.balance.toLocaleString('en-IN');
     }
 
     function exportToExcel() {
-        const exportData = masterRows.map(r => ({
+        const data = masterRows.map(r => ({
             "Connection ID": r.data.id,
-            "Ward Details": r.data.ward,
+            "Ward": r.data.ward,
             "Consumer Name": r.data.name,
             "Mobile": r.data.mobile,
-            "Current 2025-26": r.data.curr,
-            "Arrear 2024-25": r.data.arr,
+            "Current 25-26": r.data.curr,
+            "Arrear 24-25": r.data.arr,
             "Total Balance": r.data.total
         }));
-        const ws = XLSX.utils.json_to_sheet(exportData);
+        const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Records");
-        XLSX.writeFile(wb, "Jal_Connection_Report.xlsx");
+        XLSX.writeFile(wb, "Water_Records_Detail.xlsx");
     }
 
     window.onload = fetchData;
