@@ -12,90 +12,147 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <style>
-        :root { --primary: #10b981; --gradient: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        body { background: #f0fdf4; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        :root { 
+            --primary: #00b894; 
+            --secondary: #0984e3;
+            --bg: #f8f9fa;
+            --glass: rgba(255, 255, 255, 0.95);
+        }
+        
+        body { background: var(--bg); font-family: 'Inter', 'Segoe UI', sans-serif; }
 
+        /* Modern Top Navbar */
         .topbar {
-            background: var(--gradient); height: 70px; padding: 0 20px;
+            background: #ffffff; padding: 12px 25px;
             display: flex; justify-content: space-between; align-items: center;
-            color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             position: sticky; top: 0; z-index: 1000;
         }
 
-        /* Dashboard Stats Cards */
+        /* 1. Search Bar Area (Top) */
+        .search-container {
+            max-width: 1300px; margin: 25px auto 0; padding: 0 20px;
+        }
+        .search-box {
+            position: relative; background: white; border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden;
+            display: flex; align-items: center; border: 1px solid #e0e0e0;
+        }
+        .search-box i { padding: 0 20px; color: var(--primary); font-size: 20px; }
+        #searchInput {
+            flex: 1; border: none; padding: 18px 10px; outline: none; font-size: 16px;
+        }
+        .excel-btn {
+            background: #27ae60; color: white; border: none; padding: 0 25px;
+            height: 100%; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;
+        }
+
+        /* 2. Dashboard Stats Area (Below Search) */
         .stats-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-            gap: 15px; max-width: 1350px; margin: 20px auto; padding: 0 15px; 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+            gap: 20px; max-width: 1300px; margin: 25px auto; padding: 0 20px; 
         }
         .stat-card {
-            background: white; padding: 20px; border-radius: 12px;
-            text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border-bottom: 4px solid var(--primary);
+            background: white; padding: 25px; border-radius: 20px;
+            display: flex; align-items: center; gap: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+            transition: transform 0.3s ease;
         }
-        .stat-card h3 { font-size: 14px; color: #64748b; margin-bottom: 8px; font-weight: 700; }
-        .stat-card .value { font-size: 20px; font-weight: 900; color: #1e293b; }
-
-        .action-bar { max-width: 1350px; margin: 20px auto; display: flex; gap: 10px; padding: 0 15px; }
-        .search-box { position: relative; flex: 1; }
-        #searchInput {
-            width: 100%; padding: 12px 45px; border-radius: 10px;
-            border: 2px solid var(--primary); outline: none;
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-icon {
+            width: 60px; height: 60px; border-radius: 15px;
+            display: flex; align-items: center; justify-content: center; font-size: 24px;
         }
-        .search-box i { position: absolute; left: 15px; top: 15px; color: var(--primary); }
-
-        .table-wrapper { 
-            background: white; border-radius: 12px; overflow-x: auto; 
-            margin: 0 auto 50px; max-width: 1320px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); 
-        }
-        .data-table { width: 100%; border-collapse: collapse; min-width: 950px; }
-        .data-table thead { background: var(--gradient); color: white; }
-        .data-table th, .data-table td { padding: 12px; text-align: center; border-bottom: 1px solid #eee; }
+        .icon-1 { background: #e3fcef; color: #00b894; }
+        .icon-2 { background: #e1f5fe; color: #03a9f4; }
+        .icon-3 { background: #fff4e5; color: #ff9800; }
+        .icon-4 { background: #fce4ec; color: #e91e63; }
         
-        .unpaid { color: #e11d48; font-weight: bold; }
-        .view-btn { background: #3b82f6; color: white; border: none; padding: 6px 12px; border-radius: 6px; }
+        .stat-content h3 { font-size: 13px; color: #636e72; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-content .value { font-size: 22px; font-weight: 800; color: #2d3436; }
+
+        /* Table Area */
+        .table-section { max-width: 1300px; margin: 0 auto 50px; padding: 0 20px; }
+        .table-card {
+            background: white; border-radius: 20px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+        }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table thead { background: #f8fafb; border-bottom: 2px solid #edf2f7; }
+        .data-table th { padding: 18px; color: #4a5568; font-weight: 700; text-align: center; }
+        .data-table td { padding: 16px; text-align: center; border-bottom: 1px solid #f1f4f8; vertical-align: middle; }
+        
+        .unpaid { background: #fff5f5; color: #e53e3e; padding: 4px 10px; border-radius: 8px; font-weight: 700; }
+        .paid { background: #f0fff4; color: #38a169; padding: 4px 10px; border-radius: 8px; font-weight: 700; }
+        
+        .view-btn { 
+            background: #edf2f7; color: #2d3748; border: none; padding: 8px 15px; 
+            border-radius: 10px; transition: 0.2s; font-weight: 600;
+        }
+        .view-btn:hover { background: var(--secondary); color: white; }
+
+        @media (max-width: 768px) {
+            .search-box { flex-direction: column; height: auto; }
+            .excel-btn { width: 100%; padding: 12px; }
+        }
     </style>
 </head>
 <body>
 
 <div class="topbar">
-    <div style="display:flex; align-items:center; gap:10px;">
-        <img src="img1.png" height="50">
-        <span class="fw-bold fs-5">नगर पालिका परिषद नकुड</span>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <img src="img1.png" height="45">
+        <span style="font-weight: 800; font-size: 18px; color: #2d3436;">NPP NAKUR <small style="font-weight:400; color:#636e72;">| Water Tax</small></span>
     </div>
-    <div style="display:flex; gap:10px;">
-        <a href="add_connection.html" class="btn btn-warning btn-sm fw-bold"><i class="fas fa-plus"></i> नया कनेक्शन</a>
-        <a href="dashboard.html" class="text-white fs-4"><i class="fas fa-home"></i></a>
+    <div style="display:flex; gap:15px; align-items:center;">
+        <a href="add_connection.html" class="btn btn-primary btn-sm rounded-pill px-3 fw-bold"><i class="fas fa-plus me-1"></i> Add New</a>
+        <a href="dashboard.html" class="text-dark fs-4"><i class="fas fa-th-large"></i></a>
+    </div>
+</div>
+
+<div class="search-container">
+    <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search by name, connection number or ward..." onkeyup="fastSearch()">
+        <button class="excel-btn" onclick="exportToExcel()">
+            <i class="fas fa-file-excel"></i> Export Excel
+        </button>
     </div>
 </div>
 
 <div class="stats-grid">
-    <div class="stat-card"><h3>कुल कनेक्शन</h3><div class="value" id="totalConn">0</div></div>
-    <div class="stat-card"><h3>चालू मांग</h3><div class="value" id="totalCurr">₹0.00</div></div>
-    <div class="stat-card"><h3>कुल बकाया</h3><div class="value" id="totalArr">₹0.00</div></div>
-    <div class="stat-card"><h3>कुल देय राशि</h3><div class="value" id="totalAll" style="color:#059669;">₹0.00</div></div>
+    <div class="stat-card">
+        <div class="stat-icon icon-1"><i class="fas fa-users"></i></div>
+        <div class="stat-content"><h3>Total Conn.</h3><div class="value" id="totalConn">0</div></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon icon-2"><i class="fas fa-tint"></i></div>
+        <div class="stat-content"><h3>Current Demand</h3><div class="value" id="totalCurr">₹0</div></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon icon-3"><i class="fas fa-clock"></i></div>
+        <div class="stat-content"><h3>Arrear</h3><div class="value" id="totalArr">₹0</div></div>
+    </div>
+    <div class="stat-card" style="border-bottom: 4px solid #e91e63;">
+        <div class="stat-icon icon-4"><i class="fas fa-wallet"></i></div>
+        <div class="stat-content"><h3>Net Payable</h3><div class="value" id="totalAll">₹0</div></div>
+    </div>
 </div>
 
-<div class="container-fluid">
-    <div class="action-bar">
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="नाम, कनेक्शन नंबर या वार्ड से खोजें..." onkeyup="fastSearch()">
-        </div>
-        <button class="btn btn-success" onclick="exportToExcel()"><i class="fas fa-file-excel"></i> Excel</button>
-    </div>
-
-    <div class="table-wrapper">
+<div class="table-section">
+    <div class="table-card">
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>कन. नं.</th>
-                    <th>वार्ड</th>
-                    <th>उपभोक्ता का नाम</th>
-                    <th>मोबाइल</th>
-                    <th>चालू मांग</th>
-                    <th>बकाया</th>
-                    <th>कुल शेष</th>
-                    <th>एक्शन</th>
+                    <th>Conn. No</th>
+                    <th>Ward</th>
+                    <th>Owner Name</th>
+                    <th>Mobile</th>
+                    <th>Current</th>
+                    <th>Arrear</th>
+                    <th>Total Balance</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody id="tableBody"></tbody>
@@ -108,7 +165,6 @@
 
     async function init() {
         try {
-            // 1. CSV डेटा लोड करना
             const res = await fetch('Connection_data.csv');
             const csvText = res.ok ? await res.text() : "";
             const lines = csvText.split('\n').filter(l => l.trim() !== "").slice(1);
@@ -126,45 +182,43 @@
                 };
             });
 
-            // 2. LocalStorage से नया डेटा उठाना
             const localData = JSON.parse(localStorage.getItem('water_connections') || '[]');
-            
-            // 3. डेटा मिलाना
             masterData = [...localData, ...csvRows];
 
-            // 4. Calculations (Dashboard Stats)
-            let stats = { count: 0, curr: 0, arr: 0, total: 0 };
-            masterData.forEach(item => {
-                stats.count++;
-                stats.curr += item.curr;
-                stats.arr += item.arr;
-                stats.total += item.total;
-            });
-
-            // UI अपडेट करना
-            document.getElementById('totalConn').innerText = stats.count;
-            document.getElementById('totalCurr').innerText = '₹' + stats.curr.toLocaleString('en-IN');
-            document.getElementById('totalArr').innerText = '₹' + stats.arr.toLocaleString('en-IN');
-            document.getElementById('totalAll').innerText = '₹' + stats.total.toLocaleString('en-IN');
-
+            calculateStats();
             renderTable(masterData);
         } catch (e) { console.error(e); }
+    }
+
+    function calculateStats() {
+        let stats = { count: 0, curr: 0, arr: 0, total: 0 };
+        masterData.forEach(item => {
+            stats.count++;
+            stats.curr += item.curr;
+            stats.arr += item.arr;
+            stats.total += item.total;
+        });
+
+        document.getElementById('totalConn').innerText = stats.count;
+        document.getElementById('totalCurr').innerText = '₹' + stats.curr.toLocaleString('en-IN');
+        document.getElementById('totalArr').innerText = '₹' + stats.arr.toLocaleString('en-IN');
+        document.getElementById('totalAll').innerText = '₹' + stats.total.toLocaleString('en-IN');
     }
 
     function renderTable(data) {
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = data.map(item => `
             <tr>
-                <td>${item.id}</td>
-                <td>${item.ward}</td>
-                <td style="text-align:left;">${item.name}</td>
+                <td style="font-weight:700; color:#2d3436;">${item.id}</td>
+                <td><span class="badge bg-light text-dark border">${item.ward}</span></td>
+                <td style="text-align:left; font-weight:600;">${item.name}</td>
                 <td>${item.mobile}</td>
                 <td>₹${item.curr}</td>
                 <td>₹${item.arr}</td>
-                <td class="${item.total > 0 ? 'unpaid' : ''}">₹${item.total.toFixed(2)}</td>
+                <td><span class="${item.total > 0 ? 'unpaid' : 'paid'}">₹${item.total.toFixed(2)}</span></td>
                 <td>
                     <button class="view-btn" onclick="location.href='connection_view.html?id=${item.id}'">
-                        <i class="fas fa-eye"></i>
+                        <i class="fas fa-arrow-right"></i>
                     </button>
                 </td>
             </tr>
@@ -181,12 +235,12 @@
 
     function exportToExcel() {
         const ws = XLSX.utils.json_to_sheet(masterData.map(item => ({
-            "कन. नं.": item.id, "वार्ड": item.ward, "नाम": item.name, 
-            "मोबाइल": item.mobile, "चालू मांग": item.curr, "बकाया": item.arr, "कुल शेष": item.total
+            "Connection No": item.id, "Ward": item.ward, "Name": item.name, 
+            "Mobile": item.mobile, "Current": item.curr, "Arrear": item.arr, "Total": item.total
         })));
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "WaterList");
-        XLSX.writeFile(wb, "NPP_Nakur_Water_List.xlsx");
+        XLSX.utils.book_append_sheet(wb, ws, "Connections");
+        XLSX.writeFile(wb, "NPP_Nakur_Water_Data.xlsx");
     }
 
     window.onload = init;
