@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>जल कनेक्शन डैशबोर्ड | NPP NAKUR</title>
+    <title>नगर पालिका परिषद - जल कर डैशबोर्ड</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,217 +13,224 @@
         @import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;600;700&display=swap');
 
         :root { 
-            --primary: #2563eb; 
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --bg: #f8fafc;
+            --primary: #1e40af; 
+            --success: #15803d;
+            --danger: #b91c1c;
+            --warning: #b45309;
+            --header-bg: #ffffff;
+            --row-even: #f0f9ff;
         }
         
-        body { 
-            background: var(--bg); 
-            font-family: 'Hind', sans-serif; 
-            overflow-x: hidden;
-        }
+        body { background-color: #f1f5f9; font-family: 'Hind', sans-serif; }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Navbar */
-        .navbar-custom {
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            padding: 15px 5%;
+        /* Navbar & Logo */
+        .top-nav {
+            background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+            padding: 12px 5%;
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-        .brand-text { color: white; font-weight: 700; font-size: 22px; display: flex; align-items: center; gap: 10px; }
-        .nav-icons a { color: #cbd5e1; font-size: 20px; margin-left: 20px; transition: 0.3s; }
-        .nav-icons a:hover { color: white; transform: scale(1.1); }
+        .logo-section { display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 700; }
+        .logo-section i { font-size: 30px; color: #60a5fa; }
 
-        /* Dashboard Container */
-        .main-container {
-            max-width: 1200px; margin: 30px auto; padding: 0 20px;
-            animation: fadeInUp 0.8s ease-out;
+        .container-main { max-width: 1300px; margin: 20px auto; padding: 0 15px; }
+
+        /* 1. Search Bar Top */
+        .search-area {
+            background: white; padding: 20px; border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex; gap: 15px; margin-bottom: 25px;
+            animation: fadeInDown 0.5s ease;
         }
+        .search-input-group { flex: 1; position: relative; }
+        .search-input-group i { position: absolute; left: 15px; top: 14px; color: #94a3b8; }
+        .search-input-group input { 
+            width: 100%; padding: 12px 45px; border-radius: 10px; border: 2px solid #e2e8f0;
+            font-size: 16px; outline: none; transition: 0.3s;
+        }
+        .search-input-group input:focus { border-color: #3b82f6; box-shadow: 0 0 10px rgba(59,130,246,0.2); }
 
-        /* Stats Cards */
-        .stats-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        /* 2. Dashboard Cards (Now Below Search) */
+        .dashboard-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px; margin-bottom: 30px;
         }
         .stat-card {
-            background: white; border-radius: 20px; padding: 25px;
-            text-align: center; border-bottom: 5px solid transparent;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.3s;
+            background: white; padding: 20px; border-radius: 15px;
+            display: flex; align-items: center; gap: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 6px solid; transition: 0.3s;
         }
-        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
-        .stat-card i { font-size: 30px; margin-bottom: 15px; }
-        .stat-val { font-size: 24px; font-weight: 800; color: #1e293b; }
-        .stat-label { font-size: 14px; color: #64748b; font-weight: 600; text-transform: uppercase; }
-
-        .c-conn { border-color: var(--primary); } .c-conn i { color: var(--primary); }
-        .c-curr { border-color: var(--success); } .c-curr i { color: var(--success); }
-        .c-arr { border-color: var(--warning); } .c-arr i { color: var(--warning); }
-        .c-net { border-color: var(--danger); } .c-net i { color: var(--danger); }
-
-        /* Search & Excel Bar */
-        .action-bar {
-            background: white; padding: 15px; border-radius: 15px;
-            display: flex; gap: 15px; margin-bottom: 25px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-        }
-        .search-box { flex: 1; position: relative; }
-        .search-box i { position: absolute; left: 15px; top: 13px; color: #94a3b8; }
-        .search-box input { 
-            width: 100%; padding: 10px 10px 10px 45px; border-radius: 10px;
-            border: 1px solid #e2e8f0; outline: none; transition: 0.3s;
-        }
-        .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
-
-        .btn-excel {
-            background: #166534; color: white; border: none; padding: 10px 20px;
-            border-radius: 10px; font-weight: 600; display: flex; align-items: center; gap: 8px;
-        }
-
-        /* Modern Table */
-        .table-card {
-            background: white; border-radius: 20px; overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-        }
-        .table-center { width: 100%; border-collapse: collapse; }
-        .table-center thead { background: #f1f5f9; }
-        .table-center th { padding: 18px; text-align: center; color: #475569; font-weight: 700; border-bottom: 2px solid #e2e8f0; }
-        .table-center td { padding: 15px; text-align: center; border-bottom: 1px solid #f1f5f9; font-size: 15px; vertical-align: middle; }
+        .stat-card:hover { transform: scale(1.03); }
+        .icon-box { width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
         
-        /* Row Colors */
-        .tr-even { background-color: #fafafa; }
-        .badge-ward { background: #e0f2fe; color: #0369a1; padding: 5px 12px; border-radius: 20px; font-weight: 700; }
-        .net-due { color: var(--danger); font-weight: 800; }
+        .c-1 { border-left-color: var(--primary); } .i-1 { background: #dbeafe; color: var(--primary); }
+        .c-2 { border-left-color: var(--success); } .i-2 { background: #dcfce7; color: var(--success); }
+        .c-3 { border-left-color: var(--warning); } .i-3 { background: #fef3c7; color: var(--warning); }
+        .c-4 { border-left-color: var(--danger); }  .i-4 { background: #fee2e2; color: var(--danger); }
 
-        @media (max-width: 768px) {
-            .action-bar { flex-direction: column; }
+        .stat-info h3 { margin: 0; font-size: 22px; font-weight: 800; color: #1e293b; }
+        .stat-info p { margin: 0; font-size: 14px; color: #64748b; font-weight: 600; }
+
+        /* 3. Colorful Table */
+        .table-wrap {
+            background: white; border-radius: 15px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.6s ease;
         }
+        .custom-table { width: 100%; border-collapse: collapse; }
+        .custom-table thead { background: #1e293b; color: white; }
+        .custom-table th { padding: 18px; text-align: center; text-transform: uppercase; font-size: 14px; letter-spacing: 0.5px; }
+        .custom-table td { padding: 15px; text-align: center; border-bottom: 1px solid #eef2f6; vertical-align: middle; }
+        
+        .custom-table tbody tr:nth-child(even) { background-color: var(--row-even); }
+        .custom-table tbody tr:hover { background-color: #e0f2fe; cursor: pointer; }
+
+        .ward-badge { background: #3b82f6; color: white; padding: 4px 10px; border-radius: 6px; font-weight: bold; }
+        .amt-curr { color: var(--success); font-weight: 700; }
+        .amt-arr { color: var(--warning); font-weight: 700; }
+        .amt-total { color: var(--danger); font-weight: 800; font-size: 16px; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<nav class="navbar-custom">
-    <div class="brand-text">
-        <i class="fas fa-droplet text-primary"></i> NPP NAKUR WATER TAX
+<nav class="top-nav">
+    <div class="logo-section">
+        <i class="fas fa-landmark"></i>
+        <span>NPP NAKUR - जल कनेक्शन प्रणाली</span>
     </div>
-    <div class="nav-icons">
-        <a href="dashboard.html" title="होम"><i class="fas fa-house-chimney"></i></a>
-        <a href="settings.html" title="सेटिंग"><i class="fas fa-gear"></i></a>
+    <div>
+        <button class="btn btn-light btn-sm fw-bold" onclick="window.location.reload()"><i class="fas fa-sync"></i> रिफ्रेश</button>
     </div>
 </nav>
 
-<div class="main-container">
+<div class="container-main">
     
-    <div class="stats-grid">
-        <div class="stat-card c-conn">
-            <i class="fas fa-users"></i>
-            <div class="stat-val" id="totalConn">4,233</div>
-            <div class="stat-label">कुल कनेक्शन</div>
-        </div>
-        <div class="stat-card c-curr">
-            <i class="fas fa-file-invoice-dollar"></i>
-            <div class="stat-val" id="totalCurr">₹25,39,800</div>
-            <div class="stat-label">चालू मांग</div>
-        </div>
-        <div class="stat-card c-arr">
-            <i class="fas fa-clock-rotate-left"></i>
-            <div class="stat-val" id="totalArr">₹0</div>
-            <div class="stat-label">बकाया राशि</div>
-        </div>
-        <div class="stat-card c-net">
-            <i class="fas fa-wallet"></i>
-            <div class="stat-val" id="totalNet">₹25,39,800</div>
-            <div class="stat-label">कुल देय</div>
-        </div>
-    </div>
-
-    <div class="action-bar">
-        <div class="search-box">
+    <div class="search-area">
+        <div class="search-input-group">
             <i class="fas fa-search"></i>
-            <input type="text" id="searchInp" placeholder="नाम या वार्ड से सर्च करें..." onkeyup="filterTable()">
+            <input type="text" id="mainSearch" placeholder="उपभोक्ता का नाम, वार्ड या कनेक्शन नंबर लिखें..." onkeyup="searchHandler()">
         </div>
-        <button class="btn-excel" onclick="exportData()">
-            <i class="fas fa-file-excel"></i> EXCEL
-        </button>
-        <button class="btn btn-primary rounded-3 px-4 fw-bold" onclick="location.href='add_connection.html'">
-            + नया कनेक्शन
+        <button class="btn btn-success px-4 fw-bold" onclick="exportToExcel()">
+            <i class="fas fa-download"></i> EXCEL
         </button>
     </div>
 
-    <div class="table-card">
-        <table class="table-center">
+    <div class="dashboard-grid">
+        <div class="stat-card c-1">
+            <div class="icon-box i-1"><i class="fas fa-link"></i></div>
+            <div class="stat-info">
+                <h3 id="statConn">4,233</h3>
+                <p>कुल कनेक्शन</p>
+            </div>
+        </div>
+        <div class="stat-card c-2">
+            <div class="icon-box i-2"><i class="fas fa-rupee-sign"></i></div>
+            <div class="stat-info">
+                <h3 id="statCurr">₹25,39,800</h3>
+                <p>चालू मांग (Current)</p>
+            </div>
+        </div>
+        <div class="stat-card c-3">
+            <div class="icon-box i-3"><i class="fas fa-history"></i></div>
+            <div class="stat-info">
+                <h3 id="statArr">₹0</h3>
+                <p>बकाया राशि (Arrear)</p>
+            </div>
+        </div>
+        <div class="stat-card c-4">
+            <div class="icon-box i-4"><i class="fas fa-wallet"></i></div>
+            <div class="stat-info">
+                <h3 id="statNet">₹25,39,800</h3>
+                <p>कुल देय (Total Payable)</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table class="custom-table" id="dataTable">
             <thead>
                 <tr>
                     <th>कन. नं.</th>
                     <th>वार्ड</th>
-                    <th>उपभोक्ता का नाम</th>
+                    <th style="text-align: left; padding-left: 40px;">उपभोक्ता का नाम</th>
                     <th>चालू मांग</th>
-                    <th>बकाया</th>
+                    <th>बकाया राशि</th>
                     <th>कुल देय</th>
-                    <th>एक्शन</th>
+                    <th>विवरण</th>
                 </tr>
             </thead>
-            <tbody id="tableData">
+            <tbody id="tableBody">
                 </tbody>
         </table>
     </div>
 </div>
 
 <script>
-    // डमी डेटा (इसे आप अपनी CSV फाइल से रिप्लेस करेंगे)
-    let waterData = [
-        {id: "1001", ward: "01", name: "अमित कुमार", curr: 600, arr: 100, total: 700},
-        {id: "1002", ward: "05", name: "सुनील सिंह", curr: 600, arr: 600, total: 1200},
-        {id: "1003", ward: "03", name: "राजेश वर्मा", curr: 600, arr: 0, total: 600}
+    // आपका डेटा यहाँ है (मैंने इसमें डमी डेटा सेट किया है, आप अपनी फाइल का डेटा यहाँ डाल सकते हैं)
+    const masterData = [
+        {id: "101", ward: "01", name: "राम अवतार गुप्ता", curr: 600, arr: 1200, total: 1800},
+        {id: "102", ward: "05", name: "मोहित सैनी", curr: 600, arr: 0, total: 600},
+        {id: "103", ward: "12", name: "श्रीमती सुनीता देवी", curr: 600, arr: 450, total: 1050},
+        {id: "104", ward: "03", name: "अब्दुल रहीम", curr: 600, arr: 2500, total: 3100},
+        {id: "105", ward: "08", name: "राजपाल सिंह", curr: 600, arr: 0, total: 600},
+        // ... आप यहाँ 4000+ लाइन्स जोड़ सकते हैं
     ];
 
-    function loadTable(data) {
-        const tbody = document.getElementById('tableData');
+    function renderTable(data) {
+        const tbody = document.getElementById('tableBody');
         tbody.innerHTML = "";
+        
+        let totalCurr = 0;
+        let totalArr = 0;
 
-        data.forEach((item, index) => {
-            let row = `<tr class="${index % 2 === 0 ? '' : 'tr-even'}">
-                <td class="fw-bold">${item.id}</td>
-                <td><span class="badge-ward">${item.ward}</span></td>
-                <td class="text-start ps-4">${item.name}</td>
-                <td>₹${item.curr}</td>
-                <td>₹${item.arr}</td>
-                <td><span class="net-due">₹${item.total}</span></td>
-                <td>
-                    <button class="btn btn-sm btn-outline-primary" onclick="alert('View ID: ${item.id}')">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </td>
-            </tr>`;
+        data.forEach(item => {
+            totalCurr += item.curr;
+            totalArr += item.arr;
+
+            let row = `
+                <tr>
+                    <td class="fw-bold text-secondary">#${item.id}</td>
+                    <td><span class="ward-badge">${item.ward}</span></td>
+                    <td style="text-align: left; padding-left: 40px; font-weight: 600;">${item.name}</td>
+                    <td class="amt-curr">₹${item.curr}</td>
+                    <td class="amt-arr">₹${item.arr}</td>
+                    <td class="amt-total">₹${item.total}</td>
+                    <td><button class="btn btn-sm btn-outline-primary"><i class="fas fa-print"></i></button></td>
+                </tr>
+            `;
             tbody.innerHTML += row;
         });
+
+        // कार्ड्स में टोटल अपडेट करें
+        document.getElementById('statConn').innerText = data.length.toLocaleString();
+        document.getElementById('statCurr').innerText = "₹" + totalCurr.toLocaleString('en-IN');
+        document.getElementById('statArr').innerText = "₹" + totalArr.toLocaleString('en-IN');
+        document.getElementById('statNet').innerText = "₹" + (totalCurr + totalArr).toLocaleString('en-IN');
     }
 
-    function filterTable() {
-        let val = document.getElementById('searchInp').value.toLowerCase();
-        let filtered = waterData.filter(x => 
-            x.name.toLowerCase().includes(val) || x.ward.includes(val) || x.id.includes(val)
+    function searchHandler() {
+        let keyword = document.getElementById('mainSearch').value.toLowerCase();
+        let filtered = masterData.filter(x => 
+            x.name.toLowerCase().includes(keyword) || 
+            x.ward.includes(keyword) || 
+            x.id.includes(keyword)
         );
-        loadTable(filtered);
+        renderTable(filtered);
     }
 
-    function exportData() {
-        const ws = XLSX.utils.json_to_sheet(waterData);
+    function exportToExcel() {
+        const ws = XLSX.utils.json_to_sheet(masterData);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Records");
-        XLSX.writeFile(wb, "Water_Tax_Report.xlsx");
+        XLSX.utils.book_append_sheet(wb, ws, "TaxRecords");
+        XLSX.writeFile(wb, "NPP_Nakur_Water_Tax.xlsx");
     }
 
-    // पेज लोड होते ही डेटा दिखाओ
-    window.onload = () => loadTable(waterData);
+    // Initialize
+    window.onload = () => renderTable(masterData);
 </script>
 
 </body>
