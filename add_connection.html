@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>नया जल कनेक्शन - NPP NAKUR</title>
+    
+    <link rel="icon" type="image/x-icon" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/svgs/solid/water.svg">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', 'Nirmala UI', sans-serif; }
@@ -41,6 +44,9 @@
             background: #fafafa; font-size: 15px; transition: all 0.3s;
         }
         input:focus, select:focus { outline: none; border-color: #1565c0; background: white; }
+        
+        /* 600 रुपये वाले इनपुट के लिए स्टाइल जो बदला न जा सके */
+        input[readonly] { background: #eeeeee; cursor: not-allowed; color: #666; font-weight: bold; }
 
         .total-balance {
             margin-top: 15px; font-weight: bold; color: #2e7d32; background: #f1f8e9;
@@ -65,14 +71,17 @@
         @media (max-width: 768px) {
             .form-container { grid-template-columns: 1fr; }
             .full-width { grid-column: span 1; }
-            .header { flex-direction: column; padding: 15px; gap: 10px;}
+            .header { flex-direction: column; padding: 15px; gap: 12px; }
         }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div><strong><i class="fas fa-water" style="color: #1565c0;"></i> नया जल कनेक्शन</strong></div>
+    <div>
+        <i class="fas fa-water" style="color: #1565c0; font-size: 24px;"></i> 
+        <strong style="font-size: 20px; margin-left: 10px;">NPP NAKUR</strong>
+    </div>
     <div style="display: flex;">
         <a href="dashboard.html"><i class="fas fa-home"></i> होम</a>
         <a href="index.html" onclick="localStorage.clear();"><i class="fas fa-sign-out-alt"></i> लॉगआउट</a>
@@ -103,8 +112,14 @@
             </div>
 
             <div class="form-group">
-                <label for="ward_no"><i class="fas fa-map-marker-alt"></i> वार्ड नंबर*</label>
-                <input type="number" id="ward_no" required placeholder="वार्ड नंबर दर्ज करें">
+                <label for="ward_no"><i class="fas fa-map-marker-alt"></i> वार्ड नंबर और नाम*</label>
+                <select id="ward_no" required>
+                    <option value="" disabled selected>वार्ड चुनें...</option>
+                    <option value="18-बन्जारान">18-बन्जारान</option>
+                    <option value="01-आजाद नगर">01-आजाद नगर</option>
+                    <option value="02-गांधी नगर">02-गांधी नगर</option>
+                    <option value="03-सुभाष नगर">03-सुभाष नगर</option>
+                    </select>
             </div>
 
             <div class="form-group">
@@ -117,8 +132,8 @@
             </div>
 
             <div class="form-group">
-                <label for="current_amount"><i class="fas fa-rupee-sign"></i> वर्तमान राशि (2025-26)*</label>
-                <input type="number" id="current_amount" step="0.01" value="600.00" oninput="calculateTotal()">
+                <label for="current_amount"><i class="fas fa-rupee-sign"></i> वर्तमान राशि (Fixed)*</label>
+                <input type="number" id="current_amount" value="600.00" readonly>
             </div>
 
             <div class="form-group">
@@ -139,7 +154,7 @@
 
             <div class="form-group full-width">
                 <button type="submit" class="submit-btn">
-                    <i class="fas fa-save"></i> कनेक्शन सहेजें
+                    <i class="fas fa-save"></i> कनेक्शन सुरक्षित करें
                 </button>
             </div>
         </form>
@@ -151,31 +166,29 @@
 </div>
 
 <script>
-    // --- सुरक्षा जांच ---
+    // सुरक्षा जांच
     if (localStorage.getItem('isLoggedIn') !== 'true') {
         window.location.replace('index.html');
     }
 
-    // कुल राशि की गणना
+    // कुल राशि की गणना (600 + बकाया)
     function calculateTotal() {
-        const curr = parseFloat(document.getElementById("current_amount").value) || 0;
+        const fixedAmt = 600.00;
         const arrear = parseFloat(document.getElementById("arrear_balance").value) || 0;
-        const total = curr + arrear;
+        const total = fixedAmt + arrear;
         document.getElementById("totalAmount").textContent = total.toFixed(2);
     }
 
-    // पेज लोड होने पर सेटअप
     window.onload = function() {
-        // ऑटो डेट सेट करें
+        // वर्तमान समय सेट करें
         const now = new Date();
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
         document.getElementById("connection_date_time").value = now.toISOString().slice(0, 16);
         
-        // प्रारंभिक राशि की गणना करें
+        // पेज खुलते ही गणना करें
         calculateTotal();
     };
 
-    // फॉर्म सबमिट हैंडलर
     document.getElementById('waterForm').onsubmit = function(e) {
         e.preventDefault();
         
@@ -185,35 +198,30 @@
             return;
         }
 
-        // सभी डेटा को ऑब्जेक्ट में सहेजें
+        // वह डेटा जो connection_detail.html में भेजा जाएगा
         const formData = {
             id: Date.now(),
             con_no: document.getElementById('con_no').value,
             owner: document.getElementById('owner').value,
             mobile: mobile,
-            ward: document.getElementById('ward_no').value, // वार्ड नंबर यहाँ है
+            ward: document.getElementById('ward_no').value, // इसमें "18-बन्जारान" जैसा पूरा नाम जाएगा
             type: document.getElementById('connection_type').value,
-            current_amt: document.getElementById('current_amount').value,
+            current_amt: "600.00",
             arrear_amt: document.getElementById('arrear_balance').value,
-            amount: document.getElementById('totalAmount').textContent, // कुल राशि
+            amount: document.getElementById('totalAmount').textContent,
             date: document.getElementById('connection_date_time').value
         };
 
-        try {
-            // डेटा को LocalStorage में स्टोर करें
-            let connections = JSON.parse(localStorage.getItem('water_connections') || '[]');
-            connections.push(formData);
-            localStorage.setItem('water_connections', JSON.stringify(connections));
+        // LocalStorage में डेटा अपडेट करना
+        let connections = JSON.parse(localStorage.getItem('water_connections') || '[]');
+        connections.push(formData);
+        localStorage.setItem('water_connections', JSON.stringify(connections));
 
-            showMsg('success', 'डेटा सफलतापूर्वक सहेज लिया गया है!');
-            
-            // 1.5 सेकंड बाद लिस्ट पेज पर भेजें
-            setTimeout(() => {
-                window.location.href = 'connection_detail.html';
-            }, 1500);
-        } catch (err) {
-            showMsg('error', 'डेटा सहेजने में त्रुटि हुई!');
-        }
+        showMsg('success', 'नया कनेक्शन सफलतापूर्वक सहेज लिया गया है!');
+        
+        setTimeout(() => {
+            window.location.href = 'connection_detail.html';
+        }, 1500);
     };
 
     function showMsg(type, text) {
