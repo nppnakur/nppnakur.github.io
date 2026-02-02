@@ -12,8 +12,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
         body {
-            background: #f4f7fe;
-            color: #2b3674;
+            background: #fffaf0; /* Light Orange/Cream background */
+            color: #4a3728;
             display: flex;
             justify-content: center;
             min-height: 100vh;
@@ -26,11 +26,11 @@
             background: #fff;
             border-radius: 30px;
             padding: 40px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
-            position: relative;
+            box-shadow: 0 20px 50px rgba(255, 165, 0, 0.1);
+            border: 1px solid #ffe4b5;
         }
 
-        /* Top Header Area */
+        /* Header Area */
         .header {
             display: flex;
             justify-content: space-between;
@@ -43,56 +43,50 @@
             width: 70px;
             height: 70px;
             border-radius: 20px;
-            box-shadow: 10px 10px 20px rgba(0,0,0,0.05);
-            border: 2px solid #fff;
+            border: 2px solid #ffa500;
         }
 
-        .header-left h1 { font-size: 28px; font-weight: 800; color: #1b2559; }
-        .header-left p { font-size: 14px; color: #a3aed0; font-weight: 500; }
+        .header-left h1 { font-size: 28px; font-weight: 800; color: #cc7a00; }
+        .header-left p { font-size: 14px; color: #996633; font-weight: 500; }
 
         .home-btn {
             width: 50px;
             height: 50px;
-            background: #f4f7fe;
+            background: #fff5e6;
             border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #4318ff;
+            color: #ffa500;
             text-decoration: none;
             transition: 0.3s;
         }
-        .home-btn:hover { background: #4318ff; color: #fff; transform: translateY(-3px); }
+        .home-btn:hover { background: #ffa500; color: #fff; transform: translateY(-3px); }
 
-        /* Data Grid Layout */
+        /* Data Grid */
         .details-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 25px;
         }
 
-        .input-item {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .input-item label { font-size: 13px; font-weight: 700; color: #1b2559; margin-left: 5px; }
+        .input-item { display: flex; flex-direction: column; gap: 10px; }
+        .input-item label { font-size: 13px; font-weight: 700; color: #805500; margin-left: 5px; }
         
         .input-item input {
             padding: 18px;
             border-radius: 20px;
-            border: 1px solid #e0e5f2;
-            background: #fff;
+            border: 1px solid #ffe4b5;
+            background: #fffcf5;
             font-size: 16px;
             font-weight: 600;
-            color: #2b3674;
+            color: #4a3728;
             transition: 0.3s;
         }
 
-        .input-item input:focus { border-color: #4318ff; outline: none; box-shadow: 0 10px 20px rgba(67, 24, 255, 0.05); }
+        .input-item input:focus { border-color: #ffa500; outline: none; background: #fff; }
 
-        /* Money Cards (Horizontal Row) */
+        /* Money Cards */
         .money-section {
             grid-column: 1 / -1;
             display: grid;
@@ -104,37 +98,33 @@
         .money-card {
             padding: 25px;
             border-radius: 25px;
-            text-align: left;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #e0e5f2;
+            border: 1px solid #ffe4b5;
+            background: #fffcf5;
         }
 
-        .money-card label { font-size: 11px; color: #a3aed0; font-weight: 800; text-transform: uppercase; }
+        .money-card label { font-size: 11px; color: #996633; font-weight: 800; text-transform: uppercase; }
         .money-card input { 
             width: 100%; border: none !important; background: transparent !important; 
-            font-size: 24px !important; font-weight: 800 !important; color: #1b2559 !important;
-            margin-top: 5px;
+            font-size: 24px !important; font-weight: 800 !important; color: #cc7a00 !important;
         }
 
-        /* Specialized Colors */
-        .money-card.current { border-left: 6px solid #4318ff; background: #f4f7fe; }
-        .money-card.arrears { border-left: 6px solid #ffb547; background: #fffcf5; }
-        .money-card.total { background: #4318ff; }
-        .money-card.total label { color: rgba(255,255,255,0.7); }
+        .money-card.total { background: #ffa500; border: none; }
+        .money-card.total label { color: rgba(255,255,255,0.8); }
         .money-card.total input { color: #fff !important; font-size: 30px !important; }
 
         /* Buttons Area */
         .footer-btns {
             grid-column: 1 / -1;
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between; /* Space for Delete on left, others on right */
             gap: 15px;
             margin-top: 30px;
         }
 
+        .right-group { display: flex; gap: 15px; }
+
         .btn {
-            padding: 15px 30px;
+            padding: 15px 25px;
             border-radius: 18px;
             border: none;
             font-weight: 700;
@@ -145,14 +135,17 @@
             transition: 0.3s;
         }
 
-        .btn-edit { background: #2b3674; color: #fff; }
-        .btn-print { background: #e0e5f2; color: #2b3674; }
+        .btn-edit { background: #805500; color: #fff; }
+        .btn-print { background: #ffe4b5; color: #805500; }
         .btn-save { background: #05cd99; color: #fff; display: none; }
+        .btn-delete { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+
         .btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .btn-delete:hover { background: #b91c1c; color: #fff; }
 
         @media (max-width: 800px) {
             .details-grid, .money-section { grid-template-columns: 1fr; }
-            .main-card { padding: 25px; }
+            .footer-btns { flex-direction: column-reverse; }
         }
     </style>
 </head>
@@ -189,11 +182,11 @@
             </div>
 
             <div class="money-section">
-                <div class="money-card current">
+                <div class="money-card">
                     <label>चालू मांग (2025-2026)</label>
                     <input type="text" id="disp_curr" disabled>
                 </div>
-                <div class="money-card arrears">
+                <div class="money-card">
                     <label>बकाया (2024-2025)</label>
                     <input type="text" id="disp_arr" disabled>
                 </div>
@@ -204,15 +197,26 @@
             </div>
 
             <div class="footer-btns">
-                <button id="saveBtn" class="btn btn-save" onclick="saveData()"><i class="fas fa-save"></i> UPDATE</button>
-                <button class="btn btn-print" onclick="window.print()"><i class="fas fa-print"></i> PRINT</button>
-                <button class="btn btn-edit" id="editBtn" onclick="enableEdit()"><i class="fas fa-user-edit"></i> EDIT INFO</button>
+                <button class="btn btn-delete" onclick="deleteRecord()">
+                    <i class="fas fa-trash-alt"></i> DELETE
+                </button>
+
+                <div class="right-group">
+                    <button id="saveBtn" class="btn btn-save" onclick="saveData()">
+                        <i class="fas fa-save"></i> UPDATE
+                    </button>
+                    <button class="btn btn-print" onclick="window.print()">
+                        <i class="fas fa-print"></i> PRINT
+                    </button>
+                    <button class="btn btn-edit" id="editBtn" onclick="enableEdit()">
+                        <i class="fas fa-user-edit"></i> EDIT INFO
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
 <script>
-    // Fix for special IDs like Baljeet Singh (1,191)
     function cleanID(id) {
         if(!id) return "";
         return decodeURIComponent(id).replace("NPPNCN-", "").replace(/[",\s]/g, "").trim();
@@ -253,10 +257,29 @@
             document.querySelectorAll('input').forEach(i => { if(i.id !== 'disp_id') i.disabled = false; });
             document.getElementById('saveBtn').style.display = 'flex';
             document.getElementById('editBtn').style.display = 'none';
+        } else {
+            alert("Wrong Password!");
         }
     }
 
-    function saveData() { alert("Updated Successfully!"); location.reload(); }
+    function saveData() { 
+        alert("Updated Successfully!"); 
+        location.reload(); 
+    }
+
+    // Delete Function with Password and Confirm
+    function deleteRecord() {
+        const pass = prompt("Enter Admin Password to DELETE:");
+        if (pass === "admin123") {
+            const confirmDel = confirm("Warning: Are you sure you want to delete this record? This cannot be undone.");
+            if (confirmDel) {
+                alert("Record Deleted Successfully!");
+                window.location.href = "connection_detail.html"; 
+            }
+        } else if (pass !== null) {
+            alert("Incorrect Password!");
+        }
+    }
 
     window.onload = init;
 </script>
