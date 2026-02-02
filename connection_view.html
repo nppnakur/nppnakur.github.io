@@ -180,51 +180,98 @@
     </div>
 
 <script>
-    // ID से कोमा, कोट्स और फालतू स्पेस हटाने का फंक्शन
+    // ID से विशेष characters हटाने का फंक्शन
     function cleanID(id) {
         if (!id) return "";
-        return id.replace(/[,"']/g, '').trim();
+        // सभी quotes, commas और extra spaces को हटाएं
+        return id.replace(/["',]/g, '').replace(/\s+/g, ' ').trim();
+    }
+
+    // CSV row को columns में बदलने का बेहतर तरीका
+    function parseCSVRow(row) {
+        const result = [];
+        let current = "";
+        let inQuotes = false;
+        
+        for (let i = 0; i < row.length; i++) {
+            const char = row[i];
+            const nextChar = row[i + 1];
+            
+            if (char === '"' && inQuotes && nextChar === '"') {
+                current += '"';
+                i++; // Skip next quote
+            } else if (char === '"') {
+                inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+                result.push(current);
+                current = "";
+            } else {
+                current += char;
+            }
+        }
+        result.push(current);
+        return result;
     }
 
     async function init() {
         const params = new URLSearchParams(window.location.search);
         const rawId = params.get('id'); 
-        if(!rawId) return;
+        
+        if(!rawId) {
+            console.log("No ID parameter found");
+            return;
+        }
 
         const originalId = decodeURIComponent(rawId);
         document.getElementById('disp_id').value = originalId;
         
+        // Clean the search ID for comparison
         const searchIdClean = cleanID(originalId);
+        console.log("Searching for cleaned ID:", searchIdClean);
 
         try {
             const res = await fetch('Connection_data.csv');
             const text = await res.text();
             const rows = text.split(/\r?\n/);
+            
+            console.log("Total rows in CSV:", rows.length);
 
             for(let i = 1; i < rows.length; i++) {
                 const row = rows[i];
-                if(!row) continue;
+                if(!row.trim()) continue;
 
-                // CSV columns parsing (handles commas inside quotes)
-                const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                // Use the improved CSV parser
+                const cols = parseCSVRow(row);
                 
-                if(cols[0]) {
+                if(cols.length >= 1 && cols[0]) {
                     const csvIdClean = cleanID(cols[0]);
+                    console.log("Checking CSV ID:", csvIdClean);
                     
-                    // अगर साफ की हुई ID मैच होती है
-                    if(searchIdClean.includes(csvIdClean) || csvIdClean.includes(searchIdClean)) {
-                        document.getElementById('disp_name').value = (cols[2] + " " + (cols[3] || "")).replace(/"/g, '').trim();
-                        document.getElementById('disp_ward').value = cols[1] ? cols[1].replace(/"/g, '') : "N/A";
-                        document.getElementById('disp_mobile').value = cols[5] ? cols[5].replace(/"/g, '') : "---";
-                        document.getElementById('disp_curr').value = "₹ " + (cols[6] || "0");
-                        document.getElementById('disp_arr').value = "₹ " + (cols[7] || "0");
-                        document.getElementById('disp_total').value = "₹ " + (cols[8] || "0");
+                    // Exact match करने की कोशिश करें
+                    if(searchIdClean === csvIdClean) {
+                        console.log("Match found! Filling data...");
+                        
+                        // Data fill करें (CSV columns के अनुसार)
+                        document.getElementById('disp_name').value = cols[2] ? cols[2].replace(/"/g, '').trim() : "";
+                        document.getElementById('disp_ward').value = cols[1] ? cols[1].replace(/"/g, '').trim() : "N/A";
+                        document.getElementById('disp_mobile').value = cols[5] ? cols[5].replace(/"/g, '').trim() : "---";
+                        document.getElementById('disp_curr').value = "₹ " + (cols[6] ? cols[6].replace(/"/g, '').trim() : "0");
+                        document.getElementById('disp_arr').value = "₹ " + (cols[7] ? cols[7].replace(/"/g, '').trim() : "0");
+                        document.getElementById('disp_total').value = "₹ " + (cols[8] ? cols[8].replace(/"/g, '').trim() : "0");
+                        
+                        console.log("Data filled successfully");
                         return;
                     }
                 }
             }
-            console.log("No match found for: " + searchIdClean);
-        } catch(e) { console.log("Fetch Error", e); }
+            
+            console.log("No match found for ID:", searchIdClean);
+            alert("उपभोक्ता का डेटा नहीं मिला।");
+            
+        } catch(e) { 
+            console.log("Fetch Error", e);
+            alert("CSV फाइल लोड करने में त्रुटि: " + e.message);
+        }
     }
 
     function goToEdit() {
@@ -232,15 +279,19 @@
         if (pass === "admin123") {
             const id = encodeURIComponent(document.getElementById('disp_id').value);
             window.location.href = "edit_connection.html?id=" + id;
+        } else if (pass !== null) {
+            alert("गलत पासवर्ड!");
         }
     }
 
     function handleDelete() {
         const pass = prompt("डिलीट पासवर्ड:");
         if (pass === "admin123") {
-            if(confirm("रिकॉर्ड डिलीट करें?")) {
+            if(confirm("क्या आप वाकई इस रिकॉर्ड को डिलीट करना चाहते हैं?")) {
                 window.location.href = "https://nppnakur.github.io/connection_detail.html";
             }
+        } else if (pass !== null) {
+            alert("गलत पासवर्ड!");
         }
     }
 
