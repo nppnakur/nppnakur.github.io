@@ -3,79 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consumer Detail - NPP NAKUR</title>
+    <title>उपभोक्ता विवरण - NPP नकुड़</title>
     
     <link rel="icon" type="image/png" href="img1.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif; 
+        }
 
         body {
-            background: #fffaf0; 
-            color: #4a3728;
-            display: flex;
-            justify-content: center;
+            background: linear-gradient(135deg, #f8f4e8 0%, #fff8ee 100%);
+            color: #333;
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
         }
 
         .main-card {
             width: 100%;
-            max-width: 900px;
-            background: #fff;
-            border-radius: 30px;
+            max-width: 1000px;
+            background: white;
+            border-radius: 25px;
             padding: 30px;
-            box-shadow: 0 20px 50px rgba(255, 165, 0, 0.1);
-            border: 1px solid #ffe4b5;
+            box-shadow: 0 20px 60px rgba(255, 140, 0, 0.1);
+            border: 2px solid #ff8c00;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Header Layout: Logo Left, Buttons Right */
+        .main-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff8c00, #ffc400);
+        }
+
+        /* Header Design */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #fff5e6;
+            border-bottom: 3px solid #ff8c00;
         }
 
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .header-left img { width: 70px; height: 70px; border-radius: 10px; }
-        .header-left h1 { font-size: 24px; font-weight: 800; color: #cc7a00; }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
 
-        .header-right { display: flex; gap: 12px; }
+        .logo-wrapper {
+            width: 80px;
+            height: 80px;
+            background: #ff8c00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(255, 140, 0, 0.3);
+            border: 3px solid white;
+        }
+
+        .logo-wrapper img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .logo-text h1 {
+            font-size: 26px;
+            color: #ff8c00;
+            margin-bottom: 5px;
+        }
+
+        .logo-text p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
         .nav-btn {
-            width: 45px; height: 45px; background: #fff5e6; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            color: #ffa500; text-decoration: none; transition: 0.3s; font-size: 18px;
-            border: 1px solid #ffe4b5;
+            width: 45px;
+            height: 45px;
+            background: #fff5e6;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff8c00;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 2px solid #ff8c00;
         }
-        .nav-btn:hover { background: #ffa500; color: #fff; transform: translateY(-3px); }
+
+        .nav-btn:hover {
+            background: #ff8c00;
+            color: white;
+            transform: scale(1.1);
+        }
 
         /* Data Grid */
-        .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .input-item { display: flex; flex-direction: column; gap: 8px; }
-        .input-item label { font-size: 12px; font-weight: 700; color: #805500; text-transform: uppercase; }
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .input-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-item label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ff8c00;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .input-item input {
-            padding: 16px; border-radius: 15px; border: 1px solid #ffe4b5;
-            background: #fffcf5; font-size: 16px; font-weight: 600; color: #4a3728; outline: none;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #ff8c00;
+            background: #fff9f0;
+            font-size: 16px;
+            color: #333;
+            outline: none;
+        }
+
+        .input-item input:disabled {
+            background: #f5f5f5;
+            color: #555;
         }
 
         /* Money Section */
         .money-section {
             grid-column: 1 / -1;
-            display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 15px;
-            margin-top: 15px; background: #fff9ef; padding: 25px; border-radius: 20px;
-            border: 1px dashed #ffa500;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+            padding: 25px;
+            background: #fff9f0;
+            border-radius: 15px;
+            border: 2px dashed #ff8c00;
         }
-        .money-card input { width: 100%; border: none; background: transparent; font-size: 22px; font-weight: 800; color: #cc7a00; }
-        
-        .total-box { background: #ffa500; padding: 15px; border-radius: 15px; }
-        .total-box label { color: #fff; }
-        .total-box input { color: #fff !important; font-size: 26px !important; }
 
-        /* Toolbar Bottom */
+        .money-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 2px solid #ff8c00;
+        }
+
+        .money-card label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .money-card input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 22px;
+            font-weight: 700;
+            color: #ff8c00;
+            outline: none;
+        }
+
+        .total-box {
+            background: #ff8c00;
+            color: white;
+        }
+
+        .total-box label {
+            color: white;
+        }
+
+        .total-box input {
+            color: white;
+            font-size: 26px;
+        }
+
+        /* Toolbar */
         .toolbar {
             grid-column: 1 / -1;
             display: flex;
@@ -83,27 +219,69 @@
             gap: 15px;
             margin-top: 30px;
             padding-top: 20px;
-            border-top: 2px solid #fff5e6;
+            border-top: 2px solid #ff8c00;
         }
 
         .icon-circle {
-            width: 55px; height: 55px; border-radius: 50%; border: none;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        .btn-print { background: #6c757d; color: #fff; }
-        .btn-pay { background: #28a745; color: #fff; }
-        .btn-edit { background: #ffa500; color: #fff; }
-        .btn-delete { background: #fff; color: #dc3545; border: 1px solid #ffcccc; }
+        .btn-print { background: #6c757d; color: white; }
+        .btn-pay { background: #28a745; color: white; }
+        .btn-edit { background: #ff8c00; color: white; }
+        .btn-delete { background: white; color: #dc3545; border: 2px solid #dc3545; }
 
-        .icon-circle:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+        .icon-circle:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
 
-        @media (max-width: 650px) {
-            .details-grid, .money-section { grid-template-columns: 1fr; }
-            .header { flex-direction: column-reverse; text-align: center; gap: 15px; }
-            .header-left { flex-direction: column; }
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .details-grid, .money-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .toolbar {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ff8c00;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -111,19 +289,22 @@
 
     <div class="main-card">
         <header class="header">
-            <div class="header-left">
-                <img src="img1.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1067/1067566.png'">
-                <div>
+            <div class="logo-container">
+                <div class="logo-wrapper">
+                    <img src="img1.png" alt="Logo" 
+                         onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869869.png'">
+                </div>
+                <div class="logo-text">
                     <h1>उपभोक्ता विवरण</h1>
-                    <p>न.पा.प. नकुड़ - जल विभाग</p>
+                    <p>नगर पालिका परिषद नकुड़</p>
                 </div>
             </div>
             
-            <div class="header-right">
-                <a href="https://nppnakur.github.io/connection_detail.html" class="nav-btn" title="वापस सूची पर">
+            <div class="nav-buttons">
+                <a href="https://nppnakur.github.io/connection_detail.html" class="nav-btn" title="वापस">
                     <i class="fas fa-arrow-left"></i>
                 </a>
-                <a href="https://nppnakur.github.io/water_manegment.html" class="nav-btn" title="होम पेज">
+                <a href="https://nppnakur.github.io/water_manegment.html" class="nav-btn" title="होम">
                     <i class="fas fa-home"></i>
                 </a>
             </div>
@@ -131,48 +312,53 @@
 
         <div class="details-grid">
             <div class="input-item" style="grid-column: 1 / -1;">
-                <label>Connection ID</label>
+                <label><i class="fas fa-id-card"></i> कनेक्शन आईडी</label>
                 <input type="text" id="disp_id" disabled>
             </div>
+            
             <div class="input-item">
-                <label>उपभोक्ता का नाम</label>
+                <label><i class="fas fa-user"></i> उपभोक्ता नाम</label>
                 <input type="text" id="disp_name" disabled>
             </div>
+            
             <div class="input-item">
-                <label>वार्ड नं. / नाम</label>
+                <label><i class="fas fa-map-marker-alt"></i> वार्ड</label>
                 <input type="text" id="disp_ward" disabled>
             </div>
+            
             <div class="input-item" style="grid-column: 1 / -1;">
-                <label>मोबाइल नंबर</label>
+                <label><i class="fas fa-phone"></i> मोबाइल नंबर</label>
                 <input type="text" id="disp_mobile" disabled>
             </div>
 
             <div class="money-section">
                 <div class="money-card">
-                    <label>चालू मांग</label>
+                    <label><i class="fas fa-file-invoice"></i> चालू मांग</label>
                     <input type="text" id="disp_curr" disabled>
                 </div>
+                
                 <div class="money-card">
-                    <label>बकाया</label>
+                    <label><i class="fas fa-history"></i> बकाया</label>
                     <input type="text" id="disp_arr" disabled>
                 </div>
+                
                 <div class="money-card total-box">
-                    <label>कुल देय</label>
+                    <label><i class="fas fa-rupee-sign"></i> कुल देय</label>
                     <input type="text" id="disp_total" disabled>
                 </div>
             </div>
 
             <div class="toolbar">
-                <button class="icon-circle btn-print" title="Print" onclick="window.print()">
+                <button class="icon-circle btn-print" onclick="window.print()">
                     <i class="fas fa-print"></i>
                 </button>
-                <button class="icon-circle btn-pay" title="Pay Bill" onclick="location.href='https://nppnakur.github.io/pay_bill.html'">
+                <button class="icon-circle btn-pay" onclick="location.href='https://nppnakur.github.io/pay_bill.html'">
                     <i class="fas fa-file-invoice-dollar"></i>
                 </button>
-                <button class="icon-circle btn-edit" title="Edit" onclick="goToEdit()">
+                <button class="icon-circle btn-edit" onclick="goToEdit()">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
-                <button class="icon-circle btn-delete" title="Delete" onclick="handleDelete()">
+                <button class="icon-circle btn-delete" onclick="handleDelete()">
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </div>
@@ -180,71 +366,168 @@
     </div>
 
 <script>
-    // ID से कोमा, कोट्स और फालतू स्पेस हटाने का फंक्शन
-    function cleanID(id) {
-        if (!id) return "";
-        return id.replace(/[,"']/g, '').trim();
+    // Debug function to log data
+    function debugLog(message, data) {
+        console.log(`[DEBUG] ${message}:`, data);
     }
 
-    async function init() {
-        const params = new URLSearchParams(window.location.search);
-        const rawId = params.get('id'); 
-        if(!rawId) return;
+    // Function to normalize ID - remove quotes and clean
+    function normalizeID(id) {
+        if (!id) return '';
+        // Remove quotes, commas, and trim
+        return id.replace(/["',]/g, '').trim();
+    }
 
-        const originalId = decodeURIComponent(rawId);
-        document.getElementById('disp_id').value = originalId;
+    // Function to parse tab-separated data
+    function parseTSVRow(row) {
+        return row.split(/\t/);
+    }
+
+    async function loadConsumerData() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const idParam = urlParams.get('id');
         
-        const searchIdClean = cleanID(originalId);
+        if (!idParam) {
+            alert('कोई कनेक्शन आईडी नहीं मिली');
+            return;
+        }
+
+        // Display the ID from URL
+        const displayID = decodeURIComponent(idParam);
+        document.getElementById('disp_id').value = displayID;
+        
+        // Normalize the search ID
+        const searchID = normalizeID(displayID);
+        debugLog('Searching for ID', searchID);
 
         try {
-            const res = await fetch('Connection_data.csv');
-            const text = await res.text();
-            const rows = text.split(/\r?\n/);
+            // Show loading state
+            document.getElementById('disp_name').value = 'लोड हो रहा है...';
+            
+            // Fetch CSV data
+            const response = await fetch('Connection_data.csv');
+            const csvData = await response.text();
+            
+            // Split into lines
+            const lines = csvData.split(/\r?\n/);
+            debugLog('Total lines in CSV', lines.length);
 
-            for(let i = 1; i < rows.length; i++) {
-                const row = rows[i];
-                if(!row) continue;
-
-                // CSV columns parsing (handles commas inside quotes)
-                const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            let found = false;
+            
+            // Skip header if exists
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
                 
-                if(cols[0]) {
-                    const csvIdClean = cleanID(cols[0]);
+                // Parse tab-separated columns
+                const columns = parseTSVRow(line);
+                debugLog(`Line ${i} columns`, columns);
+                
+                if (columns.length >= 8) {
+                    const csvID = columns[0] ? columns[0].trim() : '';
+                    const normalizedCSVID = normalizeID(csvID);
                     
-                    // अगर साफ की हुई ID मैच होती है
-                    if(searchIdClean.includes(csvIdClean) || csvIdClean.includes(searchIdClean)) {
-                        document.getElementById('disp_name').value = (cols[2] + " " + (cols[3] || "")).replace(/"/g, '').trim();
-                        document.getElementById('disp_ward').value = cols[1] ? cols[1].replace(/"/g, '') : "N/A";
-                        document.getElementById('disp_mobile').value = cols[5] ? cols[5].replace(/"/g, '') : "---";
-                        document.getElementById('disp_curr').value = "₹ " + (cols[6] || "0");
-                        document.getElementById('disp_arr').value = "₹ " + (cols[7] || "0");
-                        document.getElementById('disp_total').value = "₹ " + (cols[8] || "0");
-                        return;
+                    debugLog(`Comparing: Search="${searchID}" vs CSV="${normalizedCSVID}"`);
+                    
+                    // Check if IDs match
+                    if (normalizedCSVID === searchID) {
+                        debugLog('MATCH FOUND!', columns);
+                        
+                        // Fill data based on your CSV format:
+                        // 0: ID, 1: Ward, 2: Name, 3: Mobile, 4: Current, 5: Arrears, 6: Total
+                        document.getElementById('disp_name').value = columns[2] || '';
+                        document.getElementById('disp_ward').value = columns[1] || '';
+                        document.getElementById('disp_mobile').value = columns[3] || 'N/A';
+                        document.getElementById('disp_curr').value = columns[4] ? `₹ ${columns[4]}` : '₹ 0';
+                        document.getElementById('disp_arr').value = columns[5] ? `₹ ${columns[5]}` : '₹ 0';
+                        document.getElementById('disp_total').value = columns[6] ? `₹ ${columns[6]}` : '₹ 0';
+                        
+                        found = true;
+                        break;
                     }
                 }
             }
-            console.log("No match found for: " + searchIdClean);
-        } catch(e) { console.log("Fetch Error", e); }
+            
+            if (!found) {
+                debugLog('No match found for ID', searchID);
+                document.getElementById('disp_name').value = 'डेटा नहीं मिला';
+                document.getElementById('disp_ward').value = 'N/A';
+                document.getElementById('disp_mobile').value = 'N/A';
+                document.getElementById('disp_curr').value = '₹ 0';
+                document.getElementById('disp_arr').value = '₹ 0';
+                document.getElementById('disp_total').value = '₹ 0';
+                
+                alert(`कनेक्शन आईडी "${displayID}" का डेटा नहीं मिला`);
+            }
+            
+        } catch (error) {
+            console.error('Error loading data:', error);
+            document.getElementById('disp_name').value = 'त्रुटि: डेटा लोड नहीं हो पाया';
+            alert('CSV फाइल लोड करने में त्रुटि: ' + error.message);
+        }
     }
 
     function goToEdit() {
-        const pass = prompt("पासवर्ड डालें:");
-        if (pass === "admin123") {
-            const id = encodeURIComponent(document.getElementById('disp_id').value);
-            window.location.href = "edit_connection.html?id=" + id;
+        const password = prompt('संपादन के लिए पासवर्ड डालें:');
+        if (password === 'admin123') {
+            const id = document.getElementById('disp_id').value;
+            window.location.href = `edit_connection.html?id=${encodeURIComponent(id)}`;
+        } else if (password !== null) {
+            alert('गलत पासवर्ड!');
         }
     }
 
     function handleDelete() {
-        const pass = prompt("डिलीट पासवर्ड:");
-        if (pass === "admin123") {
-            if(confirm("रिकॉर्ड डिलीट करें?")) {
-                window.location.href = "https://nppnakur.github.io/connection_detail.html";
+        const password = prompt('हटाने के लिए पासवर्ड डालें:');
+        if (password === 'admin123') {
+            if (confirm('क्या आप वाकई इस रिकॉर्ड को हटाना चाहते हैं?')) {
+                alert('रिकॉर्ड हटा दिया गया (डेमो)');
+                window.location.href = 'https://nppnakur.github.io/connection_detail.html';
             }
+        } else if (password !== null) {
+            alert('गलत पासवर्ड!');
         }
     }
 
-    window.onload = init;
+    // When page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add loading indicator
+        const nameField = document.getElementById('disp_name');
+        const loadingSpan = document.createElement('span');
+        loadingSpan.className = 'loading';
+        loadingSpan.style.marginLeft = '10px';
+        loadingSpan.style.display = 'inline-block';
+        
+        // Load data
+        setTimeout(() => {
+            loadConsumerData();
+            // Remove loading indicator after 2 seconds
+            setTimeout(() => {
+                loadingSpan.style.display = 'none';
+            }, 2000);
+        }, 500);
+    });
+
+    // Test function - you can call this from console
+    window.testCSV = async function() {
+        try {
+            const response = await fetch('Connection_data.csv');
+            const data = await response.text();
+            const lines = data.split(/\r?\n/);
+            
+            console.log('=== CSV CONTENT TEST ===');
+            console.log('Total lines:', lines.length);
+            
+            for (let i = 0; i < Math.min(5, lines.length); i++) {
+                const cols = parseTSVRow(lines[i]);
+                console.log(`Line ${i}:`, cols);
+            }
+            
+            return lines;
+        } catch (error) {
+            console.error('Test failed:', error);
+        }
+    };
 </script>
 </body>
 </html>
