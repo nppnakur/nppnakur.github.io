@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consumer Detail - NPP NAKUR</title>
+    <title>Connection View - NPP NAKUR</title>
     
     <link rel="icon" type="image/png" href="img1.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -12,7 +12,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
         body {
-            background: #fffaf0; /* Creamy Orange Background */
+            background: #fffaf0; 
             color: #4a3728;
             display: flex;
             justify-content: center;
@@ -22,106 +22,125 @@
 
         .main-card {
             width: 100%;
-            max-width: 1000px;
+            max-width: 900px;
             background: #fff;
             border-radius: 30px;
-            padding: 40px;
+            padding: 35px;
             box-shadow: 0 20px 50px rgba(255, 165, 0, 0.1);
             border: 1px solid #ffe4b5;
+            position: relative;
         }
 
-        /* Header */
-        .header {
+        /* Header Navigation */
+        .nav-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 35px;
+            margin-bottom: 25px;
         }
 
-        .header-left { display: flex; align-items: center; gap: 20px; }
-        .header-left img { width: 70px; height: 70px; border-radius: 20px; border: 2px solid #ffa500; }
-        .header-left h1 { font-size: 26px; font-weight: 800; color: #cc7a00; }
-        .header-left p { font-size: 14px; color: #996633; }
+        .nav-left { display: flex; gap: 10px; }
 
-        .home-btn {
+        .nav-btn {
             width: 45px; height: 45px; background: #fff5e6; border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            color: #ffa500; text-decoration: none; transition: 0.3s;
+            color: #ffa500; text-decoration: none; transition: 0.3s; font-size: 18px;
         }
-        .home-btn:hover { background: #ffa500; color: #fff; }
+        .nav-btn:hover { background: #ffa500; color: #fff; transform: scale(1.1); }
 
-        /* Grid System */
+        /* Profile Header */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #fff5e6;
+        }
+
+        .header img { width: 70px; height: 70px; border-radius: 20px; border: 2px solid #ffa500; }
+        .header h1 { font-size: 26px; font-weight: 800; color: #cc7a00; }
+        .header p { font-size: 14px; color: #996633; font-weight: 600; }
+
+        /* Data Grid */
         .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
         .input-item { display: flex; flex-direction: column; gap: 8px; }
         .input-item label { font-size: 12px; font-weight: 700; color: #805500; text-transform: uppercase; }
         .input-item input {
-            padding: 15px; border-radius: 15px; border: 1px solid #ffe4b5;
-            background: #fffcf5; font-size: 16px; font-weight: 600; color: #4a3728;
+            padding: 16px; border-radius: 18px; border: 1px solid #ffe4b5;
+            background: #fffcf5; font-size: 16px; font-weight: 600; color: #4a3728; outline: none;
         }
 
-        /* Money Cards */
+        /* Money Section */
         .money-section {
             grid-column: 1 / -1;
             display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 15px;
-            margin-top: 15px; background: #fff9ef; padding: 20px; border-radius: 20px;
+            margin-top: 15px; background: #fff9ef; padding: 25px; border-radius: 25px;
+            border: 1px dashed #ffa500;
         }
-        .money-card label { font-size: 11px; color: #996633; font-weight: 800; }
-        .money-card input { 
-            width: 100%; border: none; background: transparent; 
-            font-size: 22px; font-weight: 800; color: #cc7a00; outline: none;
-        }
-        .money-card.total-bg { background: #ffa500; padding: 15px; border-radius: 15px; }
-        .money-card.total-bg label { color: #fff; opacity: 0.9; }
-        .money-card.total-bg input { color: #fff; font-size: 26px; }
+        .money-card input { width: 100%; border: none; background: transparent; font-size: 22px; font-weight: 800; color: #cc7a00; }
+        
+        .total-box { background: #ffa500; padding: 15px; border-radius: 20px; }
+        .total-box label { color: #fff; }
+        .total-box input { color: #fff !important; font-size: 28px !important; }
 
-        /* Buttons Toolbar */
-        .footer-toolbar {
+        /* Icon Toolbar Bottom */
+        .icon-toolbar {
             grid-column: 1 / -1;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #fff5e6;
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 2px solid #fff5e6;
         }
 
-        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
-
-        .btn {
-            padding: 12px 20px; border-radius: 12px; border: none;
-            font-size: 14px; font-weight: 700; cursor: pointer;
-            display: flex; align-items: center; gap: 8px; transition: 0.3s;
+        .btn-circle {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: none;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 15px rgba(255, 165, 0, 0.15);
         }
 
-        /* Colors */
-        .btn-pay { background: #28a745; color: #fff; } /* Green for Pay */
-        .btn-print { background: #6c757d; color: #fff; }
-        .btn-edit { background: #ffa500; color: #fff; }
-        .btn-delete { background: #fff; color: #dc3545; border: 1px solid #ffcccc; }
-        .btn-save { background: #007bff; color: #fff; display: none; }
+        .btn-pay { background: #28a745; color: #fff; }       
+        .btn-print { background: #6c757d; color: #fff; }     
+        .btn-edit { background: #ffa500; color: #fff; }      
+        .btn-delete { background: #fff; color: #dc3545; border: 1px solid #ffcccc; } 
 
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .btn-delete:hover { background: #dc3545; color: #fff; }
+        .btn-circle:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0,0,0,0.2); }
+        
+        .right-tools { display: flex; gap: 20px; }
 
-        @media (max-width: 768px) {
+        @media (max-width: 650px) {
             .details-grid, .money-section { grid-template-columns: 1fr; }
-            .footer-toolbar { flex-direction: column-reverse; gap: 20px; }
-            .btn-group { width: 100%; justify-content: center; }
+            .icon-toolbar { flex-direction: column-reverse; gap: 25px; }
         }
     </style>
 </head>
 <body>
 
     <div class="main-card">
-        <header class="header">
-            <div class="header-left">
-                <img src="img1.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1067/1067566.png'">
-                <div>
-                    <h1>Consumer Details</h1>
-                    <p>नगर पालिका परिषद नकुड़ (सहारनपुर)</p>
-                </div>
+        <nav class="nav-header">
+            <div class="nav-left">
+                <a href="https://nppnakur.github.io/connection_detail.html" class="nav-btn" title="सूची पर वापस जाएं">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
             </div>
-            <a href="index.html" class="home-btn"><i class="fas fa-home"></i></a>
+            <a href="https://nppnakur.github.io/water_manegment.html" class="nav-btn" title="होम पेज">
+                <i class="fas fa-home"></i>
+            </a>
+        </nav>
+
+        <header class="header">
+            <img src="img1.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1067/1067566.png'">
+            <div>
+                <h1>उपभोक्ता विवरण</h1>
+                <p>नगर पालिका परिषद नकुड़ - जल विभाग</p>
+            </div>
         </header>
 
         <div class="details-grid">
@@ -130,53 +149,49 @@
                 <input type="text" id="disp_id" disabled>
             </div>
             <div class="input-item">
-                <label>Consumer Name</label>
+                <label>उपभोक्ता का नाम</label>
                 <input type="text" id="disp_name" disabled>
             </div>
             <div class="input-item">
-                <label>Ward No / Name</label>
+                <label>वार्ड नं. / नाम</label>
                 <input type="text" id="disp_ward" disabled>
             </div>
             <div class="input-item">
-                <label>Mobile No.</label>
+                <label>मोबाइल नंबर</label>
                 <input type="text" id="disp_mobile" disabled>
             </div>
 
             <div class="money-section">
                 <div class="money-card">
-                    <label>चालू मांग (2025-26)</label>
+                    <label>चालू मांग</label>
                     <input type="text" id="disp_curr" disabled>
                 </div>
                 <div class="money-card">
-                    <label>पुराना बकाया</label>
+                    <label>बकाया</label>
                     <input type="text" id="disp_arr" disabled>
                 </div>
-                <div class="money-card total-bg">
+                <div class="money-card total-box">
                     <label>कुल देय राशि</label>
                     <input type="text" id="disp_total" disabled>
                 </div>
             </div>
 
-            <div class="footer-toolbar">
-                <button class="btn btn-delete" onclick="handleDelete()">
-                    <i class="fas fa-trash-alt"></i> DELETE
+            <div class="icon-toolbar">
+                <button class="btn-circle btn-delete" title="डिलीट करें" onclick="handleDelete()">
+                    <i class="fas fa-trash-alt"></i>
                 </button>
 
-                <div class="btn-group">
-                    <button class="btn btn-print" onclick="window.print()">
-                        <i class="fas fa-print"></i> PRINT
+                <div class="right-tools">
+                    <button class="btn-circle btn-print" title="प्रिंट बिल" onclick="window.print()">
+                        <i class="fas fa-print"></i>
                     </button>
                     
-                    <button class="btn btn-pay" onclick="handlePay()">
-                        <i class="fas fa-file-invoice-dollar"></i> PAY BILL
+                    <button class="btn-circle btn-pay" title="भुगतान रसीद" onclick="location.href='https://nppnakur.github.io/pay_bill.html'">
+                        <i class="fas fa-file-invoice-dollar"></i>
                     </button>
 
-                    <button class="btn btn-edit" id="editBtn" onclick="enableEdit()">
-                        <i class="fas fa-edit"></i> EDIT
-                    </button>
-
-                    <button id="saveBtn" class="btn btn-save" onclick="saveData()">
-                        <i class="fas fa-check-circle"></i> SAVE CHANGES
+                    <button class="btn-circle btn-edit" title="संपादित करें" onclick="goToEdit()">
+                        <i class="fas fa-pencil-alt"></i>
                     </button>
                 </div>
             </div>
@@ -184,60 +199,31 @@
     </div>
 
 <script>
-    // URL से डेटा प्राप्त करने और पेज भरने का फंक्शन
-    function getParams() {
-        const urlParams = new URLSearchParams(window.location.search);
-        document.getElementById('disp_id').value = urlParams.get('id') || "NPPNCN-000";
-        // डमी डेटा (यहाँ आप अपनी CSV/DB लॉजिक लगा सकते हैं)
-        document.getElementById('disp_name').value = "उपभोक्ता का नाम"; 
-        document.getElementById('disp_ward').value = "Ward-10";
-        document.getElementById('disp_mobile').value = "98XXXXXXXX";
-        document.getElementById('disp_curr').value = "₹ 500.00";
-        document.getElementById('disp_arr').value = "₹ 1200.00";
-        document.getElementById('disp_total').value = "₹ 1700.00";
-    }
+    // URL से डेटा फेच करने का लॉजिक (जैसा पहले था)
+    const params = new URLSearchParams(window.location.search);
+    const connID = params.get('id') || "NPPNCN-001";
+    document.getElementById('disp_id').value = connID;
 
-    // Edit बटन का फंक्शन
-    function enableEdit() {
+    // Edit पेज पर भेजने का फंक्शन
+    function goToEdit() {
         const pass = prompt("एडमिन पासवर्ड दर्ज करें:");
         if (pass === "admin123") {
-            document.querySelectorAll('input').forEach(input => {
-                if(input.id !== 'disp_id' && input.id !== 'disp_total') input.disabled = false;
-            });
-            document.getElementById('saveBtn').style.display = 'flex';
-            document.getElementById('editBtn').style.display = 'none';
-        } else {
+            window.location.href = "edit_connection.html?id=" + encodeURIComponent(connID);
+        } else if (pass !== null) {
             alert("गलत पासवर्ड!");
         }
     }
 
-    // Save बटन
-    function saveData() {
-        alert("डेटा सफलतापूर्वक अपडेट किया गया!");
-        location.reload();
-    }
-
-    // Pay बटन (बिल भुगतान के लिए)
-    function handlePay() {
-        const id = document.getElementById('disp_id').value;
-        alert("भुगतान खिड़की खुल रही है: " + id);
-        // यहाँ आप pay_bill.html पर भेज सकते हैं
-    }
-
-    // Delete बटन (सुरक्षा के साथ)
+    // Delete फंक्शन
     function handleDelete() {
-        const pass = prompt("हटाने के लिए पासवर्ड डालें:");
+        const pass = prompt("डिलीट करने के लिए पासवर्ड डालें:");
         if (pass === "admin123") {
-            if(confirm("सावधान! क्या आप वाकई इस रिकॉर्ड को मिटाना चाहते हैं?")) {
-                alert("रिकॉर्ड हटा दिया गया!");
-                window.location.href = "connection_detail.html";
+            if(confirm("सावधान! क्या आप इस रिकॉर्ड को हमेशा के लिए मिटाना चाहते हैं?")) {
+                alert("रिकॉर्ड सफलतापूर्वक हटा दिया गया!");
+                window.location.href = "https://nppnakur.github.io/connection_detail.html";
             }
-        } else if(pass !== null) {
-            alert("गलत पासवर्ड!");
         }
     }
-
-    window.onload = getParams;
 </script>
 </body>
 </html>
