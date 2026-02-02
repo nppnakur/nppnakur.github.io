@@ -11,8 +11,12 @@
     <style>
         :root { 
             --primary: #1e3a8a;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
             --bg-page: #f1f5f9; 
-            --card-bg: #ffffff; 
+            --card-white: #ffffff;
+            --border: #cbd5e1;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
@@ -31,112 +35,157 @@
             max-width: 1100px;
             display: grid;
             grid-template-columns: 1fr 280px; 
-            gap: 20px;
-            background: var(--card-bg);
+            gap: 25px;
+            background: var(--card-white);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 1px solid #cbd5e1;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
         }
 
-        .header-panel {
+        /* Header Section */
+        .app-header {
             grid-column: 1 / -1;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #e2e8f0;
             padding-bottom: 15px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
-        .logo-section { display: flex; align-items: center; gap: 15px; }
-        .logo-section img { width: 60px; height: 60px; border-radius: 10px; border: 1px solid var(--primary); }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .header-left img { width: 60px; height: 60px; border-radius: 10px; border: 2px solid var(--primary); }
+        .header-left h2 { color: var(--primary); font-size: 26px; font-weight: 800; }
 
+        .header-right .home-btn {
+            font-size: 24px;
+            color: var(--primary);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .header-right .home-btn:hover { color: var(--accent); transform: scale(1.1); }
+
+        /* Content Panel */
         .info-panel { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
 
         .data-box {
             background: #f8fafc;
-            padding: 12px 15px;
+            padding: 12px 18px;
             border-radius: 10px;
             border: 1px solid #e2e8f0;
         }
 
-        .data-box label { display: block; font-size: 11px; color: #64748b; font-weight: 800; text-transform: uppercase; }
-        .data-box input { background: transparent; border: none; color: #1e293b; font-size: 16px; font-weight: 700; width: 100%; outline: none; margin-top: 4px; }
+        .data-box label { 
+            display: block; 
+            font-size: 11px; 
+            color: #64748b; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            margin-bottom: 4px; 
+        }
 
-        .money-row { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 15px; margin-top: 10px; }
-        .total-box { background: #fff1f2; border-color: #fecaca; }
+        .data-box input { 
+            background: transparent; 
+            border: none; 
+            color: #1e293b; 
+            font-size: 17px; 
+            font-weight: 700; 
+            width: 100%; 
+            outline: none; 
+        }
+
+        /* Amount Row with Years */
+        .money-strip { 
+            grid-column: 1 / -1; 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1.5fr; 
+            gap: 15px; 
+            margin-top: 10px; 
+        }
+
+        .total-box { background: #fff1f2; border: 1px solid #fecaca; }
+        .total-box label { color: #be123b; }
         .total-box input { color: #be123b; font-size: 22px; font-weight: 900; }
 
+        /* Sidebar Buttons */
         .action-panel { display: flex; flex-direction: column; gap: 12px; }
-        .btn { padding: 15px; border-radius: 10px; border: none; cursor: pointer; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; }
+
+        .btn {
+            padding: 15px; border-radius: 10px; border: none; cursor: pointer; font-weight: 700;
+            display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px; transition: 0.2s;
+        }
+
         .btn-pay { background: var(--primary); color: white; }
         .btn-edit { background: white; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-print { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
         .btn-delete { background: #fee2e2; color: #b91c1c; }
 
-        #saveBtn { display: none; background: #10b981; color: white; width: 100%; margin-top: 10px; }
+        #saveBtn { display: none; background: var(--success); color: white; width: 100%; margin-top: 10px; }
 
-        @media (max-width: 850px) { .dashboard { grid-template-columns: 1fr; } .money-row { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .money-strip { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
 <div class="dashboard">
-    <div class="header-panel">
-        <div class="logo-section">
-            <img src="img1.png" alt="Logo">
-            <div>
-                <h2 style="color: var(--primary);">उपभोक्ता विवरण</h2>
-                <p style="color: #64748b; font-size: 12px;">न.पा.प. नकुड़ (सहारनपुर)</p>
-            </div>
+    <header class="app-header">
+        <div class="header-left">
+            <img src="img1.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1067/1067566.png'">
+            <h2>Consumer Detail</h2>
         </div>
-        <span style="background: #dcfce7; color: #166534; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 800;">LIVE DATA</span>
-    </div>
+        <div class="header-right">
+            <a href="connection_detail.html" class="home-btn" title="मुख्य पेज"><i class="fas fa-home"></i></a>
+        </div>
+    </header>
 
     <div class="info-panel">
         <div class="data-box"><label>उपभोक्ता ID</label><input type="text" id="disp_id" disabled></div>
-        <div class="data-box"><label>नाम</label><input type="text" id="disp_name" disabled></div>
-        <div class="data-box"><label>वार्ड</label><input type="text" id="disp_ward" disabled></div>
-        <div class="data-box"><label>मोबाइल</label><input type="text" id="disp_mobile" disabled></div>
+        <div class="data-box"><label>नाम (Consumer Name)</label><input type="text" id="disp_name" disabled></div>
+        <div class="data-box"><label>वार्ड नं. / नाम</label><input type="text" id="disp_ward" disabled></div>
+        <div class="data-box"><label>संपर्क मोबाइल</label><input type="text" id="disp_mobile" disabled></div>
 
-        <div class="money-row">
-            <div class="data-box"><label>चालू मांग</label><input type="text" id="disp_curr" disabled></div>
-            <div class="data-box"><label>बकाया</label><input type="text" id="disp_arr" disabled></div>
-            <div class="data-box total-box"><label>कुल देय</label><input type="text" id="disp_total" disabled></div>
+        <div class="money-strip">
+            <div class="data-box"><label>चालू मांग (2025-2026)</label><input type="text" id="disp_curr" disabled></div>
+            <div class="data-box"><label>बकाया राशि (2024-2025)</label><input type="text" id="disp_arr" disabled></div>
+            <div class="data-box total-box"><label>कुल देय राशि</label><input type="text" id="disp_total" disabled></div>
         </div>
-        <button id="saveBtn" class="btn" onclick="saveData()">Update Record</button>
+        <button id="saveBtn" class="btn" onclick="saveData()"><i class="fas fa-save"></i> डेटा अपडेट करें</button>
     </div>
 
     <div class="action-panel">
-        <button class="btn btn-pay" onclick="alert('Redirecting...')"><i class="fas fa-rupee-sign"></i> PAY NOW</button>
-        <button class="btn btn-edit" id="editBtn" onclick="enableEdit()"><i class="fas fa-edit"></i> EDIT</button>
-        <button class="btn" style="background:#f1f5f9" onclick="window.print()"><i class="fas fa-print"></i> PRINT</button>
-        <button class="btn btn-delete" onclick="handleDelete()"><i class="fas fa-trash"></i> DELETE</button>
+        <button class="btn btn-pay" onclick="alert('Payment Option Soon')"><i class="fas fa-wallet"></i> PAY BILL</button>
+        <button class="btn btn-edit" id="editBtn" onclick="enableEdit()"><i class="fas fa-user-edit"></i> EDIT INFO</button>
+        <button class="btn btn-print" onclick="window.print()"><i class="fas fa-print"></i> PRINT</button>
+        <button class="btn btn-delete" onclick="handleDelete()"><i class="fas fa-trash-alt"></i> DELETE</button>
     </div>
 </div>
 
 <script>
-    // कोमा वाली ID को क्लीन करने का फंक्शन
-    function superClean(str) {
-        if(!str) return "";
-        return decodeURIComponent(str).replace("NPPNCN-", "").replace(/[",\s]/g, "").trim();
+    // ID Cleaner for "1,191" type issues
+    function cleanID(id) {
+        if(!id) return "";
+        return decodeURIComponent(id).replace("NPPNCN-", "").replace(/[",\s]/g, "").trim();
     }
 
-    async function load() {
-        const urlParams = new URLSearchParams(window.location.search);
-        let rawId = urlParams.get('id');
+    async function init() {
+        const params = new URLSearchParams(window.location.search);
+        let rawId = params.get('id');
         if(!rawId) return;
 
-        let searchId = superClean(rawId);
+        let target = cleanID(rawId);
 
-        // 1. LocalStorage Check
+        // 1. Check LocalStorage
         const local = JSON.parse(localStorage.getItem('newConnections') || '[]');
-        let data = local.find(i => superClean(i.id) === searchId);
+        let data = local.find(i => cleanID(i.id) === target);
 
         if(data) {
             render(data);
         } else {
-            // 2. CSV Check
+            // 2. Check CSV
             try {
                 const res = await fetch('Connection_data.csv');
                 const text = await res.text();
@@ -146,7 +195,7 @@
                     const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if(!cols[0]) continue;
 
-                    if(superClean(cols[0]) === searchId) {
+                    if(cleanID(cols[0]) === target) {
                         render({
                             id: `NPPNCN-${cols[0].replace(/"/g, '')}`,
                             ward: cols[1] || "---",
@@ -159,7 +208,7 @@
                         return;
                     }
                 }
-            } catch(e) { console.error("CSV error"); }
+            } catch(e) { console.error("CSV loading error"); }
         }
     }
 
@@ -168,34 +217,35 @@
         document.getElementById('disp_name').value = d.name;
         document.getElementById('disp_ward').value = d.ward;
         document.getElementById('disp_mobile').value = d.mobile;
-        document.getElementById('disp_curr').value = "₹" + d.curr;
-        document.getElementById('disp_arr').value = "₹" + d.arr;
-        document.getElementById('disp_total').value = "₹" + d.total;
+        document.getElementById('disp_curr').value = "₹" + d.curr.toString().replace("₹","");
+        document.getElementById('disp_arr').value = "₹" + d.arr.toString().replace("₹","");
+        document.getElementById('disp_total').value = "₹" + d.total.toString().replace("₹","");
     }
 
     function enableEdit() {
         if(prompt("Admin Password:") === "admin123") {
             document.querySelectorAll('input').forEach(i => { if(i.id !== 'disp_id') i.disabled = false; });
-            document.getElementById('saveBtn').style.display = 'block';
+            document.getElementById('saveBtn').style.display = 'flex';
             document.getElementById('editBtn').style.display = 'none';
         }
     }
 
-    function saveData() { alert("Updated!"); location.reload(); }
+    function saveData() { alert("Data Updated!"); location.reload(); }
 
     function handleDelete() {
-        if(prompt("Password:") === "admin123") {
-            if(confirm("Delete this?")) {
+        if(prompt("Admin Password:") === "admin123") {
+            if(confirm("Confirm Delete?")) {
                 let local = JSON.parse(localStorage.getItem('newConnections') || '[]');
-                let currentId = superClean(document.getElementById('disp_id').value);
-                let updated = local.filter(i => superClean(i.id) !== currentId);
-                localStorage.setItem('newConnections', JSON.stringify(updated));
+                let current = cleanID(document.getElementById('disp_id').value);
+                let filtered = local.filter(i => cleanID(i.id) !== current);
+                localStorage.setItem('newConnections', JSON.stringify(filtered));
                 window.location.href = "connection_detail.html";
             }
         }
     }
 
-    window.onload = load;
+    window.onload = init;
 </script>
+
 </body>
 </html>
