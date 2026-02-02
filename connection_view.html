@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connection View - NPP NAKUR</title>
+    <title>Consumer Detail - NPP NAKUR</title>
     
     <link rel="icon" type="image/png" href="img1.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
 
         body {
             background: #fffaf0; 
@@ -17,213 +17,217 @@
             display: flex;
             justify-content: center;
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 20px;
         }
 
         .main-card {
             width: 100%;
-            max-width: 900px;
+            max-width: 850px;
             background: #fff;
-            border-radius: 30px;
-            padding: 35px;
-            box-shadow: 0 20px 50px rgba(255, 165, 0, 0.1);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(255, 165, 0, 0.12);
             border: 1px solid #ffe4b5;
-            position: relative;
         }
 
-        /* Header Navigation */
-        .nav-header {
+        /* Top Bar with Combined Buttons */
+        .top-nav {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 12px;
             margin-bottom: 25px;
         }
 
-        .nav-left { display: flex; gap: 10px; }
-
-        .nav-btn {
-            width: 45px; height: 45px; background: #fff5e6; border-radius: 12px;
+        .nav-link {
+            width: 45px; height: 45px; 
+            background: #fff5e6; 
+            border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            color: #ffa500; text-decoration: none; transition: 0.3s; font-size: 18px;
+            color: #ffa500; text-decoration: none; 
+            transition: 0.3s; font-size: 18px;
+            border: 1px solid #ffe4b5;
         }
-        .nav-btn:hover { background: #ffa500; color: #fff; transform: scale(1.1); }
+        .nav-link:hover { background: #ffa500; color: #fff; transform: scale(1.05); }
 
-        /* Profile Header */
-        .header {
+        /* Header Section */
+        .profile-header {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #fff5e6;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #fff9ef;
+        }
+        .profile-header img { width: 65px; height: 65px; border-radius: 15px; border: 2px solid #ffa500; }
+        .profile-header h1 { font-size: 22px; color: #cc7a00; font-weight: 800; }
+
+        /* Detail Grid */
+        .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .data-box { display: flex; flex-direction: column; gap: 6px; }
+        .data-box label { font-size: 11px; font-weight: 700; color: #a07d5a; text-transform: uppercase; margin-left: 5px; }
+        .data-box input {
+            padding: 14px; border-radius: 12px; border: 1px solid #ffe4b5;
+            background: #fffdfa; font-size: 15px; font-weight: 600; color: #4a3728; outline: none;
         }
 
-        .header img { width: 70px; height: 70px; border-radius: 20px; border: 2px solid #ffa500; }
-        .header h1 { font-size: 26px; font-weight: 800; color: #cc7a00; }
-        .header p { font-size: 14px; color: #996633; font-weight: 600; }
-
-        /* Data Grid */
-        .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .input-item { display: flex; flex-direction: column; gap: 8px; }
-        .input-item label { font-size: 12px; font-weight: 700; color: #805500; text-transform: uppercase; }
-        .input-item input {
-            padding: 16px; border-radius: 18px; border: 1px solid #ffe4b5;
-            background: #fffcf5; font-size: 16px; font-weight: 600; color: #4a3728; outline: none;
-        }
-
-        /* Money Section */
-        .money-section {
+        /* Money Row */
+        .money-strip {
             grid-column: 1 / -1;
-            display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 15px;
-            margin-top: 15px; background: #fff9ef; padding: 25px; border-radius: 25px;
-            border: 1px dashed #ffa500;
+            display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 12px;
+            margin-top: 10px; background: #fff9ef; padding: 20px; border-radius: 18px;
+            border: 1px solid #ffedcc;
         }
-        .money-card input { width: 100%; border: none; background: transparent; font-size: 22px; font-weight: 800; color: #cc7a00; }
-        
-        .total-box { background: #ffa500; padding: 15px; border-radius: 20px; }
-        .total-box label { color: #fff; }
-        .total-box input { color: #fff !important; font-size: 28px !important; }
+        .money-strip input { width: 100%; border: none; background: transparent; font-size: 20px; font-weight: 800; color: #cc7a00; }
+        .total-highlight { background: #ffa500; border-radius: 12px; padding: 10px; }
+        .total-highlight label { color: #fff; }
+        .total-highlight input { color: #fff !important; font-size: 24px !important; }
 
-        /* Icon Toolbar Bottom */
-        .icon-toolbar {
+        /* Toolbar Icons */
+        .toolbar {
             grid-column: 1 / -1;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 35px;
-            padding-top: 25px;
-            border-top: 2px solid #fff5e6;
+            justify-content: flex-end; /* Align all to right */
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #fff5e6;
         }
 
-        .btn-circle {
-            width: 60px; height: 60px;
-            border-radius: 50%;
+        .icon-btn {
+            width: 55px; height: 55px;
+            border-radius: 15px;
             border: none;
             display: flex; align-items: center; justify-content: center;
-            font-size: 22px;
+            font-size: 20px;
             cursor: pointer;
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 8px 15px rgba(255, 165, 0, 0.15);
+            transition: 0.3s ease;
         }
 
-        .btn-pay { background: #28a745; color: #fff; }       
-        .btn-print { background: #6c757d; color: #fff; }     
-        .btn-edit { background: #ffa500; color: #fff; }      
-        .btn-delete { background: #fff; color: #dc3545; border: 1px solid #ffcccc; } 
+        .btn-print { background: #f0f0f0; color: #555; }
+        .btn-pay { background: #e8f5e9; color: #2e7d32; }
+        .btn-edit { background: #fff3e0; color: #ef6c00; }
+        .btn-delete { background: #ffebee; color: #c62828; }
 
-        .btn-circle:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0,0,0,0.2); }
-        
-        .right-tools { display: flex; gap: 20px; }
+        .icon-btn:hover { transform: translateY(-5px); filter: brightness(0.9); }
 
-        @media (max-width: 650px) {
-            .details-grid, .money-section { grid-template-columns: 1fr; }
-            .icon-toolbar { flex-direction: column-reverse; gap: 25px; }
+        @media (max-width: 600px) {
+            .details-grid, .money-strip { grid-template-columns: 1fr; }
+            .toolbar { justify-content: center; }
         }
     </style>
 </head>
 <body>
 
     <div class="main-card">
-        <nav class="nav-header">
-            <div class="nav-left">
-                <a href="https://nppnakur.github.io/connection_detail.html" class="nav-btn" title="सूची पर वापस जाएं">
-                    <i class="fas fa-arrow-left"></i>
-                </a>
-            </div>
-            <a href="https://nppnakur.github.io/water_manegment.html" class="nav-btn" title="होम पेज">
+        <div class="top-nav">
+            <a href="https://nppnakur.github.io/connection_detail.html" class="nav-link" title="सूची पर वापस">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <a href="https://nppnakur.github.io/water_manegment.html" class="nav-link" title="होम">
                 <i class="fas fa-home"></i>
             </a>
-        </nav>
+        </div>
 
-        <header class="header">
+        <header class="profile-header">
             <img src="img1.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1067/1067566.png'">
             <div>
                 <h1>उपभोक्ता विवरण</h1>
-                <p>नगर पालिका परिषद नकुड़ - जल विभाग</p>
+                <p>न.पा.प. नकुड़ - जल कल विभाग</p>
             </div>
         </header>
 
         <div class="details-grid">
-            <div class="input-item">
-                <label>Connection ID</label>
-                <input type="text" id="disp_id" disabled>
+            <div class="data-box" style="grid-column: 1 / -1;">
+                <label>Connection ID & Name</label>
+                <input type="text" id="full_id_display" disabled>
             </div>
-            <div class="input-item">
+            
+            <div class="data-box">
                 <label>उपभोक्ता का नाम</label>
                 <input type="text" id="disp_name" disabled>
             </div>
-            <div class="input-item">
-                <label>वार्ड नं. / नाम</label>
+            <div class="data-box">
+                <label>वार्ड</label>
                 <input type="text" id="disp_ward" disabled>
             </div>
-            <div class="input-item">
-                <label>मोबाइल नंबर</label>
-                <input type="text" id="disp_mobile" disabled>
-            </div>
 
-            <div class="money-section">
-                <div class="money-card">
+            <div class="money-strip">
+                <div class="data-box">
                     <label>चालू मांग</label>
                     <input type="text" id="disp_curr" disabled>
                 </div>
-                <div class="money-card">
+                <div class="data-box">
                     <label>बकाया</label>
                     <input type="text" id="disp_arr" disabled>
                 </div>
-                <div class="money-card total-box">
+                <div class="data-box total-highlight">
                     <label>कुल देय राशि</label>
                     <input type="text" id="disp_total" disabled>
                 </div>
             </div>
 
-            <div class="icon-toolbar">
-                <button class="btn-circle btn-delete" title="डिलीट करें" onclick="handleDelete()">
-                    <i class="fas fa-trash-alt"></i>
+            <div class="toolbar">
+                <button class="icon-btn btn-print" title="Print" onclick="window.print()">
+                    <i class="fas fa-print"></i>
+                </button>
+                
+                <button class="icon-btn btn-pay" title="Pay Bill" onclick="location.href='https://nppnakur.github.io/pay_bill.html'">
+                    <i class="fas fa-file-invoice-dollar"></i>
                 </button>
 
-                <div class="right-tools">
-                    <button class="btn-circle btn-print" title="प्रिंट बिल" onclick="window.print()">
-                        <i class="fas fa-print"></i>
-                    </button>
-                    
-                    <button class="btn-circle btn-pay" title="भुगतान रसीद" onclick="location.href='https://nppnakur.github.io/pay_bill.html'">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                    </button>
+                <button class="icon-btn btn-edit" title="Edit" onclick="goToEdit()">
+                    <i class="fas fa-user-edit"></i>
+                </button>
 
-                    <button class="btn-circle btn-edit" title="संपादित करें" onclick="goToEdit()">
-                        <i class="fas fa-pencil-alt"></i>
-                    </button>
-                </div>
+                <button class="icon-btn btn-delete" title="Delete" onclick="handleDelete()">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
             </div>
         </div>
     </div>
 
 <script>
-    // URL से डेटा फेच करने का लॉजिक (जैसा पहले था)
-    const params = new URLSearchParams(window.location.search);
-    const connID = params.get('id') || "NPPNCN-001";
-    document.getElementById('disp_id').value = connID;
+    // URL से पूरी ID निकालने का उन्नत तरीका
+    function getFullData() {
+        const urlString = window.location.href;
+        const url = new URL(urlString);
+        // 'id' पैरामीटर को डिकोड करना ताकि हिंदी अक्षर न कटें
+        const fullId = decodeURIComponent(url.searchParams.get("id") || "");
 
-    // Edit पेज पर भेजने का फंक्शन
-    function goToEdit() {
-        const pass = prompt("एडमिन पासवर्ड दर्ज करें:");
-        if (pass === "admin123") {
-            window.location.href = "edit_connection.html?id=" + encodeURIComponent(connID);
-        } else if (pass !== null) {
-            alert("गलत पासवर्ड!");
+        if(fullId) {
+            document.getElementById('full_id_display').value = fullId;
+            
+            // ID से नाम और राशि अलग करने की कोशिश (अगर पैटर्न फिक्स है)
+            // उदाहरण के लिए, मान लेते हैं कि "₹" से पहले नाम है
+            const namePart = fullId.split('0₹')[0] || "Name Not Found";
+            document.getElementById('disp_name').value = namePart;
+            
+            // डमी डाटा सेट करना (यहाँ आप CSV फेच लॉजिक भी डाल सकते हैं)
+            document.getElementById('disp_ward').value = "नगर क्षेत्र";
+            document.getElementById('disp_curr').value = "₹ 600";
+            document.getElementById('disp_arr').value = "₹ 600";
+            document.getElementById('disp_total').value = "₹ 1200";
         }
     }
 
-    // Delete फंक्शन
-    function handleDelete() {
-        const pass = prompt("डिलीट करने के लिए पासवर्ड डालें:");
+    function goToEdit() {
+        const pass = prompt("एडमिन पासवर्ड:");
         if (pass === "admin123") {
-            if(confirm("सावधान! क्या आप इस रिकॉर्ड को हमेशा के लिए मिटाना चाहते हैं?")) {
-                alert("रिकॉर्ड सफलतापूर्वक हटा दिया गया!");
+            const currentId = encodeURIComponent(document.getElementById('full_id_display').value);
+            window.location.href = "edit_connection.html?id=" + currentId;
+        } else if(pass !== null) alert("गलत पासवर्ड!");
+    }
+
+    function handleDelete() {
+        const pass = prompt("डिलीट करने के लिए पासवर्ड:");
+        if (pass === "admin123") {
+            if(confirm("सावधान! क्या आप यह रिकॉर्ड मिटाना चाहते हैं?")) {
+                alert("सफलतापूर्वक हटाया गया!");
                 window.location.href = "https://nppnakur.github.io/connection_detail.html";
             }
         }
     }
+
+    window.onload = getFullData;
 </script>
 </body>
 </html>
