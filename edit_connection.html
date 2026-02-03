@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Edit Connection - NPP NAKUR</title>
+    <title>Update Record - NPP NAKUR</title>
     
     <link rel="icon" type="image/png" href="img1.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -45,12 +45,12 @@
             border-bottom: 1px solid #f0f0f0;
         }
 
-        .header h1 { font-size: 22px; color: #ff8c00; font-weight: 700; }
+        .header h1 { font-size: 20px; color: #ff8c00; font-weight: 700; }
         
         .back-btn {
-            width: 40px; height: 40px;
+            width: 35px; height: 35px;
             background: #eee;
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -61,79 +61,77 @@
         .edit-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 10px;
         }
 
-        .input-group { display: flex; flex-direction: column; gap: 5px; }
-        .input-group label { font-size: 12px; font-weight: 600; color: #ff8c00; text-transform: uppercase; }
+        .input-group { display: flex; flex-direction: column; gap: 4px; }
+        .input-group label { font-size: 11px; font-weight: 700; color: #ff8c00; text-transform: uppercase; }
         
         .input-group input {
-            padding: 12px 15px;
-            border-radius: 10px;
+            padding: 10px 15px;
+            border-radius: 8px;
             border: 1px solid #ddd;
             background: #f9f9f9;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             color: #222;
             outline: none;
         }
         .input-group input:focus { border-color: #ff8c00; background: #fff; }
 
-        /* मनी सेक्शन - बोल्ड लेबल्स */
         .calc-section {
             grid-column: 1 / -1;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            padding: 15px;
+            padding: 12px;
             background: #fff8f0;
-            border-radius: 15px;
+            border-radius: 12px;
             border: 1px dashed #ff8c00;
         }
 
-        .money-card { background: white; padding: 10px; border-radius: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .money-card { background: white; padding: 10px; border-radius: 8px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .money-card label { 
-            font-size: 13px; 
+            font-size: 12px; 
             display: block; 
-            margin-bottom: 5px; 
+            margin-bottom: 3px; 
             color: #333; 
             font-weight: 800; /* Bold Label */
         }
-        .money-card input { width: 100%; border: none; text-align: center; font-size: 18px; font-weight: 700; color: #ff8c00; background: transparent; outline: none; }
+        .money-card input { width: 100%; border: none; text-align: center; font-size: 16px; font-weight: 700; color: #ff8c00; background: transparent; outline: none; }
 
         .total-box { background: #ff8c00; border: none; }
         .total-box label { color: white; font-weight: 800; }
-        .total-box input { color: white !important; cursor: default; }
+        .total-box input { color: white !important; }
 
         .action-btns {
             display: flex;
             justify-content: center;
-            padding-top: 15px;
+            padding-top: 10px;
             border-top: 1px solid #f0f0f0;
         }
 
         .btn-save {
             background: #ff8c00;
             color: #fff;
-            padding: 15px 60px;
+            padding: 12px 50px;
             border-radius: 50px;
             border: none;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: 0.3s;
+            transition: 0.2s;
         }
-        .btn-save:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(255, 140, 0, 0.3); }
+        .btn-save:hover { transform: scale(1.02); }
 
         @media (max-width: 600px) {
-            .edit-grid { grid-template-columns: 1fr; gap: 10px; }
-            .calc-section { grid-template-columns: repeat(3, 1fr); padding: 8px; }
-            .money-card input { font-size: 14px; }
-            .header h1 { font-size: 18px; }
+            .edit-grid { grid-template-columns: 1fr; }
+            .calc-section { grid-template-columns: repeat(3, 1fr); }
+            .money-card input { font-size: 13px; }
         }
     </style>
 </head>
@@ -141,14 +139,14 @@
 
     <div class="main-card">
         <header class="header">
-            <h1><i class="fas fa-edit"></i> डेटा संशोधित करें</h1>
+            <h1><i class="fas fa-edit"></i> रिकॉर्ड अपडेट करें</h1>
             <a href="connection_detail.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
         </header>
 
         <div class="edit-grid">
             <div class="input-group" style="grid-column: 1 / -1;">
-                <label>कनेक्शन आईडी</label>
-                <input type="text" id="edit_id" placeholder="NPPNCN-0000">
+                <label>कनेक्शन आईडी (Prefix: NPPNCN-)</label>
+                <input type="text" id="edit_id">
             </div>
             
             <div class="input-group">
@@ -157,7 +155,7 @@
             </div>
             
             <div class="input-group">
-                <label>वार्ड</label>
+                <label>वार्ड नं. / नाम</label>
                 <input type="text" id="edit_ward">
             </div>
             
@@ -168,15 +166,15 @@
 
             <div class="calc-section">
                 <div class="money-card">
-                    <label>मांग</label>
+                    <label>मांग (₹)</label>
                     <input type="number" id="edit_curr" oninput="calculate()">
                 </div>
                 <div class="money-card">
-                    <label>बकाया</label>
+                    <label>बकाया (₹)</label>
                     <input type="number" id="edit_arr" oninput="calculate()">
                 </div>
                 <div class="money-card total-box">
-                    <label>कुल देय</label>
+                    <label>कुल देय (₹)</label>
                     <input type="number" id="edit_total" readonly>
                 </div>
             </div>
@@ -184,36 +182,21 @@
 
         <div class="action-btns">
             <button class="btn-save" onclick="handleSave()">
-                <i class="fas fa-save"></i> UPDATE DATA
+                <i class="fas fa-sync-alt"></i> UPDATE RECORD
             </button>
         </div>
     </div>
 
 <script>
-    // ID फॉर्मेटिंग
-    function formatID(id) {
+    // CSV और URL से आईडी साफ़ करने का फंक्शन
+    function getCleanID(id) {
         if (!id) return "";
-        let clean = id.toString().replace(/["']/g, '').trim();
-        if (!clean.toUpperCase().startsWith("NPPNCN-")) {
-            clean = "NPPNCN-" + clean;
+        let str = decodeURIComponent(id).replace(/["']/g, '').trim();
+        // अगर आईडी में केवल नंबर है, तो NPPNCN- जोड़ें
+        if (!str.toUpperCase().startsWith("NPPNCN-")) {
+            str = "NPPNCN-" + str;
         }
-        return clean;
-    }
-
-    function parseCSVRow(row) {
-        const result = [];
-        let cur = "";
-        let inQuotes = false;
-        for (let i = 0; i < row.length; i++) {
-            let char = row[i];
-            if (char === '"') inQuotes = !inQuotes;
-            else if (char === ',' && !inQuotes) {
-                result.push(cur.trim());
-                cur = "";
-            } else cur += char;
-        }
-        result.push(cur.trim());
-        return result;
+        return str;
     }
 
     async function loadData() {
@@ -221,7 +204,7 @@
         let rawId = params.get('id');
         if(!rawId) return;
 
-        const searchId = formatID(decodeURIComponent(rawId));
+        const targetId = getCleanID(rawId);
 
         try {
             const res = await fetch('Connection_data.csv');
@@ -230,21 +213,29 @@
 
             for(let i = 1; i < rows.length; i++) {
                 if(!rows[i].trim()) continue;
-                const cols = parseCSVRow(rows[i]);
-                const csvId = formatID(cols[0]);
+                
+                // CSV Parsing (Handling Quotes)
+                const cols = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                const currentId = getCleanID(cols[0]);
 
-                if(csvId === searchId) {
-                    document.getElementById('edit_id').value = csvId;
-                    document.getElementById('edit_ward').value = cols[1] || "";
-                    document.getElementById('edit_name').value = cols[2] || "";
-                    document.getElementById('edit_mobile').value = cols[5] || "";
-                    document.getElementById('edit_curr').value = cols[6] || 0;
-                    document.getElementById('edit_arr').value = cols[7] || 0;
+                if(currentId === targetId) {
+                    document.getElementById('edit_id').value = currentId;
+                    document.getElementById('edit_ward').value = (cols[1] || "").replace(/"/g, '');
+                    document.getElementById('edit_name').value = (cols[2] || "").replace(/"/g, '');
+                    document.getElementById('edit_mobile').value = (cols[5] || "").replace(/"/g, '');
+                    
+                    // पैसे को नंबर में बदलकर भरना
+                    let m_curr = parseFloat((cols[6] || "0").replace(/[₹,]/g, '')) || 0;
+                    let m_arr = parseFloat((cols[7] || "0").replace(/[₹,]/g, '')) || 0;
+                    
+                    document.getElementById('edit_curr').value = m_curr;
+                    document.getElementById('edit_arr').value = m_arr;
+                    
                     calculate();
                     break;
                 }
             }
-        } catch(e) { console.error(e); }
+        } catch(e) { console.error("Data Load Error:", e); }
     }
 
     function calculate() {
@@ -254,12 +245,15 @@
     }
 
     function handleSave() {
-        // ID चेक करना कि NPPNCN- लगा है या नहीं
-        let finalId = formatID(document.getElementById('edit_id').value);
-        document.getElementById('edit_id').value = finalId;
-
-        alert("डाटा सफलतापूर्वक अपडेट कर दिया गया है!");
-        window.location.href = "connection_detail.html?id=" + encodeURIComponent(finalId);
+        // फाइनल आईडी सुनिश्चित करें
+        let idVal = document.getElementById('edit_id').value;
+        if(idVal && !idVal.toUpperCase().startsWith("NPPNCN-")) {
+            idVal = "NPPNCN-" + idVal;
+        }
+        
+        alert("डाटा सफलतापूर्वक अपडेट हो गया!");
+        // वापस डिटेल्स पेज पर भेजें
+        window.location.href = "connection_detail.html?id=" + encodeURIComponent(idVal);
     }
 
     window.onload = loadData;
