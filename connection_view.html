@@ -7,28 +7,26 @@
     
     <link rel="icon" type="image/png" href="img1.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif; }
 
-        /* पेज को फिक्स करने के लिए */
         body { 
             background: #fdfaf4; 
-            color: #333; 
             height: 100vh; 
             width: 100vw;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden; /* नो स्क्रॉल */
+            overflow: hidden; 
             padding: 10px;
         }
 
         .main-card { 
             width: 100%; 
-            max-width: 900px; 
-            height: 95vh; /* स्क्रीन के अंदर फिक्स */
+            max-width: 850px; 
+            height: 96vh; 
             background: #ffffff; 
             border-radius: 20px; 
             padding: 20px; 
@@ -39,41 +37,38 @@
             justify-content: space-between;
         }
 
-        /* लोगो से बॉर्डर हटा दिया गया है */
+        /* लोगो स्टाइल - नो बॉर्डर */
         .logo-circle {
             width: 70px;
             height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: none; /* ऑरेंज बैकग्राउंड हटाया */
         }
 
         .logo-circle img {
             width: 65px;
             height: 65px;
             object-fit: contain;
-            border: none; /* बॉर्डर हटाया */
-            box-shadow: none; /* शैडो हटाई */
         }
 
         .header { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            padding-bottom: 15px;
+            padding-bottom: 10px;
             border-bottom: 1px solid #f0f0f0;
         }
 
         .logo-container { display: flex; align-items: center; gap: 15px; }
-        .logo-text h1 { font-size: 22px; color: #ff8c00; }
+        .logo-text h1 { font-size: 22px; color: #ff8c00; font-weight: 700; }
         .logo-text p { font-size: 13px; color: #666; }
 
         .details-grid { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
             gap: 15px; 
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         .input-item { display: flex; flex-direction: column; gap: 5px; }
@@ -89,6 +84,7 @@
             color: #222;
         }
 
+        /* मनी सेक्शन और बोल्ड लेबल्स */
         .money-section { 
             grid-column: 1 / -1; 
             display: grid; 
@@ -101,11 +97,20 @@
         }
 
         .money-card { background: white; padding: 10px; border-radius: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .money-card label { font-size: 11px; display: block; margin-bottom: 5px; color: #666; }
+        
+        /* मांग, बकाया, कुल देय को बोल्ड किया गया */
+        .money-card label { 
+            font-size: 13px; 
+            display: block; 
+            margin-bottom: 5px; 
+            color: #333; 
+            font-weight: 800; /* Bold Label */
+        }
+
         .money-card input { width: 100%; border: none; text-align: center; font-size: 18px; font-weight: 700; color: #ff8c00; background: transparent; }
 
         .total-box { background: #ff8c00; }
-        .total-box label { color: white; }
+        .total-box label { color: white; font-weight: 800; }
         .total-box input { color: white !important; }
 
         .toolbar { 
@@ -127,18 +132,19 @@
             justify-content: center; 
             font-size: 18px; 
             transition: 0.2s;
+            color: white;
         }
 
-        .btn-print { background: #6c757d; color: white; }
-        .btn-pay { background: #28a745; color: white; }
-        .btn-edit { background: #ff8c00; color: white; }
+        .btn-print { background: #6c757d; }
+        .btn-pay { background: #28a745; }
+        .btn-edit { background: #ff8c00; }
         .btn-delete { background: #fff; color: #dc3545; border: 1px solid #ffcccc; }
 
         .nav-btn { width: 40px; height: 40px; background: #eee; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #333; text-decoration: none; }
 
         @media (max-width: 600px) {
-            .details-grid { grid-template-columns: 1fr; gap: 10px; }
-            .money-section { grid-template-columns: repeat(3, 1fr); padding: 10px; }
+            .details-grid { grid-template-columns: 1fr; gap: 8px; }
+            .money-section { grid-template-columns: repeat(3, 1fr); padding: 8px; }
             .money-card input { font-size: 14px; }
             .logo-text h1 { font-size: 18px; }
         }
@@ -209,10 +215,15 @@
     </div>
 
 <script>
-    // ID सफाई के लिए: कोट्स हटाकर मैच करना
+    // ID सफाई और Prefix जोड़ना
     function cleanID(id) {
         if (!id) return "";
-        return id.toString().replace(/["']/g, '').trim();
+        let clean = id.toString().replace(/["']/g, '').trim();
+        // अगर आईडी में NPPNCN- नहीं है, तो जोड़ें
+        if (!clean.toUpperCase().startsWith("NPPNCN-")) {
+            clean = "NPPNCN-" + clean;
+        }
+        return clean;
     }
 
     function parseCSVRow(row) {
@@ -251,8 +262,8 @@
                 const csvId = cleanID(cols[0]);
 
                 if(csvId === searchId) {
-                    document.getElementById('disp_ward').value = cols[1] || "";
-                    document.getElementById('disp_name').value = cols[2] || "";
+                    document.getElementById('disp_ward').value = cols[1] || "N/A";
+                    document.getElementById('disp_name').value = cols[2] || "N/A";
                     document.getElementById('disp_mobile').value = cols[5] || "---";
                     document.getElementById('disp_curr').value = "₹" + (cols[6] || "0");
                     document.getElementById('disp_arr').value = "₹" + (cols[7] || "0");
