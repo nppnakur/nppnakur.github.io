@@ -35,9 +35,14 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            animation: slideUp 0.5s ease;
         }
 
-        /* लोगो स्टाइल - नो बॉर्डर */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .logo-circle {
             width: 70px;
             height: 70px;
@@ -84,7 +89,6 @@
             color: #222;
         }
 
-        /* मनी सेक्शन और बोल्ड लेबल्स */
         .money-section { 
             grid-column: 1 / -1; 
             display: grid; 
@@ -98,13 +102,12 @@
 
         .money-card { background: white; padding: 10px; border-radius: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         
-        /* मांग, बकाया, कुल देय को बोल्ड किया गया */
         .money-card label { 
             font-size: 13px; 
             display: block; 
             margin-bottom: 5px; 
             color: #333; 
-            font-weight: 800; /* Bold Label */
+            font-weight: 800;
         }
 
         .money-card input { width: 100%; border: none; text-align: center; font-size: 18px; font-weight: 700; color: #ff8c00; background: transparent; }
@@ -131,9 +134,11 @@
             align-items: center; 
             justify-content: center; 
             font-size: 18px; 
-            transition: 0.2s;
+            transition: 0.3s;
             color: white;
         }
+
+        .icon-circle:hover { transform: scale(1.1); filter: brightness(1.1); }
 
         .btn-print { background: #6c757d; }
         .btn-pay { background: #28a745; }
@@ -192,7 +197,7 @@
 
             <div class="money-section">
                 <div class="money-card">
-                    <label>मांग</label>
+                    <label>मांग (25-26)</label>
                     <input type="text" id="disp_curr" disabled>
                 </div>
                 <div class="money-card">
@@ -215,15 +220,14 @@
     </div>
 
 <script>
-    // ID सफाई और Prefix जोड़ना
-    function cleanID(id) {
+    // ID को साफ करने और फॉर्मेट करने का फंक्शन
+    function formatID(id) {
         if (!id) return "";
         let clean = id.toString().replace(/["']/g, '').trim();
-        // अगर आईडी में NPPNCN- नहीं है, तो जोड़ें
         if (!clean.toUpperCase().startsWith("NPPNCN-")) {
             clean = "NPPNCN-" + clean;
         }
-        return clean;
+        return clean.toUpperCase();
     }
 
     function parseCSVRow(row) {
@@ -245,48 +249,87 @@
     async function init() {
         const params = new URLSearchParams(window.location.search);
         let rawId = params.get('id'); 
-        if(!rawId) return;
+        if(!rawId) {
+            alert("आईडी नहीं मिली!");
+            return;
+        }
 
-        const searchId = cleanID(decodeURIComponent(rawId));
+        const searchId = formatID(decodeURIComponent(rawId));
         document.getElementById('disp_id').value = searchId;
 
-        try {
-            const res = await fetch('Connection_data.csv');
-            const text = await res.text();
-            const rows = text.split(/\r?\n/);
-            let found = false;
+        let foundData = null;
 
-            for(let i = 1; i < rows.length; i++) {
-                if(!rows[i].trim()) continue;
-                const cols = parseCSVRow(rows[i]);
-                const csvId = cleanID(cols[0]);
+        // 1. सबसे पहले LocalStorage (नए कनेक्शन) में देखें
+        const localData = JSON.parse(localStorage.getItem("newConnections")) || [];
+        const matchedLocal = localData.find(item => formatID(item.id) === searchId);
 
-                if(csvId === searchId) {
-                    document.getElementById('disp_ward').value = cols[1] || "N/A";
-                    document.getElementById('disp_name').value = cols[2] || "N/A";
-                    document.getElementById('disp_mobile').value = cols[5] || "---";
-                    document.getElementById('disp_curr').value = "₹" + (cols[6] || "0");
-                    document.getElementById('disp_arr').value = "₹" + (cols[7] || "0");
-                    document.getElementById('disp_total').value = "₹" + (cols[8] || "0");
-                    found = true;
-                    break;
+        if (matchedLocal) {
+            foundData = {
+                ward: matchedLocal.ward,
+                name: matchedLocal.name,
+                mobile: matchedLocal.mobile,
+                curr: matchedLocal.curr,
+                arr: matchedLocal.arr,
+                total: matchedLocal.total
+            };
+        } else {
+            // 2. अगर लोकल में नहीं मिला, तो CSV फाइल में खोजें
+            try {
+                const res = await fetch('Connection_data.csv');
+                if (res.ok) {
+                    const text = await res.text();
+                    const rows = text.split(/\r?\n/);
+                    for(let i = 1; i < rows.length; i++) {
+                        if(!rows[i].trim()) continue;
+                        const cols = parseCSVRow(rows[i]);
+                        if(formatID(cols[0]) === searchId) {
+                            foundData = {
+                                ward: cols[1],
+                                name: cols[2],
+                                mobile: cols[5],
+                                curr: cols[6],
+                                arr: cols[7],
+                                total: cols[8]
+                            };
+                            break;
+                        }
+                    }
                 }
-            }
-        } catch(e) { console.error(e); }
+            } catch(e) { console.error("CSV Fetch Error:", e); }
+        }
+
+        // डेटा रेंडर करें
+        if (foundData) {
+            document.getElementById('disp_ward').value = foundData.ward || "N/A";
+            document.getElementById('disp_name').value = foundData.name || "N/A";
+            document.getElementById('disp_mobile').value = foundData.mobile || "---";
+            document.getElementById('disp_curr').value = "₹" + parseFloat(foundData.curr || 0).toFixed(2);
+            document.getElementById('disp_arr').value = "₹" + parseFloat(foundData.arr || 0).toFixed(2);
+            document.getElementById('disp_total').value = "₹" + parseFloat(foundData.total || 0).toFixed(2);
+        } else {
+            alert("उपभोक्ता का डेटा नहीं मिला!");
+        }
     }
 
     function goToEdit() {
-        const pass = prompt("पासवर्ड:");
+        const pass = prompt("एडमिन पासवर्ड दर्ज करें:");
         if (pass === "admin123") {
             const id = encodeURIComponent(document.getElementById('disp_id').value);
             window.location.href = "edit_connection.html?id=" + id;
+        } else {
+            alert("गलत पासवर्ड!");
         }
     }
 
     function handleDelete() {
-        const pass = prompt("पासवर्ड:");
-        if (pass === "admin123" && confirm("हटाना चाहते हैं?")) {
-            window.location.href = "connection_detail.html";
+        const pass = prompt("हटाने के लिए पासवर्ड दर्ज करें:");
+        if (pass === "admin123") {
+            if (confirm("क्या आप वाकई इस कनेक्शन को हटाना चाहते हैं?")) {
+                // यहाँ डिलीट लॉजिक जोड़ सकते हैं (LocalStorage से हटाने के लिए)
+                window.location.href = "connection_detail.html";
+            }
+        } else {
+            alert("गलत पासवर्ड!");
         }
     }
 
