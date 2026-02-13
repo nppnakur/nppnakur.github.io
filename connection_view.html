@@ -1,339 +1,73 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>उपभोक्ता विवरण - NPP नकुड़</title>
-    
-    <link rel="icon" type="image/png" href="img1.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif; }
-
-        body { 
-            background: #fdfaf4; 
-            height: 100vh; 
-            width: 100vw;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden; 
-            padding: 10px;
-        }
-
-        .main-card { 
-            width: 100%; 
-            max-width: 850px; 
-            height: 96vh; 
-            background: #ffffff; 
-            border-radius: 20px; 
-            padding: 20px; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            border: 1px solid #eee;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            animation: slideUp 0.5s ease;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .logo-circle {
-            width: 70px;
-            height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-circle img {
-            width: 65px;
-            height: 65px;
-            object-fit: contain;
-        }
-
-        .header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding-bottom: 10px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .logo-container { display: flex; align-items: center; gap: 15px; }
-        .logo-text h1 { font-size: 22px; color: #ff8c00; font-weight: 700; }
-        .logo-text p { font-size: 13px; color: #666; }
-
-        .details-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 15px; 
-            margin-top: 10px;
-        }
-
-        .input-item { display: flex; flex-direction: column; gap: 5px; }
-        .input-item label { font-size: 12px; font-weight: 600; color: #ff8c00; text-transform: uppercase; }
+async function fetchData() {
+    try {
+        // 1. सबसे पहले लिस्ट को खाली करें ताकि पुराना डेटा न दिखे
+        masterRows = []; 
+        document.getElementById('tableBody').innerHTML = ""; 
         
-        .input-item input { 
-            padding: 12px 15px; 
-            border-radius: 10px; 
-            border: 1px solid #ddd; 
-            background: #f9f9f9; 
-            font-size: 15px; 
-            font-weight: 600; 
-            color: #222;
-        }
+        stats = { total: 0, current: 0, arrear: 0, balance: 0 };
 
-        .money-section { 
-            grid-column: 1 / -1; 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 10px; 
-            padding: 15px; 
-            background: #fff8f0; 
-            border-radius: 15px; 
-            border: 1px dashed #ff8c00;
-        }
+        // 2. LocalStorage से डेटा लोड करें (यही वो डेटा है जो डिलीट करने पर हटना चाहिए)
+        let localData = JSON.parse(localStorage.getItem("newConnections")) || [];
 
-        .money-card { background: white; padding: 10px; border-radius: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        
-        .money-card label { 
-            font-size: 13px; 
-            display: block; 
-            margin-bottom: 5px; 
-            color: #333; 
-            font-weight: 800;
-        }
-
-        .money-card input { width: 100%; border: none; text-align: center; font-size: 18px; font-weight: 700; color: #ff8c00; background: transparent; }
-
-        .total-box { background: #ff8c00; }
-        .total-box label { color: white; font-weight: 800; }
-        .total-box input { color: white !important; }
-
-        .toolbar { 
-            display: flex; 
-            justify-content: center; 
-            gap: 20px; 
-            padding-top: 15px;
-            border-top: 1px solid #f0f0f0;
-        }
-
-        .icon-circle { 
-            width: 50px; 
-            height: 50px; 
-            border-radius: 50%; 
-            border: none; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 18px; 
-            transition: 0.3s;
-            color: white;
-        }
-
-        .icon-circle:hover { transform: scale(1.1); filter: brightness(1.1); }
-
-        .btn-print { background: #6c757d; }
-        .btn-pay { background: #28a745; }
-        .btn-edit { background: #ff8c00; }
-        .btn-delete { background: #fff; color: #dc3545; border: 1px solid #ffcccc; }
-
-        .nav-btn { width: 40px; height: 40px; background: #eee; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #333; text-decoration: none; }
-
-        @media (max-width: 600px) {
-            .details-grid { grid-template-columns: 1fr; gap: 8px; }
-            .money-section { grid-template-columns: repeat(3, 1fr); padding: 8px; }
-            .money-card input { font-size: 14px; }
-            .logo-text h1 { font-size: 18px; }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="main-card">
-        <header class="header">
-            <div class="logo-container">
-                <div class="logo-circle">
-                    <img src="img1.png" alt="Logo" onerror="this.src='https://img.icons8.com/color/96/000000/water.png'">
-                </div>
-                <div class="logo-text">
-                    <h1>उपभोक्ता विवरण</h1>
-                    <p>न.पा.प. नकुड़ - जल विभाग</p>
-                </div>
-            </div>
-            <div class="nav-buttons" style="display: flex; gap: 10px;">
-                <a href="connection_detail.html" class="nav-btn"><i class="fas fa-arrow-left"></i></a>
-                <a href="water_manegment.html" class="nav-btn"><i class="fas fa-home"></i></a>
-            </div>
-        </header>
-
-        <div class="details-grid">
-            <div class="input-item" style="grid-column: 1 / -1;">
-                <label>कनेक्शन आईडी</label>
-                <input type="text" id="disp_id" disabled>
-            </div>
-            
-            <div class="input-item">
-                <label>उपभोक्ता का नाम</label>
-                <input type="text" id="disp_name" disabled>
-            </div>
-            
-            <div class="input-item">
-                <label>वार्ड</label>
-                <input type="text" id="disp_ward" disabled>
-            </div>
-            
-            <div class="input-item" style="grid-column: 1 / -1;">
-                <label>मोबाइल नंबर</label>
-                <input type="text" id="disp_mobile" disabled>
-            </div>
-
-            <div class="money-section">
-                <div class="money-card">
-                    <label>मांग (25-26)</label>
-                    <input type="text" id="disp_curr" disabled>
-                </div>
-                <div class="money-card">
-                    <label>बकाया</label>
-                    <input type="text" id="disp_arr" disabled>
-                </div>
-                <div class="money-card total-box">
-                    <label>कुल देय</label>
-                    <input type="text" id="disp_total" disabled>
-                </div>
-            </div>
-        </div>
-
-        <div class="toolbar">
-            <button class="icon-circle btn-print" title="Print" onclick="window.print()"><i class="fas fa-print"></i></button>
-            <button class="icon-circle btn-pay" title="Pay" onclick="location.href='pay_bill.html'"><i class="fas fa-file-invoice-dollar"></i></button>
-            <button class="icon-circle btn-edit" title="Edit" onclick="goToEdit()"><i class="fas fa-pencil-alt"></i></button>
-            <button class="icon-circle btn-delete" title="Delete" onclick="handleDelete()"><i class="fas fa-trash-alt"></i></button>
-        </div>
-    </div>
-
-<script>
-    // ID को साफ करने और फॉर्मेट करने का फंक्शन
-    function formatID(id) {
-        if (!id) return "";
-        let clean = id.toString().replace(/["']/g, '').trim();
-        if (!clean.toUpperCase().startsWith("NPPNCN-")) {
-            clean = "NPPNCN-" + clean;
-        }
-        return clean.toUpperCase();
-    }
-
-    function parseCSVRow(row) {
-        const result = [];
-        let cur = "";
-        let inQuotes = false;
-        for (let i = 0; i < row.length; i++) {
-            let char = row[i];
-            if (char === '"') inQuotes = !inQuotes;
-            else if (char === ',' && !inQuotes) {
-                result.push(cur.trim());
-                cur = "";
-            } else cur += char;
-        }
-        result.push(cur.trim());
-        return result;
-    }
-
-    async function init() {
-        const params = new URLSearchParams(window.location.search);
-        let rawId = params.get('id'); 
-        if(!rawId) {
-            alert("आईडी नहीं मिली!");
-            return;
-        }
-
-        const searchId = formatID(decodeURIComponent(rawId));
-        document.getElementById('disp_id').value = searchId;
-
-        let foundData = null;
-
-        // 1. सबसे पहले LocalStorage (नए कनेक्शन) में देखें
-        const localData = JSON.parse(localStorage.getItem("newConnections")) || [];
-        const matchedLocal = localData.find(item => formatID(item.id) === searchId);
-
-        if (matchedLocal) {
-            foundData = {
-                ward: matchedLocal.ward,
-                name: matchedLocal.name,
-                mobile: matchedLocal.mobile,
-                curr: matchedLocal.curr,
-                arr: matchedLocal.arr,
-                total: matchedLocal.total
-            };
-        } else {
-            // 2. अगर लोकल में नहीं मिला, तो CSV फाइल में खोजें
-            try {
-                const res = await fetch('Connection_data.csv');
-                if (res.ok) {
-                    const text = await res.text();
-                    const rows = text.split(/\r?\n/);
-                    for(let i = 1; i < rows.length; i++) {
-                        if(!rows[i].trim()) continue;
-                        const cols = parseCSVRow(rows[i]);
-                        if(formatID(cols[0]) === searchId) {
-                            foundData = {
-                                ward: cols[1],
-                                name: cols[2],
-                                mobile: cols[5],
-                                curr: cols[6],
-                                arr: cols[7],
-                                total: cols[8]
-                            };
-                            break;
-                        }
+        // 3. CSV से डेटा लोड करें
+        let csvRows = [];
+        try {
+            const response = await fetch('Connection_data.csv');
+            if(response.ok) {
+                const csvData = await response.text();
+                const lines = csvData.split(/\r?\n/).filter(line => line.trim() !== "").slice(1);
+                csvRows = lines.map(line => {
+                    const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    if (cols.length >= 9) {
+                        return createRowObject(cols[0], cols[1], cols[2], cols[5], cols[6], cols[7], cols[8], false);
                     }
-                }
-            } catch(e) { console.error("CSV Fetch Error:", e); }
-        }
-
-        // डेटा रेंडर करें
-        if (foundData) {
-            document.getElementById('disp_ward').value = foundData.ward || "N/A";
-            document.getElementById('disp_name').value = foundData.name || "N/A";
-            document.getElementById('disp_mobile').value = foundData.mobile || "---";
-            document.getElementById('disp_curr').value = "₹" + parseFloat(foundData.curr || 0).toFixed(2);
-            document.getElementById('disp_arr').value = "₹" + parseFloat(foundData.arr || 0).toFixed(2);
-            document.getElementById('disp_total').value = "₹" + parseFloat(foundData.total || 0).toFixed(2);
-        } else {
-            alert("उपभोक्ता का डेटा नहीं मिला!");
-        }
-    }
-
-    function goToEdit() {
-        const pass = prompt("एडमिन पासवर्ड दर्ज करें:");
-        if (pass === "admin123") {
-            const id = encodeURIComponent(document.getElementById('disp_id').value);
-            window.location.href = "edit_connection.html?id=" + id;
-        } else {
-            alert("गलत पासवर्ड!");
-        }
-    }
-
-    function handleDelete() {
-        const pass = prompt("हटाने के लिए पासवर्ड दर्ज करें:");
-        if (pass === "admin123") {
-            if (confirm("क्या आप वाकई इस कनेक्शन को हटाना चाहते हैं?")) {
-                // यहाँ डिलीट लॉजिक जोड़ सकते हैं (LocalStorage से हटाने के लिए)
-                window.location.href = "connection_detail.html";
+                    return null;
+                }).filter(x => x);
             }
-        } else {
-            alert("गलत पासवर्ड!");
-        }
-    }
+        } catch(e) { console.log("CSV load skipped"); }
 
-    window.onload = init;
-</script>
-</body>
-</html>
+        // 4. लोकल और CSV डेटा को मिलाएं
+        // ध्यान दें: अब localRows को पहले रखा गया है ताकि ताजा डेटा ऊपर दिखे
+        let localRows = localData.map(d => createRowObject(d.id, d.ward, d.name, d.mobile, d.curr, d.arr, d.total, true));
+        
+        masterRows = [...localRows, ...csvRows];
+
+        // 5. स्टेट्स की गणना करें और टेबल दिखाएँ
+        calculateStats();
+        renderTable(masterRows);
+        
+    } catch (e) { 
+        console.error("Error loading data:", e); 
+    }
+}
+
+// यह फंक्शन सुनिश्चित करता है कि नंबर सही से जुड़ें (₹010600 वाली समस्या को खत्म करता है)
+function createRowObject(id, ward, name, mobile, curr, arr, total, isNew) {
+    const cVal = parseFloat(curr) || 0;
+    const aVal = parseFloat(arr) || 0;
+    const tVal = parseFloat(total) || 0;
+
+    const item = { 
+        id: id.toString().startsWith("NPPNCN") ? id : `NPPNCN-${id.toString().trim()}`, 
+        ward: (ward || "").trim(), 
+        name: (name || "").replace(/"/g, '').trim(), 
+        mobile: (mobile || "---").trim(),
+        curr: cVal, arr: aVal, total: tVal, 
+        rawId: id.toString().replace("NPPNCN-", "").trim()
+    };
+
+    return {
+        data: item,
+        html: `<tr>
+                <td class="id-cell">${item.id}${isNew ? '<span class="new-badge">NEW</span>' : ''}</td>
+                <td>${item.ward}</td>
+                <td class="name-cell">${item.name}</td>
+                <td>${item.mobile}</td>
+                <td style="color:#10b981; font-weight:700;">₹${item.curr.toFixed(2)}</td>
+                <td style="color:#f59e0b; font-weight:700;">₹${item.arr.toFixed(2)}</td>
+                <td class="amt-total">₹${item.total.toFixed(2)}</td>
+                <td><a href="connection_view.html?id=${item.rawId}" class="view-btn"><i class="fas fa-eye"></i></a></td>
+            </tr>`,
+        text: `${item.id} ${item.ward} ${item.name} ${item.mobile}`.toUpperCase()
+    };
+}
