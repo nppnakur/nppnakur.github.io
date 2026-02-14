@@ -26,95 +26,102 @@
     }
 
     h2 {
-      position: absolute; top: 4%; width: 100%; text-align: center;
-      font-size: clamp(20px, 6vw, 32px); color: #fff; 
+      position: absolute; top: 3%; width: 100%; text-align: center;
+      font-size: clamp(18px, 5vw, 28px); color: #fff; 
       margin: 0; z-index: 10;
       text-shadow: 0 0 15px rgba(255, 204, 0, 0.7);
-      letter-spacing: 2px;
+      text-transform: uppercase;
     }
 
+    /* Container की हाइट कम और चौड़ाई ज्यादा की गई */
     .container {
-      background-color: rgba(0, 0, 0, 0.4); 
+      background-color: rgba(0, 0, 0, 0.45); 
       backdrop-filter: blur(15px);
       -webkit-backdrop-filter: blur(15px);
       border-radius: 20px;
-      padding: 40px;
+      padding: 25px 40px;
       display: flex; 
       flex-direction: row;
       width: 95%; 
-      max-width: 1000px; 
-      min-height: 450px;
+      max-width: 950px; 
+      min-height: auto; /* हाइट कंटेंट के हिसाब से कम रहेगी */
       border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.7);
       z-index: 5;
       align-items: center;
     }
 
-    .logo-section { flex: 1; display: flex; align-items: center; justify-content: center; }
+    .logo-section { flex: 0.8; display: flex; align-items: center; justify-content: center; }
 
-    /* बीच का दंडा */
+    /* बीच का दंडा (Divider) */
     .divider {
       width: 2px;
-      height: 280px;
+      height: 220px;
       background: linear-gradient(to bottom, transparent, #ffcc00, transparent);
-      margin: 0 30px;
+      margin: 0 35px;
     }
 
     .rotating-logo {
-      width: clamp(150px, 30vw, 280px);
-      filter: drop-shadow(0 0 15px rgba(255,204,0,0.4));
+      width: clamp(120px, 20vw, 220px);
+      filter: drop-shadow(0 0 10px rgba(255,204,0,0.4));
       animation: smoothSwing 5s ease-in-out infinite;
     }
 
     @keyframes smoothSwing {
-      0%, 100% { transform: rotateY(-20deg); }
-      50% { transform: rotateY(20deg); }
+      0%, 100% { transform: rotateY(-15deg); }
+      50% { transform: rotateY(15deg); }
     }
 
-    .form-section { flex: 1.2; padding: 0 10px; }
-    .form-section h3 { color: #ffcc00; text-align: center; margin-bottom: 25px; font-size: 28px; letter-spacing: 1px; }
+    .form-section { flex: 1.2; }
+    .form-section h3 { color: #ffcc00; text-align: center; margin: 0 0 20px 0; font-size: 24px; }
 
-    .form-group { margin-bottom: 15px; }
-    .form-group label { color: #ffcc00; font-size: 12px; font-weight: 600; display: block; margin-bottom: 5px; margin-left: 15px; text-transform: uppercase; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { color: #ffcc00; font-size: 11px; font-weight: 600; display: block; margin-bottom: 4px; margin-left: 10px; }
 
     .form-group input {
-      width: 100%; padding: 12px 20px; border-radius: 50px;
+      width: 100%; padding: 10px 18px; border-radius: 50px;
       border: 1px solid rgba(255, 204, 0, 0.4);
       background: rgba(255, 255, 255, 0.08);
-      color: #fff; outline: none; font-size: 15px;
+      color: #fff; outline: none; font-size: 14px;
     }
 
-    /* Captcha Styling */
-    .captcha-box {
-      display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+    /* Captcha CSS */
+    .captcha-row {
+      display: flex; align-items: center; gap: 8px; margin-top: 5px;
     }
     #captcha-code {
-      background: #ffcc00; color: #000; padding: 8px 15px; 
+      background: #ffcc00; color: #000; padding: 6px 12px; 
       font-weight: bold; border-radius: 5px; letter-spacing: 3px;
-      font-style: italic; user-select: none;
+      font-style: italic; user-select: none; font-size: 16px;
     }
-    .refresh-btn { color: #fff; cursor: pointer; font-size: 18px; }
+    .refresh-icon { color: #ffcc00; cursor: pointer; font-size: 18px; }
 
     .form-group button {
-      width: 100%; padding: 14px; border-radius: 50px;
+      width: 100%; padding: 12px; border-radius: 50px;
       border: none; background: linear-gradient(45deg, #ffcc00, #ffeb3b);
-      color: #000; font-weight: 800; cursor: pointer; font-size: 16px;
-      box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4);
-      transition: all 0.3s ease; text-transform: uppercase;
+      color: #000; font-weight: 800; cursor: pointer; font-size: 15px;
+      box-shadow: 0 4px 12px rgba(255, 204, 0, 0.3);
+      margin-top: 5px;
     }
-
-    .form-group button:active { transform: scale(0.96); }
 
     footer {
-      position: absolute; bottom: 3%; width: 100%; text-align: center;
-      color: rgba(255, 204, 0, 0.8); font-size: 13px; font-weight: bold;
+      position: absolute; bottom: 2%; width: 100%; text-align: center;
+      color: rgba(255, 204, 0, 0.7); font-size: 11px; font-weight: bold;
     }
 
-    @media (max-width: 800px) {
-      .container { flex-direction: column; width: 90%; height: auto; padding: 30px 20px; }
-      .divider { display: none; }
-      .logo-section { margin-bottom: 20px; }
-      .rotating-logo { width: 120px; }
+    /* Mobile Responsive Settings */
+    @media (max-width: 768px) {
+      .container { 
+        flex-direction: column; 
+        width: 90%; 
+        padding: 20px; 
+        margin-top: 40px;
+      }
+      .divider { display: none; } /* मोबाइल पर दंडा हटा दिया */
+      .logo-section { margin-bottom: 15px; }
+      .rotating-logo { width: 100px; }
+      h2 { top: 2%; font-size: 18px; }
+      .form-section h3 { font-size: 20px; margin-bottom: 15px; }
     }
 
     #otp-section { display: none; }
@@ -132,24 +139,23 @@
   <div class="divider"></div>
 
   <div class="form-section">
-    <h3>ADMIN LOGIN</h3>
-    
     <div id="login-section">
+      <h3>ADMIN LOGIN</h3>
       <div class="form-group">
         <label>USER NAME</label>
-        <input type="text" id="username" placeholder="Admin ID">
+        <input type="text" id="username" placeholder="Enter ID">
       </div>
       <div class="form-group">
         <label>PASSWORD</label>
-        <input type="password" id="password" placeholder="Password">
+        <input type="password" id="password" placeholder="Enter Password">
       </div>
       
       <div class="form-group">
-        <label>CAPTCHA CODE</label>
-        <div class="captcha-box">
+        <label>SECURITY CAPTCHA</label>
+        <div class="captcha-row">
           <div id="captcha-code"></div>
-          <span class="refresh-btn" onclick="generateCaptcha()">🔄</span>
-          <input type="text" id="captcha-input" placeholder="Enter Code" style="width: 120px; padding: 8px 15px;">
+          <span class="refresh-icon" onclick="generateCaptcha()">🔄</span>
+          <input type="text" id="captcha-input" placeholder="Code" style="width: 100px; padding: 8px 12px;">
         </div>
       </div>
 
@@ -159,9 +165,10 @@
     </div>
     
     <div id="otp-section">
-      <p style="color:#4caf50; text-align:center; font-size:14px; font-weight:bold;">✅ OTP SENT SUCCESSFULLY</p>
+      <h3>VERIFY OTP</h3>
+      <p style="color:#4caf50; text-align:center; font-size:13px; font-weight:bold; margin-bottom:15px;">✅ OTP SENT TO REGISTERED EMAIL</p>
       <div class="form-group">
-        <label>ENTER 6-DIGIT OTP</label>
+        <label>6-DIGIT OTP</label>
         <input type="text" id="user-otp" placeholder="XXXXXX" maxlength="6">
       </div>
       <div class="form-group">
@@ -237,7 +244,7 @@ document.getElementById('verifyBtn').onclick = function() {
             window.location.href = "dashboard.html"; 
         }, 800);
     } else {
-        alert("Invalid OTP!");
+        alert("Invalid OTP! Please check again.");
     }
 };
 </script>
