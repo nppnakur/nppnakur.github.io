@@ -1,151 +1,30 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JAL CONNECTION VIVRAN DETAIL</title>
-    <link rel="icon" type="image/png" href="img1.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&display=swap');
-        body { background: #f4f7f6; font-family: 'Hind', sans-serif; margin: 0; }
-        .topbar { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); height: 85px; padding: 0 30px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 1000; color: white; }
-        .header-left h1 { font-weight: 700; font-size: 24px; margin: 0; }
-        .search-area { max-width: 550px; margin: 30px auto; display: flex; gap: 12px; padding: 0 15px; }
-        .search-wrapper { position: relative; flex: 1; }
-        .search-wrapper i { position: absolute; left: 18px; top: 14px; color: #1e40af; }
-        #searchInput { width: 100%; padding: 12px 20px 12px 50px; border-radius: 50px; border: 2px solid #cbd5e1; outline: none; }
-        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; max-width: 1300px; margin: 0 auto 30px; padding: 0 20px; }
-        .stat-card { background: white; padding: 20px; border-radius: 15px; text-align: center; border-left: 6px solid #1e40af; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
-        .table-section { max-width: 1480px; margin: 0 auto 50px; padding: 0 15px; }
-        .table-container { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table thead { background: #1e293b; color: white; }
-        .data-table th, .data-table td { padding: 15px; text-align: center; border-bottom: 1px solid #eee; }
-        .new-badge { background: #10b981; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
-        .id-cell { font-weight: bold; color: #1e40af; }
-    </style>
-</head>
-<body>
-
-<div class="topbar">
-    <div class="header-left"><h1>JAL CONNECTION VIVRAN DETAIL</h1></div>
-    <div class="header-right">
-        <a href="https://nppnakur.github.io/water_manegment.html" style="color:white; font-size: 20px; margin-right: 15px;"><i class="fas fa-home"></i></a>
-        <a href="login.html" style="color:white; font-size: 20px;"><i class="fas fa-sign-out-alt"></i></a>
-    </div>
-</div>
-
-<div class="search-area">
-    <div class="search-wrapper">
-        <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="नाम, आईडी या मोबाइल से खोजें..." onkeyup="fastSearch()">
-    </div>
-</div>
-
-<div class="stats-row">
-    <div class="stat-card"><p>कुल कनेक्शन</p><h2 id="statTotal">0</h2></div>
-    <div class="stat-card"><p>कुल अवशेष</p><h2 id="statTotalRem">₹0</h2></div>
-</div>
-
-<div class="table-section">
-    <div class="table-container">
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>कन. आईडी</th>
-                    <th>वार्ड</th>
-                    <th>उपभोक्ता</th>
-                    <th>मोबाइल</th>
-                    <th>मांग</th>
-                    <th>बकाया</th>
-                    <th>कुल अवशेष</th>
-                    <th>देखें</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
-    </div>
-</div>
-
-<script>
-    let masterRows = [];
-
-    async function fetchData() {
-        masterRows = []; 
-        let stats = { total: 0, balance: 0 };
-
-        // 1. Load Local Storage Data (Added Connections)
-        let localData = JSON.parse(localStorage.getItem("newConnections")) || [];
-        let localRows = localData.map(d => createRowObject(d.id, d.ward, d.name, d.mobile, d.curr, d.arr, d.total, true));
-
-        // 2. Load CSV Data
-        let csvRows = [];
-        try {
-            const response = await fetch('Connection_data.csv');
-            const csvText = await response.text();
-            const lines = csvText.split(/\r?\n/).slice(1);
-            csvRows = lines.map(line => {
-                const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                if (cols.length >= 9) {
-                    return createRowObject(cols[0], cols[1], cols[2], cols[5], cols[6], cols[7], cols[8], false);
-                }
-                return null;
-            }).filter(x => x);
-        } catch(e) { console.log("CSV load error"); }
-
-        masterRows = [...localRows, ...csvRows];
+function handleDelete() {
+    const pass = prompt("हटाने के लिए एडमिन पासवर्ड दर्ज करें:");
+    if (pass === "admin123") {
+        // ID को पूरी तरह साफ करें (सिर्फ नंबर और जरूरी अक्षर रखें)
+        const currentId = document.getElementById('disp_id').value.replace(/["']/g, '').trim();
         
-        // Calculate Stats
-        masterRows.forEach(r => {
-            stats.total++;
-            stats.balance += parseFloat(r.data.total);
-        });
+        if (confirm("क्या आप इस कनेक्शन को हटाना चाहते हैं?")) {
+            let localData = JSON.parse(localStorage.getItem("newConnections")) || [];
+            
+            // मैचिंग के लिए सख्त फिल्टर (ID को NPPNCN- के साथ या बिना भी चेक करेगा)
+            const initialLength = localData.length;
+            localData = localData.filter(item => {
+                let itemId = item.id.toString().replace(/["']/g, '').trim();
+                // अगर ID में NPPNCN- नहीं है तो जोड़कर चेक करें
+                if (!itemId.startsWith("NPPNCN-")) itemId = "NPPNCN-" + itemId;
+                return itemId !== currentId;
+            });
 
-        document.getElementById('statTotal').innerText = stats.total;
-        document.getElementById('statTotalRem').innerText = '₹' + stats.balance.toLocaleString('en-IN');
-        
-        renderTable(masterRows);
+            if (localData.length < initialLength) {
+                localStorage.setItem("newConnections", JSON.stringify(localData));
+                alert("सफलतापूर्वक हटा दिया गया!");
+                window.location.href = "connection_detail.html"; 
+            } else {
+                alert("त्रुटि: यह डेटा LocalStorage में नहीं मिला। (हो सकता है यह CSV फाइल में हो जिसे ब्राउज़र से नहीं हटाया जा सकता)");
+            }
+        }
+    } else if (pass !== null) {
+        alert("गलत पासवर्ड!");
     }
-
-    function createRowObject(id, ward, name, mobile, curr, arr, total, isNew) {
-        // Fix: Force numeric addition to avoid ₹010600 error
-        const c = parseFloat(curr) || 0;
-        const a = parseFloat(arr) || 0;
-        const t = parseFloat(total) || (c + a);
-
-        const cleanId = id.toString().replace(/["']/g, '').trim();
-        const fullId = cleanId.startsWith("NPPNCN-") ? cleanId : "NPPNCN-" + cleanId;
-
-        return {
-            data: { id: fullId, rawId: cleanId.replace("NPPNCN-", ""), total: t },
-            html: `<tr>
-                    <td class="id-cell">${fullId} ${isNew ? '<span class="new-badge">NEW</span>' : ''}</td>
-                    <td>${ward}</td>
-                    <td>${name.replace(/"/g, '')}</td>
-                    <td>${mobile || '---'}</td>
-                    <td>₹${c}</td>
-                    <td>₹${a}</td>
-                    <td style="color:red; font-weight:bold;">₹${t}</td>
-                    <td><a href="connection_view.html?id=${cleanId.replace("NPPNCN-", "")}"><i class="fas fa-eye text-primary"></i></a></td>
-                </tr>`,
-            text: `${fullId} ${name} ${mobile}`.toUpperCase()
-        };
-    }
-
-    function renderTable(list) {
-        document.getElementById('tableBody').innerHTML = list.map(r => r.html).join('');
-    }
-
-    function fastSearch() {
-        const query = document.getElementById("searchInput").value.toUpperCase();
-        renderTable(masterRows.filter(r => r.text.includes(query)));
-    }
-
-    window.onload = fetchData;
-</script>
-</body>
-</html>
+}
