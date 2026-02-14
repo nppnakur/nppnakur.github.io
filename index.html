@@ -27,56 +27,80 @@
 
     h2 {
       position: absolute; top: 4%; width: 100%; text-align: center;
-      font-size: clamp(20px, 6vw, 30px); color: #fff; 
+      font-size: clamp(20px, 6vw, 32px); color: #fff; 
       margin: 0; z-index: 10;
       text-shadow: 0 0 15px rgba(255, 204, 0, 0.7);
+      letter-spacing: 2px;
     }
 
     .container {
-      background-color: rgba(0, 0, 0, 0.3); 
+      background-color: rgba(0, 0, 0, 0.4); 
       backdrop-filter: blur(15px);
       -webkit-backdrop-filter: blur(15px);
-      border-radius: 30px;
-      padding: 30px 20px;
-      display: flex; flex-direction: row;
-      width: 92%; max-width: 850px;
+      border-radius: 20px;
+      padding: 40px;
+      display: flex; 
+      flex-direction: row;
+      width: 95%; 
+      max-width: 1000px; 
+      min-height: 450px;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.8);
       z-index: 5;
+      align-items: center;
     }
 
     .logo-section { flex: 1; display: flex; align-items: center; justify-content: center; }
 
+    /* बीच का दंडा */
+    .divider {
+      width: 2px;
+      height: 280px;
+      background: linear-gradient(to bottom, transparent, #ffcc00, transparent);
+      margin: 0 30px;
+    }
+
     .rotating-logo {
-      width: clamp(130px, 25vw, 240px);
-      filter: drop-shadow(0 0 10px rgba(255,204,0,0.3));
+      width: clamp(150px, 30vw, 280px);
+      filter: drop-shadow(0 0 15px rgba(255,204,0,0.4));
       animation: smoothSwing 5s ease-in-out infinite;
     }
 
     @keyframes smoothSwing {
-      0%, 100% { transform: rotateY(-25deg); }
-      50% { transform: rotateY(25deg); }
+      0%, 100% { transform: rotateY(-20deg); }
+      50% { transform: rotateY(20deg); }
     }
 
-    .form-section { flex: 1.2; padding: 0 15px; }
-    .form-section h3 { color: #ffcc00; text-align: center; margin-bottom: 25px; font-size: 26px; }
+    .form-section { flex: 1.2; padding: 0 10px; }
+    .form-section h3 { color: #ffcc00; text-align: center; margin-bottom: 25px; font-size: 28px; letter-spacing: 1px; }
 
-    .form-group { margin-bottom: 18px; }
-    .form-group label { color: #ffcc00; font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px; margin-left: 10px; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { color: #ffcc00; font-size: 12px; font-weight: 600; display: block; margin-bottom: 5px; margin-left: 15px; text-transform: uppercase; }
 
     .form-group input {
-      width: 100%; padding: 14px 20px; border-radius: 50px;
+      width: 100%; padding: 12px 20px; border-radius: 50px;
       border: 1px solid rgba(255, 204, 0, 0.4);
       background: rgba(255, 255, 255, 0.08);
       color: #fff; outline: none; font-size: 15px;
     }
+
+    /* Captcha Styling */
+    .captcha-box {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+    }
+    #captcha-code {
+      background: #ffcc00; color: #000; padding: 8px 15px; 
+      font-weight: bold; border-radius: 5px; letter-spacing: 3px;
+      font-style: italic; user-select: none;
+    }
+    .refresh-btn { color: #fff; cursor: pointer; font-size: 18px; }
 
     .form-group button {
       width: 100%; padding: 14px; border-radius: 50px;
       border: none; background: linear-gradient(45deg, #ffcc00, #ffeb3b);
       color: #000; font-weight: 800; cursor: pointer; font-size: 16px;
       box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4);
-      transition: all 0.3s ease;
+      transition: all 0.3s ease; text-transform: uppercase;
     }
 
     .form-group button:active { transform: scale(0.96); }
@@ -86,11 +110,11 @@
       color: rgba(255, 204, 0, 0.8); font-size: 13px; font-weight: bold;
     }
 
-    @media (max-width: 600px) {
-      .container { flex-direction: column; width: 88%; padding: 25px 15px; margin-top: 20px; }
+    @media (max-width: 800px) {
+      .container { flex-direction: column; width: 90%; height: auto; padding: 30px 20px; }
+      .divider { display: none; }
       .logo-section { margin-bottom: 20px; }
-      .rotating-logo { width: 110px; }
-      h2 { top: 3%; font-size: 20px; }
+      .rotating-logo { width: 120px; }
     }
 
     #otp-section { display: none; }
@@ -105,18 +129,30 @@
     <img src="img1.png" alt="Logo" class="rotating-logo">
   </div>
 
+  <div class="divider"></div>
+
   <div class="form-section">
     <h3>ADMIN LOGIN</h3>
     
     <div id="login-section">
       <div class="form-group">
         <label>USER NAME</label>
-        <input type="text" id="username" placeholder="Enter Admin ID" autocomplete="off">
+        <input type="text" id="username" placeholder="Admin ID">
       </div>
       <div class="form-group">
         <label>PASSWORD</label>
-        <input type="password" id="password" placeholder="Enter Password">
+        <input type="password" id="password" placeholder="Password">
       </div>
+      
+      <div class="form-group">
+        <label>CAPTCHA CODE</label>
+        <div class="captcha-box">
+          <div id="captcha-code"></div>
+          <span class="refresh-btn" onclick="generateCaptcha()">🔄</span>
+          <input type="text" id="captcha-input" placeholder="Enter Code" style="width: 120px; padding: 8px 15px;">
+        </div>
+      </div>
+
       <div class="form-group">
         <button type="button" id="loginBtn">SEND OTP</button>
       </div>
@@ -126,7 +162,7 @@
       <p style="color:#4caf50; text-align:center; font-size:14px; font-weight:bold;">✅ OTP SENT SUCCESSFULLY</p>
       <div class="form-group">
         <label>ENTER 6-DIGIT OTP</label>
-        <input type="text" id="user-otp" placeholder="XXXXXX" maxlength="6" inputmode="numeric">
+        <input type="text" id="user-otp" placeholder="XXXXXX" maxlength="6">
       </div>
       <div class="form-group">
         <button type="button" id="verifyBtn">VERIFY & LOGIN</button>
@@ -145,12 +181,31 @@ emailjs.init("u_DDKYPoptkEmoftY");
 const SERVICE_ID = "service_25eenak";
 const TEMPLATE_ID = "template_hdj6nfo";
 let generatedOTP = null;
+let currentCaptcha = "";
+
+function generateCaptcha() {
+    const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    currentCaptcha = "";
+    for (let i = 0; i < 5; i++) {
+        currentCaptcha += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    document.getElementById("captcha-code").innerText = currentCaptcha;
+}
+
+window.onload = generateCaptcha;
 
 document.getElementById('loginBtn').onclick = function() {
     const user = document.getElementById('username').value.trim();
     const pass = document.getElementById('password').value.trim();
+    const captchaInp = document.getElementById('captcha-input').value.trim();
 
     if (user === "Sunnydhaka" && pass === "Sunny1990") {
+        if (captchaInp.toUpperCase() !== currentCaptcha) {
+            alert("Invalid Captcha!");
+            generateCaptcha();
+            return;
+        }
+
         generatedOTP = Math.floor(100000 + Math.random() * 900000);
         this.innerText = "SENDING...";
         this.disabled = true;
@@ -172,25 +227,17 @@ document.getElementById('loginBtn').onclick = function() {
     }
 };
 
-// --- सुधारित वेरिफिकेशन लॉजिक ---
 document.getElementById('verifyBtn').onclick = function() {
     const entered = document.getElementById('user-otp').value.trim();
-    const btn = this;
-
     if (parseInt(entered) === generatedOTP) {
-        btn.innerText = "VERIFYING...";
-        btn.disabled = true;
-        
-        // localStorage सेट करें ताकि डैशबोर्ड पर एक्सेस मिल सके
+        this.innerText = "VERIFYING...";
+        this.disabled = true;
         localStorage.setItem("isLoggedIn", "true");
-
-        // छोटा सा डिले ताकि यूजर को कन्फर्मेशन महसूस हो, फिर सीधे डैशबोर्ड पर भेजें
         setTimeout(() => {
             window.location.href = "dashboard.html"; 
-        }, 500);
-        
+        }, 800);
     } else {
-        alert("Invalid OTP! Try again.");
+        alert("Invalid OTP!");
     }
 };
 </script>
