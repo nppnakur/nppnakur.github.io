@@ -54,10 +54,10 @@
 
         .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
         .input-item { display: flex; flex-direction: column; gap: 8px; }
-        .input-item label { font-size: 12px; font-weight: 700; color: #805500; text-transform: uppercase; }
+        .input-item label { font-size: 13px; font-weight: 800; color: #805500; text-transform: uppercase; }
         .input-item input {
             padding: 16px; border-radius: 15px; border: 1px solid #ffe4b5;
-            background: #fffcf5; font-size: 16px; font-weight: 600; color: #4a3728; outline: none;
+            background: #fffcf5; font-size: 16px; font-weight: 700; color: #4a3728; outline: none;
         }
 
         .money-section {
@@ -67,19 +67,19 @@
             border: 1px dashed #ffa500;
         }
         
-        /* Labels Bold Styles */
         .money-card label {
-            font-weight: 800 !important; /* Extra Bold */
-            color: #664400;
+            font-weight: 900 !important; /* Extra Bold */
+            color: #5d3a00;
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-size: 14px;
         }
 
-        .money-card input { width: 100%; border: none; background: transparent; font-size: 22px; font-weight: 800; color: #cc7a00; }
+        .money-card input { width: 100%; border: none; background: transparent; font-size: 24px; font-weight: 800; color: #cc7a00; }
         
         .total-box { background: #ffa500; padding: 15px; border-radius: 15px; }
         .total-box label { color: #fff !important; }
-        .total-box input { color: #fff !important; font-size: 26px !important; }
+        .total-box input { color: #fff !important; font-size: 28px !important; }
 
         .toolbar {
             grid-column: 1 / -1;
@@ -187,17 +187,22 @@
 <script>
     function cleanID(id) {
         if (!id) return "";
+        // कोमा, कोट्स और फालतू स्पेस हटाना
         return id.replace(/[,"']/g, '').trim();
     }
 
-    function formatShortID(fullId) {
-        if (!fullId) return "";
-        let parts = fullId.split('-');
-        if (parts.length >= 2) {
-            let numPart = parts[1].substring(0, 4); 
-            return parts[0] + "-" + numPart;
-        }
-        return fullId;
+    // आईडी को NPPNCN- के साथ फॉर्मेट करने वाला फंक्शन
+    function formatToNPPNCN(fullId) {
+        if (!fullId) return "NPPNCN-";
+        
+        // अगर पहले से NPPNCN- मौजूद है, तो उसे क्लीन करें
+        let clean = cleanID(fullId).replace(/NPPNCN-/g, '');
+        
+        // केवल काम के 4 अंक या जो भी संख्या हो उसे लें
+        // (अगर आप सिर्फ 1612 दिखाना चाहते हैं तो split का उपयोग करें)
+        let numOnly = clean.split('-')[0].substring(0, 6); 
+        
+        return "NPPNCN-" + numOnly;
     }
 
     async function init() {
@@ -206,7 +211,9 @@
         if(!rawId) return;
 
         const originalId = decodeURIComponent(rawId);
-        document.getElementById('disp_id').value = formatShortID(originalId);
+        
+        // डिस्प्ले में हमेशा NPPNCN- के साथ आईडी दिखाएं
+        document.getElementById('disp_id').value = formatToNPPNCN(originalId);
         
         const searchIdClean = cleanID(originalId);
 
