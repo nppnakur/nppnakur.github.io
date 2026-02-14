@@ -1,242 +1,67 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consumer Detail - NPP NAKUR</title>
-    
-    <link rel="icon" type="image/png" href="img1.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-
-        body {
-            background: #fffaf0; 
-            color: #4a3728;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .main-card {
-            width: 100%;
-            max-width: 900px;
-            background: #fff;
-            border-radius: 30px;
-            padding: 30px;
-            box-shadow: 0 20px 50px rgba(255, 165, 0, 0.1);
-            border: 1px solid #ffe4b5;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #fff5e6;
-        }
-
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .header-left img { width: 70px; height: 70px; border-radius: 10px; }
-        .header-left h1 { font-size: 24px; font-weight: 800; color: #cc7a00; }
-
-        .header-right { display: flex; gap: 12px; }
-        .nav-btn {
-            width: 45px; height: 45px; background: #fff5e6; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            color: #ffa500; text-decoration: none; transition: 0.3s; font-size: 18px;
-            border: 1px solid #ffe4b5;
-        }
-        .nav-btn:hover { background: #ffa500; color: #fff; transform: translateY(-3px); }
-
-        .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .input-item { display: flex; flex-direction: column; gap: 8px; }
-        .input-item label { font-size: 13px; font-weight: 800; color: #805500; text-transform: uppercase; }
-        .input-item input {
-            padding: 16px; border-radius: 15px; border: 1px solid #ffe4b5;
-            background: #fffcf5; font-size: 16px; font-weight: 700; color: #4a3728; outline: none;
-        }
-
-        .money-section {
-            grid-column: 1 / -1;
-            display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 15px;
-            margin-top: 15px; background: #fff9ef; padding: 25px; border-radius: 20px;
-            border: 1px dashed #ffa500;
-        }
-        
-        .money-card label {
-            font-weight: 900 !important;
-            color: #5d3a00;
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .money-card input { width: 100%; border: none; background: transparent; font-size: 24px; font-weight: 800; color: #cc7a00; }
-        
-        .total-box { background: #ffa500; padding: 15px; border-radius: 15px; }
-        .total-box label { color: #fff !important; }
-        .total-box input { color: #fff !important; font-size: 28px !important; }
-
-        .toolbar {
-            grid-column: 1 / -1;
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px solid #fff5e6;
-        }
-
-        .icon-circle {
-            width: 55px; height: 55px; border-radius: 50%; border: none;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        }
-
-        .btn-print { background: #6c757d; color: #fff; }
-        .btn-pay { background: #28a745; color: #fff; }
-        .btn-edit { background: #ffa500; color: #fff; }
-        .btn-delete { background: #fff; color: #dc3545; border: 1px solid #ffcccc; }
-
-        .icon-circle:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-
-        @media (max-width: 650px) {
-            .details-grid, .money-section { grid-template-columns: 1fr; }
-            .header { flex-direction: column-reverse; text-align: center; gap: 15px; }
-            .header-left { flex-direction: column; }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="main-card">
-        <header class="header">
-            <div class="header-left">
-                <img src="img1.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1067/1067566.png'">
-                <div>
-                    <h1>उपभोक्ता विवरण</h1>
-                    <p>न.पा.प. नकुड़ - जल विभाग</p>
-                </div>
-            </div>
-            
-            <div class="header-right">
-                <a href="https://nppnakur.github.io/connection_detail.html" class="nav-btn">
-                    <i class="fas fa-arrow-left"></i>
-                </a>
-                <a href="https://nppnakur.github.io/water_manegment.html" class="nav-btn">
-                    <i class="fas fa-home"></i>
-                </a>
-            </div>
-        </header>
-
-        <div class="details-grid">
-            <div class="input-item" style="grid-column: 1 / -1;">
-                <label>Connection ID</label>
-                <input type="text" id="disp_id" disabled>
-            </div>
-            <div class="input-item">
-                <label>उपभोक्ता का नाम</label>
-                <input type="text" id="disp_name" disabled>
-            </div>
-            <div class="input-item">
-                <label>वार्ड नं. / मोहल्ला</label>
-                <input type="text" id="disp_ward" disabled>
-            </div>
-            <div class="input-item" style="grid-column: 1 / -1;">
-                <label>मोबाइल नंबर</label>
-                <input type="text" id="disp_mobile" disabled>
-            </div>
-
-            <div class="money-section">
-                <div class="money-card">
-                    <label>**चालू मांग (2025-2026)**</label>
-                    <input type="text" id="disp_curr" disabled>
-                </div>
-                <div class="money-card">
-                    <label>**बकाया (2024-2025)**</label>
-                    <input type="text" id="disp_arr" disabled>
-                </div>
-                <div class="money-card total-box">
-                    <label>कुल देय</label>
-                    <input type="text" id="disp_total" disabled>
-                </div>
-            </div>
-
-            <div class="toolbar">
-                <button class="icon-circle btn-print" onclick="window.print()">
-                    <i class="fas fa-print"></i>
-                </button>
-                <button class="icon-circle btn-pay" onclick="location.href='https://nppnakur.github.io/pay_bill.html'">
-                    <i class="fas fa-file-invoice-dollar"></i>
-                </button>
-                <button class="icon-circle btn-edit" onclick="goToEdit()">
-                    <i class="fas fa-pencil-alt"></i>
-                </button>
-                <button class="icon-circle btn-delete" onclick="handleDelete()">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
 <script>
-    // आपका Web App URL यहाँ डाल दिया गया है
+    // आपका Web App URL
     const scriptURL = "https://script.google.com/macros/s/AKfycbymUtOoGLhEvXjXNPGtUDD9H-157gxjsZiNPXuHEmRMja_Fe7e4cosQgXU3z4rprN83yA/exec"; 
 
     async function init() {
         const params = new URLSearchParams(window.location.search);
-        let id = params.get('id');
-        if(!id) return;
+        let rawId = params.get('id');
+        if(!rawId) return;
 
-        // "NPPNCN-" हटाकर केवल नंबर भेजने के लिए (अगर ज़रूरत हो)
-        let searchId = decodeURIComponent(id).replace("NPPNCN-", "").trim();
+        // ID को क्लीन करें: NPPNCN- हटाएँ और सिर्फ शुद्ध नंबर/ID निकालें
+        let searchId = decodeURIComponent(rawId).replace("NPPNCN-", "").trim();
 
         try {
-            const res = await fetch(scriptURL + "?action=read&id=" + searchId);
+            // गूगल शीट से डेटा मांगना
+            const res = await fetch(scriptURL + "?action=read&id=" + encodeURIComponent(searchId));
             const data = await res.json();
 
-            if(data && data.length > 0) {
-                // आपकी शीट के कॉलम के हिसाब से डेटा भरना
-                document.getElementById('disp_id').value = "NPPNCN-" + data[0]; // Connection No
-                document.getElementById('disp_ward').value = data[1]; // Ward No
-                document.getElementById('disp_name').value = data[2]; // Owner Name
-                document.getElementById('disp_mobile').value = data[3] || "---"; // Mobile
-                document.getElementById('disp_curr').value = "₹ " + (data[4] || 0); // Current
-                document.getElementById('disp_arr').value = "₹ " + (data[5] || 0); // Arrear
-                document.getElementById('disp_total').value = "₹ " + (data[6] || 0); // Remaining
+            // जाँचें कि डेटा मिला या नहीं (अगर डेटा खाली एरे [] आया तो भी "नहीं मिला" दिखाएगा)
+            if(data && data.length > 0 && data !== "Not Found") {
+                
+                // कनेक्शन आईडी दिखाना (NPPNCN- के साथ)
+                document.getElementById('disp_id').value = "NPPNCN-" + data[0]; 
+                
+                // शीट के कॉलम का क्रम: 0=ID, 1=Ward, 2=Name, 3=Mobile, 4=Current, 5=Arrear, 6=Total
+                document.getElementById('disp_ward').value = data[1] || "---"; 
+                document.getElementById('disp_name').value = data[2] || "---"; 
+                document.getElementById('disp_mobile').value = data[3] || "---"; 
+                
+                // पैसे वाले कॉलम में ₹ का निशान और वैल्यू
+                document.getElementById('disp_curr').value = "₹ " + (data[4] !== undefined ? data[4] : 0);
+                document.getElementById('disp_arr').value = "₹ " + (data[5] !== undefined ? data[5] : 0);
+                document.getElementById('disp_total').value = "₹ " + (data[6] !== undefined ? data[6] : 0);
+                
             } else {
-                alert("डाटा नहीं मिला! कृपया ID चेक करें।");
+                alert("डाटा नहीं मिला! कृपया सुनिश्चित करें कि गूगल शीट में ID: '" + searchId + "' मौजूद है।");
             }
         } catch(e) { 
-            console.error("Error fetching data", e); 
-            alert("डेटा लोड करने में समस्या आई। कृपया नेटवर्क चेक करें।");
+            console.error("Fetch Error:", e); 
+            alert("डेटा लोड करने में समस्या आई। Apps Script पर 'Anyone' एक्सेस चेक करें।");
         }
     }
 
     function handleDelete() {
         const pass = prompt("डिलीट पासवर्ड डालें:");
         if (pass === "admin123") {
-            if(confirm("सावधान: क्या आप वाकई इस उपभोक्ता को Google Sheet से हमेशा के लिए हटाना चाहते हैं?")) {
-                const id = document.getElementById('disp_id').value.replace("NPPNCN-", "");
+            const currentId = document.getElementById('disp_id').value.replace("NPPNCN-", "").trim();
+            
+            if(confirm("सावधान: क्या आप वाकई ID " + currentId + " को हमेशा के लिए डिलीट करना चाहते हैं?")) {
                 
-                fetch(scriptURL + "?action=delete&id=" + id)
+                fetch(scriptURL + "?action=delete&id=" + encodeURIComponent(currentId))
                 .then(res => res.text())
                 .then(result => {
-                    if(result === "Success") {
-                        alert("डाटा सफलतापूर्वक गूगल शीट से डिलीट हो गया!");
+                    if(result.trim() === "Success") {
+                        alert("डाटा गूगल शीट से सफलतापूर्वक हट गया है।");
                         window.location.href = "https://nppnakur.github.io/connection_detail.html";
                     } else {
                         alert("डिलीट नहीं हो पाया: " + result);
                     }
                 })
-                .catch(err => alert("Error: " + err));
+                .catch(err => alert("नेटवर्क एरर: " + err));
             }
-        } else { alert("गलत पासवर्ड!"); }
+        } else if(pass !== null) { 
+            alert("गलत पासवर्ड!"); 
+        }
     }
 
     function goToEdit() {
@@ -244,10 +69,10 @@
         if (pass === "admin123") {
             const params = new URLSearchParams(window.location.search);
             window.location.href = "edit_connection.html?id=" + params.get('id');
-        } else { alert("गलत पासवर्ड!"); }
+        } else if(pass !== null) { 
+            alert("गलत पासवर्ड!"); 
+        }
     }
 
     window.onload = init;
 </script>
-</body>
-</html>
