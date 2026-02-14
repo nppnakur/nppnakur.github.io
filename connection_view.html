@@ -68,7 +68,7 @@
         }
         
         .money-card label {
-            font-weight: 900 !important; /* Extra Bold */
+            font-weight: 900 !important;
             color: #5d3a00;
             display: block;
             margin-bottom: 8px;
@@ -185,43 +185,24 @@
     </div>
 
 <script>
-    function cleanID(id) {
-        if (!id) return "";
-        // कोमा, कोट्स और फालतू स्पेस हटाना
-        return id.replace(/[,"']/g, '').trim();
-    }
-
-    // आईडी को NPPNCN- के साथ फॉर्मेट करने वाला फंक्शन
-    function formatToNPPNCN(fullId) {
-        if (!fullId) return "NPPNCN-";
-        
-        // अगर पहले से NPPNCN- मौजूद है, तो उसे क्लीन करें
-        let clean = cleanID(fullId).replace(/NPPNCN-/g, '');
-        
-        // केवल काम के 4 अंक या जो भी संख्या हो उसे लें
-        // (अगर आप सिर्फ 1612 दिखाना चाहते हैं तो split का उपयोग करें)
-        let numOnly = clean.split('-')[0].substring(0, 6); 
-        
-        return "NPPNCN-" + numOnly;
+    function cleanData(val) {
+        if (!val) return "";
+        return val.replace(/[,"']/g, '').trim();
     }
 
     async function init() {
         const params = new URLSearchParams(window.location.search);
-        const rawId = params.get('id'); 
+        let rawId = params.get('id'); 
         if(!rawId) return;
 
-        const originalId = decodeURIComponent(rawId);
-        
-        // डिस्प्ले में हमेशा NPPNCN- के साथ आईडी दिखाएं
-        document.getElementById('disp_id').value = formatToNPPNCN(originalId);
-        
-        const searchIdClean = cleanID(originalId);
+        const searchIdClean = cleanData(decodeURIComponent(rawId));
 
         try {
             const res = await fetch('Connection_data.csv');
             const text = await res.text();
             const rows = text.split(/\r?\n/);
 
+            let found = false;
             for(let i = 1; i < rows.length; i++) {
                 const row = rows[i];
                 if(!row) continue;
@@ -229,38 +210,46 @@
                 const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 
                 if(cols[0]) {
-                    const csvIdClean = cleanID(cols[0]);
+                    const csvIdClean = cleanData(cols[0]);
                     
-                    if(searchIdClean.includes(csvIdClean) || csvIdClean.includes(searchIdClean)) {
+                    // Match logic
+                    if(csvIdClean === searchIdClean || csvIdClean.includes(searchIdClean) || searchIdClean.includes(csvIdClean)) {
+                        
+                        let displayID = csvIdClean.startsWith("NPPNCN-") ? csvIdClean : "NPPNCN-" + csvIdClean;
+                        document.getElementById('disp_id').value = displayID;
+
                         document.getElementById('disp_name').value = (cols[2] + " " + (cols[3] || "")).replace(/"/g, '').trim();
                         document.getElementById('disp_ward').value = cols[1] ? cols[1].replace(/"/g, '') : "N/A";
                         document.getElementById('disp_mobile').value = cols[5] ? cols[5].replace(/"/g, '') : "---";
-                        document.getElementById('disp_curr').value = "₹ " + (cols[6] || "0");
-                        document.getElementById('disp_arr').value = "₹ " + (cols[7] || "0");
-                        document.getElementById('disp_total').value = "₹ " + (cols[8] || "0");
-                        return;
+                        document.getElementById('disp_curr').value = "₹ " + cleanData(cols[6] || "0");
+                        document.getElementById('disp_arr').value = "₹ " + cleanData(cols[7] || "0");
+                        document.getElementById('disp_total').value = "₹ " + cleanData(cols[8] || "0");
+                        found = true;
+                        break;
                     }
                 }
+            }
+            if(!found) {
+                alert("डाटा नहीं मिला! कृपया सुनिश्चित करें कि ID सही है और CSV में मौजूद है।");
             }
         } catch(e) { console.log("Fetch Error", e); }
     }
 
     function goToEdit() {
-        const pass = prompt("पासवर्ड डालें:");
+        const pass = prompt("एडिट पासवर्ड डालें:");
         if (pass === "admin123") {
             const params = new URLSearchParams(window.location.search);
-            const id = params.get('id');
-            window.location.href = "edit_connection.html?id=" + id;
-        }
+            window.location.href = "edit_connection.html?id=" + params.get('id');
+        } else { alert("गलत पासवर्ड!"); }
     }
 
     function handleDelete() {
-        const pass = prompt("डिलीट पासवर्ड:");
+        const pass = prompt("डिलीट पासवर्ड डालें:");
         if (pass === "admin123") {
-            if(confirm("रिकॉर्ड डिलीट करें?")) {
+            if(confirm("सावधान: क्या आप वाकई इस रिकॉर्ड को हटाना चाहते हैं? (नोट: यह केवल लिस्ट से वापस भेजेगा, CSV से नहीं)")) {
                 window.location.href = "https://nppnakur.github.io/connection_detail.html";
             }
-        }
+        } else { alert("गलत पासवर्ड!"); }
     }
 
     window.onload = init;
