@@ -66,10 +66,19 @@
             margin-top: 15px; background: #fff9ef; padding: 25px; border-radius: 20px;
             border: 1px dashed #ffa500;
         }
+        
+        /* Labels Bold Styles */
+        .money-card label {
+            font-weight: 800 !important; /* Extra Bold */
+            color: #664400;
+            display: block;
+            margin-bottom: 5px;
+        }
+
         .money-card input { width: 100%; border: none; background: transparent; font-size: 22px; font-weight: 800; color: #cc7a00; }
         
         .total-box { background: #ffa500; padding: 15px; border-radius: 15px; }
-        .total-box label { color: #fff; }
+        .total-box label { color: #fff !important; }
         .total-box input { color: #fff !important; font-size: 26px !important; }
 
         .toolbar {
@@ -128,7 +137,7 @@
         <div class="details-grid">
             <div class="input-item" style="grid-column: 1 / -1;">
                 <label>Connection ID</label>
-                <input type="text" id="disp_id" disabled placeholder="NPPNCN-XXXX">
+                <input type="text" id="disp_id" disabled>
             </div>
             <div class="input-item">
                 <label>उपभोक्ता का नाम</label>
@@ -145,11 +154,11 @@
 
             <div class="money-section">
                 <div class="money-card">
-                    <label>चालू मांग 2025-2026</label>
+                    <label>चालू मांग (2025-2026)</label>
                     <input type="text" id="disp_curr" disabled>
                 </div>
                 <div class="money-card">
-                    <label>बकाया 2024-2025</label>
+                    <label>बकाया (2024-2025)</label>
                     <input type="text" id="disp_arr" disabled>
                 </div>
                 <div class="money-card total-box">
@@ -181,13 +190,11 @@
         return id.replace(/[,"']/g, '').trim();
     }
 
-    // आईडी को छोटा करने वाला फंक्शन (NPPNCN-161218 -> NPPNCN-1612)
     function formatShortID(fullId) {
         if (!fullId) return "";
-        // अगर आईडी में डैश है, तो पहले दो हिस्से लें (NPPNCN और संख्या का शुरुआती भाग)
         let parts = fullId.split('-');
         if (parts.length >= 2) {
-            let numPart = parts[1].substring(0, 4); // संख्या के पहले 4 अंक
+            let numPart = parts[1].substring(0, 4); 
             return parts[0] + "-" + numPart;
         }
         return fullId;
@@ -199,8 +206,6 @@
         if(!rawId) return;
 
         const originalId = decodeURIComponent(rawId);
-        
-        // डिस्प्ले में छोटी आईडी दिखाएं
         document.getElementById('disp_id').value = formatShortID(originalId);
         
         const searchIdClean = cleanID(originalId);
@@ -236,7 +241,6 @@
     function goToEdit() {
         const pass = prompt("पासवर्ड डालें:");
         if (pass === "admin123") {
-            // एडिट पर जाते समय ओरिजिनल आईडी भेजें ताकि डेटा मिल सके
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
             window.location.href = "edit_connection.html?id=" + id;
