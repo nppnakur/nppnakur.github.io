@@ -125,10 +125,10 @@
             </div>
             
             <div class="header-right">
-                <a href="https://nppnakur.github.io/connection_detail.html" class="nav-btn" title="वापस सूची पर">
+                <a href="https://nppnakur.github.io/connection_detail.html" class="nav-btn">
                     <i class="fas fa-arrow-left"></i>
                 </a>
-                <a href="https://nppnakur.github.io/water_manegment.html" class="nav-btn" title="होम पेज">
+                <a href="https://nppnakur.github.io/water_manegment.html" class="nav-btn">
                     <i class="fas fa-home"></i>
                 </a>
             </div>
@@ -144,7 +144,7 @@
                 <input type="text" id="disp_name" disabled>
             </div>
             <div class="input-item">
-                <label>वार्ड नं. / नाम</label>
+                <label>वार्ड नं. / मोहल्ला</label>
                 <input type="text" id="disp_ward" disabled>
             </div>
             <div class="input-item" style="grid-column: 1 / -1;">
@@ -154,11 +154,11 @@
 
             <div class="money-section">
                 <div class="money-card">
-                    <label>चालू मांग (2025-2026)</label>
+                    <label>**चालू मांग (2025-2026)**</label>
                     <input type="text" id="disp_curr" disabled>
                 </div>
                 <div class="money-card">
-                    <label>बकाया (2024-2025)</label>
+                    <label>**बकाया (2024-2025)**</label>
                     <input type="text" id="disp_arr" disabled>
                 </div>
                 <div class="money-card total-box">
@@ -168,16 +168,16 @@
             </div>
 
             <div class="toolbar">
-                <button class="icon-circle btn-print" title="Print" onclick="window.print()">
+                <button class="icon-circle btn-print" onclick="window.print()">
                     <i class="fas fa-print"></i>
                 </button>
-                <button class="icon-circle btn-pay" title="Pay Bill" onclick="location.href='https://nppnakur.github.io/pay_bill.html'">
+                <button class="icon-circle btn-pay" onclick="location.href='https://nppnakur.github.io/pay_bill.html'">
                     <i class="fas fa-file-invoice-dollar"></i>
                 </button>
-                <button class="icon-circle btn-edit" title="Edit" onclick="goToEdit()">
+                <button class="icon-circle btn-edit" onclick="goToEdit()">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
-                <button class="icon-circle btn-delete" title="Delete" onclick="handleDelete()">
+                <button class="icon-circle btn-delete" onclick="handleDelete()">
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </div>
@@ -185,54 +185,58 @@
     </div>
 
 <script>
-    function cleanData(val) {
-        if (!val) return "";
-        return val.replace(/[,"']/g, '').trim();
-    }
+    // आपका Web App URL यहाँ डाल दिया गया है
+    const scriptURL = "https://script.google.com/macros/s/AKfycbymUtOoGLhEvXjXNPGtUDD9H-157gxjsZiNPXuHEmRMja_Fe7e4cosQgXU3z4rprN83yA/exec"; 
 
     async function init() {
         const params = new URLSearchParams(window.location.search);
-        let rawId = params.get('id'); 
-        if(!rawId) return;
+        let id = params.get('id');
+        if(!id) return;
 
-        const searchIdClean = cleanData(decodeURIComponent(rawId));
+        // "NPPNCN-" हटाकर केवल नंबर भेजने के लिए (अगर ज़रूरत हो)
+        let searchId = decodeURIComponent(id).replace("NPPNCN-", "").trim();
 
         try {
-            const res = await fetch('Connection_data.csv');
-            const text = await res.text();
-            const rows = text.split(/\r?\n/);
+            const res = await fetch(scriptURL + "?action=read&id=" + searchId);
+            const data = await res.json();
 
-            let found = false;
-            for(let i = 1; i < rows.length; i++) {
-                const row = rows[i];
-                if(!row) continue;
+            if(data && data.length > 0) {
+                // आपकी शीट के कॉलम के हिसाब से डेटा भरना
+                document.getElementById('disp_id').value = "NPPNCN-" + data[0]; // Connection No
+                document.getElementById('disp_ward').value = data[1]; // Ward No
+                document.getElementById('disp_name').value = data[2]; // Owner Name
+                document.getElementById('disp_mobile').value = data[3] || "---"; // Mobile
+                document.getElementById('disp_curr').value = "₹ " + (data[4] || 0); // Current
+                document.getElementById('disp_arr').value = "₹ " + (data[5] || 0); // Arrear
+                document.getElementById('disp_total').value = "₹ " + (data[6] || 0); // Remaining
+            } else {
+                alert("डाटा नहीं मिला! कृपया ID चेक करें।");
+            }
+        } catch(e) { 
+            console.error("Error fetching data", e); 
+            alert("डेटा लोड करने में समस्या आई। कृपया नेटवर्क चेक करें।");
+        }
+    }
 
-                const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+    function handleDelete() {
+        const pass = prompt("डिलीट पासवर्ड डालें:");
+        if (pass === "admin123") {
+            if(confirm("सावधान: क्या आप वाकई इस उपभोक्ता को Google Sheet से हमेशा के लिए हटाना चाहते हैं?")) {
+                const id = document.getElementById('disp_id').value.replace("NPPNCN-", "");
                 
-                if(cols[0]) {
-                    const csvIdClean = cleanData(cols[0]);
-                    
-                    // Match logic
-                    if(csvIdClean === searchIdClean || csvIdClean.includes(searchIdClean) || searchIdClean.includes(csvIdClean)) {
-                        
-                        let displayID = csvIdClean.startsWith("NPPNCN-") ? csvIdClean : "NPPNCN-" + csvIdClean;
-                        document.getElementById('disp_id').value = displayID;
-
-                        document.getElementById('disp_name').value = (cols[2] + " " + (cols[3] || "")).replace(/"/g, '').trim();
-                        document.getElementById('disp_ward').value = cols[1] ? cols[1].replace(/"/g, '') : "N/A";
-                        document.getElementById('disp_mobile').value = cols[5] ? cols[5].replace(/"/g, '') : "---";
-                        document.getElementById('disp_curr').value = "₹ " + cleanData(cols[6] || "0");
-                        document.getElementById('disp_arr').value = "₹ " + cleanData(cols[7] || "0");
-                        document.getElementById('disp_total').value = "₹ " + cleanData(cols[8] || "0");
-                        found = true;
-                        break;
+                fetch(scriptURL + "?action=delete&id=" + id)
+                .then(res => res.text())
+                .then(result => {
+                    if(result === "Success") {
+                        alert("डाटा सफलतापूर्वक गूगल शीट से डिलीट हो गया!");
+                        window.location.href = "https://nppnakur.github.io/connection_detail.html";
+                    } else {
+                        alert("डिलीट नहीं हो पाया: " + result);
                     }
-                }
+                })
+                .catch(err => alert("Error: " + err));
             }
-            if(!found) {
-                alert("डाटा नहीं मिला! कृपया सुनिश्चित करें कि ID सही है और CSV में मौजूद है।");
-            }
-        } catch(e) { console.log("Fetch Error", e); }
+        } else { alert("गलत पासवर्ड!"); }
     }
 
     function goToEdit() {
@@ -240,15 +244,6 @@
         if (pass === "admin123") {
             const params = new URLSearchParams(window.location.search);
             window.location.href = "edit_connection.html?id=" + params.get('id');
-        } else { alert("गलत पासवर्ड!"); }
-    }
-
-    function handleDelete() {
-        const pass = prompt("डिलीट पासवर्ड डालें:");
-        if (pass === "admin123") {
-            if(confirm("सावधान: क्या आप वाकई इस रिकॉर्ड को हटाना चाहते हैं? (नोट: यह केवल लिस्ट से वापस भेजेगा, CSV से नहीं)")) {
-                window.location.href = "https://nppnakur.github.io/connection_detail.html";
-            }
         } else { alert("गलत पासवर्ड!"); }
     }
 
