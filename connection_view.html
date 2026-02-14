@@ -1,78 +1,41 @@
-<script>
-    // आपका Web App URL
-    const scriptURL = "https://script.google.com/macros/s/AKfycbymUtOoGLhEvXjXNPGtUDD9H-157gxjsZiNPXuHEmRMja_Fe7e4cosQgXU3z4rprN83yA/exec"; 
+function doGet(e) {
+  var action = e.parameter.action;
+  var id = e.parameter.id;
+  var callback = e.parameter.callback; // यह लाइन बहुत जरूरी है
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = sheet.getDataRange().getValues();
 
-    async function init() {
-        const params = new URLSearchParams(window.location.search);
-        let rawId = params.get('id');
-        if(!rawId) return;
+  var output = "";
 
-        // ID को क्लीन करें: NPPNCN- हटाएँ और सिर्फ शुद्ध नंबर/ID निकालें
-        let searchId = decodeURIComponent(rawId).replace("NPPNCN-", "").trim();
-
-        try {
-            // गूगल शीट से डेटा मांगना
-            const res = await fetch(scriptURL + "?action=read&id=" + encodeURIComponent(searchId));
-            const data = await res.json();
-
-            // जाँचें कि डेटा मिला या नहीं (अगर डेटा खाली एरे [] आया तो भी "नहीं मिला" दिखाएगा)
-            if(data && data.length > 0 && data !== "Not Found") {
-                
-                // कनेक्शन आईडी दिखाना (NPPNCN- के साथ)
-                document.getElementById('disp_id').value = "NPPNCN-" + data[0]; 
-                
-                // शीट के कॉलम का क्रम: 0=ID, 1=Ward, 2=Name, 3=Mobile, 4=Current, 5=Arrear, 6=Total
-                document.getElementById('disp_ward').value = data[1] || "---"; 
-                document.getElementById('disp_name').value = data[2] || "---"; 
-                document.getElementById('disp_mobile').value = data[3] || "---"; 
-                
-                // पैसे वाले कॉलम में ₹ का निशान और वैल्यू
-                document.getElementById('disp_curr').value = "₹ " + (data[4] !== undefined ? data[4] : 0);
-                document.getElementById('disp_arr').value = "₹ " + (data[5] !== undefined ? data[5] : 0);
-                document.getElementById('disp_total').value = "₹ " + (data[6] !== undefined ? data[6] : 0);
-                
-            } else {
-                alert("डाटा नहीं मिला! कृपया सुनिश्चित करें कि गूगल शीट में ID: '" + searchId + "' मौजूद है।");
-            }
-        } catch(e) { 
-            console.error("Fetch Error:", e); 
-            alert("डेटा लोड करने में समस्या आई। Apps Script पर 'Anyone' एक्सेस चेक करें।");
-        }
+  if (action == 'read') {
+    var foundData = [];
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0].toString().trim() == id.toString().trim()) {
+        foundData = data[i];
+        break;
+      }
     }
+    output = JSON.stringify(foundData);
+  }
 
-    function handleDelete() {
-        const pass = prompt("डिलीट पासवर्ड डालें:");
-        if (pass === "admin123") {
-            const currentId = document.getElementById('disp_id').value.replace("NPPNCN-", "").trim();
-            
-            if(confirm("सावधान: क्या आप वाकई ID " + currentId + " को हमेशा के लिए डिलीट करना चाहते हैं?")) {
-                
-                fetch(scriptURL + "?action=delete&id=" + encodeURIComponent(currentId))
-                .then(res => res.text())
-                .then(result => {
-                    if(result.trim() === "Success") {
-                        alert("डाटा गूगल शीट से सफलतापूर्वक हट गया है।");
-                        window.location.href = "https://nppnakur.github.io/connection_detail.html";
-                    } else {
-                        alert("डिलीट नहीं हो पाया: " + result);
-                    }
-                })
-                .catch(err => alert("नेटवर्क एरर: " + err));
-            }
-        } else if(pass !== null) { 
-            alert("गलत पासवर्ड!"); 
-        }
+  if (action == 'delete') {
+    var status = "Not Found";
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0].toString().trim() == id.toString().trim()) {
+        sheet.deleteRow(i + 1);
+        status = "Success";
+        break;
+      }
     }
+    output = JSON.stringify(status);
+  }
 
-    function goToEdit() {
-        const pass = prompt("एडिट पासवर्ड डालें:");
-        if (pass === "admin123") {
-            const params = new URLSearchParams(window.location.search);
-            window.location.href = "edit_connection.html?id=" + params.get('id');
-        } else if(pass !== null) { 
-            alert("गलत पासवर्ड!"); 
-        }
-    }
-
-    window.onload = init;
-</script>
+  // यह हिस्सा नेटवर्क एरर को खत्म कर देगा
+  if (callback) {
+    return ContentService.createTextOutput(callback + '(' + output + ')')
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  } else {
+    return ContentService.createTextOutput(output)
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
