@@ -30,7 +30,6 @@
             border: 1px solid #ffe4b5;
         }
 
-        /* Header Layout: Logo Left, Buttons Right */
         .header {
             display: flex;
             justify-content: space-between;
@@ -53,7 +52,6 @@
         }
         .nav-btn:hover { background: #ffa500; color: #fff; transform: translateY(-3px); }
 
-        /* Data Grid */
         .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
         .input-item { display: flex; flex-direction: column; gap: 8px; }
         .input-item label { font-size: 12px; font-weight: 700; color: #805500; text-transform: uppercase; }
@@ -62,7 +60,6 @@
             background: #fffcf5; font-size: 16px; font-weight: 600; color: #4a3728; outline: none;
         }
 
-        /* Money Section */
         .money-section {
             grid-column: 1 / -1;
             display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 15px;
@@ -75,7 +72,6 @@
         .total-box label { color: #fff; }
         .total-box input { color: #fff !important; font-size: 26px !important; }
 
-        /* Toolbar Bottom */
         .toolbar {
             grid-column: 1 / -1;
             display: flex;
@@ -132,7 +128,7 @@
         <div class="details-grid">
             <div class="input-item" style="grid-column: 1 / -1;">
                 <label>Connection ID</label>
-                <input type="text" id="disp_id" disabled>
+                <input type="text" id="disp_id" disabled placeholder="NPPNCN-XXXX">
             </div>
             <div class="input-item">
                 <label>उपभोक्ता का नाम</label>
@@ -149,11 +145,11 @@
 
             <div class="money-section">
                 <div class="money-card">
-                    <label>चालू मांग</label>
+                    <label>चालू मांग 2025-2026</label>
                     <input type="text" id="disp_curr" disabled>
                 </div>
                 <div class="money-card">
-                    <label>बकाया</label>
+                    <label>बकाया 2024-2025</label>
                     <input type="text" id="disp_arr" disabled>
                 </div>
                 <div class="money-card total-box">
@@ -180,10 +176,21 @@
     </div>
 
 <script>
-    // ID से कोमा, कोट्स और फालतू स्पेस हटाने का फंक्शन
     function cleanID(id) {
         if (!id) return "";
         return id.replace(/[,"']/g, '').trim();
+    }
+
+    // आईडी को छोटा करने वाला फंक्शन (NPPNCN-161218 -> NPPNCN-1612)
+    function formatShortID(fullId) {
+        if (!fullId) return "";
+        // अगर आईडी में डैश है, तो पहले दो हिस्से लें (NPPNCN और संख्या का शुरुआती भाग)
+        let parts = fullId.split('-');
+        if (parts.length >= 2) {
+            let numPart = parts[1].substring(0, 4); // संख्या के पहले 4 अंक
+            return parts[0] + "-" + numPart;
+        }
+        return fullId;
     }
 
     async function init() {
@@ -192,7 +199,9 @@
         if(!rawId) return;
 
         const originalId = decodeURIComponent(rawId);
-        document.getElementById('disp_id').value = originalId;
+        
+        // डिस्प्ले में छोटी आईडी दिखाएं
+        document.getElementById('disp_id').value = formatShortID(originalId);
         
         const searchIdClean = cleanID(originalId);
 
@@ -205,13 +214,11 @@
                 const row = rows[i];
                 if(!row) continue;
 
-                // CSV columns parsing (handles commas inside quotes)
                 const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 
                 if(cols[0]) {
                     const csvIdClean = cleanID(cols[0]);
                     
-                    // अगर साफ की हुई ID मैच होती है
                     if(searchIdClean.includes(csvIdClean) || csvIdClean.includes(searchIdClean)) {
                         document.getElementById('disp_name').value = (cols[2] + " " + (cols[3] || "")).replace(/"/g, '').trim();
                         document.getElementById('disp_ward').value = cols[1] ? cols[1].replace(/"/g, '') : "N/A";
@@ -223,14 +230,15 @@
                     }
                 }
             }
-            console.log("No match found for: " + searchIdClean);
         } catch(e) { console.log("Fetch Error", e); }
     }
 
     function goToEdit() {
         const pass = prompt("पासवर्ड डालें:");
         if (pass === "admin123") {
-            const id = encodeURIComponent(document.getElementById('disp_id').value);
+            // एडिट पर जाते समय ओरिजिनल आईडी भेजें ताकि डेटा मिल सके
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
             window.location.href = "edit_connection.html?id=" + id;
         }
     }
