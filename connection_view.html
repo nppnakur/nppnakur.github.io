@@ -1,72 +1,105 @@
-/**
- * Google Sheet API with Read, Delete, Add, and Update features
- */
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheet Admin Panel</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #eef2f3; display: flex; justify-content: center; padding: 20px; }
+        .container { background: #ffffff; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 25px; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #34495e; }
+        input { width: 100%; padding: 12px; border: 1px solid #dcdde1; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        input:focus { border-color: #3498db; outline: none; box-shadow: 0 0 5px rgba(52, 152, 219, 0.3); }
+        .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
+        button { padding: 12px; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; font-size: 14px; transition: all 0.2s; text-transform: uppercase; }
+        .btn-read { background-color: #3498db; }
+        .btn-add { background-color: #27ae60; }
+        .btn-update { background-color: #f39c12; }
+        .btn-delete { background-color: #e74c3c; }
+        button:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        button:active { transform: translateY(1px); }
+        #status { text-align: center; margin-top: 15px; font-weight: bold; color: #3498db; display: none; }
+        #result-box { margin-top: 20px; padding: 15px; border-radius: 8px; background: #f8f9fa; border: 1px solid #e1e4e8; min-height: 50px; font-family: monospace; font-size: 13px; color: #2f3640; overflow-x: auto; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
 
-function doGet(e) {
-  var action = e.parameter.action;
-  var id = e.parameter.id;
-  var callback = e.parameter.callback;
-  
-  // अपनी शीट का नाम यहाँ लिखें (जैसे "Sheet1")
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1"); 
-  var data = sheet.getDataRange().getValues();
-  var output = "";
+<div class="container">
+    <h2>Sheet API Control</h2>
+    
+    <div class="form-group">
+        <label>ID (खोजने या डिलीट करने के लिए)</label>
+        <input type="text" id="row_id" placeholder="उदा. 101">
+    </div>
+    
+    <div class="form-group">
+        <label>डेटा (जोड़ने या अपडेट के लिए)</label>
+        <input type="text" id="row_data" placeholder="101,Rahul,BCA,Delhi (कोमा लगायें)">
+    </div>
 
-  // 1. READ ACTION: ID के आधार पर डेटा खोजना
-  if (action == 'read') {
-    var foundData = [];
-    for (var i = 1; i < data.length; i++) {
-      if (data[i][0].toString().trim() == id.toString().trim()) {
-        foundData = data[i];
-        break;
-      }
+    <div class="button-grid">
+        <button class="btn-read" onclick="callApi('read')">Data देखें</button>
+        <button class="btn-add" onclick="callApi('add')">नया जोड़ें</button>
+        <button class="btn-update" onclick="callApi('update')">अपडेट करें</button>
+        <button class="btn-delete" onclick="callApi('delete')">डिलीट करें</button>
+    </div>
+
+    <div id="status">प्रक्रिया जारी है...</div>
+    <div id="result-box">परिणाम यहाँ दिखेगा...</div>
+</div>
+
+<script>
+    // आपका Web App URL यहाँ डाल दिया गया है
+    const API_URL = "https://script.google.com/macros/s/AKfycbw13i2xcY7V76iwupb_iGV-Ri0W0v-cg-C1yybS9IXwBY4U80JVZ0LGnYVBDFwqo5KDVg/exec";
+
+    function callApi(action) {
+        const id = document.getElementById('row_id').value;
+        const data = document.getElementById('row_data').value;
+        const resultBox = document.getElementById('result-box');
+        const status = document.getElementById('status');
+
+        // Validation
+        if (!id && action !== 'add') {
+            alert("कृपया ID भरें!");
+            return;
+        }
+
+        // Show loading
+        status.style.display = "block";
+        resultBox.innerText = "वेट करें...";
+
+        // JSONP Request (CORS एरर से बचने के लिए)
+        const script = document.createElement('script');
+        // URL में पैरामीटर्स जोड़ना
+        const finalUrl = `${API_URL}?action=${action}&id=${encodeURIComponent(id)}&data=${encodeURIComponent(data)}&callback=handleResponse`;
+        
+        script.src = finalUrl;
+        document.body.appendChild(script);
+        
+        // स्क्रिप्ट को हटाने का काम (सफाई)
+        script.onload = () => document.body.removeChild(script);
     }
-    output = JSON.stringify(foundData);
-  }
 
-  // 2. DELETE ACTION: ID के आधार पर Row हटाना
-  else if (action == 'delete') {
-    var status = "Not Found";
-    for (var i = 1; i < data.length; i++) {
-      if (data[i][0].toString().trim() == id.toString().trim()) {
-        sheet.deleteRow(i + 1);
-        status = "Success: Row Deleted";
-        break;
-      }
+    // Google Script से रिस्पॉन्स मिलने पर यह चलेगा
+    function handleResponse(res) {
+        const status = document.getElementById('status');
+        const resultBox = document.getElementById('result-box');
+        
+        status.style.display = "none";
+        
+        if (Array.isArray(res)) {
+            if (res.length === 0) {
+                resultBox.innerText = "कोई डेटा नहीं मिला!";
+            } else {
+                resultBox.innerText = "डेटा मिला:\n" + JSON.stringify(res, null, 2);
+            }
+        } else {
+            resultBox.innerText = "सर्वर का संदेश: " + res;
+        }
     }
-    output = JSON.stringify(status);
-  }
+</script>
 
-  // 3. ADD ACTION: नया डेटा सबसे नीचे जोड़ना
-  else if (action == 'add') {
-    // मान लीजिये आप URL में &data=Value1,Value2 भेज रहे हैं
-    var newRow = e.parameter.data.split(","); 
-    sheet.appendRow(newRow);
-    output = JSON.stringify("Success: Row Added");
-  }
-
-  // 4. UPDATE ACTION: पुरानी ID का डेटा बदलना
-  else if (action == 'update') {
-    var status = "ID Not Found";
-    var updatedRowData = e.parameter.data.split(",");
-    for (var i = 1; i < data.length; i++) {
-      if (data[i][0].toString().trim() == id.toString().trim()) {
-        // पूरी Row को अपडेट करना
-        var range = sheet.getRange(i + 1, 1, 1, updatedRowData.length);
-        range.setValues([updatedRowData]);
-        status = "Success: Row Updated";
-        break;
-      }
-    }
-    output = JSON.stringify(status);
-  }
-
-  // नेटवर्क एरर (CORS) को रोकने के लिए JSONP Handling
-  if (callback) {
-    return ContentService.createTextOutput(callback + '(' + output + ')')
-      .setMimeType(ContentService.MimeType.JAVASCRIPT);
-  } else {
-    return ContentService.createTextOutput(output)
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}
+</body>
+</html>
