@@ -1,77 +1,43 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connection View - All Records</title>
+    <title>Add Connection Detail</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; padding: 20px; }
-        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #1e3799; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
-        .refresh-btn { background: #27ae60; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; float: right; margin-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background: #3498db; color: white; }
-        tr:nth-child(even) { background: #f9f9f9; }
-        #loader { text-align: center; font-size: 18px; color: #3498db; padding: 20px; }
+        body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+        .box { background: white; padding: 20px; border-radius: 8px; max-width: 400px; margin: auto; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;}
+        button { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
+    <div class="box">
+        <h2>Add Detail</h2>
+        <input type="text" id="id" placeholder="ID (NPPNCN-161218)">
+        <input type="text" id="name" placeholder="Name">
+        <input type="text" id="amount" placeholder="Amount (600)">
+        <button onclick="sendData()">Submit Data</button>
+        <p id="msg"></p>
+    </div>
 
-<div class="container">
-    <button class="refresh-btn" onclick="location.reload()">Refresh Data 🔄</button>
-    <h2>Connection List (Real-time Sheet Data)</h2>
-    
-    <div id="loader">डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</div>
-    
-    <table id="dataTable" style="display:none;">
-        <thead id="tableHeader"></thead>
-        <tbody id="tableBody"></tbody>
-    </table>
-</div>
+    <script>
+        const WEB_APP_URL = "आपका_URL_यहाँ_डालें";
 
-<script>
-    // आपका असली वेब ऐप URL
-    const API_URL = "https://script.google.com/macros/s/AKfycbw13i2xcY7V76iwupb_iGV-Ri0W0v-cg-C1yybS9IXwBY4U80JVZ0LGnYVBDFwqo5KDVg/exec";
+        function sendData() {
+            const id = document.getElementById('id').value;
+            const name = document.getElementById('name').value;
+            const amt = document.getElementById('amount').value;
+            const data = `${id},${name},${amt}`;
 
-    // पेज खुलते ही डेटा लोड करें
-    window.onload = function() {
-        const script = document.createElement('script');
-        script.src = `${API_URL}?action=readAll&callback=showData`;
-        document.body.appendChild(script);
-    };
-
-    function showData(data) {
-        const loader = document.getElementById('loader');
-        const table = document.getElementById('dataTable');
-        const tHead = document.getElementById('tableHeader');
-        const tBody = document.getElementById('tableBody');
-
-        loader.style.display = "none";
-        table.style.display = "table";
-
-        if (!data || data.length === 0) {
-            loader.innerText = "कोई डेटा नहीं मिला!";
-            loader.style.display = "block";
-            return;
+            document.getElementById('msg').innerText = "भेजा जा रहा है...";
+            
+            const script = document.createElement('script');
+            script.src = `${WEB_APP_URL}?action=add&data=${encodeURIComponent(data)}&callback=res`;
+            document.body.appendChild(script);
         }
 
-        // 1. Header बनाना (Sheet की पहली लाइन)
-        let headerHtml = "<tr>";
-        data[0].forEach(h => headerHtml += `<th>${h}</th>`);
-        headerHtml += "</tr>";
-        tHead.innerHTML = headerHtml;
-
-        // 2. Rows बनाना (बाकी सारा डेटा)
-        let bodyHtml = "";
-        for (let i = 1; i < data.length; i++) {
-            bodyHtml += "<tr>";
-            data[i].forEach(cell => bodyHtml += `<td>${cell}</td>`);
-            bodyHtml += "</tr>";
+        function res(response) {
+            document.getElementById('msg').innerText = "सफलतापूर्वक जुड़ गया!";
         }
-        tBody.innerHTML = bodyHtml;
-    }
-</script>
-
+    </script>
 </body>
 </html>
