@@ -5,72 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connection View - All Records</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; padding: 20px; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-        th { background-color: #3498db; color: white; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
-        tr:hover { background-color: #f1f1f1; }
-        
-        .loader { text-align: center; font-weight: bold; color: #3498db; margin: 20px; }
-        .refresh-btn { background: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; float: right; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #1e3799; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .refresh-btn { background: #27ae60; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; float: right; margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #3498db; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        #loader { text-align: center; font-size: 18px; color: #3498db; padding: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <button class="refresh-btn" onclick="fetchAllData()">Refresh Data</button>
-    <h2>Connection List (Google Sheet Data)</h2>
+    <button class="refresh-btn" onclick="location.reload()">Refresh Data 🔄</button>
+    <h2>Connection List (Real-time Sheet Data)</h2>
     
-    <div id="loader" class="loader">डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</div>
+    <div id="loader">डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</div>
     
     <table id="dataTable" style="display:none;">
-        <thead>
-            <tr id="tableHeader">
-                </tr>
-        </thead>
-        <tbody id="tableBody">
-            </tbody>
+        <thead id="tableHeader"></thead>
+        <tbody id="tableBody"></tbody>
     </table>
 </div>
 
 <script>
-    // आपका Web App URL
+    // आपका असली वेब ऐप URL
     const API_URL = "https://script.google.com/macros/s/AKfycbw13i2xcY7V76iwupb_iGV-Ri0W0v-cg-C1yybS9IXwBY4U80JVZ0LGnYVBDFwqo5KDVg/exec";
 
-    // पेज लोड होते ही डेटा लाओ
-    window.onload = fetchAllData;
-
-    function fetchAllData() {
-        const loader = document.getElementById('loader');
-        const table = document.getElementById('dataTable');
-        const tableBody = document.getElementById('tableBody');
-        const tableHeader = document.getElementById('tableHeader');
-
-        loader.style.display = "block";
-        table.style.display = "none";
-        tableBody.innerHTML = "";
-        tableHeader.innerHTML = "";
-
-        // 'readAll' एक्शन के लिए कॉल (हम script में एक छोटा बदलाव करेंगे)
-        // फिलहाल हम read action को बिना ID के भेजेंगे ताकि वो सब दिखाए (अगर script support करे)
-        // वरना हमें Apps Script में readAll का function डालना होगा।
-        
+    // पेज खुलते ही डेटा लोड करें
+    window.onload = function() {
         const script = document.createElement('script');
-        script.src = `${API_URL}?action=readAll&callback=displayData`;
+        script.src = `${API_URL}?action=readAll&callback=showData`;
         document.body.appendChild(script);
-    }
+    };
 
-    function displayData(data) {
+    function showData(data) {
         const loader = document.getElementById('loader');
         const table = document.getElementById('dataTable');
-        const tableBody = document.getElementById('tableBody');
-        const tableHeader = document.getElementById('tableHeader');
+        const tHead = document.getElementById('tableHeader');
+        const tBody = document.getElementById('tableBody');
 
         loader.style.display = "none";
+        table.style.display = "table";
 
         if (!data || data.length === 0) {
             loader.innerText = "कोई डेटा नहीं मिला!";
@@ -78,28 +56,20 @@
             return;
         }
 
-        // 1. टेबल हेडर बनाएँ (पहली Row से)
-        const headers = ["ID", "Name", "Details", "Status"]; // आप अपनी शीट के हिसाब से बदलें
-        headers.forEach(h => {
-            let th = document.createElement('th');
-            th.innerText = h;
-            tableHeader.appendChild(th);
-        });
+        // 1. Header बनाना (Sheet की पहली लाइन)
+        let headerHtml = "<tr>";
+        data[0].forEach(h => headerHtml += `<th>${h}</th>`);
+        headerHtml += "</tr>";
+        tHead.innerHTML = headerHtml;
 
-        // 2. डेटा रोज़ (Rows) भरें
-        data.forEach((row, index) => {
-            if(index === 0) return; // Header row को छोड़ दें अगर वो डेटा में है
-            let tr = document.createElement('tr');
-            row.forEach(cell => {
-                let td = document.createElement('td');
-                td.innerText = cell;
-                tableHeader.appendChild(td); // Safe side filling
-                tr.appendChild(td);
-            });
-            tableBody.appendChild(tr);
-        });
-
-        table.style.display = "table";
+        // 2. Rows बनाना (बाकी सारा डेटा)
+        let bodyHtml = "";
+        for (let i = 1; i < data.length; i++) {
+            bodyHtml += "<tr>";
+            data[i].forEach(cell => bodyHtml += `<td>${cell}</td>`);
+            bodyHtml += "</tr>";
+        }
+        tBody.innerHTML = bodyHtml;
     }
 </script>
 
