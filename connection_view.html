@@ -3,101 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Sheet Admin Panel</title>
+    <title>Connection View - All Records</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #eef2f3; display: flex; justify-content: center; padding: 20px; }
-        .container { background: #ffffff; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
-        h2 { text-align: center; color: #2c3e50; margin-bottom: 25px; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #34495e; }
-        input { width: 100%; padding: 12px; border: 1px solid #dcdde1; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
-        input:focus { border-color: #3498db; outline: none; box-shadow: 0 0 5px rgba(52, 152, 219, 0.3); }
-        .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
-        button { padding: 12px; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; font-size: 14px; transition: all 0.2s; text-transform: uppercase; }
-        .btn-read { background-color: #3498db; }
-        .btn-add { background-color: #27ae60; }
-        .btn-update { background-color: #f39c12; }
-        .btn-delete { background-color: #e74c3c; }
-        button:hover { filter: brightness(1.1); transform: translateY(-1px); }
-        button:active { transform: translateY(1px); }
-        #status { text-align: center; margin-top: 15px; font-weight: bold; color: #3498db; display: none; }
-        #result-box { margin-top: 20px; padding: 15px; border-radius: 8px; background: #f8f9fa; border: 1px solid #e1e4e8; min-height: 50px; font-family: monospace; font-size: 13px; color: #2f3640; overflow-x: auto; white-space: pre-wrap; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        tr:hover { background-color: #f1f1f1; }
+        
+        .loader { text-align: center; font-weight: bold; color: #3498db; margin: 20px; }
+        .refresh-btn { background: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; float: right; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Sheet API Control</h2>
+    <button class="refresh-btn" onclick="fetchAllData()">Refresh Data</button>
+    <h2>Connection List (Google Sheet Data)</h2>
     
-    <div class="form-group">
-        <label>ID (खोजने या डिलीट करने के लिए)</label>
-        <input type="text" id="row_id" placeholder="उदा. 101">
-    </div>
+    <div id="loader" class="loader">डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</div>
     
-    <div class="form-group">
-        <label>डेटा (जोड़ने या अपडेट के लिए)</label>
-        <input type="text" id="row_data" placeholder="101,Rahul,BCA,Delhi (कोमा लगायें)">
-    </div>
-
-    <div class="button-grid">
-        <button class="btn-read" onclick="callApi('read')">Data देखें</button>
-        <button class="btn-add" onclick="callApi('add')">नया जोड़ें</button>
-        <button class="btn-update" onclick="callApi('update')">अपडेट करें</button>
-        <button class="btn-delete" onclick="callApi('delete')">डिलीट करें</button>
-    </div>
-
-    <div id="status">प्रक्रिया जारी है...</div>
-    <div id="result-box">परिणाम यहाँ दिखेगा...</div>
+    <table id="dataTable" style="display:none;">
+        <thead>
+            <tr id="tableHeader">
+                </tr>
+        </thead>
+        <tbody id="tableBody">
+            </tbody>
+    </table>
 </div>
 
 <script>
-    // आपका Web App URL यहाँ डाल दिया गया है
+    // आपका Web App URL
     const API_URL = "https://script.google.com/macros/s/AKfycbw13i2xcY7V76iwupb_iGV-Ri0W0v-cg-C1yybS9IXwBY4U80JVZ0LGnYVBDFwqo5KDVg/exec";
 
-    function callApi(action) {
-        const id = document.getElementById('row_id').value;
-        const data = document.getElementById('row_data').value;
-        const resultBox = document.getElementById('result-box');
-        const status = document.getElementById('status');
+    // पेज लोड होते ही डेटा लाओ
+    window.onload = fetchAllData;
 
-        // Validation
-        if (!id && action !== 'add') {
-            alert("कृपया ID भरें!");
+    function fetchAllData() {
+        const loader = document.getElementById('loader');
+        const table = document.getElementById('dataTable');
+        const tableBody = document.getElementById('tableBody');
+        const tableHeader = document.getElementById('tableHeader');
+
+        loader.style.display = "block";
+        table.style.display = "none";
+        tableBody.innerHTML = "";
+        tableHeader.innerHTML = "";
+
+        // 'readAll' एक्शन के लिए कॉल (हम script में एक छोटा बदलाव करेंगे)
+        // फिलहाल हम read action को बिना ID के भेजेंगे ताकि वो सब दिखाए (अगर script support करे)
+        // वरना हमें Apps Script में readAll का function डालना होगा।
+        
+        const script = document.createElement('script');
+        script.src = `${API_URL}?action=readAll&callback=displayData`;
+        document.body.appendChild(script);
+    }
+
+    function displayData(data) {
+        const loader = document.getElementById('loader');
+        const table = document.getElementById('dataTable');
+        const tableBody = document.getElementById('tableBody');
+        const tableHeader = document.getElementById('tableHeader');
+
+        loader.style.display = "none";
+
+        if (!data || data.length === 0) {
+            loader.innerText = "कोई डेटा नहीं मिला!";
+            loader.style.display = "block";
             return;
         }
 
-        // Show loading
-        status.style.display = "block";
-        resultBox.innerText = "वेट करें...";
+        // 1. टेबल हेडर बनाएँ (पहली Row से)
+        const headers = ["ID", "Name", "Details", "Status"]; // आप अपनी शीट के हिसाब से बदलें
+        headers.forEach(h => {
+            let th = document.createElement('th');
+            th.innerText = h;
+            tableHeader.appendChild(th);
+        });
 
-        // JSONP Request (CORS एरर से बचने के लिए)
-        const script = document.createElement('script');
-        // URL में पैरामीटर्स जोड़ना
-        const finalUrl = `${API_URL}?action=${action}&id=${encodeURIComponent(id)}&data=${encodeURIComponent(data)}&callback=handleResponse`;
-        
-        script.src = finalUrl;
-        document.body.appendChild(script);
-        
-        // स्क्रिप्ट को हटाने का काम (सफाई)
-        script.onload = () => document.body.removeChild(script);
-    }
+        // 2. डेटा रोज़ (Rows) भरें
+        data.forEach((row, index) => {
+            if(index === 0) return; // Header row को छोड़ दें अगर वो डेटा में है
+            let tr = document.createElement('tr');
+            row.forEach(cell => {
+                let td = document.createElement('td');
+                td.innerText = cell;
+                tableHeader.appendChild(td); // Safe side filling
+                tr.appendChild(td);
+            });
+            tableBody.appendChild(tr);
+        });
 
-    // Google Script से रिस्पॉन्स मिलने पर यह चलेगा
-    function handleResponse(res) {
-        const status = document.getElementById('status');
-        const resultBox = document.getElementById('result-box');
-        
-        status.style.display = "none";
-        
-        if (Array.isArray(res)) {
-            if (res.length === 0) {
-                resultBox.innerText = "कोई डेटा नहीं मिला!";
-            } else {
-                resultBox.innerText = "डेटा मिला:\n" + JSON.stringify(res, null, 2);
-            }
-        } else {
-            resultBox.innerText = "सर्वर का संदेश: " + res;
-        }
+        table.style.display = "table";
     }
 </script>
 
