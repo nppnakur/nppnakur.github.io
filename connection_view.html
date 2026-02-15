@@ -1,12 +1,18 @@
+/**
+ * Google Sheet API with Read, Delete, Add, and Update features
+ */
+
 function doGet(e) {
   var action = e.parameter.action;
   var id = e.parameter.id;
-  var callback = e.parameter.callback; // यह लाइन बहुत जरूरी है
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var callback = e.parameter.callback;
+  
+  // अपनी शीट का नाम यहाँ लिखें (जैसे "Sheet1")
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1"); 
   var data = sheet.getDataRange().getValues();
-
   var output = "";
 
+  // 1. READ ACTION: ID के आधार पर डेटा खोजना
   if (action == 'read') {
     var foundData = [];
     for (var i = 1; i < data.length; i++) {
@@ -18,19 +24,44 @@ function doGet(e) {
     output = JSON.stringify(foundData);
   }
 
-  if (action == 'delete') {
+  // 2. DELETE ACTION: ID के आधार पर Row हटाना
+  else if (action == 'delete') {
     var status = "Not Found";
     for (var i = 1; i < data.length; i++) {
       if (data[i][0].toString().trim() == id.toString().trim()) {
         sheet.deleteRow(i + 1);
-        status = "Success";
+        status = "Success: Row Deleted";
         break;
       }
     }
     output = JSON.stringify(status);
   }
 
-  // यह हिस्सा नेटवर्क एरर को खत्म कर देगा
+  // 3. ADD ACTION: नया डेटा सबसे नीचे जोड़ना
+  else if (action == 'add') {
+    // मान लीजिये आप URL में &data=Value1,Value2 भेज रहे हैं
+    var newRow = e.parameter.data.split(","); 
+    sheet.appendRow(newRow);
+    output = JSON.stringify("Success: Row Added");
+  }
+
+  // 4. UPDATE ACTION: पुरानी ID का डेटा बदलना
+  else if (action == 'update') {
+    var status = "ID Not Found";
+    var updatedRowData = e.parameter.data.split(",");
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0].toString().trim() == id.toString().trim()) {
+        // पूरी Row को अपडेट करना
+        var range = sheet.getRange(i + 1, 1, 1, updatedRowData.length);
+        range.setValues([updatedRowData]);
+        status = "Success: Row Updated";
+        break;
+      }
+    }
+    output = JSON.stringify(status);
+  }
+
+  // नेटवर्क एरर (CORS) को रोकने के लिए JSONP Handling
   if (callback) {
     return ContentService.createTextOutput(callback + '(' + output + ')')
       .setMimeType(ContentService.MimeType.JAVASCRIPT);
