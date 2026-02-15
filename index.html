@@ -33,7 +33,6 @@
       text-transform: uppercase;
     }
 
-    /* Container की हाइट कम और चौड़ाई ज्यादा की गई */
     .container {
       background-color: rgba(0, 0, 0, 0.45); 
       backdrop-filter: blur(15px);
@@ -44,7 +43,7 @@
       flex-direction: row;
       width: 95%; 
       max-width: 950px; 
-      min-height: auto; /* हाइट कंटेंट के हिसाब से कम रहेगी */
+      min-height: auto;
       border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 20px 40px rgba(0,0,0,0.7);
       z-index: 5;
@@ -53,7 +52,6 @@
 
     .logo-section { flex: 0.8; display: flex; align-items: center; justify-content: center; }
 
-    /* बीच का दंडा (Divider) */
     .divider {
       width: 2px;
       height: 220px;
@@ -78,14 +76,30 @@
     .form-group { margin-bottom: 12px; }
     .form-group label { color: #ffcc00; font-size: 11px; font-weight: 600; display: block; margin-bottom: 4px; margin-left: 10px; }
 
+    /* यहाँ बॉक्स को छोटा करने के लिए बदलाव किया गया है */
     .form-group input {
-      width: 100%; padding: 10px 18px; border-radius: 50px;
+      width: 100%; 
+      max-width: 280px; /* बॉक्स की चौड़ाई सीमित की गई */
+      padding: 8px 15px; /* पैडिंग कम की गई */
+      border-radius: 50px;
       border: 1px solid rgba(255, 204, 0, 0.4);
       background: rgba(255, 255, 255, 0.08);
       color: #fff; outline: none; font-size: 14px;
+      display: block;
     }
 
-    /* Captcha CSS */
+    /* बटन की चौड़ाई भी इनपुट के बराबर रखने के लिए */
+    .form-group button {
+      width: 100%; 
+      max-width: 280px;
+      padding: 10px; 
+      border-radius: 50px;
+      border: none; background: linear-gradient(45deg, #ffcc00, #ffeb3b);
+      color: #000; font-weight: 800; cursor: pointer; font-size: 15px;
+      box-shadow: 0 4px 12px rgba(255, 204, 0, 0.3);
+      margin-top: 5px;
+    }
+
     .captcha-row {
       display: flex; align-items: center; gap: 8px; margin-top: 5px;
     }
@@ -96,20 +110,11 @@
     }
     .refresh-icon { color: #ffcc00; cursor: pointer; font-size: 18px; }
 
-    .form-group button {
-      width: 100%; padding: 12px; border-radius: 50px;
-      border: none; background: linear-gradient(45deg, #ffcc00, #ffeb3b);
-      color: #000; font-weight: 800; cursor: pointer; font-size: 15px;
-      box-shadow: 0 4px 12px rgba(255, 204, 0, 0.3);
-      margin-top: 5px;
-    }
-
     footer {
       position: absolute; bottom: 2%; width: 100%; text-align: center;
       color: rgba(255, 204, 0, 0.7); font-size: 11px; font-weight: bold;
     }
 
-    /* Mobile Responsive Settings */
     @media (max-width: 768px) {
       .container { 
         flex-direction: column; 
@@ -117,11 +122,12 @@
         padding: 20px; 
         margin-top: 40px;
       }
-      .divider { display: none; } /* मोबाइल पर दंडा हटा दिया */
+      .divider { display: none; }
       .logo-section { margin-bottom: 15px; }
       .rotating-logo { width: 100px; }
       h2 { top: 2%; font-size: 18px; }
       .form-section h3 { font-size: 20px; margin-bottom: 15px; }
+      .form-group input, .form-group button { max-width: 100%; } /* मोबाइल पर फुल विड्थ */
     }
 
     #otp-section { display: none; }
@@ -155,7 +161,7 @@
         <div class="captcha-row">
           <div id="captcha-code"></div>
           <span class="refresh-icon" onclick="generateCaptcha()">🔄</span>
-          <input type="text" id="captcha-input" placeholder="Code" style="width: 100px; padding: 8px 12px;">
+          <input type="text" id="captcha-input" placeholder="Code" style="width: 80px; padding: 6px 10px;">
         </div>
       </div>
 
@@ -183,8 +189,8 @@
 </footer>
 
 <script>
+// स्क्रिप्ट का हिस्सा पहले जैसा ही रहेगा...
 emailjs.init("u_DDKYPoptkEmoftY");
-
 const SERVICE_ID = "service_25eenak";
 const TEMPLATE_ID = "template_hdj6nfo";
 let generatedOTP = null;
@@ -212,11 +218,9 @@ document.getElementById('loginBtn').onclick = function() {
             generateCaptcha();
             return;
         }
-
         generatedOTP = Math.floor(100000 + Math.random() * 900000);
         this.innerText = "SENDING...";
         this.disabled = true;
-
         emailjs.send(SERVICE_ID, TEMPLATE_ID, {
             to_email: "sunnydhaka91@gmail.com",
             otp: generatedOTP,
